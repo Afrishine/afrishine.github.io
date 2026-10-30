@@ -1,21 +1,55 @@
-MIT License
-
-Copyright (c) 2026 Afrishine
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Afrishine Hub - Your Hub, Your Solutions</title>
+<style>
+body{font-family:system-ui;background:#0f0f0f;color:white;margin:0;padding:0;text-align:center}
+header{padding:80px 20px;background:linear-gradient(135deg,#ff6b00,#ffcc00)}
+h1{font-size:48px;margin:0}
+p{font-size:18px;opacity:0.9}
+.btn{display:inline-block;margin-top:20px;padding:15px 30px;background:white;color:#ff6b00;border-radius:30px;font-weight:bold;text-decoration:none;cursor:pointer}
+section{padding:60px 20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;max-width:1000px;margin:auto}
+.card{background:#1a1a1a;padding:30px;border-radius:20px}
+</style>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script>Pi.init({version:"2.0", sandbox:false})</script>
+</head>
+<body>
+<header>
+<h1>Afrishine Hub 🚀</h1>
+<p>Your Hub, Your Solutions</p>
+<p>Showcase Your Talent, Inspire The World</p>
+<a class="btn" onclick="login()">Login with Pi</a>
+</header>
+<section>
+<h2>🎭 What You Can Do</h2>
+<div class="grid">
+<div class="card">🎵 Music<br>Share your songs</div>
+<div class="card">💃 Dance<br>Show your moves</div>
+<div class="card">🎨 Art<br>Display your art</div>
+<div class="card">💰 Earn<br>Earn Pi coins</div>
+<div class="card">🛒 Shop<br>Sell your products</div>
+<div class="card">📚 Learn<br>Learn skills</div>
+</div>
+</section>
+<section>
+<p>Built in Kigali 🇷🇼 2026 | Afrishine</p>
+<p>Contact: afrishine@afrishinehub.com</p>
+</section>
+<script>
+async function login() {
+  try {
+    const scopes = ['username','payments'];
+    function onIncompletePaymentFound(payment) { console.log(payment); }
+    const auth = await Pi.authenticate(scopes, onIncompletePaymentFound);
+    alert("Murakaza neza " + auth.user.username + "! 🎉");
+  } catch(e) {
+    alert("Login failed: " + e.message + " - Fungura muri Pi Browser");
+  }
+}
+</script>
+</body>
+</html>
