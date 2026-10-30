@@ -505,7 +505,47 @@ footer{
 
   <!-- PROFILE -->
   <section class="page" id="profile">
-   <div class="eyebrow">YOUR AFRISHINE ACCOUNT</div>
+   <div class="eyebrow">YOUR AFRISHINE ACCOUNT</div> <!-- LOVE CONNECTION -->
+<section class="page" id="love">
+ <div class="eyebrow">CONNECT · FRIENDSHIP · LOVE</div>
+ <h1>❤️ Love Connection</h1>
+ <p class="muted">Find Friends, Love & Community.</p>
+
+ <section class="panel" id="loveAgeGate">
+  <h2>Welcome to Love Connection</h2>
+  <p>
+   A community for adults aged 18 and above to meet new people,
+   build friendships and explore meaningful relationships.
+  </p>
+
+  <p style="margin-top:15px;color:#ffca58;font-weight:700">
+   🔞 This section is strictly for adults aged 18+.
+  </p>
+
+  <div class="actions">
+   <button class="gold" onclick="confirmLoveAge()">
+    I am 18 or older — Continue
+   </button>
+   <button class="secondary" onclick="showPage('home')">
+    Go Back
+   </button>
+  </div>
+ </section>
+
+ <section class="panel" id="loveContent" style="display:none">
+  <h2>Welcome to Love Connection ❤️</h2>
+  <p>
+   Meet new friends, connect with people and build meaningful
+   relationships in a respectful community.
+  </p>
+  <p style="margin-top:12px">
+   Find Friends · Love · Community
+  </p>
+  <button class="gold" onclick="notice('Love profiles and matching will be enabled after secure backend integration.')">
+   Explore Members ❤️
+  </button>
+ </section>
+</section>
    <h1>My Profile</h1>
    <p class="muted">Manage your account and public creator profile.</p>
    <section class="panel">
@@ -588,6 +628,11 @@ function notice(message){
  window.ahNoticeTimer=setTimeout(()=>{
   el.style.display='none';
  },3500);
+}
+/* LOVE CONNECTION AGE GATE */
+function confirmLoveAge(){
+ document.getElementById('loveAgeGate').style.display='none';
+ document.getElementById('loveContent').style.display='block';
 }
 
 /* RESTORE PAGE */
