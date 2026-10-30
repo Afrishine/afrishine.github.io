@@ -1,116 +1,661 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080a10">
 <title>Afrishine Hub</title>
+
+<!-- Official Pi Network SDK -->
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,sans-serif}
-body{background:#000;color:#fff;max-width:480px;margin:0 auto;padding-bottom:90px}
-.pi-banner{background:linear-gradient(90deg,#1a0b5e,#4a1a9e);border:2px solid #ffb400;border-radius:16px;margin:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
-.pi-logo{width:48px;height:48px;background:#000;border:2px solid #ffb400;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#ffb400;font-weight:900;font-size:24px}
-.pi-banner-text h2{font-size:18px}
-.pi-banner-text h2 span{color:#ffb400}
-.pi-banner-text p{font-size:10px;opacity:.8}
-.pi-login-btn{background:linear-gradient(90deg,#ffb400,#ff8c00);color:#000;border:none;padding:8px 14px;border-radius:20px;font-weight:700;font-size:12px;cursor:pointer}
-.header{background:linear-gradient(180deg,#2a1a00,#000);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ffb40033}
-.logo-mark{font-size:32px;font-weight:900;background:linear-gradient(45deg,#ffb400,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-style:italic}
-.header-text h1{font-size:18px}
-.header-text h1 span{color:#ffb400}
-.header-text p{font-size:9px;opacity:.7}
-.grid{padding:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.card{background:linear-gradient(180deg,#1a1a1a,#0f0f0f);border:1px solid #222;border-radius:14px;padding:16px 6px;text-align:center;cursor:pointer}
-.card.active{background:linear-gradient(135deg,#ff8c00,#ffb400);color:#000}
-.card i{font-size:28px;margin-bottom:6px;display:block;color:#ffb400}
-.card.active i{color:#fff}
-.card p{font-size:11px;font-weight:600}
-.shop-section{margin:12px;border:1px solid #333;border-radius:16px;padding:14px;background:#0a0a0a}
-.shop-header{display:flex;gap:12px;align-items:center;margin-bottom:14px}
-.shop-header h2{font-size:22px}
-.shop-header h2 span{color:#ffb400;font-size:16px;display:block}
-.shop-header p{font-size:10px;opacity:.7}
-.buy-sell{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.buy-box,.sell-box{border-radius:14px;padding:14px;text-align:center}
-.buy-box{background:linear-gradient(135deg,#0dbf5a,#0a8a42)}
-.sell-box{background:linear-gradient(135deg,#0d6efd,#0a4abf)}
-.buy-box i,.sell-box i{font-size:28px;margin-bottom:6px}
-.buy-box h3,.sell-box h3{font-size:14px}
-.btn-white{background:#fff;border:none;padding:7px 12px;border-radius:20px;font-size:11px;font-weight:700;margin-top:8px}
-.together{margin:12px;border:1px solid #3a2a00;background:#151000;border-radius:20px;padding:8px 12px;display:flex;gap:10px;align-items:center}
-.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#0a0a0a;border-top:1px solid #222;display:flex;justify-content:space-around;padding:8px 0 12px}
-.nav-item{text-align:center;opacity:.6}
-.nav-item.active{opacity:1;color:#ffb400}
-.add-btn{width:48px;height:48px;background:linear-gradient(135deg,#ffb400,#ff8c00);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-top:-20px;border:3px solid #000;color:#000;font-size:22px}
+:root{
+ --gold:#ffb91f;
+ --bg:#080a10;
+ --panel:#171b25;
+ --muted:#aeb6c5;
+ --line:#303747
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+ background:var(--bg);
+ color:#fff;
+ font-family:system-ui,Arial,sans-serif;
+ padding-bottom:82px
+}
+button,a{font:inherit}
+button{cursor:pointer}
+.app{
+ max-width:980px;
+ margin:auto;
+ padding:12px;
+ position:relative
+}
+.pi-login{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:12px;
+ padding:12px;
+ border:2px solid var(--gold);
+ border-radius:16px;
+ background:linear-gradient(100deg,#1a0b5e,#491b91);
+ margin-bottom:14px
+}
+.pi-info{display:flex;align-items:center;gap:10px}
+.pi-symbol{
+ width:42px;height:42px;
+ border:2px solid var(--gold);
+ border-radius:50%;
+ display:grid;
+ place-items:center;
+ font-size:25px;
+ color:var(--gold);
+ font-weight:900
+}
+.pi-info small,.brand small{
+ display:block;
+ color:#c4c9d4;
+ font-size:11px
+}
+.gold{
+ background:linear-gradient(120deg,#ffd46d,#f2a400);
+ color:#171107;
+ border:0;
+ border-radius:22px;
+ padding:10px 15px;
+ font-weight:800
+}
+header{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ padding:12px 2px 18px;
+ border-bottom:1px solid #3a2a0b;
+ position:relative
+}
+.brand{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ color:white;
+ text-decoration:none
+}
+.brand-mark{
+ font-size:30px;
+ font-weight:950;
+ font-style:italic;
+ color:var(--gold)
+}
+.brand strong{font-size:19px}
+.header-actions{display:flex;gap:9px}
+.round{
+ width:38px;height:38px;
+ border:1px solid var(--line);
+ border-radius:50%;
+ background:#202532;
+ color:white
+}
+.menu-btn{font-size:22px;font-weight:900}
+.menu-drawer{
+ display:none;
+ position:absolute;
+ right:0;
+ top:60px;
+ z-index:30;
+ width:220px;
+ max-width:85vw;
+ padding:9px;
+ background:#171b25;
+ border:1px solid var(--gold);
+ border-radius:14px;
+ box-shadow:0 12px 30px #0009
+}
+.menu-drawer.open{display:block}
+.menu-drawer a{
+ display:block;
+ padding:12px;
+ color:white;
+ text-decoration:none;
+ border-bottom:1px solid #303747;
+ font-size:13px
+}
+.menu-drawer a:last-child{border-bottom:0}
+.menu-drawer a:hover{background:#292f3b;color:var(--gold)}
+.hero{padding:28px 4px 22px}
+.eyebrow{
+ font-size:10px;
+ letter-spacing:1.5px;
+ color:var(--gold);
+ font-weight:800
+}
+.hero h1{
+ font-size:clamp(28px,6vw,44px);
+ line-height:1.12;
+ margin:9px 0
+}
+.hero h1 span{color:var(--gold)}
+.muted{
+ color:var(--muted);
+ font-size:13px;
+ line-height:1.6;
+ max-width:680px
+}
+.actions{
+ display:flex;
+ gap:8px;
+ flex-wrap:wrap;
+ margin-top:15px
+}
+.secondary{
+ background:#202634;
+ color:#fff;
+ border:1px solid #485166;
+ border-radius:22px;
+ padding:9px 14px;
+ font-weight:700
+}
+h2.section-title{font-size:20px;margin:12px 0}
+.grid{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:10px
+}
+.tile{
+ min-height:112px;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+ gap:7px;
+ text-align:center;
+ padding:12px 5px;
+ border:1px solid #292f3b;
+ border-radius:16px;
+ background:linear-gradient(160deg,#1c2029,#10131a);
+ color:white;
+ text-decoration:none
+}
+.tile .emoji{font-size:27px}
+.tile b{font-size:13px}
+.tile small{font-size:10px;color:var(--muted)}
+.panel{
+ margin-top:15px;
+ padding:17px;
+ border:1px solid #343b49;
+ border-radius:17px;
+ background:#11151d
+}
+.panel h2{margin:3px 0 7px}
+.panel p{
+ color:var(--muted);
+ font-size:13px;
+ line-height:1.55
+}
+.shop-options{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px;
+ margin-top:13px
+}
+.shop-card{
+ padding:16px 10px;
+ text-align:center;
+ border-radius:15px
+}
+.buy{background:linear-gradient(135deg,#0dbf62,#087c40)}
+.sell{background:linear-gradient(135deg,#1675f5,#0848b4)}
+.shop-card b{display:block;margin:6px}
+.white-btn{
+ border:0;
+ border-radius:20px;
+ background:#fff;
+ padding:8px 13px;
+ font-weight:800;
+ margin-top:9px;
+ color:#17202c
+}
+.page{display:none;padding:23px 3px}
+.page.active{display:block}
+.page h1{font-size:29px;margin:6px 0}
+.page .panel{margin-top:13px}
+.field{
+ display:block;
+ width:100%;
+ padding:12px;
+ border:1px solid #41495a;
+ border-radius:10px;
+ background:#090c12;
+ color:white;
+ margin:10px 0
+}
+footer{
+ text-align:center;
+ color:#788294;
+ font-size:11px;
+ padding:25px 5px
+}
+.bottom-nav{
+ position:fixed;
+ bottom:0;left:0;right:0;
+ z-index:10;
+ display:flex;
+ justify-content:center;
+ background:#0c1019;
+ border-top:1px solid #303747;
+ padding:8px 0 calc(8px + env(safe-area-inset-bottom))
+}
+.bottom-nav a{
+ width:min(19%,120px);
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ gap:2px;
+ color:#929aaa;
+ text-decoration:none;
+ font-size:19px
+}
+.bottom-nav small{font-size:10px}
+.bottom-nav a.active{color:var(--gold)}
+.bottom-nav .add{
+ width:46px;height:46px;
+ margin:-17px 7px 0;
+ border:3px solid var(--bg);
+ border-radius:50%;
+ background:var(--gold);
+ color:#171107;
+ font-size:27px;
+ font-weight:900;
+ justify-content:center
+}
+.notice{
+ display:none;
+ position:fixed;
+ z-index:40;
+ bottom:90px;
+ left:50%;
+ transform:translateX(-50%);
+ max-width:90%;
+ padding:11px 15px;
+ background:#2b2415;
+ border:1px solid #98752d;
+ border-radius:12px;
+ color:#ffe2a0;
+ font-size:12px
+}
+@media(min-width:700px){
+ .grid{grid-template-columns:repeat(4,1fr)}
+ .hero{padding-top:40px}
+ .tile{min-height:130px}
+}
+@media(max-width:380px){
+ .pi-login{align-items:flex-start}
+ .pi-info small{max-width:145px}
+ .gold{font-size:11px;padding:9px 10px}
+ .grid{gap:7px}
+ .brand strong{font-size:16px}
+ .header-actions{gap:5px}
+ .round{width:35px;height:35px}
+}
 </style>
 </head>
+
 <body>
-<div class="pi-banner">
-  <div style="display:flex;gap:10px;align-items:center">
-    <div class="pi-logo">π</div>
-    <div class="pi-banner-text">
-      <h2>Login with <span>Pi</span></h2>
-      <p>Access your Afrishine Hub account<br>with Pi Network</p>
+<div class="app">
+
+ <!-- PI LOGIN -->
+ <section class="pi-login" id="piLoginArea">
+  <div class="pi-info">
+   <div class="pi-symbol">π</div>
+   <div>
+    <b>Login with Pi</b>
+    <small>Secure access to Afrishine Hub</small>
+   </div>
+  </div>
+  <button class="gold" id="piLoginBtn">Login with Pi →</button>
+ </section>
+
+ <!-- HEADER -->
+ <header>
+  <a class="brand" href="#home" data-page="home">
+   <b class="brand-mark">AH</b>
+   <span>
+    <strong><span style="color:var(--gold)">Afrishine</span> Hub</strong>
+    <small>Your Hub, Your Solutions</small>
+   </span>
+  </a>
+
+  <div class="header-actions">
+   <button class="round" onclick="showPage('inbox')" aria-label="Inbox">✉</button>
+   <button class="round" onclick="showPage('profile')" aria-label="Profile">👤</button>
+   <button class="round menu-btn" id="menuBtn" aria-label="Open Menu">☰</button>
+  </div>
+
+  <!-- MENU DRAWER -->
+  <div class="menu-drawer" id="menuDrawer">
+   <a href="#home" data-page="home">⌂ Home</a>
+   <a href="#talent" data-page="talent">🎬 Talent Hub</a>
+   <a href="#academy" data-page="academy">🎓 Afrishine Academy</a>
+   <a href="#shop" data-page="shop">🛍️ Shop</a>
+   <a href="#travel" data-page="travel">✈️ Travel Booking</a>
+   <a href="#jobs" data-page="jobs">💼 Digital Jobs</a>
+   <a href="#wallet" data-page="wallet">👛 My Wallet</a>
+   <a href="#inbox" data-page="inbox">💬 Inbox</a>
+   <a href="#profile" data-page="profile">👤 My Profile</a>
+  </div>
+ </header>
+
+ <main>
+
+  <!-- HOME -->
+  <section class="page active" id="home">
+   <div class="hero">
+    <div class="eyebrow">YOUR COMMUNITY · YOUR OPPORTUNITIES</div>
+    <h1>Showcase Your Talent.<br><span>Inspire The World.</span></h1>
+    <p class="muted">Discover talent, learn new skills, shop, travel and connect with opportunities — all in one place.</p>
+    <div class="actions">
+     <button class="gold" onclick="showPage('talent')">Explore Talent Hub</button>
+     <button class="secondary" onclick="showPage('academy')">Visit Academy</button>
     </div>
-  </div>
-  <button class="pi-login-btn" onclick="loginWithPi()">Login with Pi →</button>
-</div>
+   </div>
 
-<div class="header">
-  <div style="display:flex;gap:8px;align-items:center">
-    <div class="logo-mark">AH</div>
-    <div class="header-text">
-      <h1><span>Afrishine</span> Hub</h1>
-      <p>Your Hub, Your Solutions</p>
-      <p>Showcase Your Talent, Inspire The World</p>
+   <h2 class="section-title">Explore Afrishine Hub</h2>
+
+   <div class="grid">
+    <a class="tile" href="#talent" data-page="talent"><span class="emoji">🎬</span><b>Talent Hub</b><small>Videos, photos and posts</small></a>
+    <a class="tile" href="#academy" data-page="academy"><span class="emoji">🎓</span><b>Afrishine Academy</b><small>Learn and grow</small></a>
+    <a class="tile" href="#shop" data-page="shop"><span class="emoji">🛍️</span><b>Shop</b><small>Buy and sell</small></a>
+    <a class="tile" href="#travel" data-page="travel"><span class="emoji">✈️</span><b>Travel Booking</b><small>Travel services</small></a>
+    <a class="tile" href="#jobs" data-page="jobs"><span class="emoji">💼</span><b>Digital Jobs</b><small>Find opportunities</small></a>
+    <a class="tile" href="#wallet" data-page="wallet"><span class="emoji">👛</span><b>My Wallet</b><small>AST and activity</small></a>
+    <a class="tile" href="#inbox" data-page="inbox"><span class="emoji">💬</span><b>Inbox</b><small>Messages</small></a>
+    <a class="tile" href="#profile" data-page="profile"><span class="emoji">👤</span><b>Profile</b><small>Your account</small></a>
+   </div>
+
+   <section class="panel">
+    <div class="eyebrow">AFRISHINE TOKEN</div>
+    <h2>AST Wallet</h2>
+    <p>Your AST balance and transaction history will appear here after secure wallet and backend integration.</p>
+    <div class="actions">
+     <button class="secondary" onclick="showPage('wallet')">Open My Wallet →</button>
     </div>
-  </div>
-  <div style="display:flex;gap:10px"><div style="width:32px;height:32px;background:#222;border-radius:50%;display:flex;align-items:center;justify-content:center"><i class="fas fa-bell" style="font-size:14px"></i></div><div style="width:32px;height:32px;background:#222;border-radius:50%;display:flex;align-items:center;justify-content:center"><i class="fas fa-user" style="font-size:14px"></i></div></div>
+   </section>
+
+   <footer>© 2026 Afrishine Hub · Built in Kigali, Rwanda 🇷🇼</footer>
+  </section>
+
+  <!-- TALENT HUB -->
+  <section class="page" id="talent">
+   <div class="eyebrow">CREATE · SHARE · CONNECT</div>
+   <h1>Talent Hub</h1>
+   <p class="muted">Showcase your talent and discover creators in the community.</p>
+   <section class="panel">
+    <h2>Share your talent</h2>
+    <p>Post videos, photos or text. Uploading requires media storage and a connected backend.</p>
+    <div class="actions">
+     <button class="gold" onclick="notice('Video upload will be enabled after media storage is connected.')">＋ Post Video</button>
+     <button class="secondary" onclick="notice('Photo upload will be enabled after media storage is connected.')">Post Photo</button>
+     <button class="secondary" onclick="notice('Text posts require the platform database.')">Text Post</button>
+    </div>
+   </section>
+   <section class="panel">
+    <h2>Community Feed</h2>
+    <p>Creator posts and support activity will appear here after database integration.</p>
+   </section>
+  </section>
+
+  <!-- ACADEMY -->
+  <section class="page" id="academy">
+   <div class="eyebrow">LEARN · PRACTICE · GROW</div>
+   <h1>Afrishine Academy</h1>
+   <p class="muted">A learning space for digital skills, creativity, business and financial education.</p>
+   <section class="panel">
+    <h2>Courses & Training</h2>
+    <p>Course catalogue, lessons, learning progress and certificates will be connected here.</p>
+    <button class="gold" onclick="notice('Course catalogue is not connected yet.')">Explore Courses</button>
+   </section>
+  </section>
+
+  <!-- SHOP -->
+  <section class="page" id="shop">
+   <div class="eyebrow">BUY · SELL · SUPPORT LOCAL</div>
+   <h1>Shop — Buy & Sell</h1>
+   <p class="muted">Discover products and reach customers through Afrishine Hub.</p>
+   <div class="shop-options">
+    <div class="shop-card buy">
+     <div style="font-size:30px">🛍️</div>
+     <b>Buy Products</b>
+     <p>Find what you need</p>
+     <button class="white-btn" onclick="notice('Product catalogue and checkout need backend integration.')">Explore Now →</button>
+    </div>
+    <div class="shop-card sell">
+     <div style="font-size:30px">🏷️</div>
+     <b>Sell Products</b>
+     <p>Reach more customers</p>
+     <button class="white-btn" onclick="notice('Seller registration and product listing need backend integration.')">Start Selling →</button>
+    </div>
+   </div>
+  </section>
+
+  <!-- TRAVEL -->
+  <section class="page" id="travel">
+   <div class="eyebrow">PLAN YOUR JOURNEY</div>
+   <h1>Travel Booking</h1>
+   <p class="muted">Find travel services and booking opportunities.</p>
+   <section class="panel">
+    <h2>Search Travel</h2>
+    <input class="field" id="destination" placeholder="Enter destination">
+    <button class="gold" onclick="notice('Travel booking provider must be connected before reservations can be made.')">Search Trips</button>
+   </section>
+  </section>
+
+  <!-- JOBS -->
+  <section class="page" id="jobs">
+   <div class="eyebrow">WORK · CONNECT · GROW</div>
+   <h1>Digital Jobs</h1>
+   <p class="muted">Discover digital work and connect with employers.</p>
+   <section class="panel">
+    <h2>Find Opportunities</h2>
+    <p>Job listings, applications and employer profiles will be available after backend integration.</p>
+    <div class="actions">
+     <button class="gold" onclick="notice('Job listings are not connected yet.')">Find Jobs</button>
+     <button class="secondary" onclick="notice('Employer job posting is not connected yet.')">Post a Job</button>
+    </div>
+   </section>
+  </section>
+
+  <!-- WALLET -->
+  <section class="page" id="wallet">
+   <div class="eyebrow">AFRISHINE TOKEN</div>
+   <h1>My Wallet</h1>
+   <p class="muted">AST wallet, transaction activity and supported payment services.</p>
+   <section class="panel">
+    <div class="eyebrow">AVAILABLE BALANCE</div>
+    <h2>— AST</h2>
+    <p>Your real balance will be shown after secure wallet integration. No token balance or conversion is simulated.</p>
+   </section>
+   <section class="panel">
+    <h2>Wallet Services</h2>
+    <p>Send AST · Receive AST · Gift History · Transaction History · AST ↔ Pi</p>
+    <div class="actions">
+     <button class="gold" onclick="notice('AST transfers need a secure wallet backend.')">Send AST</button>
+     <button class="secondary" onclick="notice('AST to Pi conversion is not enabled. It needs an approved, secure exchange mechanism.')">AST ↔ Pi</button>
+     <button class="secondary" onclick="notice('Transaction history will appear after wallet integration.')">History</button>
+    </div>
+   </section>
+  </section>
+
+  <!-- INBOX -->
+  <section class="page" id="inbox">
+   <div class="eyebrow">STAY CONNECTED</div>
+   <h1>Inbox</h1>
+   <p class="muted">Messages, updates and creator conversations.</p>
+   <section class="panel">
+    <h2>Your Messages</h2>
+    <p>Your conversations will appear here after secure messaging and database services are connected.</p>
+   </section>
+  </section>
+
+  <!-- PROFILE -->
+  <section class="page" id="profile">
+   <div class="eyebrow">YOUR AFRISHINE ACCOUNT</div>
+   <h1>My Profile</h1>
+   <p class="muted">Manage your account and public creator profile.</p>
+   <section class="panel">
+    <h2>Account Details</h2>
+    <p id="profileStatus">Sign in with Pi to display your verified Pi username here.</p>
+    <button class="secondary" onclick="notice('Profile editing will be connected to your account database.')">Edit Profile</button>
+   </section>
+  </section>
+
+ </main>
 </div>
 
-<div class="grid">
-  <div class="card"><i class="fas fa-microphone"></i><p>Talent Hub</p></div>
-  <div class="card"><i class="fas fa-book"></i><p>Learn</p></div>
-  <div class="card"><i class="fas fa-plane"></i><p>Travel Booking</p></div>
-  <div class="card"><i class="fas fa-sack-dollar"></i><p>My Wallet</p></div>
-  <div class="card active"><i class="fas fa-shopping-cart"></i><p>Shop</p></div>
-  <div class="card"><i class="fas fa-briefcase"></i><p>Digital Job</p></div>
-</div>
+<!-- BOTTOM NAVIGATION -->
+<nav class="bottom-nav">
+ <a href="#home" data-page="home" class="active">⌂<small>Home</small></a>
+ <a href="#talent" data-page="talent">▶<small>Talent</small></a>
+ <a href="#talent" data-page="talent" class="add" aria-label="Create">＋</a>
+ <a href="#inbox" data-page="inbox">✉<small>Inbox</small></a>
+ <a href="#profile" data-page="profile">☺<small>Profile</small></a>
+</nav>
 
-<div class="shop-section">
-  <div class="shop-header">
-    <i class="fas fa-shopping-cart" style="font-size:36px;color:#ffb400"></i>
-    <div><h2>Shop<span>Buy & Sell</span></h2><p>Discover products, buy and sell with Afrishine Hub.</p></div>
-    <div style="font-size:40px">🛒</div>
-  </div>
-  <div class="buy-sell">
-    <div class="buy-box"><i class="fas fa-shopping-bag"></i><h3>Buy Products</h3><p>Find what you need</p><button class="btn-white" style="color:#0a8a42">Explore Now →</button></div>
-    <div class="sell-box"><i class="fas fa-tag"></i><h3>Sell Products</h3><p>Reach more customers</p><button class="btn-white" style="color:#0a4abf">Start Selling →</button></div>
-  </div>
-</div>
-
-<div class="together"><i class="fas fa-bullhorn" style="color:#ffb400"></i><div><h4 style="font-size:11px;color:#ffb400">Together We Grow</h4><p style="font-size:9px;opacity:.7">Buy • Sell • Support Local • Build Africa</p></div><i class="fas fa-arrow-right" style="margin-left:auto;color:#ffb400"></i></div>
-<div style="text-align:center;padding:10px;font-size:10px;opacity:.4">afrishinehub@gmail.com</div>
-
-<div class="bottom-nav">
-  <div class="nav-item active"><i class="fas fa-home"></i><p>Home</p></div>
-  <div class="nav-item"><i class="fas fa-th-large"></i><p>Apps</p></div>
-  <div class="add-btn"><i class="fas fa-plus"></i></div>
-  <div class="nav-item"><i class="fas fa-comment-dots"></i><p>Messages</p></div>
-  <div class="nav-item"><i class="fas fa-cog"></i><p>Settings</p></div>
-</div>
+<div id="notice" class="notice"></div>
 
 <script>
-const Pi = window.Pi;
-if(Pi){ Pi.init({version:"2.0", sandbox:false}); }
-async function loginWithPi(){
-  try{
-    if(!Pi){ alert('Fungura muri Pi Browser'); return; }
-    const auth = await Pi.authenticate(['username','payments'], ()=>{});
-    document.querySelector('.pi-banner').innerHTML = '<div style="color:#0f0">✅ Welcome @'+auth.user.username+'</div>';
-  }catch(e){ alert('Login failed: '+e.message); }
+/* MENU */
+const menuBtn=document.getElementById('menuBtn');
+const menuDrawer=document.getElementById('menuDrawer');
+
+menuBtn.addEventListener('click',()=>{
+ menuDrawer.classList.toggle('open');
+});
+
+menuDrawer.querySelectorAll('a').forEach(link=>{
+ link.addEventListener('click',()=>{
+  menuDrawer.classList.remove('open');
+ });
+});
+
+document.addEventListener('click',e=>{
+ if(!menuDrawer.contains(e.target)&&!menuBtn.contains(e.target)){
+  menuDrawer.classList.remove('open');
+ }
+});
+
+/* PAGE NAVIGATION */
+function showPage(id){
+ const page=document.getElementById(id);
+ if(!page)return;
+
+ document.querySelectorAll('.page').forEach(p=>{
+  p.classList.toggle('active',p.id===id);
+ });
+
+ document.querySelectorAll('[data-page]').forEach(a=>{
+  a.classList.toggle('active',a.dataset.page===id);
+ });
+
+ menuDrawer.classList.remove('open');
+
+ if(location.hash!=='#'+id){
+  history.replaceState(null,'','#'+id);
+ }
+
+ window.scrollTo({top:0,behavior:'instant'});
 }
+
+document.querySelectorAll('[data-page]').forEach(el=>{
+ el.addEventListener('click',e=>{
+  e.preventDefault();
+  showPage(el.dataset.page);
+ });
+});
+
+/* NOTIFICATION */
+function notice(message){
+ const el=document.getElementById('notice');
+ el.textContent=message;
+ el.style.display='block';
+ clearTimeout(window.ahNoticeTimer);
+ window.ahNoticeTimer=setTimeout(()=>{
+  el.style.display='none';
+ },3500);
+}
+
+/* RESTORE PAGE */
+const firstPage=location.hash.replace('#','');
+if(document.getElementById(firstPage)){
+ showPage(firstPage);
+}
+
+/* PI NETWORK LOGIN */
+(async function setupPi(){
+ const btn=document.getElementById('piLoginBtn');
+
+ try{
+  if(!window.Pi){
+   throw new Error('Pi SDK unavailable');
+  }
+
+  window.Pi.init({
+   version:'2.0',
+   sandbox:false
+  });
+
+  btn.addEventListener('click',async()=>{
+   btn.disabled=true;
+   btn.textContent='Connecting…';
+
+   try{
+    const auth=await window.Pi.authenticate(
+     ['username'],
+     ()=>{}
+    );
+
+    const username=auth&&auth.user&&auth.user.username;
+
+    if(!username){
+     throw new Error('Pi username was not returned');
+    }
+
+    sessionStorage.setItem('afrishine_pi_username',username);
+
+    const safeUsername=String(username).replace(/[&<>"']/g,'');
+
+    document.getElementById('piLoginArea').innerHTML=
+     '<div class="pi-info">'+
+      '<div class="pi-symbol">π</div>'+
+      '<div><b>Welcome @'+safeUsername+'</b>'+
+      '<small>Pi sign-in completed</small></div>'+
+     '</div>';
+
+    const profile=document.getElementById('profileStatus');
+
+    if(profile){
+     profile.textContent='Signed in with Pi as @'+username;
+    }
+
+   }catch(err){
+    console.error(err);
+    notice('Pi Login failed. Reopen in Pi Browser and try again.');
+    btn.disabled=false;
+    btn.textContent='Login with Pi →';
+   }
+  });
+
+ }catch(err){
+  console.warn('Pi SDK initialization:',err);
+  btn.textContent='Open in Pi Browser';
+
+  btn.addEventListener('click',()=>{
+   notice('Open Afrishine Hub inside Pi Browser to use Pi Login.');
+  });
+ }
+})();
 </script>
+
 </body>
 </html>
