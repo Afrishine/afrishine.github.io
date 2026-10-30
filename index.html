@@ -1,1 +1,116 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Afrishine Hub</title><script src="https://sdk.minepi.com/pi-sdk.js"></script><script>Pi.init({version:"2.0",sandbox:false})</script><style>body{font-family:system-ui;background:#0f0f0f;color:#fff;margin:0;text-align:center}header{padding:70px 20px;background:linear-gradient(135deg,#ff6b00,#ffcc00)}h1{font-size:42px} .btn{padding:14px 28px;background:#fff;color:#ff6b00;border-radius:30px;font-weight:bold;border:none;font-size:16px} .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;max-width:900px;margin:30px auto;padding:0 20px} .card{background:#1a1a1a;padding:25px;border-radius:16px}</style></head><body><header><h1>Afrishine Hub 🚀</h1><p>Your Hub, Your Solutions</p><p>Showcase Your Talent, Inspire The World</p><br><button class="btn" onclick="login()">Login with Pi</button></header><div class="grid"><div class="card">🎵 Music</div><div class="card">💃 Dance</div><div class="card">🎨 Art</div><div class="card">💰 Earn Pi</div><div class="card">🛒 Shop</div><div class="card">📚 Learn</div></div><p>Built in Kigali 🇷🇼 2026</p><p>afrishine@afrishinehub.com</p><script>async function login(){try{const auth=await Pi.authenticate(['username','payments'],function(p){console.log(p)});alert("Murakaza neza "+auth.user.username)}catch(e){alert("Fungura muri Pi Browser: "+e.message)}}</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Afrishine Hub</title>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,sans-serif}
+body{background:#000;color:#fff;max-width:480px;margin:0 auto;padding-bottom:90px}
+.pi-banner{background:linear-gradient(90deg,#1a0b5e,#4a1a9e);border:2px solid #ffb400;border-radius:16px;margin:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+.pi-logo{width:48px;height:48px;background:#000;border:2px solid #ffb400;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#ffb400;font-weight:900;font-size:24px}
+.pi-banner-text h2{font-size:18px}
+.pi-banner-text h2 span{color:#ffb400}
+.pi-banner-text p{font-size:10px;opacity:.8}
+.pi-login-btn{background:linear-gradient(90deg,#ffb400,#ff8c00);color:#000;border:none;padding:8px 14px;border-radius:20px;font-weight:700;font-size:12px;cursor:pointer}
+.header{background:linear-gradient(180deg,#2a1a00,#000);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ffb40033}
+.logo-mark{font-size:32px;font-weight:900;background:linear-gradient(45deg,#ffb400,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-style:italic}
+.header-text h1{font-size:18px}
+.header-text h1 span{color:#ffb400}
+.header-text p{font-size:9px;opacity:.7}
+.grid{padding:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.card{background:linear-gradient(180deg,#1a1a1a,#0f0f0f);border:1px solid #222;border-radius:14px;padding:16px 6px;text-align:center;cursor:pointer}
+.card.active{background:linear-gradient(135deg,#ff8c00,#ffb400);color:#000}
+.card i{font-size:28px;margin-bottom:6px;display:block;color:#ffb400}
+.card.active i{color:#fff}
+.card p{font-size:11px;font-weight:600}
+.shop-section{margin:12px;border:1px solid #333;border-radius:16px;padding:14px;background:#0a0a0a}
+.shop-header{display:flex;gap:12px;align-items:center;margin-bottom:14px}
+.shop-header h2{font-size:22px}
+.shop-header h2 span{color:#ffb400;font-size:16px;display:block}
+.shop-header p{font-size:10px;opacity:.7}
+.buy-sell{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.buy-box,.sell-box{border-radius:14px;padding:14px;text-align:center}
+.buy-box{background:linear-gradient(135deg,#0dbf5a,#0a8a42)}
+.sell-box{background:linear-gradient(135deg,#0d6efd,#0a4abf)}
+.buy-box i,.sell-box i{font-size:28px;margin-bottom:6px}
+.buy-box h3,.sell-box h3{font-size:14px}
+.btn-white{background:#fff;border:none;padding:7px 12px;border-radius:20px;font-size:11px;font-weight:700;margin-top:8px}
+.together{margin:12px;border:1px solid #3a2a00;background:#151000;border-radius:20px;padding:8px 12px;display:flex;gap:10px;align-items:center}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#0a0a0a;border-top:1px solid #222;display:flex;justify-content:space-around;padding:8px 0 12px}
+.nav-item{text-align:center;opacity:.6}
+.nav-item.active{opacity:1;color:#ffb400}
+.add-btn{width:48px;height:48px;background:linear-gradient(135deg,#ffb400,#ff8c00);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-top:-20px;border:3px solid #000;color:#000;font-size:22px}
+</style>
+</head>
+<body>
+<div class="pi-banner">
+  <div style="display:flex;gap:10px;align-items:center">
+    <div class="pi-logo">π</div>
+    <div class="pi-banner-text">
+      <h2>Login with <span>Pi</span></h2>
+      <p>Access your Afrishine Hub account<br>with Pi Network</p>
+    </div>
+  </div>
+  <button class="pi-login-btn" onclick="loginWithPi()">Login with Pi →</button>
+</div>
+
+<div class="header">
+  <div style="display:flex;gap:8px;align-items:center">
+    <div class="logo-mark">AH</div>
+    <div class="header-text">
+      <h1><span>Afrishine</span> Hub</h1>
+      <p>Your Hub, Your Solutions</p>
+      <p>Showcase Your Talent, Inspire The World</p>
+    </div>
+  </div>
+  <div style="display:flex;gap:10px"><div style="width:32px;height:32px;background:#222;border-radius:50%;display:flex;align-items:center;justify-content:center"><i class="fas fa-bell" style="font-size:14px"></i></div><div style="width:32px;height:32px;background:#222;border-radius:50%;display:flex;align-items:center;justify-content:center"><i class="fas fa-user" style="font-size:14px"></i></div></div>
+</div>
+
+<div class="grid">
+  <div class="card"><i class="fas fa-microphone"></i><p>Talent Hub</p></div>
+  <div class="card"><i class="fas fa-book"></i><p>Learn</p></div>
+  <div class="card"><i class="fas fa-plane"></i><p>Travel Booking</p></div>
+  <div class="card"><i class="fas fa-sack-dollar"></i><p>My Wallet</p></div>
+  <div class="card active"><i class="fas fa-shopping-cart"></i><p>Shop</p></div>
+  <div class="card"><i class="fas fa-briefcase"></i><p>Digital Job</p></div>
+</div>
+
+<div class="shop-section">
+  <div class="shop-header">
+    <i class="fas fa-shopping-cart" style="font-size:36px;color:#ffb400"></i>
+    <div><h2>Shop<span>Buy & Sell</span></h2><p>Discover products, buy and sell with Afrishine Hub.</p></div>
+    <div style="font-size:40px">🛒</div>
+  </div>
+  <div class="buy-sell">
+    <div class="buy-box"><i class="fas fa-shopping-bag"></i><h3>Buy Products</h3><p>Find what you need</p><button class="btn-white" style="color:#0a8a42">Explore Now →</button></div>
+    <div class="sell-box"><i class="fas fa-tag"></i><h3>Sell Products</h3><p>Reach more customers</p><button class="btn-white" style="color:#0a4abf">Start Selling →</button></div>
+  </div>
+</div>
+
+<div class="together"><i class="fas fa-bullhorn" style="color:#ffb400"></i><div><h4 style="font-size:11px;color:#ffb400">Together We Grow</h4><p style="font-size:9px;opacity:.7">Buy • Sell • Support Local • Build Africa</p></div><i class="fas fa-arrow-right" style="margin-left:auto;color:#ffb400"></i></div>
+<div style="text-align:center;padding:10px;font-size:10px;opacity:.4">afrishinehub@gmail.com</div>
+
+<div class="bottom-nav">
+  <div class="nav-item active"><i class="fas fa-home"></i><p>Home</p></div>
+  <div class="nav-item"><i class="fas fa-th-large"></i><p>Apps</p></div>
+  <div class="add-btn"><i class="fas fa-plus"></i></div>
+  <div class="nav-item"><i class="fas fa-comment-dots"></i><p>Messages</p></div>
+  <div class="nav-item"><i class="fas fa-cog"></i><p>Settings</p></div>
+</div>
+
+<script>
+const Pi = window.Pi;
+if(Pi){ Pi.init({version:"2.0", sandbox:false}); }
+async function loginWithPi(){
+  try{
+    if(!Pi){ alert('Fungura muri Pi Browser'); return; }
+    const auth = await Pi.authenticate(['username','payments'], ()=>{});
+    document.querySelector('.pi-banner').innerHTML = '<div style="color:#0f0">✅ Welcome @'+auth.user.username+'</div>';
+  }catch(e){ alert('Login failed: '+e.message); }
+}
+</script>
+</body>
+</html>
