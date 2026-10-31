@@ -5,12 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080a10">
 
-<!-- AFRISHINE HUB PWA -->
-<link rel="manifest" href="./manifest.json">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23080a10'/%3E%3Ctext x='50' y='67' font-size='49' font-family='Arial' font-weight='900' font-style='italic' text-anchor='middle' fill='%23ffb91f'%3EAH%3C/text%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="./og-image.png">
-
-<!-- AFRISHINE HUB GOOGLE SEO -->
 <meta name="description" content="Afrishine Hub is an African all-in-one platform for Talent Hub, Love Connection, shopping, travel, digital jobs and online learning.">
 <meta name="keywords" content="Afrishine, Afrishine Hub, Rwanda, Pi Network, Love Hub, Kigali">
 <meta name="google-site-verification" content="h7q7UayKtmaSy3J6x4vbtNJrREPyw0O_Q7gU6-GWSKs">
@@ -18,20 +12,10 @@
 <meta name="author" content="Afrishine Hub">
 <link rel="canonical" href="https://afrishine.github.io/">
 
-<!-- WHATSAPP / FACEBOOK SOCIAL PREVIEW -->
 <meta property="og:title" content="Afrishine Hub">
 <meta property="og:description" content="Your Hub, Your Solutions. Discover talent, connect, learn, shop and explore opportunities.">
 <meta property="og:url" content="https://afrishine.github.io/">
 <meta property="og:type" content="website">
-<meta property="og:image" content="https://afrishine.github.io/og-image.png">
-<meta property="og:image:secure_url" content="https://afrishine.github.io/og-image.png">
-<meta property="og:image:type" content="image/png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Afrishine Hub">
-<meta name="twitter:description" content="Your Hub, Your Solutions. Discover talent, connect, learn, shop and explore opportunities.">
-<meta name="twitter:image" content="https://afrishine.github.io/og-image.png">
 
 <title>Afrishine Hub</title>
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
@@ -56,317 +40,200 @@ button{cursor:pointer}
 .app{max-width:980px;margin:auto;padding:12px}
 
 .pi-login{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:12px;
-  border:2px solid var(--gold);
-  border-radius:16px;
-  background:linear-gradient(100deg,#1a0b5e,#491b91);
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:12px;border:2px solid var(--gold);
+  border-radius:16px;background:linear-gradient(100deg,#1a0b5e,#491b91);
   margin-bottom:14px
 }
 .pi-info{display:flex;align-items:center;gap:10px}
 .pi-symbol{
-  width:42px;height:42px;
-  border:2px solid var(--gold);
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  font-size:25px;
-  color:var(--gold);
-  font-weight:900
+  width:42px;height:42px;border:2px solid var(--gold);
+  border-radius:50%;display:grid;place-items:center;
+  font-size:25px;color:var(--gold);font-weight:900
 }
-.pi-info small,.brand small{
-  display:block;
-  color:#c4c9d4;
-  font-size:11px
-}
+.pi-info small,.brand small{display:block;color:#c4c9d4;font-size:11px}
 .gold{
   background:linear-gradient(120deg,#ffd46d,#f2a400);
-  color:#171107;
-  border:0;
-  border-radius:22px;
-  padding:10px 15px;
-  font-weight:800
+  color:#171107;border:0;border-radius:22px;
+  padding:10px 15px;font-weight:800
 }
 header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:12px 2px 18px;
-  border-bottom:1px solid #3a2a0b
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 2px 18px;border-bottom:1px solid #3a2a0b
 }
-.brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  color:white;
-  text-decoration:none
-}
-.brand-mark{
-  font-size:30px;
-  font-weight:950;
-  font-style:italic;
-  color:var(--gold)
-}
+.brand{display:flex;align-items:center;gap:10px;color:white;text-decoration:none}
+.brand-mark{font-size:30px;font-weight:950;font-style:italic;color:var(--gold)}
 .brand strong{font-size:19px}
 .header-actions{display:flex;gap:9px}
 .round{
-  width:38px;height:38px;
-  border:1px solid var(--line);
-  border-radius:50%;
-  background:#202532;
-  color:white
+  width:38px;height:38px;border:1px solid var(--line);
+  border-radius:50%;background:#202532;color:white
 }
 .hero{padding:28px 4px 22px}
-.eyebrow{
-  font-size:10px;
-  letter-spacing:1.5px;
-  color:var(--gold);
-  font-weight:800
-}
-.hero h1{
-  font-size:clamp(28px,6vw,44px);
-  line-height:1.12;
-  margin:9px 0
-}
+.eyebrow{font-size:10px;letter-spacing:1.5px;color:var(--gold);font-weight:800}
+.hero h1{font-size:clamp(28px,6vw,44px);line-height:1.12;margin:9px 0}
 .hero h1 span{color:var(--gold)}
-.muted{
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.6;
-  max-width:680px
-}
-.actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-top:15px
-}
+.muted{color:var(--muted);font-size:13px;line-height:1.6;max-width:680px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
 .secondary{
-  background:#202634;
-  color:#fff;
-  border:1px solid #485166;
-  border-radius:22px;
-  padding:9px 14px;
-  font-weight:700
+  background:#202634;color:#fff;border:1px solid #485166;
+  border-radius:22px;padding:9px 14px;font-weight:700
 }
 h2.section-title{font-size:20px;margin:12px 0}
-.grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px
-}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .tile{
-  min-height:112px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:7px;
-  text-align:center;
-  padding:12px 5px;
-  border:1px solid #292f3b;
-  border-radius:16px;
+  min-height:112px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:7px;text-align:center;
+  padding:12px 5px;border:1px solid #292f3b;border-radius:16px;
   background:linear-gradient(160deg,#1c2029,#10131a);
-  color:white;
-  text-decoration:none
+  color:white;text-decoration:none
 }
 .tile .emoji{font-size:27px}
 .tile b{font-size:13px}
 .tile small{font-size:10px;color:var(--muted)}
 .panel{
-  margin-top:15px;
-  padding:17px;
-  border:1px solid #343b49;
-  border-radius:17px;
-  background:#11151d
+  margin-top:15px;padding:17px;border:1px solid #343b49;
+  border-radius:17px;background:#11151d
 }
 .panel h2{margin:3px 0 7px}
 .panel p{color:var(--muted);font-size:13px;line-height:1.55}
-.shop-options{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-top:13px
-}
-.shop-card{
-  padding:16px 10px;
-  text-align:center;
-  border-radius:15px
-}
+.shop-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px}
+.shop-card{padding:16px 10px;text-align:center;border-radius:15px}
 .buy{background:linear-gradient(135deg,#0dbf62,#087c40)}
 .sell{background:linear-gradient(135deg,#1675f5,#0848b4)}
 .shop-card b{display:block;margin:6px}
 .white-btn{
-  border:0;
-  border-radius:20px;
-  background:#fff;
-  padding:8px 13px;
-  font-weight:800;
-  margin-top:9px;
-  color:#17202c
+  border:0;border-radius:20px;background:#fff;padding:8px 13px;
+  font-weight:800;margin-top:9px;color:#17202c
 }
 .page{display:none;padding:23px 3px}
 .page.active{display:block}
 .page h1{font-size:29px;margin:6px 0}
 .page .panel{margin-top:13px}
 .field{
-  display:block;
-  width:100%;
-  padding:12px;
-  border:1px solid #41495a;
-  border-radius:10px;
-  background:#090c12;
-  color:white;
-  margin:10px 0
+  display:block;width:100%;padding:12px;border:1px solid #41495a;
+  border-radius:10px;background:#090c12;color:white;margin:10px 0
 }
-footer{
-  text-align:center;
-  color:#788294;
-  font-size:11px;
-  padding:25px 5px
-}
+footer{text-align:center;color:#788294;font-size:11px;padding:25px 5px}
+
 .bottom-nav{
-  position:fixed;
-  bottom:0;left:0;right:0;
-  z-index:10;
-  display:flex;
-  justify-content:center;
-  background:#0c1019;
+  position:fixed;bottom:0;left:0;right:0;z-index:10;
+  display:flex;justify-content:center;background:#0c1019;
   border-top:1px solid #303747;
   padding:8px 0 calc(8px + env(safe-area-inset-bottom))
 }
 .bottom-nav a{
-  width:min(19%,120px);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:2px;
-  color:#929aaa;
-  text-decoration:none;
-  font-size:19px
+  width:min(19%,120px);display:flex;flex-direction:column;
+  align-items:center;gap:2px;color:#929aaa;text-decoration:none;font-size:19px
 }
 .bottom-nav small{font-size:10px}
 .bottom-nav a.active{color:var(--gold)}
 .bottom-nav .add{
-  width:46px;height:46px;
-  margin:-17px 7px 0;
-  border:3px solid var(--bg);
-  border-radius:50%;
-  background:var(--gold);
-  color:#171107;
-  font-size:27px;
-  font-weight:900;
-  justify-content:center
+  width:46px;height:46px;margin:-17px 7px 0;border:3px solid var(--bg);
+  border-radius:50%;background:var(--gold);color:#171107;
+  font-size:27px;font-weight:900;justify-content:center
 }
 .notice{
-  display:none;
-  position:fixed;
-  z-index:50;
-  bottom:90px;
-  left:50%;
-  transform:translateX(-50%);
-  max-width:90%;
-  padding:11px 15px;
-  background:#2b2415;
-  border:1px solid #98752d;
-  border-radius:12px;
-  color:#ffe2a0;
-  font-size:12px
+  display:none;position:fixed;z-index:100;bottom:90px;left:50%;
+  transform:translateX(-50%);max-width:90%;padding:11px 15px;
+  background:#2b2415;border:1px solid #98752d;border-radius:12px;
+  color:#ffe2a0;font-size:12px
 }
 .menu-button{font-size:21px}
 .menu-drawer{
-  display:none;
-  position:fixed;
-  z-index:25;
-  top:0;right:0;
-  width:min(310px,86vw);
-  height:100dvh;
-  overflow-y:auto;
-  background:#111722;
-  border-left:1px solid #343b49;
-  padding:18px;
-  box-shadow:-15px 0 40px #0009
+  display:none;position:fixed;z-index:25;top:0;right:0;
+  width:min(310px,86vw);height:100dvh;overflow-y:auto;
+  background:#111722;border-left:1px solid #343b49;
+  padding:18px;box-shadow:-15px 0 40px #0009
 }
 .menu-drawer.open{display:block}
 .menu-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:16px;
-  color:var(--gold);
-  font-weight:800
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:16px;color:var(--gold);font-weight:800
 }
 .menu-drawer a{
-  display:block;
-  padding:13px 10px;
-  margin:5px 0;
-  border:1px solid #303747;
-  border-radius:10px;
-  color:white;
-  text-decoration:none;
-  background:#1a202c
+  display:block;padding:13px 10px;margin:5px 0;
+  border:1px solid #303747;border-radius:10px;color:white;
+  text-decoration:none;background:#1a202c
 }
 .menu-backdrop{
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:24;
-  background:#0009
+  display:none;position:fixed;inset:0;z-index:24;background:#0009
 }
 .menu-backdrop.open{display:block}
 .age-gate{text-align:center;padding:22px 12px}
 
-/* CREATE MENU */
+/* CREATE MENUS */
 .create-backdrop{
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:40;
-  background:#000b
+  display:none;position:fixed;inset:0;z-index:40;background:#000b
 }
 .create-backdrop.open{display:block}
 .create-menu{
-  display:none;
-  position:fixed;
-  z-index:41;
-  bottom:0;
-  left:50%;
-  transform:translateX(-50%);
-  width:min(520px,100%);
+  display:none;position:fixed;z-index:41;bottom:0;left:50%;
+  transform:translateX(-50%);width:min(520px,100%);
   padding:22px 18px calc(25px + env(safe-area-inset-bottom));
-  background:#171d29;
-  border:1px solid #424b5d;
-  border-radius:22px 22px 0 0;
-  box-shadow:0 -12px 40px #0009
+  background:#171d29;border:1px solid #424b5d;
+  border-radius:22px 22px 0 0;box-shadow:0 -12px 40px #0009
 }
 .create-menu.open{display:block}
 .create-menu-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:17px
+  display:flex;justify-content:space-between;align-items:center;margin-bottom:17px
 }
 .create-menu-head h2{font-size:19px;color:var(--gold)}
 .create-option{
-  width:100%;
-  display:flex;
-  align-items:center;
-  gap:13px;
-  padding:14px;
-  margin:9px 0;
-  border:1px solid #394355;
-  border-radius:13px;
-  background:#222a38;
-  color:white;
-  text-align:left;
-  font-weight:750
+  width:100%;display:flex;align-items:center;gap:13px;
+  padding:14px;margin:9px 0;border:1px solid #394355;
+  border-radius:13px;background:#222a38;color:white;
+  text-align:left;font-weight:750
 }
 .create-option span{font-size:25px}
 .create-option:active{background:#343f52}
 
+/* CREATOR WORKSPACE */
+.creator-backdrop{
+  display:none;position:fixed;inset:0;z-index:60;background:#000d
+}
+.creator-backdrop.open{display:block}
+.creator-workspace{
+  display:none;position:fixed;z-index:61;inset:0;
+  overflow-y:auto;background:#0d121c;padding:18px;
+  padding-bottom:35px
+}
+.creator-workspace.open{display:block}
+.creator-inner{max-width:650px;margin:0 auto}
+.creator-header{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;margin:4px 0 20px
+}
+.creator-header h2{font-size:20px;color:var(--gold)}
+.creator-close{
+  width:40px;height:40px;border-radius:50%;
+  background:#222a38;color:white;border:1px solid #465064;font-size:22px
+}
+.creator-workspace textarea{
+  width:100%;min-height:150px;resize:vertical;
+  padding:14px;border-radius:12px;border:1px solid #41495a;
+  background:#151b27;color:white;font:inherit;line-height:1.5
+}
+.preview-box{
+  display:none;margin-top:15px;padding:13px;
+  border:1px solid #394355;border-radius:14px;background:#151b27
+}
+.preview-box.show{display:block}
+.preview-box img,.preview-box video{
+  display:block;width:100%;max-height:55vh;
+  object-fit:contain;border-radius:10px;background:#05070b
+}
+.preview-text{
+  white-space:pre-wrap;overflow-wrap:anywhere;
+  line-height:1.6;margin-top:10px
+}
+.creator-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}
+.creator-hint{color:var(--muted);font-size:12px;line-height:1.5;margin-top:10px}
+.camera-video{
+  display:block;width:100%;max-height:60vh;min-height:220px;
+  object-fit:contain;background:#000;border-radius:14px
+}
+.hidden-input{display:none}
 @media(min-width:700px){
   .grid{grid-template-columns:repeat(4,1fr)}
   .hero{padding-top:40px}
@@ -384,247 +251,294 @@ footer{
 <body>
 <div class="app">
 
-  <section class="pi-login" id="piLoginArea">
-    <div class="pi-info">
-      <div class="pi-symbol">π</div>
-      <div><b>Login with Pi</b><small>Secure access to Afrishine Hub</small></div>
+<section class="pi-login" id="piLoginArea">
+  <div class="pi-info">
+    <div class="pi-symbol">π</div>
+    <div><b>Login with Pi</b><small>Secure access to Afrishine Hub</small></div>
+  </div>
+  <button class="gold" id="piLoginBtn">Login with Pi →</button>
+</section>
+
+<header>
+  <a class="brand" href="#home" data-page="home">
+    <b class="brand-mark">AH</b>
+    <span>
+      <strong><span style="color:var(--gold)">Afrishine</span> Hub</strong>
+      <small>Your Hub, Your Solutions</small>
+    </span>
+  </a>
+  <div class="header-actions">
+    <button class="round menu-button" onclick="openMenu()" aria-label="Open menu">☰</button>
+    <button class="round" onclick="showPage('inbox')" aria-label="Inbox">✉</button>
+    <button class="round" onclick="showPage('profile')" aria-label="Profile">👤</button>
+  </div>
+</header>
+
+<main>
+
+<section class="page active" id="home">
+  <div class="hero">
+    <div class="eyebrow">YOUR COMMUNITY · YOUR OPPORTUNITIES</div>
+    <h1>Showcase Your Talent.<br><span>Inspire The World.</span></h1>
+    <p class="muted">Discover talent, learn new skills, shop, travel and connect with opportunities — all in one place.</p>
+    <div class="actions">
+      <button class="gold" onclick="showPage('talent')">Explore Talent Hub</button>
+      <button class="secondary" onclick="showPage('academy')">Visit Academy</button>
     </div>
-    <button class="gold" id="piLoginBtn">Login with Pi →</button>
-  </section>
-
-  <header>
-    <a class="brand" href="#home" data-page="home">
-      <b class="brand-mark">AH</b>
-      <span>
-        <strong><span style="color:var(--gold)">Afrishine</span> Hub</strong>
-        <small>Your Hub, Your Solutions</small>
-      </span>
-    </a>
-    <div class="header-actions">
-      <button class="round menu-button" onclick="openMenu()" aria-label="Open menu">☰</button>
-      <button class="round" onclick="showPage('inbox')" aria-label="Inbox">✉</button>
-      <button class="round" onclick="showPage('profile')" aria-label="Profile">👤</button>
-    </div>
-  </header>
-
-  <main>
-
-    <section class="page active" id="home">
-      <div class="hero">
-        <div class="eyebrow">YOUR COMMUNITY · YOUR OPPORTUNITIES</div>
-        <h1>Showcase Your Talent.<br><span>Inspire The World.</span></h1>
-        <p class="muted">Discover talent, learn new skills, shop, travel and connect with opportunities — all in one place.</p>
-        <div class="actions">
-          <button class="gold" onclick="showPage('talent')">Explore Talent Hub</button>
-          <button class="secondary" onclick="showPage('academy')">Visit Academy</button>
-        </div>
-      </div>
-
-      <h2 class="section-title">Explore Afrishine Hub</h2>
-      <div class="grid">
-        <a class="tile" href="#talent" data-page="talent"><span class="emoji">🎬</span><b>Talent Hub</b><small>Videos, photos and posts</small></a>
-        <a class="tile" href="#love" data-page="love"><span class="emoji">❤️</span><b>Love Connection</b><small>Connect with respect</small></a>
-        <a class="tile" href="#travel" data-page="travel"><span class="emoji">✈️</span><b>Travel Booking</b><small>Travel services</small></a>
-        <a class="tile" href="#academy" data-page="academy"><span class="emoji">🎓</span><b>Afrishine Academy</b><small>Learn and grow</small></a>
-        <a class="tile" href="#jobs" data-page="jobs"><span class="emoji">💼</span><b>Digital Job</b><small>Find opportunities</small></a>
-        <a class="tile" href="#shop" data-page="shop"><span class="emoji">🛍️</span><b>Shop</b><small>Buy and sell</small></a>
-        <a class="tile" href="#wallet" data-page="wallet"><span class="emoji">👛</span><b>My Wallet</b><small>AST and activity</small></a>
-        <a class="tile" href="#inbox" data-page="inbox"><span class="emoji">💬</span><b>Inbox</b><small>Messages</small></a>
-        <a class="tile" href="#profile" data-page="profile"><span class="emoji">👤</span><b>Profile</b><small>Your account</small></a>
-      </div>
-
-      <section class="panel">
-        <div class="eyebrow">AFRISHINE TOKEN</div>
-        <h2>AST Wallet</h2>
-        <p>Your AST balance and transaction history will appear here after secure wallet and backend integration.</p>
-        <div class="actions">
-          <button class="secondary" onclick="showPage('wallet')">Open My Wallet →</button>
-        </div>
-      </section>
-      <footer>© 2026 Afrishine Hub · Built in Kigali, Rwanda 🇷🇼</footer>
-    </section>
-
-    <!-- TALENT HUB -->
-    <section class="page" id="talent">
-      <div class="eyebrow">CREATE · SHARE · CONNECT</div>
-      <h1>Talent Hub</h1>
-      <p class="muted">Showcase your talent and discover creators in the community.</p>
-
-      <section class="panel">
-        <h2>Share your talent</h2>
-        <p>Create posts, share photos and videos, or connect with your audience.</p>
-        <div class="actions">
-          <button class="gold" onclick="openCreateMenu()">＋ Create</button>
-        </div>
-      </section>
-
-      <section class="panel">
-        <h2>Community Feed</h2>
-        <p>Creator posts and support activity will appear here after database integration.</p>
-      </section>
-    </section>
-
-    <!-- LOVE CONNECTION -->
-    <section class="page" id="love">
-      <div class="eyebrow">MEET · CONNECT · RESPECT</div>
-      <h1>Love Connection ❤️</h1>
-      <p class="muted">A respectful space for adults to connect and get to know one another.</p>
-
-      <section class="panel age-gate" id="loveAgeGate">
-        <h2>Age Confirmation</h2>
-        <p>Love Connection is intended for adults aged 18 and above. Confirm that you are at least 18 years old to continue.</p>
-        <div class="actions" style="justify-content:center">
-          <button class="gold" onclick="confirmLoveAge()">I am 18 or older</button>
-          <button class="secondary" onclick="showPage('home')">Go Back</button>
-        </div>
-      </section>
-
-      <section class="panel" id="loveContent" style="display:none">
-        <h2>Welcome to Love Connection</h2>
-        <p>Connect respectfully. Be honest, protect your privacy, and take time to know people before sharing personal information.</p>
-        <div class="actions">
-          <button class="gold" onclick="notice('Love Connection profiles will be available after secure account and database integration.')">Explore Connections</button>
-          <button class="secondary" onclick="notice('Creating a Love Connection profile will be enabled after backend integration.')">Create Profile</button>
-        </div>
-      </section>
-    </section>
-
-    <!-- TRAVEL -->
-    <section class="page" id="travel">
-      <div class="eyebrow">PLAN YOUR JOURNEY</div>
-      <h1>Travel Booking</h1>
-      <p class="muted">Find travel services and booking opportunities.</p>
-      <section class="panel">
-        <h2>Search Travel</h2>
-        <input class="field" id="destination" placeholder="Enter destination">
-        <button class="gold" onclick="notice('Travel booking provider must be connected before reservations can be made.')">Search Trips</button>
-      </section>
-    </section>
-
-    <!-- ACADEMY -->
-    <section class="page" id="academy">
-      <div class="eyebrow">LEARN · PRACTICE · GROW</div>
-      <h1>Afrishine Academy</h1>
-      <p class="muted">A learning space for digital skills, creativity, business and financial education.</p>
-      <section class="panel">
-        <h2>Courses & Training</h2>
-        <p>Course catalogue, lessons, learning progress and certificates will be connected here.</p>
-        <button class="gold" onclick="notice('Course catalogue is not connected yet.')">Explore Courses</button>
-      </section>
-    </section>
-
-    <!-- DIGITAL JOB -->
-    <section class="page" id="jobs">
-      <div class="eyebrow">WORK · CONNECT · GROW</div>
-      <h1>Digital Job</h1>
-      <p class="muted">Discover digital work and connect with employers.</p>
-      <section class="panel">
-        <h2>Find Opportunities</h2>
-        <p>Job listings, applications and employer profiles will be available after backend integration.</p>
-        <div class="actions">
-          <button class="gold" onclick="notice('Job listings are not connected yet.')">Find Jobs</button>
-          <button class="secondary" onclick="notice('Employer job posting is not connected yet.')">Post a Job</button>
-        </div>
-      </section>
-    </section>
-
-    <!-- SHOP -->
-    <section class="page" id="shop">
-      <div class="eyebrow">BUY · SELL · SUPPORT LOCAL</div>
-      <h1>Shop — Buy & Sell</h1>
-      <p class="muted">Discover products and reach customers through Afrishine Hub.</p>
-      <div class="shop-options">
-        <div class="shop-card buy">
-          <div style="font-size:30px">🛍️</div>
-          <b>Buy Products</b>
-          <p>Find what you need</p>
-          <button class="white-btn" onclick="notice('Product catalogue and checkout need backend integration.')">Explore Now →</button>
-        </div>
-        <div class="shop-card sell">
-          <div style="font-size:30px">🏷️</div>
-          <b>Sell Products</b>
-          <p>Reach more customers</p>
-          <button class="white-btn" onclick="notice('Seller registration and product listing need backend integration.')">Start Selling →</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- WALLET -->
-    <section class="page" id="wallet">
-      <div class="eyebrow">AFRISHINE TOKEN</div>
-      <h1>My Wallet</h1>
-      <p class="muted">AST wallet, transaction activity and supported payment services.</p>
-      <section class="panel">
-        <div class="eyebrow">AVAILABLE BALANCE</div>
-        <h2>— AST</h2>
-        <p>Your real balance will be shown after secure wallet integration. No token balance or conversion is simulated.</p>
-      </section>
-      <section class="panel">
-        <h2>Wallet Services</h2>
-        <p>Send AST · Receive AST · Gift History · Transaction History · AST ↔ Pi</p>
-        <div class="actions">
-          <button class="gold" onclick="notice('AST transfers need a secure wallet backend.')">Send AST</button>
-          <button class="secondary" onclick="notice('AST to Pi conversion is not enabled. It needs an approved, secure exchange mechanism.')">AST ↔ Pi</button>
-          <button class="secondary" onclick="notice('Transaction history will appear after wallet integration.')">History</button>
-        </div>
-      </section>
-    </section>
-
-    <!-- INBOX -->
-    <section class="page" id="inbox">
-      <div class="eyebrow">STAY CONNECTED</div>
-      <h1>Inbox</h1>
-      <p class="muted">Messages, updates and creator conversations.</p>
-      <section class="panel">
-        <h2>Your Messages</h2>
-        <p>Your conversations will appear here after secure messaging and database services are connected.</p>
-      </section>
-    </section>
-
-    <!-- PROFILE -->
-    <section class="page" id="profile">
-      <div class="eyebrow">YOUR AFRISHINE ACCOUNT</div>
-      <h1>My Profile</h1>
-      <p class="muted">Manage your account and public creator profile.</p>
-      <section class="panel">
-        <h2>Account Details</h2>
-        <p id="profileStatus">Sign in with Pi to display your verified Pi username here.</p>
-        <button class="secondary" onclick="notice('Profile editing will be connected to your account database.')">Edit Profile</button>
-      </section>
-    </section>
-
-  </main>
-</div>
-
-<!-- CREATE MENU BACKDROP AND OPTIONS -->
-<div class="create-backdrop" id="createBackdrop" onclick="closeCreateMenu()"></div>
-
-<div class="create-menu" id="createMenu" role="dialog" aria-label="Create menu">
-  <div class="create-menu-head">
-    <h2>Create on Afrishine Hub</h2>
-    <button class="round" onclick="closeCreateMenu()" aria-label="Close create menu">✕</button>
   </div>
 
-  <button class="create-option" onclick="createAction('post')">
-    <span>📝</span> Create Post
-  </button>
+  <h2 class="section-title">Explore Afrishine Hub</h2>
+  <div class="grid">
+    <a class="tile" href="#talent" data-page="talent"><span class="emoji">🎬</span><b>Talent Hub</b><small>Videos, photos and posts</small></a>
+    <a class="tile" href="#love" data-page="love"><span class="emoji">❤️</span><b>Love Connection</b><small>Connect with respect</small></a>
+    <a class="tile" href="#travel" data-page="travel"><span class="emoji">✈️</span><b>Travel Booking</b><small>Travel services</small></a>
+    <a class="tile" href="#academy" data-page="academy"><span class="emoji">🎓</span><b>Afrishine Academy</b><small>Learn and grow</small></a>
+    <a class="tile" href="#jobs" data-page="jobs"><span class="emoji">💼</span><b>Digital Job</b><small>Find opportunities</small></a>
+    <a class="tile" href="#shop" data-page="shop"><span class="emoji">🛍️</span><b>Shop</b><small>Buy and sell</small></a>
+    <a class="tile" href="#wallet" data-page="wallet"><span class="emoji">👛</span><b>My Wallet</b><small>AST and activity</small></a>
+    <a class="tile" href="#inbox" data-page="inbox"><span class="emoji">💬</span><b>Inbox</b><small>Messages</small></a>
+    <a class="tile" href="#profile" data-page="profile"><span class="emoji">👤</span><b>Profile</b><small>Your account</small></a>
+  </div>
 
-  <button class="create-option" onclick="createAction('photo')">
-    <span>🖼️</span> Upload Photo
-  </button>
+  <section class="panel">
+    <div class="eyebrow">AFRISHINE TOKEN</div>
+    <h2>AST Wallet</h2>
+    <p>Your AST balance and transaction history will appear here after secure wallet and backend integration.</p>
+    <div class="actions">
+      <button class="secondary" onclick="showPage('wallet')">Open My Wallet →</button>
+    </div>
+  </section>
+  <footer>© 2026 Afrishine Hub · Built in Kigali, Rwanda 🇷🇼</footer>
+</section>
 
-  <button class="create-option" onclick="createAction('video')">
-    <span>🎬</span> Upload Video
-  </button>
+<!-- TALENT HUB -->
+<section class="page" id="talent">
+  <div class="eyebrow">CREATE · SHARE · CONNECT</div>
+  <h1>Talent Hub</h1>
+  <p class="muted">Showcase your talent and discover creators in the community.</p>
 
-  <button class="create-option" onclick="createAction('live')">
-    <span>🔴</span> Go Live
-  </button>
+  <section class="panel">
+    <h2>Share your talent</h2>
+    <p>Create posts, share photos and videos, or connect with your audience.</p>
+    <div class="actions">
+      <button class="gold" onclick="openCreateMenu('talent')">＋ Create on Talent Hub</button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Community Feed</h2>
+    <p>Creator posts and support activity will appear here after database integration.</p>
+  </section>
+</section>
+
+<!-- LOVE CONNECTION -->
+<section class="page" id="love">
+  <div class="eyebrow">MEET · CONNECT · RESPECT</div>
+  <h1>Love Connection ❤️</h1>
+  <p class="muted">A respectful space for adults to connect and get to know one another.</p>
+
+  <section class="panel age-gate" id="loveAgeGate">
+    <h2>Age Confirmation</h2>
+    <p>Love Connection is intended for adults aged 18 and above. Confirm that you are at least 18 years old to continue.</p>
+    <div class="actions" style="justify-content:center">
+      <button class="gold" onclick="confirmLoveAge()">I am 18 or older</button>
+      <button class="secondary" onclick="showPage('home')">Go Back</button>
+    </div>
+  </section>
+
+  <section class="panel" id="loveContent" style="display:none">
+    <h2>Welcome to Love Connection</h2>
+    <p>Connect respectfully. Be honest, protect your privacy, and take time to know people before sharing personal information.</p>
+    <div class="actions">
+      <button class="gold" onclick="notice('Love Connection profiles will be available after secure account and database integration.')">Explore Connections</button>
+      <button class="secondary" onclick="notice('Creating a Love Connection profile will be enabled after backend integration.')">Create Profile</button>
+    </div>
+  </section>
+</section>
+
+<!-- TRAVEL -->
+<section class="page" id="travel">
+  <div class="eyebrow">PLAN YOUR JOURNEY</div>
+  <h1>Travel Booking</h1>
+  <p class="muted">Find travel services and booking opportunities.</p>
+  <section class="panel">
+    <h2>Search Travel</h2>
+    <input class="field" id="destination" placeholder="Enter destination">
+    <button class="gold" onclick="notice('Travel booking provider must be connected before reservations can be made.')">Search Trips</button>
+  </section>
+</section>
+
+<!-- ACADEMY -->
+<section class="page" id="academy">
+  <div class="eyebrow">LEARN · PRACTICE · GROW</div>
+  <h1>Afrishine Academy</h1>
+  <p class="muted">A learning space for digital skills, creativity, business and financial education.</p>
+  <section class="panel">
+    <h2>Courses & Training</h2>
+    <p>Course catalogue, lessons, learning progress and certificates will be connected here.</p>
+    <button class="gold" onclick="notice('Course catalogue is not connected yet.')">Explore Courses</button>
+  </section>
+</section>
+
+<!-- DIGITAL JOB -->
+<section class="page" id="jobs">
+  <div class="eyebrow">WORK · CONNECT · GROW</div>
+  <h1>Digital Job</h1>
+  <p class="muted">Discover digital work and connect with employers.</p>
+  <section class="panel">
+    <h2>Find Opportunities</h2>
+    <p>Job listings, applications and employer profiles will be available after backend integration.</p>
+    <div class="actions">
+      <button class="gold" onclick="notice('Job listings are not connected yet.')">Find Jobs</button>
+      <button class="secondary" onclick="notice('Employer job posting is not connected yet.')">Post a Job</button>
+    </div>
+  </section>
+</section>
+
+<!-- SHOP -->
+<section class="page" id="shop">
+  <div class="eyebrow">BUY · SELL · SUPPORT LOCAL</div>
+  <h1>Shop — Buy & Sell</h1>
+  <p class="muted">Discover products and reach customers through Afrishine Hub.</p>
+  <div class="shop-options">
+    <div class="shop-card buy">
+      <div style="font-size:30px">🛍️</div>
+      <b>Buy Products</b>
+      <p>Find what you need</p>
+      <button class="white-btn" onclick="notice('Product catalogue and checkout need backend integration.')">Explore Now →</button>
+    </div>
+    <div class="shop-card sell">
+      <div style="font-size:30px">🏷️</div>
+      <b>Sell Products</b>
+      <p>Reach more customers</p>
+      <button class="white-btn" onclick="notice('Seller registration and product listing need backend integration.')">Start Selling →</button>
+    </div>
+  </div>
+</section>
+
+<!-- WALLET -->
+<section class="page" id="wallet">
+  <div class="eyebrow">AFRISHINE TOKEN</div>
+  <h1>My Wallet</h1>
+  <p class="muted">AST wallet, transaction activity and supported payment services.</p>
+  <section class="panel">
+    <div class="eyebrow">AVAILABLE BALANCE</div>
+    <h2>— AST</h2>
+    <p>Your real balance will be shown after secure wallet integration. No token balance or conversion is simulated.</p>
+  </section>
+  <section class="panel">
+    <h2>Wallet Services</h2>
+    <p>Send AST · Receive AST · Gift History · Transaction History · AST ↔ Pi</p>
+    <div class="actions">
+      <button class="gold" onclick="notice('AST transfers need a secure wallet backend.')">Send AST</button>
+      <button class="secondary" onclick="notice('AST to Pi conversion is not enabled. It needs an approved, secure exchange mechanism.')">AST ↔ Pi</button>
+      <button class="secondary" onclick="notice('Transaction history will appear after wallet integration.')">History</button>
+    </div>
+  </section>
+</section>
+
+<!-- INBOX -->
+<section class="page" id="inbox">
+  <div class="eyebrow">STAY CONNECTED</div>
+  <h1>Inbox</h1>
+  <p class="muted">Messages, updates and creator conversations.</p>
+  <section class="panel">
+    <h2>Your Messages</h2>
+    <p>Your conversations will appear here after secure messaging and database services are connected.</p>
+  </section>
+</section>
+
+<!-- PROFILE -->
+<section class="page" id="profile">
+  <div class="eyebrow">YOUR AFRISHINE ACCOUNT</div>
+  <h1>My Profile</h1>
+  <p class="muted">Manage your account and public creator profile.</p>
+  <section class="panel">
+    <h2>Account Details</h2>
+    <p id="profileStatus">Sign in with Pi to display your verified Pi username here.</p>
+    <button class="secondary" onclick="notice('Profile editing will be connected to your account database.')">Edit Profile</button>
+  </section>
+</section>
+
+</main>
 </div>
+
+<!-- CREATE MENU -->
+<div class="create-backdrop" id="createBackdrop" onclick="closeCreateMenu()"></div>
+<div class="create-menu" id="createMenu" role="dialog" aria-label="Create menu">
+  <div class="create-menu-head">
+    <h2 id="createMenuTitle">Create on Afrishine Hub</h2>
+    <button class="round" onclick="closeCreateMenu()" aria-label="Close create menu">✕</button>
+  </div>
+  <button class="create-option" onclick="createAction('post')"><span>📝</span> Create Post</button>
+  <button class="create-option" onclick="createAction('photo')"><span>🖼️</span> Upload Photo</button>
+  <button class="create-option" onclick="createAction('video')"><span>🎬</span> Upload Video</button>
+  <button class="create-option" onclick="createAction('live')"><span>🔴</span> Go Live</button>
+</div>
+
+<!-- CREATOR WORKSPACE -->
+<div class="creator-backdrop" id="creatorBackdrop" onclick="closeCreator()"></div>
+<section class="creator-workspace" id="creatorWorkspace" role="dialog" aria-modal="true">
+  <div class="creator-inner">
+    <div class="creator-header">
+      <h2 id="creatorTitle">Create Post</h2>
+      <button class="creator-close" onclick="closeCreator()" aria-label="Close">✕</button>
+    </div>
+
+    <div id="postEditor" style="display:none">
+      <textarea id="postText" placeholder="What would you like to share with the Afrishine Hub community?"></textarea>
+      <div class="creator-actions">
+        <button class="gold" onclick="previewPost()">Preview Post</button>
+      </div>
+      <div class="preview-box" id="postPreview">
+        <b>Post Preview</b>
+        <div class="preview-text" id="postPreviewText"></div>
+        <p class="creator-hint">This is a local preview. It has not been published to the community.</p>
+        <div class="creator-actions">
+          <button class="gold" onclick="publishNotice()">Post</button>
+          <button class="secondary" onclick="editPost()">Edit</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="mediaEditor" style="display:none">
+      <p class="creator-hint" id="mediaInstructions">Choose a file from your phone.</p>
+      <input class="hidden-input" type="file" id="photoInput" accept="image/*">
+      <input class="hidden-input" type="file" id="videoInput" accept="video/*">
+      <button class="gold" id="chooseMediaButton" onclick="chooseMedia()">Choose from Gallery</button>
+      <div class="preview-box" id="mediaPreview">
+        <b id="mediaPreviewTitle">Preview</b>
+        <img id="photoPreview" alt="Selected photo preview" style="display:none">
+        <video id="videoPreview" controls playsinline style="display:none"></video>
+        <p class="creator-hint">This file is only previewed on your device. It has not been uploaded.</p>
+        <div class="creator-actions">
+          <button class="gold" onclick="publishNotice()">Post</button>
+          <button class="secondary" onclick="chooseMedia()">Choose Another</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="liveEditor" style="display:none">
+      <p class="creator-hint">Allow camera and microphone access when your phone asks. Your camera preview will appear below.</p>
+      <video id="liveVideo" class="camera-video" autoplay muted playsinline></video>
+      <div class="creator-actions">
+        <button class="gold" id="cameraButton" onclick="startCamera()">Start Camera Preview</button>
+        <button class="secondary" onclick="switchCamera()">Switch Camera</button>
+        <button class="secondary" onclick="stopCamera()">Stop Camera</button>
+      </div>
+      <div class="panel">
+        <h2>Live Streaming</h2>
+        <p id="liveStatus">Camera preview is not connected to a public live broadcast.</p>
+        <div class="creator-actions">
+          <button class="gold" onclick="liveBroadcastNotice()">Start Live</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- MAIN MENU -->
 <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenu()"></div>
-
 <aside class="menu-drawer" id="menuDrawer" aria-label="Main menu">
   <div class="menu-head">
     <span>AFRISHINE HUB MENU</span>
@@ -646,7 +560,7 @@ footer{
   <a href="#home" data-page="home" class="active">⌂<small>Home</small></a>
   <a href="#talent" data-page="talent">▶<small>Talent</small></a>
   <a href="#create" class="add" aria-label="Create"
-     onclick="openCreateMenu();return false;">＋</a>
+     onclick="openCreateMenu('hub');return false;">＋</a>
   <a href="#inbox" data-page="inbox">✉<small>Inbox</small></a>
   <a href="#profile" data-page="profile">☺<small>Profile</small></a>
 </nav>
@@ -658,17 +572,13 @@ function showPage(id){
   document.querySelectorAll('.page').forEach(p=>{
     p.classList.toggle('active',p.id===id);
   });
-
   document.querySelectorAll('[data-page]').forEach(a=>{
     a.classList.toggle('active',a.dataset.page===id);
   });
-
-  if(location.hash!=='#'+id){
-    history.replaceState(null,'','#'+id);
-  }
-
+  if(location.hash!=='#'+id)history.replaceState(null,'','#'+id);
   closeMenu();
   closeCreateMenu();
+  closeCreator();
   window.scrollTo({top:0,behavior:'instant'});
 }
 
@@ -683,55 +593,220 @@ function openMenu(){
   document.getElementById('menuDrawer').classList.add('open');
   document.getElementById('menuBackdrop').classList.add('open');
 }
-
 function closeMenu(){
-  const drawer=document.getElementById('menuDrawer');
-  const backdrop=document.getElementById('menuBackdrop');
-
-  if(drawer)drawer.classList.remove('open');
-  if(backdrop)backdrop.classList.remove('open');
+  document.getElementById('menuDrawer').classList.remove('open');
+  document.getElementById('menuBackdrop').classList.remove('open');
 }
 
-/* CREATE MENU FUNCTIONS */
-function openCreateMenu(){
+/* CREATE MENU */
+let createSource='hub';
+
+function openCreateMenu(source='hub'){
+  createSource=source;
   closeMenu();
+  document.getElementById('createMenuTitle').textContent =
+    source==='talent' ? 'Create on Talent Hub' : 'Create on Afrishine Hub';
   document.getElementById('createMenu').classList.add('open');
   document.getElementById('createBackdrop').classList.add('open');
 }
-
 function closeCreateMenu(){
-  const menu=document.getElementById('createMenu');
-  const backdrop=document.getElementById('createBackdrop');
-
-  if(menu)menu.classList.remove('open');
-  if(backdrop)backdrop.classList.remove('open');
+  document.getElementById('createMenu').classList.remove('open');
+  document.getElementById('createBackdrop').classList.remove('open');
 }
 
 function createAction(type){
   closeCreateMenu();
+  openCreator(type);
+}
 
-  const messages={
-    post:'Create Post will be enabled after database integration.',
-    photo:'Photo upload will be enabled after media storage is connected.',
-    video:'Video upload will be enabled after media storage is connected.',
-    live:'Go Live will be enabled after live streaming integration.'
+/* CREATOR WORKSPACE */
+let selectedMediaUrl=null;
+let cameraStream=null;
+let cameraFacing='user';
+
+function openCreator(type){
+  closeCreateMenu();
+  closeCreator(false);
+
+  document.getElementById('postEditor').style.display='none';
+  document.getElementById('mediaEditor').style.display='none';
+  document.getElementById('liveEditor').style.display='none';
+
+  const titles={
+    post:'Create Post',
+    photo:'Upload Photo',
+    video:'Upload Video',
+    live:'Go Live'
   };
+  document.getElementById('creatorTitle').textContent=titles[type]||'Create';
 
-  if(messages[type]){
-    notice(messages[type]);
+  if(type==='post'){
+    document.getElementById('postEditor').style.display='block';
+    document.getElementById('postPreview').classList.remove('show');
   }
+  if(type==='photo'||type==='video'){
+    document.getElementById('mediaEditor').style.display='block';
+    document.getElementById('mediaInstructions').textContent =
+      type==='photo' ? 'Choose a photo from your phone gallery.' : 'Choose a video from your phone gallery.';
+    document.getElementById('chooseMediaButton').textContent =
+      type==='photo' ? 'Choose Photo from Gallery' : 'Choose Video from Gallery';
+    document.getElementById('photoInput').value='';
+    document.getElementById('videoInput').value='';
+    document.getElementById('mediaPreview').classList.remove('show');
+    document.getElementById('photoPreview').style.display='none';
+    document.getElementById('videoPreview').style.display='none';
+    document.getElementById('photoInput').dataset.active = type==='photo' ? 'yes' : 'no';
+    document.getElementById('videoInput').dataset.active = type==='video' ? 'yes' : 'no';
+  }
+  if(type==='live'){
+    document.getElementById('liveEditor').style.display='block';
+    document.getElementById('liveStatus').textContent='Camera preview is not connected to a public live broadcast.';
+  }
+
+  document.getElementById('creatorBackdrop').classList.add('open');
+  document.getElementById('creatorWorkspace').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeCreator(reset=true){
+  const workspace=document.getElementById('creatorWorkspace');
+  const backdrop=document.getElementById('creatorBackdrop');
+  if(workspace)workspace.classList.remove('open');
+  if(backdrop)backdrop.classList.remove('open');
+  document.body.style.overflow='';
+  stopCamera();
+  if(reset && selectedMediaUrl){
+    URL.revokeObjectURL(selectedMediaUrl);
+    selectedMediaUrl=null;
+  }
+}
+
+function previewPost(){
+  const text=document.getElementById('postText').value.trim();
+  if(!text){
+    notice('Please write something before previewing your post.');
+    return;
+  }
+  document.getElementById('postPreviewText').textContent=text;
+  document.getElementById('postPreview').classList.add('show');
+}
+
+function editPost(){
+  document.getElementById('postPreview').classList.remove('show');
+  document.getElementById('postText').focus();
+}
+
+function chooseMedia(){
+  const photo=document.getElementById('photoInput');
+  const video=document.getElementById('videoInput');
+  if(photo.dataset.active==='yes')photo.click();
+  else if(video.dataset.active==='yes')video.click();
+}
+
+document.getElementById('photoInput').addEventListener('change',function(){
+  const file=this.files && this.files[0];
+  if(!file)return;
+  if(!file.type.startsWith('image/')){
+    notice('Please select a valid image.');
+    return;
+  }
+  showMediaPreview(file,'photo');
+});
+
+document.getElementById('videoInput').addEventListener('change',function(){
+  const file=this.files && this.files[0];
+  if(!file)return;
+  if(!file.type.startsWith('video/')){
+    notice('Please select a valid video.');
+    return;
+  }
+  showMediaPreview(file,'video');
+});
+
+function showMediaPreview(file,type){
+  if(selectedMediaUrl)URL.revokeObjectURL(selectedMediaUrl);
+  selectedMediaUrl=URL.createObjectURL(file);
+
+  const photo=document.getElementById('photoPreview');
+  const video=document.getElementById('videoPreview');
+
+  photo.style.display='none';
+  video.style.display='none';
+  video.pause();
+  video.removeAttribute('src');
+
+  if(type==='photo'){
+    photo.src=selectedMediaUrl;
+    photo.style.display='block';
+    document.getElementById('mediaPreviewTitle').textContent='Photo Preview';
+  }else{
+    video.src=selectedMediaUrl;
+    video.style.display='block';
+    document.getElementById('mediaPreviewTitle').textContent='Video Preview';
+  }
+  document.getElementById('mediaPreview').classList.add('show');
+}
+
+function publishNotice(){
+  notice('Preview ready. Publishing to the Afrishine Hub community requires database and media storage integration.');
+}
+
+/* CAMERA PREVIEW */
+async function startCamera(){
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    notice('Camera access is not supported here. Open the site in a supported browser over HTTPS.');
+    return;
+  }
+  stopCamera();
+
+  try{
+    cameraStream=await navigator.mediaDevices.getUserMedia({
+      video:{facingMode:cameraFacing},
+      audio:true
+    });
+    const video=document.getElementById('liveVideo');
+    video.srcObject=cameraStream;
+    await video.play();
+    document.getElementById('liveStatus').textContent='Camera preview is active on this device. Public live broadcasting is not connected yet.';
+    document.getElementById('cameraButton').textContent='Restart Camera Preview';
+  }catch(error){
+    console.error('Camera access error:',error);
+    document.getElementById('liveStatus').textContent='Camera or microphone access was not granted.';
+    notice('Allow camera and microphone permissions, then try again.');
+  }
+}
+
+async function switchCamera(){
+  cameraFacing=cameraFacing==='user'?'environment':'user';
+  if(cameraStream)await startCamera();
+  else notice('Tap Start Camera Preview first.');
+}
+
+function stopCamera(){
+  if(cameraStream){
+    cameraStream.getTracks().forEach(track=>track.stop());
+    cameraStream=null;
+  }
+  const video=document.getElementById('liveVideo');
+  if(video)video.srcObject=null;
+  const button=document.getElementById('cameraButton');
+  if(button)button.textContent='Start Camera Preview';
+}
+
+function liveBroadcastNotice(){
+  if(!cameraStream){
+    notice('Start Camera Preview first. Public live broadcasting will be connected later.');
+    return;
+  }
+  notice('Camera preview is working. Public live streaming still needs a streaming service.');
 }
 
 function notice(message){
   const el=document.getElementById('notice');
   el.textContent=message;
   el.style.display='block';
-
   clearTimeout(window.ahNoticeTimer);
-
-  window.ahNoticeTimer=setTimeout(()=>{
-    el.style.display='none';
-  },3500);
+  window.ahNoticeTimer=setTimeout(()=>{el.style.display='none'},3500);
 }
 
 function confirmLoveAge(){
@@ -740,12 +815,9 @@ function confirmLoveAge(){
 }
 
 const firstPage=location.hash.replace('#','');
+if(document.getElementById(firstPage))showPage(firstPage);
 
-if(document.getElementById(firstPage)){
-  showPage(firstPage);
-}
-
-/* PI LOGIN - PRESERVED */
+/* PI LOGIN - PRESERVED AS PROVIDED */
 (async function setupPi(){
   const btn=document.getElementById('piLoginBtn');
 
