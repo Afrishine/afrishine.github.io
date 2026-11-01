@@ -1,0 +1,117 @@
+
+<section class="page-section wallet-page">
+
+  <div class="welcome-banner">
+    <span class="eyebrow">AFRISHINE HUB WALLET</span>
+    <h1>My Wallet</h1>
+    <p>
+      Manage your AST activities and access
+      supported Pi ecosystem features.
+    </p>
+  </div>
+
+  <section class="section-block">
+    <div class="section-heading">
+      <h2>My Assets</h2>
+      <p>Your wallet balances will appear here.</p>
+    </div>
+
+    <div class="module-grid">
+
+      <div class="module-card">
+        <span class="module-icon">🟣</span>
+        <h3>Pi Network</h3>
+        <p>Pi balance</p>
+        <strong id="piBalance">-- Pi</strong>
+        <p>Connect your Pi account to access supported features.</p>
+      </div>
+
+      <div class="module-card">
+        <span class="module-icon">🟡</span>
+        <h3>AST Token</h3>
+        <p>AST balance</p>
+        <strong id="astBalance">-- AST</strong>
+        <p>Your AST balance will appear when the wallet system is connected.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section-block">
+    <div class="section-heading">
+      <h2>Wallet Services</h2>
+      <p>Wallet features planned for Afrishine Hub.</p>
+    </div>
+
+    <div class="module-grid">
+
+      <div class="module-card">
+        <span class="module-icon">📥</span>
+        <h3>Receive</h3>
+        <p>Receive supported assets securely.</p>
+        <button class="btn btn-outline"
+          data-auth-required="wallet-receive">
+          Receive
+        </button>
+      </div>
+
+      <div class="module-card">
+        <span class="module-icon">📤</span>
+        <h3>Send</h3>
+        <p>Send supported assets to eligible accounts.</p>
+        <button class="btn btn-outline"
+          data-auth-required="wallet-send">
+          Send
+        </button>
+      </div>
+
+      <div class="module-card">
+        <span class="module-icon">🔄</span>
+        <h3>AST ↔ Pi</h3>
+        <p>Access future AST and Pi conversion features.</p>
+        <button class="btn btn-outline"
+          data-auth-required="ast-pi-conversion">
+          Explore Conversion
+        </button>
+      </div>
+
+      <div class="module-card">
+        <span class="module-icon">📋</span>
+        <h3>Transactions</h3>
+        <p>Review your wallet activity and transaction history.</p>
+        <button class="btn btn-outline"
+          data-auth-required="wallet-history">
+          View History
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section-block">
+    <div class="community-card">
+      <span class="module-icon">🔐</span>
+      <h2>Wallet Security</h2>
+      <p>
+        Your wallet activities must use secure authentication,
+        verified transactions and protected backend services.
+        Never share your wallet passphrase or private keys.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-block">
+    <div class="section-heading">
+      <h2>Recent Transactions</h2>
+    </div>
+
+    <div id="walletTransactions" class="feed-container">
+      <div class="empty-state">
+        <span>📊</span>
+        <h3>No transactions to display</h3>
+        <p>Your verified transaction history will appear here.</p>
+      </div>
+    </div>
+  </section>
+
+</section>
