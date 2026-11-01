@@ -1,0 +1,500 @@
+/* ==================================================
+   AFRISHINE HUB — VIDEO MANAGEMENT
+   Public Videos & Private Videos
+   Your Hub, Your Solutions
+   ================================================== */
+
+import {
+  ref,
+  uploadBytesResumable,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-storage.js";
+
+import {
+  collection,
+  addDoc,
+  getDoc,
+  getDocs,
+  doc,
+  query,
+  where,
+  updateDoc,
+  serverTimestamp,
+  limit
+} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+import { db, storage } from "./firebase.js";
+
+
+const AfrishineVideo = {
+
+  destinations: [
+    "home",
+    "talent",
+    "afrishine"
+  ],
+
+  maxFileSize: 500 * 1024 * 1024,
+
+  allowedTypes: [
+    "video/mp4",
+    "video/webm",
+    "video/quicktime"
+  ],
+
+
+  // ================================================
+  // 1. VALIDATE VIDEO
+  // ================================================
+
+  validateVideo(file) {
+
+    if (!file) {
+      throw new Error("Please select a video.");
+    }
+
+    if (!this.allowedTypes.includes(file.type)) {
+      throw new Error("Please select an MP4, WebM or MOV video.");
+    }
+
+    if (file.size > this.maxFileSize) {
+      throw new Error("Video must not exceed 500 MB.");
+    }
+
+    return true;
+  },
+
+
+  // ================================================
+  // 2. UPLOAD VIDEO
+  // ================================================
+
+  async uploadVideo(options) {
+
+    const user = window.currentUser;
+
+    if (!user) {
+      window.AfrishineApp.requireLogin("upload-video");
+      return false;
+    }
+
+    const file = options.file;
+
+    this.validateVideo(file);
+
+    const visibility = options.visibility || "public";
+
+    const destinations = Array.isArray(options.destinations)
+      ? [...new Set(options.destinations)]
+      : [];
+
+    const audience = options.audience || null;
+
+    const allowedViewerIds =
+      Array.isArray(options.allowedViewerIds)
+        ? [...new Set(options.allowedViewerIds)]
+        : [];
+
+    // Validate public videos
+    if (visibility === "public") {
+
+      if (destinations.length === 0) {
+        throw new Error("Choose at least one public destination.");
+      }
+
+      if (!destinations.every(item =>
+        this.destinations.includes(item)
+      )) {
+        throw new Error("Invalid public destination.");
+      }
+
+      if (audience || allowedViewerIds.length > 0) {
+        throw new Error("Public videos cannot have a private audience.");
+      }
+
+    }
+
+    // Validate private videos
+    else if (visibility === "private") {
+
+      if (destinations.length > 0) {
+        throw new Error("Private videos cannot have public destinations.");
+      }
+
+      if (!["only_me", "selected_followers"].includes(audience)) {
+        throw new Error("Choose a private audience.");
+      }
+
+      if (
+        audience === "only_me" &&
+        allowedViewerIds.length > 0
+      ) {
+        throw new Error("Only Me cannot include other viewers.");
+      }
+
+      if (
+        audience === "selected_followers" &&
+        allowedViewerIds.length === 0
+      ) {
+        throw new Error("Select at least one follower.");
+      }
+
+    } else {
+      throw new Error("Invalid video visibility.");
+    }
+
+
+    // Private video viewers must be selected followers.
+    if (visibility === "private" &&
+        audience === "selected_followers") {
+
+      await this.verifySelectedFollowers(
+        user.uid,
+        allowedViewerIds
+      );
+    }
+
+
+    // Upload video to Firebase Storage
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+
+    const filePath =
+      `videos/${user.uid}/${Date.now()}_${safeName}`;
+
+    const videoRef = ref(storage, filePath);
+
+    const uploadTask = uploadBytesResumable(
+      videoRef,
+      file,
+      {
+        contentType: file.type
+      }
+    );
+
+    const downloadURL = await new Promise(
+      (resolve, reject) => {
+
+        uploadTask.on(
+          "state_changed",
+
+          (snapshot) => {
+
+            const progress = Math.round(
+              (snapshot.bytesTransferred /
+               snapshot.totalBytes) * 100
+            );
+
+            if (typeof options.onProgress === "function") {
+              options.onProgress(progress);
+            }
+
+          },
+
+          reject,
+
+          async () => {
+            try {
+              const url = await getDownloadURL(videoRef);
+              resolve(url);
+            } catch (error) {
+              reject(error);
+            }
+          }
+        );
+
+      }
+    );
+
+
+    // Save video information
+    const videoData = {
+
+      authorId: user.uid,
+
+      authorName:
+        user.displayName ||
+        user.username ||
+        "Afrishine Member",
+
+      provider: user.provider || "email",
+
+      title: String(options.title || "").trim(),
+
+      description:
+        String(options.description || "").trim(),
+
+      storagePath: filePath,
+
+      mediaUrl: downloadURL,
+
+      mediaType: "video",
+
+      visibility,
+
+      destinations:
+        visibility === "public" ? destinations : [],
+
+      audience:
+        visibility === "private" ? audience : null,
+
+      allowedViewerIds:
+        visibility === "private" &&
+        audience === "selected_followers"
+          ? allowedViewerIds
+          : [],
+
+      likes: [],
+
+      commentsCount: 0,
+
+      createdAt: serverTimestamp(),
+
+      updatedAt: serverTimestamp()
+
+    };
+
+
+    const result = await addDoc(
+      collection(db, "videos"),
+      videoData
+    );
+
+    return {
+      id: result.id,
+      message: "Video uploaded successfully."
+    };
+
+  },
+
+
+  // ================================================
+  // 3. VERIFY SELECTED FOLLOWERS
+  // ================================================
+
+  async verifySelectedFollowers(ownerId, viewerIds) {
+
+    for (const viewerId of viewerIds) {
+
+      const followerQuery = query(
+        collection(db, "users", ownerId, "followers"),
+        where("followerId", "==", viewerId),
+        limit(1)
+      );
+
+      const result = await getDocs(followerQuery);
+
+      if (result.empty) {
+        throw new Error(
+          "One of the selected viewers is not your follower."
+        );
+      }
+
+    }
+
+    return true;
+  },
+
+
+  // ================================================
+  // 4. LOAD PUBLIC VIDEOS
+  // ================================================
+
+  async loadPublicVideos(destination = "home") {
+
+    if (!this.destinations.includes(destination)) {
+      throw new Error("Invalid destination.");
+    }
+
+    const videosQuery = query(
+      collection(db, "videos"),
+
+      where("visibility", "==", "public"),
+
+      where(
+        "destinations",
+        "array-contains",
+        destination
+      ),
+
+      limit(30)
+    );
+
+    const snapshot = await getDocs(videosQuery);
+
+    return snapshot.docs.map(item => ({
+      id: item.id,
+      ...item.data()
+    }));
+
+  },
+
+
+  // ================================================
+  // 5. LOAD PRIVATE VIDEOS
+  // ================================================
+
+  async loadPrivateVideos() {
+
+    const user = window.currentUser;
+
+    if (!user) {
+      window.AfrishineApp.requireLogin("upload-video");
+      return [];
+    }
+
+    const videosQuery = query(
+      collection(db, "videos"),
+      where("visibility", "==", "private"),
+      where("authorId", "==", user.uid),
+      limit(30)
+    );
+
+    const snapshot = await getDocs(videosQuery);
+
+    return snapshot.docs.map(item => ({
+      id: item.id,
+      ...item.data()
+    }));
+
+  },
+
+
+  // ================================================
+  // 6. CHANGE VIDEO DESTINATIONS
+  // ================================================
+
+  async updateDestinations(videoId, destinations) {
+
+    const user = window.currentUser;
+
+    if (!user) {
+      window.AfrishineApp.requireLogin("upload-video");
+      return false;
+    }
+
+    const uniqueDestinations = [...new Set(destinations)];
+
+    if (
+      uniqueDestinations.length === 0 ||
+      !uniqueDestinations.every(item =>
+        this.destinations.includes(item)
+      )
+    ) {
+      throw new Error("Select valid destinations.");
+    }
+
+    const videoRef = doc(db, "videos", videoId);
+
+    const snapshot = await getDoc(videoRef);
+
+    if (!snapshot.exists()) {
+      throw new Error("Video not found.");
+    }
+
+    const video = snapshot.data();
+
+    if (video.authorId !== user.uid) {
+      throw new Error("You cannot edit this video.");
+    }
+
+    if (video.visibility !== "public") {
+      throw new Error("This video is not public.");
+    }
+
+    await updateDoc(videoRef, {
+      destinations: uniqueDestinations,
+      updatedAt: serverTimestamp()
+    });
+
+    return true;
+
+  },
+
+
+  // ================================================
+  // 7. CHANGE PRIVATE AUDIENCE
+  // ================================================
+
+  async updatePrivateAudience(
+    videoId,
+    audience,
+    allowedViewerIds = []
+  ) {
+
+    const user = window.currentUser;
+
+    if (!user) {
+      window.AfrishineApp.requireLogin("upload-video");
+      return false;
+    }
+
+    if (!["only_me", "selected_followers"].includes(audience)) {
+      throw new Error("Invalid private audience.");
+    }
+
+    const viewers = [...new Set(allowedViewerIds)];
+
+    if (audience === "only_me" && viewers.length > 0) {
+      throw new Error("Only Me cannot include other viewers.");
+    }
+
+    if (audience === "selected_followers") {
+
+      if (viewers.length === 0) {
+        throw new Error("Select at least one follower.");
+      }
+
+      await this.verifySelectedFollowers(
+        user.uid,
+        viewers
+      );
+
+    }
+
+    const videoRef = doc(db, "videos", videoId);
+
+    const snapshot = await getDoc(videoRef);
+
+    if (!snapshot.exists()) {
+      throw new Error("Video not found.");
+    }
+
+    const video = snapshot.data();
+
+    if (video.authorId !== user.uid) {
+      throw new Error("You cannot edit this video.");
+    }
+
+    if (video.visibility !== "private") {
+      throw new Error("This is not a private video.");
+    }
+
+    await updateDoc(videoRef, {
+
+      audience,
+
+      allowedViewerIds:
+        audience === "selected_followers"
+          ? viewers
+          : [],
+
+      updatedAt: serverTimestamp()
+
+    });
+
+    return true;
+
+  }
+
+};
+
+
+// ================================================
+// 8. EXPORT VIDEO MODULE
+// ================================================
+
+window.AfrishineVideo = AfrishineVideo;
+
+export default AfrishineVideo;
+
+console.log("Afrishine Hub Video module loaded.");
