@@ -1,0 +1,110 @@
+
+<section class="page-section home-page">
+
+  <div class="welcome-banner">
+    <span class="eyebrow">YOUR HUB, YOUR SOLUTIONS</span>
+    <h1>Welcome to Afrishine Hub</h1>
+    <p>
+      Discover opportunities, showcase your talent,
+      learn new skills and connect with your community.
+    </p>
+    <a href="#talent" data-page="talent" class="btn btn-primary">
+      Explore Talent Hub
+    </a>
+  </div>
+
+  <section class="section-block">
+    <div class="section-heading">
+      <h2>Explore Afrishine Hub</h2>
+      <p>Everything you need, in one place.</p>
+    </div>
+
+    <div class="module-grid">
+
+      <a href="#talent" data-page="talent" class="module-card">
+        <span class="module-icon">🎨</span>
+        <h3>Talent Hub</h3>
+        <p>Showcase your talents and connect with creators.</p>
+      </a>
+
+      <a href="#academy" data-page="academy" class="module-card">
+        <span class="module-icon">🎓</span>
+        <h3>Afrishine Academy</h3>
+        <p>Learn digital skills and grow your knowledge.</p>
+      </a>
+
+      <a href="#shop" data-page="shop" class="module-card">
+        <span class="module-icon">🛍️</span>
+        <h3>Shopping Store</h3>
+        <p>Discover products and opportunities to sell.</p>
+      </a>
+
+      <a href="#jobs" data-page="jobs" class="module-card">
+        <span class="module-icon">💼</span>
+        <h3>Digital Jobs</h3>
+        <p>Discover jobs, services and digital opportunities.</p>
+      </a>
+
+      <a href="#travel" data-page="travel" class="module-card">
+        <span class="module-icon">✈️</span>
+        <h3>Travel Booking</h3>
+        <p>Explore travel and transport booking services.</p>
+      </a>
+
+      <a href="#wallet" data-page="wallet" class="module-card">
+        <span class="module-icon">👛</span>
+        <h3>My Wallet</h3>
+        <p>Access your AST and Pi wallet features.</p>
+      </a>
+
+      <a href="#inbox" data-page="inbox" class="module-card">
+        <span class="module-icon">💬</span>
+        <h3>Inbox</h3>
+        <p>Connect and communicate with your community.</p>
+      </a>
+
+      <a href="#profile" data-page="profile" class="module-card">
+        <span class="module-icon">👤</span>
+        <h3>My Profile</h3>
+        <p>Manage your account and personal information.</p>
+      </a>
+
+    </div>
+  </section>
+
+  <section class="section-block">
+    <div class="section-heading">
+      <h2>Community Feed</h2>
+      <p>Discover what people are sharing.</p>
+    </div>
+
+    <div class="feed-actions">
+      <button class="btn btn-primary"
+        data-auth-required="create-post">
+        + Create Post
+      </button>
+    </div>
+
+    <div id="homeFeed" class="feed-container">
+      <div class="empty-state">
+        <span>🌍</span>
+        <h3>Your community starts here</h3>
+        <p>Public posts and videos will appear here.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-block">
+    <div class="community-card">
+      <h2>Grow Together</h2>
+      <p>
+        Afrishine Hub brings people, talents, knowledge
+        and opportunities together.
+      </p>
+      <a href="#talent" data-page="talent" class="btn btn-outline">
+        Join the Community
+      </a>
+    </div>
+  </section>
+
+</section>
