@@ -1,0 +1,128 @@
+
+<section class="page-section profile-page">
+
+  <div class="welcome-banner">
+    <span class="eyebrow">AFRISHINE HUB ACCOUNT</span>
+    <h1>My Profile</h1>
+    <p>
+      Manage your account, showcase your identity
+      and stay connected with the community.
+    </p>
+  </div>
+
+  <section class="section-block">
+    <div class="community-card profile-card">
+
+      <div class="profile-avatar" id="profileAvatar">
+        👤
+      </div>
+
+      <h2 id="profileDisplayName">Welcome to Afrishine Hub</h2>
+      <p id="profileUsername">@username</p>
+
+      <p id="profileEmail">Your email will appear here.</p>
+
+      <span class="badge">Afrishine Hub Member</span>
+
+      <button class="btn btn-primary"
+        data-auth-required="edit-profile">
+        Edit Profile
+      </button>
+
+    </div>
+  </section>
+
+  <section class="section-block">
+    <div class="section-heading">
+      <h2>My Account</h2>
+      <p>Manage your personal account settings.</p>
+    </div>
+
+    <div class="module-grid">
+
+      <div class="module-card">
+        <span class="module-icon">👤</span>
+        <h3>Personal Information</h3>
+        <p>Manage your name, photo and biography.</p>
+        <button class="btn btn-outline"
+          data-auth-required="edit-profile">
+          Manage Profile
+        </button>
+      </div>
+
+      <div class="module-card">
+        <span class="module-icon">🔐</span>
+        <h3>Login & Security</h3>
+        <p>Manage your sign-in and account security.</p>
+        <button class="btn btn-outline"
+          data-auth-required="account-security">
+          Security Settings
+        </button>
+      </div>
+
+      <div class="module-card">
+        <span class="module-icon">🎬</span>
+        <h3>My Content</h3>
+        <p>Manage your posts, videos and shared content.</p>
+        <button class="btn btn-outline"
+          data-auth-required="my-content">
+          View My Content
+        </button>
+      </div>
+
+      <div class="module-card">
+        <span class="module-icon">👥</span>
+        <h3>Followers & Following</h3>
+        <p>Manage your creator connections.</p>
+        <button class="btn btn-outline"
+          data-auth-required="my-followers">
+          View Connections
+        </button>
+      </div>
+
+      <div class="module-card">
+        <span class="module-icon">❤️</span>
+        <h3>My Activity</h3>
+        <p>View your likes, comments and interactions.</p>
+        <button class="btn btn-outline"
+          data-auth-required="my-activity">
+          View Activity
+        </button>
+      </div>
+
+      <div class="module-card">
+        <span class="module-icon">⚙️</span>
+        <h3>Preferences</h3>
+        <p>Manage your app preferences and notifications.</p>
+        <button class="btn btn-outline"
+          data-auth-required="account-preferences">
+          Preferences
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section-block">
+    <div class="community-card">
+      <h2>Account Access</h2>
+      <p>
+        Sign in to access your personal features,
+        or sign out when you finish using your account.
+      </p>
+
+      <button class="btn btn-primary"
+        id="profileSignIn"
+        onclick="window.openAuthModal && window.openAuthModal()">
+        Sign In / Sign Up
+      </button>
+
+      <button class="btn btn-outline"
+        id="profileSignOut"
+        onclick="window.afrishineLogout && window.afrishineLogout()">
+        Sign Out
+      </button>
+    </div>
+  </section>
+
+</section>
