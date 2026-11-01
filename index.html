@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,7 +32,7 @@ body{
  font-family:system-ui,Arial,sans-serif;
  padding-bottom:82px;
 }
-button,a{font:inherit}
+button,a,input{font:inherit}
 button{cursor:pointer}
 .app{max-width:980px;margin:auto;padding:12px}
 
@@ -41,6 +40,7 @@ header{
  display:flex;
  justify-content:space-between;
  align-items:center;
+ gap:10px;
  padding:12px 2px 18px;
  border-bottom:1px solid #3a2a0b;
 }
@@ -50,6 +50,7 @@ header{
  gap:10px;
  color:white;
  text-decoration:none;
+ flex-shrink:0;
 }
 .brand-mark{
  font-size:30px;
@@ -63,10 +64,44 @@ header{
  color:#c4c9d4;
  font-size:11px;
 }
-.header-actions{display:flex;gap:9px}
+.header-actions{
+ display:flex;
+ align-items:center;
+ gap:9px;
+ min-width:0;
+}
+.header-search{
+ display:flex;
+ align-items:center;
+ gap:8px;
+ width:clamp(150px,34vw,270px);
+ min-width:0;
+ height:42px;
+ padding:0 11px;
+ border:1px solid #8b713d;
+ border-radius:24px;
+ background:#111722;
+}
+.header-search .search-icon{
+ color:var(--gold);
+ font-size:21px;
+ line-height:1;
+ flex-shrink:0;
+}
+.header-search input{
+ width:100%;
+ min-width:0;
+ border:0;
+ outline:0;
+ background:transparent;
+ color:#fff;
+ font-size:13px;
+}
+.header-search input::placeholder{color:#c4c9d4}
 .round{
- width:38px;
- height:38px;
+ width:42px;
+ height:42px;
+ flex-shrink:0;
  border:1px solid var(--line);
  border-radius:50%;
  background:#202532;
@@ -128,6 +163,57 @@ header{
  color:var(--muted);
  font-size:13px;
  line-height:1.55;
+}
+.dashboard-heading{
+ font-size:23px;
+ margin:0 4px 12px;
+}
+.ast-wallet-card{
+ display:flex;
+ flex-wrap:wrap;
+ align-items:center;
+ gap:16px;
+ padding:18px;
+ margin:0 0 20px;
+ border:1px solid #51596b;
+ border-radius:18px;
+ background:linear-gradient(115deg,#171c28,#11151e);
+ box-shadow:0 8px 25px #0003;
+}
+.ast-coin{
+ width:112px;
+ height:112px;
+ flex:0 0 112px;
+ display:grid;
+ place-items:center;
+ border-radius:50%;
+ border:5px solid #e8b84d;
+ background:radial-gradient(circle at 35% 28%,#ffe99a,#eab83e 58%,#a96b0b);
+ color:#080a10;
+ font-size:35px;
+ font-weight:900;
+ box-shadow:inset 0 0 0 5px #f8d875,0 3px 10px #0006;
+}
+.ast-wallet-info{flex:1;min-width:180px}
+.ast-wallet-label{
+ color:var(--gold);
+ font-size:17px;
+ font-weight:850;
+ letter-spacing:.4px;
+}
+.ast-wallet-info h2{
+ font-size:26px;
+ margin:3px 0 7px;
+}
+.ast-wallet-info p{
+ color:#c2c9d6;
+ font-size:13px;
+ line-height:1.55;
+}
+.wallet-open{
+ margin-top:14px;
+ padding:11px 17px;
+ font-size:15px;
 }
 .shop-options{
  display:grid;
@@ -442,10 +528,28 @@ footer{
 @media(min-width:700px){
  .hero{padding-top:85px}
 }
+@media(max-width:520px){
+ header{gap:7px}
+ .brand{gap:7px}
+ .brand-mark{font-size:27px}
+ .brand strong{font-size:16px}
+ .brand small{font-size:10px}
+ .header-actions{gap:7px}
+ .header-search{width:clamp(125px,36vw,205px);height:40px;padding:0 9px}
+ .header-search input{font-size:12px}
+ .round{width:40px;height:40px}
+ .ast-wallet-card{gap:12px;padding:16px}
+ .ast-coin{width:92px;height:92px;flex-basis:92px;font-size:30px}
+ .ast-wallet-info h2{font-size:23px}
+}
 @media(max-width:380px){
  .pi-login{align-items:flex-start}
  .pi-info small{max-width:145px}
  .gold{font-size:11px;padding:9px 10px}
+ .header-search{width:122px}
+ .header-search input{font-size:11px}
+ .brand strong{font-size:14px}
+ .brand small{font-size:9px}
 }
 </style>
 </head>
@@ -463,6 +567,10 @@ footer{
 </a>
 
 <div class="header-actions">
+<form class="header-search" id="headerSearchForm" role="search" onsubmit="runHeaderSearch(event)">
+<span class="search-icon" aria-hidden="true">⌕</span>
+<input id="headerSearch" type="search" placeholder="Search talent, shop..." aria-label="Search Afrishine Hub" autocomplete="off">
+</form>
 <button class="round menu-button" onclick="openMenu()" aria-label="Open menu">☰</button>
 </div>
 </header>
@@ -494,6 +602,19 @@ Visit Academy
 </button>
 </div>
 </div>
+
+<h2 class="dashboard-heading">Explore Afrishine Hub</h2>
+
+<!-- AST WALLET CARD ON HOME DASHBOARD -->
+<section class="ast-wallet-card" aria-label="Afrishine Token wallet">
+<div class="ast-coin" aria-hidden="true">AST</div>
+<div class="ast-wallet-info">
+<div class="ast-wallet-label">AFRISHINE TOKEN</div>
+<h2>My Wallet</h2>
+<p>Your AST balance and transaction history will appear here after secure wallet and backend integration.</p>
+</div>
+<button class="secondary wallet-open" onclick="showPage('wallet')">Open My Wallet →</button>
+</section>
 
 </section>
 
@@ -867,6 +988,49 @@ document.querySelectorAll('[data-page]').forEach(el=>{
  });
 });
 
+/* HEADER SEARCH: TAP THE FIELD TO OPEN THE PHONE KEYBOARD */
+const headerSearchInput=document.getElementById('headerSearch');
+
+headerSearchInput.addEventListener('click',function(){
+ this.focus();
+});
+
+function runHeaderSearch(event){
+ event.preventDefault();
+
+ const query=headerSearchInput.value.trim().toLowerCase();
+
+ if(!query){
+  headerSearchInput.focus();
+  return;
+ }
+
+ const searchRoutes=[
+  {words:['talent','creator','video','music','dance','artist'],page:'talent'},
+  {words:['shop','product','buy','sell','store'],page:'shop'},
+  {words:['wallet','ast','token','balance','transaction'],page:'wallet'},
+  {words:['academy','learn','course','training','education'],page:'academy'},
+  {words:['travel','trip','booking','destination'],page:'travel'},
+  {words:['job','work','employment'],page:'jobs'},
+  {words:['inbox','message','chat'],page:'inbox'},
+  {words:['profile','account','login','sign in'],page:'profile'},
+  {words:['love','connection'],page:'love'},
+  {words:['contact','support','help'],page:'contact'}
+ ];
+
+ const match=searchRoutes.find(route=>
+  route.words.some(word=>query.includes(word))
+ );
+
+ if(match){
+  showPage(match.page);
+  headerSearchInput.blur();
+ }else{
+  notice('No matching section found. Try Talent, Shop, Wallet, Academy or Travel.');
+  headerSearchInput.focus();
+ }
+}
+
 /* MAIN MENU */
 function openMenu(){
  document.getElementById('menuDrawer').classList.add('open');
@@ -1123,6 +1287,7 @@ function stopCamera(){
  if(button)button.textContent='Start Camera Preview';
 }
 
+/* LIVE BROADCAST */
 function liveBroadcastNotice(){
  if(!cameraStream){
   notice('Start Camera Preview first. Public live broadcasting will be connected later.');
