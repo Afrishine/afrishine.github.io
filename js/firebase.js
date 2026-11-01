@@ -1,9 +1,9 @@
 /* ==================================================
-   AFRISHINE HUB — FIREBASE CONFIGURATION
+   AFRISHINE HUB — FIREBASE CONNECTION
    Your Hub, Your Solutions
    ================================================== */
 
-// Firebase SDK imports
+// 1. Import Firebase SDK
 import { initializeApp }
   from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 
@@ -21,25 +21,23 @@ import {
 } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-storage.js";
 
 
-// 1. Firebase Configuration
-// Tuzashyiramo amakuru ya project yawe
-// avuye muri Firebase Console.
-
+// 2. Your Firebase Configuration
 const firebaseConfig = {
-  apiKey: "PASTE_YOUR_API_KEY",
-  authDomain: "PASTE_YOUR_AUTH_DOMAIN",
-  projectId: "PASTE_YOUR_PROJECT_ID",
-  storageBucket: "PASTE_YOUR_STORAGE_BUCKET",
-  messagingSenderId: "PASTE_YOUR_MESSAGING_SENDER_ID",
-  appId: "PASTE_YOUR_APP_ID"
+  apiKey: "AIzaSyBnrdoguyhUd_E3I5RHqcXHNVLa6kIMX4",
+  authDomain: "afrishine-hub.firebaseapp.com",
+  projectId: "afrishine-hub",
+  storageBucket: "afrishine-hub.firebasestorage.app",
+  messagingSenderId: "553901207884",
+  appId: "1:553901207884:web:81d4dce86149267ae59fe9",
+  measurementId: "G-WXNG0SHM9X"
 };
 
 
-// 2. Initialize Firebase
+// 3. Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 
 
-// 3. Initialize Firebase Services
+// 4. Initialize Firebase Services
 const auth = getAuth(firebaseApp);
 
 const db = getFirestore(firebaseApp);
@@ -47,23 +45,31 @@ const db = getFirestore(firebaseApp);
 const storage = getStorage(firebaseApp);
 
 
-// 4. Current User
+// 5. Track Firebase User
 let currentFirebaseUser = null;
 
 onAuthStateChanged(auth, (user) => {
   currentFirebaseUser = user;
 
+  // Shared login state for Afrishine Hub
   window.currentUser = user || null;
 
   console.log(
     user
-      ? "Afrishine Hub user is signed in."
-      : "No user is signed in."
+      ? "Afrishine Hub: User signed in."
+      : "Afrishine Hub: No user signed in."
+  );
+
+  // Notify other app modules
+  window.dispatchEvent(
+    new CustomEvent("firebase-auth-changed", {
+      detail: { user }
+    })
   );
 });
 
 
-// 5. Export Services
+// 6. Export Firebase Services
 export {
   firebaseApp,
   auth,
@@ -71,3 +77,5 @@ export {
   storage,
   currentFirebaseUser
 };
+
+console.log("Afrishine Hub Firebase initialized.");
