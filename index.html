@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -341,38 +342,47 @@ footer{
  font-size:12px;
 }
 
+/* PROFESSIONAL MAIN MENU */
 .menu-drawer{
  display:none;
  position:fixed;
  z-index:25;
  top:0;
  right:0;
- width:min(310px,86vw);
+ width:min(580px,86vw);
  height:100dvh;
  overflow-y:auto;
  background:#111722;
  border-left:1px solid #343b49;
- padding:18px;
+ padding:22px 18px;
  box-shadow:-15px 0 40px #0009;
 }
 .menu-drawer.open{display:block}
+
 .menu-head{
  display:flex;
  justify-content:space-between;
  align-items:center;
- margin-bottom:16px;
+ margin-bottom:22px;
  color:var(--gold);
- font-weight:800;
+ font-size:19px;
+ font-weight:850;
 }
 .menu-drawer a{
  display:block;
- padding:13px 10px;
- margin:5px 0;
+ padding:17px 14px;
+ margin:8px 0;
  border:1px solid #303747;
- border-radius:10px;
- color:white;
+ border-radius:18px;
+ color:#fff;
  text-decoration:none;
- background:#1a202c;
+ background:linear-gradient(110deg,#1c2230,#191e2b);
+ font-size:17px;
+ transition:background .2s,border-color .2s;
+}
+.menu-drawer a:active{
+ background:#293246;
+ border-color:#8b713d;
 }
 .menu-backdrop{
  display:none;
@@ -577,7 +587,7 @@ footer{
 
 <main>
 
-<!-- HOME DASHBOARD: APPS REMOVED -->
+<!-- HOME DASHBOARD: UNCHANGED -->
 <section class="page active" id="home">
 
 <div class="hero">
@@ -798,6 +808,29 @@ Visit Academy
 </section>
 </section>
 
+<!-- SETTINGS AND PRIVACY: NEW PAGE -->
+<section class="page" id="settings">
+<div class="eyebrow">ACCOUNT · SECURITY · PRIVACY</div>
+<h1>Settings and Privacy</h1>
+<p class="muted">Manage your Afrishine Hub account preferences and privacy information.</p>
+
+<section class="panel">
+<h2>Account Settings</h2>
+<p>Account preferences and profile settings will be available here.</p>
+</section>
+
+<section class="panel">
+<h2>Privacy and Security</h2>
+<p>Your privacy and account security are important to Afrishine Hub.</p>
+</section>
+
+<section class="panel">
+<h2>Help and Support</h2>
+<p>For assistance, visit our Contact Us section.</p>
+<button class="gold" onclick="showPage('contact')">Contact Us →</button>
+</section>
+</section>
+
 <!-- CONTACT US -->
 <section class="page" id="contact">
 <div class="eyebrow">WE ARE HERE TO HELP</div>
@@ -920,7 +953,7 @@ Visit Academy
 </div>
 </section>
 
-<!-- MAIN MENU: ALL SIX APPS REMAIN HERE -->
+<!-- MAIN MENU -->
 <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenu()"></div>
 
 <aside class="menu-drawer" id="menuDrawer" aria-label="Main menu">
@@ -940,7 +973,8 @@ Visit Academy
 <a href="#wallet" data-page="wallet">👛 My Wallet</a>
 <a href="#inbox" data-page="inbox">💬 Inbox</a>
 <a href="#profile" data-page="profile">👤 Profile</a>
-<a href="#contact" data-page="contact">📞 Contact Us</a>
+<a href="#settings" data-page="settings">⚙️ Settings and Privacy</a>
+<a href="#contact" data-page="contact">🎧 Contact Us</a>
 
 </aside>
 
