@@ -607,8 +607,8 @@ Discover talent, learn new skills, shop, travel and connect with opportunities â
 Explore Talent Hub
 </button>
 
-<button class="secondary" onclick="showPage('academy')">
-Visit Academy
+<button class="secondary" onclick="showPage('shop')">
+Visit Shop
 </button>
 </div>
 </div>
