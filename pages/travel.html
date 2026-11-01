@@ -1,0 +1,125 @@
+
+<section class="page-section travel-page">
+
+  <div class="welcome-banner">
+    <span class="eyebrow">AFRISHINE TRAVEL</span>
+    <h1>Explore Rwanda. Travel with Ease.</h1>
+    <p>
+      Discover destinations, explore transport options
+      and connect with travel service providers.
+    </p>
+  </div>
+
+  <section class="section-block">
+    <div class="section-heading">
+      <h2>Book Your Journey</h2>
+      <p>Start planning your next trip.</p>
+    </div>
+
+    <div class="community-card">
+      <form id="travelSearchForm">
+
+        <label for="travelFrom">From</label>
+        <input id="travelFrom" name="from"
+          type="text" placeholder="e.g. Kigali" required>
+
+        <label for="travelTo">Destination</label>
+        <input id="travelTo" name="to"
+          type="text" placeholder="e.g. Rubavu" required>
+
+        <label for="travelDate">Travel Date</label>
+        <input id="travelDate" name="date"
+          type="date" required>
+
+        <label for="travelPassengers">Passengers</label>
+        <input id="travelPassengers" name="passengers"
+          type="number" min="1" value="1" required>
+
+        <button type="submit" class="btn btn-primary">
+          Search Journeys
+        </button>
+
+      </form>
+    </div>
+  </section>
+
+  <section class="section-block">
+    <div class="section-heading">
+      <h2>Popular Destinations</h2>
+      <p>Explore places around Rwanda.</p>
+    </div>
+
+    <div class="module-grid">
+
+      <div class="module-card">
+        <span class="module-icon">🏙️</span>
+        <h3>Kigali</h3>
+        <p>Discover Rwanda's capital city.</p>
+      </div>
+
+      <div class="module-card">
+        <span class="module-icon">🌊</span>
+        <h3>Rubavu</h3>
+        <p>Explore Lake Kivu and its surroundings.</p>
+      </div>
+
+      <div class="module-card">
+        <span class="module-icon">🌋</span>
+        <h3>Musanze</h3>
+        <p>Discover Rwanda's northern attractions.</p>
+      </div>
+
+      <div class="module-card">
+        <span class="module-icon">🌿</span>
+        <h3>Nyungwe</h3>
+        <p>Explore nature and forest experiences.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section-block">
+    <div class="section-heading">
+      <h2>Available Journeys</h2>
+      <p>Travel options shared by service providers.</p>
+    </div>
+
+    <div id="travelResults" class="feed-container">
+      <div class="empty-state">
+        <span>🚌</span>
+        <h3>Travel options will appear here</h3>
+        <p>
+          Available routes, transport providers
+          and booking information will be displayed here.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-block">
+    <div class="community-card">
+      <span class="module-icon">🚐</span>
+      <h2>Become a Travel Partner</h2>
+      <p>
+        Are you a transport operator or travel service provider?
+        Connect with customers through Afrishine Hub.
+      </p>
+      <button class="btn btn-primary"
+        data-auth-required="travel-partner">
+        Register as a Partner
+      </button>
+    </div>
+  </section>
+
+  <section class="section-block">
+    <div class="community-card">
+      <h2>My Bookings</h2>
+      <p>Manage your travel requests and bookings.</p>
+      <button class="btn btn-outline"
+        data-auth-required="my-bookings">
+        View My Bookings
+      </button>
+    </div>
+  </section>
+
+</section>
