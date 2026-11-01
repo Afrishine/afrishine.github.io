@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - Afrishine Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
+body { background:#0a0a0f; color:white; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; background: radial-gradient(ellipse at top, #1a1a2e 0%, #0a0a0f 60%); }
+.container { width:100%; max-width:420px; }
+.logo { text-align:center; margin-bottom:30px; }
+.logo h1 { font-size:32px; font-weight:800; letter-spacing:-1px; }
+.logo h1 span { color:#a855f7; }
+.logo p { color:#888; margin-top:8px; font-size:14px; }
+.card { background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:24px; padding:32px; backdrop-filter:blur(20px); }
+.tabs { display:flex; background:rgba(255,255,255,0.06); border-radius:12px; padding:4px; margin-bottom:24px; }
+.tab { flex:1; padding:10px; text-align:center; border-radius:8px; cursor:pointer; font-weight:600; font-size:14px; color:#888; transition:0.2s; }
+.tab.active { background:white; color:black; }
+.input-group { margin-bottom:16px; }
+label { display:block; font-size:13px; color:#aaa; margin-bottom:6px; font-weight:500; }
+input { width:100%; padding:14px 16px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:12px; color:white; font-size:15px; outline:none; }
+input:focus { border-color:#a855f7; }
+.btn { width:100%; padding:14px; background:white; color:black; border:none; border-radius:12px; font-weight:700; font-size:15px; cursor:pointer; margin-top:8px; }
+.btn-google { background:rgba(255,255,255,0.06); color:white; border:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; gap:8px; }
+.divider { display:flex; align-items:center; gap:12px; margin:20px 0; color:#555; font-size:13px; }
+.divider::before, .divider::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.08); }
+.error { background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.2); color:#f87171; padding:12px; border-radius:10px; font-size:13px; margin-bottom:16px; display:none; }
+.success { background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.2); color:#4ade80; padding:12px; border-radius:10px; font-size:13px; margin-bottom:16px; display:none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="logo"><h1>AFRI<span>SHINE</span> HUB</h1><p>Shine Your Talent. Earn Your Future.</p></div>
+  <div class="card">
+    <div class="tabs">
+      <div class="tab active" id="tab-login" onclick="switchTab('login')">Injira</div>
+      <div class="tab" id="tab-signup" onclick="switchTab('signup')">Iyandikishe</div>
+    </div>
+    <div id="error" class="error"></div>
+    <div id="success" class="success"></div>
+    <div id="form-login">
+      <div class="input-group"><label>Email</label><input type="email" id="login-email" placeholder="you@example.com"></div>
+      <div class="input-group"><label>Password</label><input type="password" id="login-password" placeholder="••••••••"></div>
+      <button class="btn" id="btn-login" onclick="login()">Injira</button>
+    </div>
+    <div id="form-signup" style="display:none;">
+      <div class="input-group"><label>Amazina yose</label><input type="text" id="signup-name" placeholder="Keza Aline"></div>
+      <div class="input-group"><label>Email</label><input type="email" id="signup-email" placeholder="you@example.com"></div>
+      <div class="input-group"><label>Password</label><input type="password" id="signup-password" placeholder="Min 6 characters"></div>
+      <button class="btn" id="btn-signup" onclick="signup()">Fungura Konti</button>
+    </div>
+    <div class="divider">cyangwa</div>
+    <button class="btn btn-google" onclick="googleLogin()">Komeza na Google</button>
+  </div>
+</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyBnrdoguyhUd_E3I5RHqcQxHNVLa6kIMX4",
+  authDomain: "afrishine-hub.firebaseapp.com",
+  projectId: "afrishine-hub",
+  storageBucket: "afrishine-hub.firebasestorage.app",
+  messagingSenderId: "553901207884",
+  appId: "1:553901207884:web:81d4dce86149267ae59fe9",
+  measurementId: "G-WXNG0SHM9X"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+window.switchTab = (t) => {
+  document.getElementById('tab-login').classList.toggle('active', t==='login');
+  document.getElementById('tab-signup').classList.toggle('active', t==='signup');
+  document.getElementById('form-login').style.display = t==='login' ? 'block' : 'none';
+  document.getElementById('form-signup').style.display = t==='signup' ? 'block' : 'none';
+}
+function showError(m){ const e=document.getElementById('error'); e.textContent=m; e.style.display='block'; document.getElementById('success').style.display='none'; }
+function showSuccess(m){ const e=document.getElementById('success'); e.textContent=m; e.style.display='block'; document.getElementById('error').style.display='none'; }
+function hideMsg(){ document.getElementById('error').style.display='none'; document.getElementById('success').style.display='none'; }
+window.login = async () => {
+  hideMsg();
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-password').value;
+  if(!email || !pass) return showError('Uzuza Email na Password');
+  const btn = document.getElementById('btn-login'); btn.disabled=true; btn.textContent='Turimo kwinjira...';
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+    showSuccess('Wijinjiye neza!');
+    setTimeout(()=> location.href='https://afrishine.github.io', 1500);
+  } catch(err){ showError('Email cyangwa Password siyo'); }
+  btn.disabled=false; btn.textContent='Injira';
+}
+window.signup = async () => {
+  hideMsg();
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const pass = document.getElementById('signup-password').value;
+  if(!name || !email || !pass) return showError('Uzuza byose');
+  if(pass.length < 6) return showError('Password igomba kuba nibura inyuguti 6');
+  const btn = document.getElementById('btn-signup'); btn.disabled=true; btn.textContent='Turimo gufungura...';
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    await updateProfile(cred.user, { displayName: name });
+    showSuccess('Konti ifunguye! Murakaza neza!');
+    setTimeout(()=> location.href='https://afrishine.github.io', 1500);
+  } catch(err){ showError(err.code==='auth/email-already-in-use' ? 'Iyi Email isanzwe ihari' : err.message); }
+  btn.disabled=false; btn.textContent='Fungura Konti';
+}
+window.googleLogin = async () => {
+  hideMsg();
+  try {
+    await signInWithPopup(auth, provider);
+    showSuccess('Wijinjiye na Google!');
+    setTimeout(()=> location.href='https://afrishine.github.io', 1000);
+  } catch(err){ showError(err.message); }
+}
+</script>
+</body>
+</html>
