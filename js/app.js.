@@ -1,0 +1,200 @@
+/* ==================================================
+   AFRISHINE HUB — MAIN APP CONTROLLER
+   Your Hub, Your Solutions
+   ================================================== */
+
+const AfrishineApp = {
+  currentPage: "home",
+  isLoading: false,
+
+  // Pages zigaragara ku bantu bose
+  publicPages: [
+    "home",
+    "talent",
+    "academy",
+    "shop",
+    "jobs",
+    "travel"
+  ],
+
+  // Ibikorwa bisaba ko umuntu aba yinjiye
+  protectedActions: [
+    "like",
+    "follow",
+    "comment",
+    "create-post",
+    "upload-video",
+    "creator-support",
+    "edit-profile",
+    "wallet-transaction"
+  ],
+
+  // Gutangiza application
+  init() {
+    console.log("Afrishine Hub is starting...");
+
+    this.setupNavigation();
+    this.setupLoginTriggers();
+    this.loadPage("home");
+
+    console.log("Afrishine Hub is ready.");
+  },
+
+  // Guhindura page
+  async loadPage(pageName) {
+    const pageContent = document.getElementById("page-content");
+
+    if (!pageContent) {
+      console.error("Page content container not found.");
+      return;
+    }
+
+    if (this.isLoading) return;
+
+    this.isLoading = true;
+    this.currentPage = pageName;
+
+    pageContent.innerHTML =
+      '<div class="loading">Loading Afrishine Hub...</div>';
+
+    try {
+      const response = await fetch(`pages/${pageName}.html`);
+
+      if (!response.ok) {
+        throw new Error("Page could not be loaded.");
+      }
+
+      const html = await response.text();
+
+      pageContent.innerHTML = html;
+
+      this.updateActiveNavigation(pageName);
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+
+    } catch (error) {
+      console.error(error);
+
+      pageContent.innerHTML = `
+        <div class="card">
+          <h2>Page not available</h2>
+          <p>This section is being prepared.</p>
+          <button class="btn" onclick="AfrishineApp.loadPage('home')">
+            Back to Home
+          </button>
+        </div>
+      `;
+
+    } finally {
+      this.isLoading = false;
+    }
+  },
+
+  // Navigation
+  setupNavigation() {
+    document.addEventListener("click", (event) => {
+      const link = event.target.closest("[data-page]");
+
+      if (!link) return;
+
+      event.preventDefault();
+
+      const page = link.dataset.page;
+
+      if (page) {
+        this.loadPage(page);
+      }
+    });
+  },
+
+  // Kwerekana page iri gukoreshwa
+  updateActiveNavigation(pageName) {
+    document.querySelectorAll(".nav-item").forEach((item) => {
+      item.classList.toggle(
+        "active",
+        item.dataset.page === pageName
+      );
+    });
+  },
+
+  // Kugenzura ibikorwa bisaba konti
+  setupLoginTriggers() {
+    document.addEventListener("click", (event) => {
+      const actionElement = event.target.closest("[data-auth-required]");
+
+      if (!actionElement) return;
+
+      event.preventDefault();
+
+      const action = actionElement.dataset.authRequired;
+
+      this.requireLogin(action);
+    });
+  },
+
+  // Gufungura login igihe bikenewe
+  requireLogin(action) {
+    if (this.isLoggedIn()) {
+      return true;
+    }
+
+    sessionStorage.setItem("pendingAction", action);
+
+    if (typeof window.openAuthModal === "function") {
+      window.openAuthModal(action);
+    } else {
+      this.showMessage(
+        "Please sign in to continue."
+      );
+    }
+
+    return false;
+  },
+
+  // Kugenzura niba user yinjiye
+  isLoggedIn() {
+    return (
+      window.currentUser !== null &&
+      window.currentUser !== undefined
+    );
+  },
+
+  // Ubutumwa bugaragara kuri screen
+  showMessage(message) {
+    const notificationBox =
+      document.getElementById("notifications");
+
+    if (!notificationBox) {
+      alert(message);
+      return;
+    }
+
+    const toast = document.createElement("div");
+
+    toast.className = "toast";
+    toast.textContent = message;
+
+    notificationBox.appendChild(toast);
+
+    setTimeout(() => {
+      toast.remove();
+    }, 3500);
+  }
+};
+
+
+// Gutangiza application page imaze kwitegura
+document.addEventListener("DOMContentLoaded", () => {
+  AfrishineApp.init();
+});
+
+
+// Gufasha izindi files gukoresha application
+window.AfrishineApp = AfrishineApp;
+
+
+// User login state izuzuzwa na auth.js cyangwa pi-auth.js
+window.currentUser = window.currentUser || null;
