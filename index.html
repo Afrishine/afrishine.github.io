@@ -75,21 +75,6 @@ header{
  font-weight:950;
  font-style:italic;
  color:var(--gold);
- display:flex;
- flex-direction:column;
- align-items:center;
- line-height:1;
-}
-
-.brand .brand-community{
- display:block;
- margin-top:5px;
- font-size:6px;
- letter-spacing:.5px;
- font-style:normal;
- font-weight:800;
- color:var(--gold);
- white-space:nowrap;
 }
 
 .brand strong{font-size:19px}
@@ -150,6 +135,8 @@ header{
 }
 
 .menu-button{font-size:21px}
+
+
 
 /* HERO SECTION */
 
@@ -749,10 +736,6 @@ footer{
 
  .brand small{font-size:10px}
 
- .brand .brand-community{
-  font-size:6px;
- }
-
  .header-actions{gap:7px}
 
  .header-search{
@@ -801,10 +784,6 @@ footer{
  .brand strong{font-size:14px}
 
  .brand small{font-size:9px}
-
- .brand .brand-community{
-  font-size:5px;
- }
 }
 </style>
 </head>
@@ -819,12 +798,7 @@ footer{
 
 <a class="brand" href="#home" data-page="home">
 
-<b class="brand-mark">
- AH
- <small class="brand-community">
- YOUR COMMUNITY · YOUR OPPORTUNITIES
- </small>
-</b>
+<b class="brand-mark">AH</b>
 
 <span>
 <strong><span style="color:var(--gold)">Afrishine</span> Hub</strong>
@@ -859,6 +833,12 @@ autocomplete="off"
 <!-- HOME DASHBOARD -->
 
 <section class="page active" id="home">
+
+<!-- COMMUNITY LABEL MOVED BELOW HEADER -->
+
+<div class="home-eyebrow">
+YOUR COMMUNITY · YOUR OPPORTUNITIES
+</div>
 
 <!-- HERO SECTION -->
 
