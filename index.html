@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -840,13 +841,9 @@ autocomplete="off"
 
 <section class="page active" id="home">
 
-<!-- COMMUNITY LABEL MOVED BELOW HEADER -->
-
 <div class="home-eyebrow">
 YOUR COMMUNITY · YOUR OPPORTUNITIES
 </div>
-
-<!-- HERO SECTION -->
 
 <div class="hero">
 
@@ -941,6 +938,77 @@ Visit Shop
 <section class="panel">
 <h2>Community Feed</h2>
 <p>Creator posts and support activity will appear here after database integration.</p>
+</section>
+
+</section>
+
+<!-- COMMUNITY -->
+
+<section class="page" id="community">
+
+<div class="eyebrow">CONNECT · SHARE · DISCOVER</div>
+
+<h1>Community 🌍</h1>
+
+<p class="muted">
+Welcome to Afrishine Hub Community — a place where people meet, discover talents, share ideas and connect with opportunities.
+</p>
+
+<section class="panel">
+
+<h2>Community Feed</h2>
+
+<p>Discover videos, photos, posts and creative talents shared by people across the Afrishine Hub community.</p>
+
+<div class="actions">
+<button class="gold" onclick="openCreateMenu('hub')">＋ Create Post</button>
+<button class="secondary" onclick="showPage('talent')">Explore Talent Hub</button>
+</div>
+
+</section>
+
+<section class="panel">
+
+<h2>👥 Groups</h2>
+
+<p>Find people who share your interests and join communities built around different talents and skills.</p>
+
+<div class="actions">
+<button class="secondary" onclick="notice('Music Groups will be available after community integration.')">🎵 Musicians</button>
+<button class="secondary" onclick="notice('Dance Groups will be available after community integration.')">💃 Dancers</button>
+<button class="secondary" onclick="notice('Fashion Groups will be available after community integration.')">👗 Fashion</button>
+</div>
+
+</section>
+
+<section class="panel">
+
+<h2>🔥 Challenges</h2>
+
+<p>Take part in creative challenges, share your talent and inspire other members.</p>
+
+<button class="gold" onclick="notice('Community Challenges will be available after backend integration.')">Explore Challenges</button>
+
+</section>
+
+<section class="panel">
+
+<h2>📅 Events & Live</h2>
+
+<p>Discover community events, live sessions, learning activities and opportunities to connect.</p>
+
+<button class="gold" onclick="notice('Community Events and Live sessions will be available after integration.')">Explore Events</button>
+
+</section>
+
+<section class="panel">
+
+<h2>❤️ Friends & Love Connection</h2>
+
+<p>Meet new people, discover meaningful connections and build respectful relationships.</p>
+
+<button class="gold" onclick="showPage('love')">Explore Love Connection →</button>
+
 </section>
 
 </section>
@@ -1457,7 +1525,7 @@ Visit Shop
 
 <a href="#home" data-page="home" class="active">⌂<small>Home</small></a>
 
-<a href="#talent" data-page="talent">▶<small>Talent</small></a>
+<a href="#community" data-page="community">◎<small>Community</small></a>
 
 <a href="#create" class="add" aria-label="Create" onclick="openCreateMenu('hub');return false;">＋</a>
 
@@ -1528,6 +1596,7 @@ function runHeaderSearch(event){
 
  const searchRoutes=[
   {words:['talent','creator','video','music','dance','artist'],page:'talent'},
+  {words:['community','communities','feed','group','groups','challenge','events'],page:'community'},
   {words:['shop','product','buy','sell','store'],page:'shop'},
   {words:['wallet','ast','token','balance','transaction'],page:'wallet'},
   {words:['academy','learn','course','training','education'],page:'academy'},
@@ -1550,7 +1619,7 @@ function runHeaderSearch(event){
 
  }else{
 
-  notice('No matching section found. Try Talent, Shop, Wallet, Academy or Travel.');
+  notice('No matching section found. Try Talent, Community, Shop, Wallet, Academy or Travel.');
   headerSearchInput.focus();
 
  }
