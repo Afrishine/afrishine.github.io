@@ -522,7 +522,7 @@ async function mediaUploadNotice(){
   const response=await fetch(endpoint,{method:'POST',headers:{'Authorization':'Bearer '+token,'Content-Type':file.type},body:file});
   const result=await response.json().catch(()=>({}));
   if(!response.ok||!result.success)throw new Error(result.error||'Media upload failed. Please try again.');
-  const caption=(document.getElementById('postText')?.value||'').trim();
+  const postTextField=document.getElementById('postText');const caption=(postTextField?postTextField.value:'').trim();
   await db.collection('posts').add({
    uid:currentFirebaseUser.uid,
    authorName:currentFirebaseUser.displayName||'Afrishine Member',
