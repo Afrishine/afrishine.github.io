@@ -243,7 +243,7 @@ body.academy-active .academy-bottom-nav{position:fixed;z-index:15;left:50%;botto
   <div class="academy-section-heading"><h3>Video Courses</h3><button type="button" class="academy-see-all" onclick="showAcademyTab('Courses',document.querySelector('.academy-bottom-nav button[data-academy-tab=Courses]'))">See all ›</button></div>
   <div class="academy-course-grid" id="academyCourseGrid" aria-live="polite"></div>
   <nav class="academy-bottom-nav" aria-label="Afrishine Academy navigation">
-    <button type="button" class="active" data-academy-tab="Home" onclick="showAcademyTab('Home',this)"><span>⌂</span><small>Home</small></button>
+    <button type="button" data-academy-tab="Home" onclick="showPage('home')" aria-label="Return to Afrishine Hub Main Dashboard" title="Return to Afrishine Hub Main Dashboard"><span>⌂</span><small>Home</small></button>
     <button type="button" data-academy-tab="Courses" onclick="showAcademyTab('Courses',this)"><span>♧</span><small>Courses</small></button>
     <button type="button" data-academy-tab="Bookmark" onclick="showAcademyTab('Bookmark',this)"><span>▱</span><small>Bookmark</small></button>
     <button type="button" data-academy-tab="Downloads" onclick="showAcademyTab('Downloads',this)"><span>⇩</span><small>Downloads</small></button>
