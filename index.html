@@ -218,6 +218,52 @@ body.academy-active .academy-bottom-nav{position:fixed;z-index:15;left:50%;botto
 .creator-dialog-close{margin-top:23px;min-width:125px;padding:11px 22px;border:0;border-radius:22px;background:#f1c96d;color:#171b2a;font-weight:850}
 @media(max-width:380px){.creator-stat{min-height:140px;padding:15px 13px}.creator-dashboard-card{padding:17px 14px}.creator-status-card{padding:19px 16px}}
 
+
+/* AFRISHINE HUB — refreshed home experience */
+.home-shortcuts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0 22px}
+.home-shortcut{position:relative;display:flex;align-items:center;gap:12px;min-height:88px;padding:15px;border:1px solid #343d4e;border-radius:18px;background:linear-gradient(145deg,#1b2331,#111722);color:#fff;text-align:left;box-shadow:0 8px 24px #0003;transition:transform .18s,border-color .18s}
+.home-shortcut:active{transform:scale(.985)}
+.home-shortcut .shortcut-icon{width:46px;height:46px;display:grid;place-items:center;flex:0 0 46px;border-radius:15px;background:#292719;font-size:24px}
+.home-shortcut strong{display:block;font-size:15px;line-height:1.2}
+.home-shortcut small{display:block;margin-top:5px;color:#b9c2d1;font-size:11px;line-height:1.35}
+.home-shortcut .shortcut-arrow{margin-left:auto;color:var(--gold);font-size:20px}
+.home-shortcut.love .shortcut-icon{background:#35202e}
+.home-shortcut.talent .shortcut-icon{background:#17372f}
+.home-shortcut.academy .shortcut-icon{background:#3b3019}
+.home-shortcut.market .shortcut-icon{background:#1d2f48}
+.home-video-section{margin:22px 0 18px}
+.home-video-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin:0 2px 12px}
+.home-video-heading h2{font-size:21px;margin:0}
+.home-video-heading p{font-size:12px;color:var(--muted);margin-top:4px}
+.home-video-feed{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.home-video-card{position:relative;overflow:hidden;aspect-ratio:9/14;border:1px solid #343d4e;border-radius:17px;background:#05070b;color:#fff;cursor:pointer}
+.home-video-card video{width:100%;height:100%;display:block;object-fit:cover;background:#05070b}
+.home-video-card:after{content:"";position:absolute;inset:40% 0 0;background:linear-gradient(transparent,#000a);pointer-events:none}
+.home-video-overlay{position:absolute;z-index:1;left:11px;right:11px;bottom:12px;display:flex;align-items:flex-end;justify-content:space-between;gap:8px;text-shadow:0 2px 5px #000}
+.home-video-overlay strong{font-size:12px;line-height:1.35;overflow-wrap:anywhere}
+.home-video-overlay small{display:block;color:#e1e5ed;font-size:10px;margin-top:4px}
+.video-play-indicator{position:absolute;z-index:2;top:10px;right:10px;width:32px;height:32px;display:grid;place-items:center;border-radius:50%;background:#0008;font-size:14px}
+.video-empty{grid-column:1/-1;padding:24px 18px;border:1px dashed #4a5365;border-radius:17px;background:#111722;text-align:center}
+.video-empty .empty-icon{font-size:30px;margin-bottom:8px}
+.video-empty strong{display:block;font-size:15px}
+.video-empty p{margin:7px auto 0;max-width:420px;color:var(--muted);font-size:12px;line-height:1.6}
+.video-viewer{display:none;position:fixed;z-index:150;inset:0;background:#000}
+.video-viewer.open{display:block}
+.video-viewer-feed{position:absolute;inset:0;overflow-y:auto;scroll-snap-type:y mandatory;overscroll-behavior:contain}
+.video-viewer-item{position:relative;width:100%;height:100%;height:100dvh;scroll-snap-align:start;background:#000;display:flex;align-items:center;justify-content:center}
+.video-viewer-item video{width:100%;height:100%;object-fit:contain;background:#000}
+.video-viewer-top{position:fixed;z-index:3;top:calc(12px + env(safe-area-inset-top));left:12px;right:12px;display:flex;justify-content:space-between;pointer-events:none}
+.video-viewer-top button{pointer-events:auto;width:43px;height:43px;border:1px solid #ffffff55;border-radius:50%;background:#10131bcc;color:#fff;font-size:20px;backdrop-filter:blur(10px)}
+.video-viewer-actions{position:absolute;z-index:2;right:14px;bottom:calc(30px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px}
+.video-viewer-actions button{width:45px;height:45px;border:1px solid #ffffff55;border-radius:50%;background:#10131bcc;color:#fff;font-size:18px}
+.video-viewer-caption{position:absolute;z-index:2;left:16px;right:76px;bottom:calc(35px + env(safe-area-inset-bottom));color:#fff;text-shadow:0 2px 6px #000;font-size:14px;line-height:1.45}
+.video-viewer-caption small{display:block;color:#ddd;font-size:11px;margin-top:5px}
+.video-viewer-item:after{content:"";position:absolute;inset:55% 0 0;background:linear-gradient(transparent,#0008);pointer-events:none}
+.video-viewer-caption,.video-viewer-actions{z-index:3}
+body.video-viewer-open{overflow:hidden}
+@media(min-width:700px){.home-shortcuts{grid-template-columns:repeat(4,minmax(0,1fr))}.home-video-feed{grid-template-columns:repeat(3,minmax(0,1fr))}.video-viewer-item video{max-width:480px}}
+@media(max-width:380px){.home-shortcut{padding:12px;gap:9px}.home-shortcut .shortcut-icon{width:40px;height:40px;flex-basis:40px}.home-shortcut strong{font-size:13px}.home-shortcut small{font-size:10px}}
+
 </style>
 </head>
 <body>
@@ -230,11 +276,21 @@ body.academy-active .academy-bottom-nav{position:fixed;z-index:15;left:50%;botto
 <section class="page active" id="home">
 <div class="home-eyebrow">YOUR COMMUNITY · YOUR OPPORTUNITIES</div>
 <div class="hero"><h1>Showcase Your Talent.<br><span>Inspire The World.</span></h1><p class="muted">Discover talent, learn new skills, shop, travel and connect with opportunities — all in one place.</p>
-<div class="actions"><button class="gold" onclick="showPage('talent')">Explore Talent Hub</button><button class="secondary" onclick="enterMarketplace()">Vist Marketplace</button></div>
+<div class="actions"><button class="gold" onclick="showPage('talent')">Explore Talent Hub</button><button class="secondary" onclick="enterMarketplace()">Visit Marketplace</button></div>
 <button class="academy-home-card" onclick="showPage('academy')"><div class="academy-home-info"><div class="academy-home-icon">🎓</div><div class="academy-home-text"><strong>LEARN WITH AFRISHINE ACADEMY</strong><small>Learn new skills, explore knowledge and grow with Afrishine Academy.</small></div></div><span class="academy-home-arrow">→</span></button>
 <button class="love-home-card" onclick="showPage('love')"><div class="love-home-info"><div class="love-home-icon">❤️</div><div class="love-home-text"><strong>LOVE CONNECTION</strong><small>Connect, discover and build meaningful relationships.</small></div></div><span class="love-home-arrow">→</span></button></div>
+<div class="home-shortcuts" aria-label="Explore Afrishine Hub services">
+<button class="home-shortcut love" type="button" onclick="showPage('love')"><span class="shortcut-icon">❤️</span><span><strong>Love Connection</strong><small>Meet and connect respectfully</small></span><span class="shortcut-arrow">›</span></button>
+<button class="home-shortcut talent" type="button" onclick="showPage('talent')"><span class="shortcut-icon">🎨</span><span><strong>Talent Hub</strong><small>Showcase skills and creativity</small></span><span class="shortcut-arrow">›</span></button>
+<button class="home-shortcut academy" type="button" onclick="showPage('academy')"><span class="shortcut-icon">🎓</span><span><strong>Afrishine Academy</strong><small>Learn and build new skills</small></span><span class="shortcut-arrow">›</span></button>
+<button class="home-shortcut market" type="button" onclick="enterMarketplace()"><span class="shortcut-icon">🛍️</span><span><strong>Marketplace</strong><small>Discover products and services</small></span><span class="shortcut-arrow">›</span></button>
+</div>
 <h2 class="dashboard-heading">Explore Afrishine Hub</h2>
 <section class="ast-wallet-card" aria-label="Afrishine Token wallet"><div class="ast-coin">AST</div><div class="ast-wallet-info"><div class="ast-wallet-label">AFRISHINE TOKEN</div><h2>My Wallet</h2><p>Your AST balance and transaction history will appear here after secure wallet and backend integration.</p></div><button class="secondary wallet-open" onclick="showPage('wallet')">Open My Wallet →</button></section>
+<section class="home-video-section" aria-label="Afrishine video feed">
+<div class="home-video-heading"><div><h2>Videos For You ▶</h2><p>Discover short videos from the Afrishine community.</p></div><span class="eyebrow">FOR YOU</span></div>
+<div class="home-video-feed" id="homeVideoFeed"><div class="video-empty"><div class="empty-icon">🎬</div><strong>Videos will appear here</strong><p>When members publish videos with a public video link, they will appear here. Videos play silently while scrolling; tap a video to watch it full screen.</p></div></div>
+</section>
 <section class="panel"><h2>Latest Community Posts</h2><p>Recent posts shared by Afrishine Hub members.</p><div id="homeFeed"><div class="empty-feed">Loading community posts…</div></div></section>
 </section>
 <section class="page" id="talent"><div class="eyebrow">CREATE · SHARE · CONNECT</div><h1>Talent Hub</h1><p class="muted">Showcase your talent and discover creators in the community.</p><section class="panel"><h2>Share your talent</h2><p>Create posts, share photos and videos, or connect with your audience.</p><div class="actions"><button class="gold" onclick="openCreateMenu('talent')">＋ Create on Talent Hub</button></div></section><section class="panel"><h2>Talent Hub Posts</h2><p>Posts shared from Talent Hub appear here and on the Home Page.</p><div id="talentFeed"><div class="empty-feed">Loading posts…</div></div></section></section>
@@ -339,6 +395,13 @@ body.academy-active .academy-bottom-nav{position:fixed;z-index:15;left:50%;botto
 <aside class="menu-drawer" id="menuDrawer" aria-label="Main menu"><div class="menu-head"><span>AFRISHINE HUB MENU</span><button class="round" onclick="closeMenu()" aria-label="Close menu">✕</button></div>
 <a href="#home" data-page="home">🏠 Home</a><a href="#talent" data-page="talent">🎬 Talent Hub</a><a href="#love" data-page="love">❤️ Love Connection</a><a href="#travel" data-page="travel">✈️ Travel Booking</a><a href="#academy" data-page="academy">🎓 Afrishine Academy</a><a href="#creatorRewards" data-page="creatorRewards">🏆 Creator Rewards</a><a href="#jobs" data-page="jobs">💼 Digital Jobs</a><a href="#shop" data-page="shop">🛍️ Shop</a><a href="#wallet" data-page="wallet">👛 My Wallet</a><a href="#inbox" data-page="inbox">💬 Inbox</a><a href="#profile" data-page="profile">👤 Profile</a><a href="#settings" data-page="settings">⚙️ Settings and Privacy</a><a href="#contact" data-page="contact">🎧 Contact Us</a></aside>
 <nav class="bottom-nav"><a href="#home" data-page="home" class="active">⌂<small>Home</small></a><a href="#community" data-page="community">◎<small>Community</small></a><a href="#create" class="add" aria-label="Create" onclick="openCreateMenu('hub');return false;">＋</a><a href="#inbox" data-page="inbox">✉<small>Inbox</small></a><a href="#profile" data-page="profile">☺<small>Profile</small></a></nav>
+<div class="video-viewer" id="videoViewer" aria-label="Full screen video viewer">
+ <div class="video-viewer-top">
+  <button type="button" onclick="closeVideoViewer()" aria-label="Back to Home feed">‹</button>
+  <button type="button" onclick="showPage('home');closeVideoViewer()" aria-label="Go to Home">⌂</button>
+ </div>
+ <div class="video-viewer-feed" id="videoViewerFeed"></div>
+</div>
 <div class="market-modal" id="marketLoginModal" role="dialog" aria-modal="true" aria-label="Marketplace sign in"><div class="market-modal-card"><div style="font-size:34px">🔐</div><h2>Login to Marketplace</h2><p class="muted" style="margin:8px auto">Komeza ukoresheje Google kugira ngo ubashe kureba, gushyiraho amatangazo no kuvugana n’abandi.</p><button class="gold" onclick="marketplaceGoogleLogin()">Continue with Google</button><button class="secondary" style="width:100%;margin-top:9px" onclick="closeMarketplaceLogin()">Cancel</button><p class="creator-hint" id="marketLoginMessage"></p></div></div><div id="notice" class="notice"></div>
 <script>
 /* Android 8+ compatibility helpers: keep older WebViews able to run page actions. */
@@ -604,6 +667,93 @@ function closeCreatorEligibilityMessage(){
   const dialog=document.getElementById('creatorEligibilityDialog');
   if(dialog && dialog.open) dialog.close();
 }
+</script>
+
+
+<script>
+/* AFRISHINE VIDEO EXPERIENCE
+   Uses video documents already stored in the existing posts collection.
+   Supported URL fields: videoUrl, mediaUrl, mediaURL or fileUrl.
+   No media is uploaded by this script; public uploads require a configured storage service.
+*/
+(function(){
+ 'use strict';
+ var videoItems=[],viewerObserver=null,feedObserver=null,activeViewerIndex=0;
+ var feed=document.getElementById('homeVideoFeed');
+ var viewer=document.getElementById('videoViewer');
+ var viewerFeed=document.getElementById('videoViewerFeed');
+ if(!feed||!viewer||!viewerFeed)return;
+ function esc(value){return String(value==null?'':value).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+ function validVideoUrl(value){try{var u=new URL(value,location.href);return u.protocol==='https:'||u.protocol==='http:'?u.href:'';}catch(e){return '';}}
+ function getVideoUrl(post){return validVideoUrl(post.videoUrl||post.mediaUrl||post.mediaURL||post.fileUrl||'');}
+ function makeCaption(post){return esc(post.text||post.caption||'A video from Afrishine Hub');}
+ function renderHomeVideos(posts){
+  videoItems=(posts||[]).filter(function(p){return String(p.type||'').toLowerCase()==='video'&&getVideoUrl(p);}).map(function(p){return {id:p.id,url:getVideoUrl(p),caption:makeCaption(p),author:esc(p.authorName||'Afrishine Member')};});
+  if(!videoItems.length){
+   feed.innerHTML='<div class="video-empty"><div class="empty-icon">🎬</div><strong>Your video feed is getting ready</strong><p>Videos shared with a public video link will appear here. Silent autoplay and full-screen viewing are ready. Public video uploads need Firebase Storage or another video-hosting service to be configured.</p></div>';
+   return;
+  }
+  feed.innerHTML=videoItems.map(function(v,i){
+   return '<article class="home-video-card" role="button" tabindex="0" aria-label="Watch video '+(i+1)+'" data-video-index="'+i+'"><video src="'+esc(v.url)+'" muted playsinline loop preload="metadata"></video><span class="video-play-indicator">▶</span><div class="home-video-overlay"><div><strong>'+v.caption+'</strong><small>by '+v.author+'</small></div><span>↗</span></div></article>';
+  }).join('');
+  feed.querySelectorAll('[data-video-index]').forEach(function(card){
+   card.addEventListener('click',function(){openVideoViewer(Number(card.getAttribute('data-video-index')));});
+   card.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();openVideoViewer(Number(card.getAttribute('data-video-index')));}});
+  });
+  observeFeedVideos();
+ }
+ function observeFeedVideos(){
+  if(feedObserver)feedObserver.disconnect();
+  if(!('IntersectionObserver' in window)){
+   feed.querySelectorAll('video').forEach(function(v){v.muted=true;var p=v.play();if(p&&p.catch)p.catch(function(){});});
+   return;
+  }
+  feedObserver=new IntersectionObserver(function(entries){
+   entries.forEach(function(entry){var v=entry.target;if(entry.isIntersecting&&entry.intersectionRatio>=.65){v.muted=true;var p=v.play();if(p&&p.catch)p.catch(function(){});}else{v.pause();}});
+  },{threshold:[0,.35,.65,1]});
+  feed.querySelectorAll('video').forEach(function(v){feedObserver.observe(v);});
+ }
+ function renderViewer(){
+  if(viewerObserver)viewerObserver.disconnect();
+  viewerFeed.innerHTML=videoItems.map(function(v,i){
+   return '<section class="video-viewer-item" data-viewer-index="'+i+'"><video src="'+esc(v.url)+'" muted playsinline loop preload="'+(i===activeViewerIndex?'auto':'metadata')+'"></video><div class="video-viewer-caption">'+v.caption+'<small>by '+v.author+'</small></div><div class="video-viewer-actions"><button type="button" data-toggle-sound="'+i+'" aria-label="Turn sound on or off">🔇</button><button type="button" data-toggle-play="'+i+'" aria-label="Pause or play video">Ⅱ</button></div></section>';
+  }).join('');
+  viewerFeed.querySelectorAll('[data-toggle-sound]').forEach(function(btn){btn.addEventListener('click',function(e){e.stopPropagation();var v=btn.closest('.video-viewer-item').querySelector('video');v.muted=!v.muted;btn.textContent=v.muted?'🔇':'🔊';if(!v.paused){var p=v.play();if(p&&p.catch)p.catch(function(){});}});});
+  viewerFeed.querySelectorAll('[data-toggle-play]').forEach(function(btn){btn.addEventListener('click',function(e){e.stopPropagation();var v=btn.closest('.video-viewer-item').querySelector('video');if(v.paused){var p=v.play();if(p&&p.catch)p.catch(function(){});btn.textContent='Ⅱ';}else{v.pause();btn.textContent='▶';}});});
+  if('IntersectionObserver' in window){
+   viewerObserver=new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){var v=entry.target.querySelector('video');if(!v)return;
+     if(entry.isIntersecting&&entry.intersectionRatio>=.7){activeViewerIndex=Number(entry.target.getAttribute('data-viewer-index'));v.muted=true;var soundButton=entry.target.querySelector('[data-toggle-sound]');if(soundButton)soundButton.textContent='🔇';var p=v.play();if(p&&p.catch)p.catch(function(){});}
+     else{v.pause();v.currentTime=0;}
+    });
+   },{root:viewerFeed,threshold:[0,.4,.7,1]});
+   viewerFeed.querySelectorAll('.video-viewer-item').forEach(function(item){viewerObserver.observe(item);});
+  }else{var first=viewerFeed.querySelector('video');if(first){first.muted=true;var p=first.play();if(p&&p.catch)p.catch(function(){});}}
+  var target=viewerFeed.querySelector('[data-viewer-index="'+activeViewerIndex+'"]');if(target)target.scrollIntoView({block:'start'});
+ }
+ window.openVideoViewer=function(index){
+  if(!videoItems.length)return;
+  activeViewerIndex=Math.max(0,Math.min(index,videoItems.length-1));
+  renderViewer();viewer.classList.add('open');document.body.classList.add('video-viewer-open');
+  var target=viewerFeed.querySelector('[data-viewer-index="'+activeViewerIndex+'"]');if(target)target.scrollIntoView({block:'start'});
+ };
+ window.closeVideoViewer=function(){
+  viewer.classList.remove('open');document.body.classList.remove('video-viewer-open');
+  if(viewerObserver)viewerObserver.disconnect();
+  viewerFeed.querySelectorAll('video').forEach(function(v){v.pause();v.removeAttribute('src');v.load();});
+  viewerFeed.innerHTML='';
+ };
+ window.addEventListener('keydown',function(e){if(e.key==='Escape'&&viewer.classList.contains('open'))window.closeVideoViewer();});
+ /* The existing Firestore posts listener calls renderPosts; wrap it without changing other feed behaviour. */
+ var originalRenderPosts=window.renderPosts;
+ window.renderPosts=function(posts){
+  if(typeof originalRenderPosts==='function')originalRenderPosts(posts);
+  renderHomeVideos(posts||[]);
+ };
+ /* Re-render when returning Home after the viewer has been closed. */
+ var homeNav=document.querySelector('.bottom-nav a[data-page="home"]');
+ if(homeNav)homeNav.addEventListener('click',function(){if(viewer.classList.contains('open'))window.closeVideoViewer();});
+})();
 </script>
 
 </body>
