@@ -264,6 +264,20 @@ body.video-viewer-open{overflow:hidden}
 @media(min-width:700px){.home-shortcuts{grid-template-columns:repeat(4,minmax(0,1fr))}.home-video-feed{grid-template-columns:repeat(3,minmax(0,1fr))}.video-viewer-item video{max-width:480px}}
 @media(max-width:380px){.home-shortcut{padding:12px;gap:9px}.home-shortcut .shortcut-icon{width:40px;height:40px;flex-basis:40px}.home-shortcut strong{font-size:13px}.home-shortcut small{font-size:10px}}
 
+
+/* FINAL CALM BRAND PALETTE: soft navy, muted gold and restrained rose */
+.academy-home-card{border:1px solid #74633b;background:linear-gradient(120deg,#171d2a,#202737);box-shadow:0 5px 16px #0003}
+.academy-home-icon{background:#302b20;color:#ead8a6}
+.academy-home-text strong{color:#f0e5c8}
+.academy-home-text small{color:#c4c9d3}
+.academy-home-arrow{color:#d8b65c}
+.love-home-card{border:1px solid #74633b;background:linear-gradient(120deg,#171d2a,#202737);box-shadow:0 5px 16px #0003}
+.love-home-icon{background:#33272d;color:#c9828d}
+.love-home-text strong{color:#f0e5c8}
+.love-home-text small{color:#c4c9d3}
+.love-home-arrow{color:#d8b65c}
+.hero{padding-bottom:25px}
+
 </style>
 </head>
 <body>
@@ -279,12 +293,6 @@ body.video-viewer-open{overflow:hidden}
 <div class="actions"><button class="gold" onclick="showPage('talent')">Explore Talent Hub</button><button class="secondary" onclick="enterMarketplace()">Visit Marketplace</button></div>
 <button class="academy-home-card" onclick="showPage('academy')"><div class="academy-home-info"><div class="academy-home-icon">🎓</div><div class="academy-home-text"><strong>LEARN WITH AFRISHINE ACADEMY</strong><small>Learn new skills, explore knowledge and grow with Afrishine Academy.</small></div></div><span class="academy-home-arrow">→</span></button>
 <button class="love-home-card" onclick="showPage('love')"><div class="love-home-info"><div class="love-home-icon">❤️</div><div class="love-home-text"><strong>LOVE CONNECTION</strong><small>Connect, discover and build meaningful relationships.</small></div></div><span class="love-home-arrow">→</span></button></div>
-<div class="home-shortcuts" aria-label="Explore Afrishine Hub services">
-<button class="home-shortcut love" type="button" onclick="showPage('love')"><span class="shortcut-icon">❤️</span><span><strong>Love Connection</strong><small>Meet and connect respectfully</small></span><span class="shortcut-arrow">›</span></button>
-<button class="home-shortcut talent" type="button" onclick="showPage('talent')"><span class="shortcut-icon">🎨</span><span><strong>Talent Hub</strong><small>Showcase skills and creativity</small></span><span class="shortcut-arrow">›</span></button>
-<button class="home-shortcut academy" type="button" onclick="showPage('academy')"><span class="shortcut-icon">🎓</span><span><strong>Afrishine Academy</strong><small>Learn and build new skills</small></span><span class="shortcut-arrow">›</span></button>
-<button class="home-shortcut market" type="button" onclick="enterMarketplace()"><span class="shortcut-icon">🛍️</span><span><strong>Marketplace</strong><small>Discover products and services</small></span><span class="shortcut-arrow">›</span></button>
-</div>
 <h2 class="dashboard-heading">Explore Afrishine Hub</h2>
 <section class="ast-wallet-card" aria-label="Afrishine Token wallet"><div class="ast-coin">AST</div><div class="ast-wallet-info"><div class="ast-wallet-label">AFRISHINE TOKEN</div><h2>My Wallet</h2><p>Your AST balance and transaction history will appear here after secure wallet and backend integration.</p></div><button class="secondary wallet-open" onclick="showPage('wallet')">Open My Wallet →</button></section>
 <section class="home-video-section" aria-label="Afrishine video feed">
