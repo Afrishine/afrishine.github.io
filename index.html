@@ -286,7 +286,9 @@ const MARKETPLACE_PAGE_SIZE=15;
 try{if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);auth=firebase.auth();db=firebase.firestore();}
 catch(error){console.error('Firebase initialization failed:',error);}
 function isGoogleMarketplaceUser(user){if(!user||!user.providerData)return false;return user.providerData.some(function(info){return info.providerId==='google.com';});}
-function showAcademyTab(tab,button){document.querySelectorAll('.academy-bottom-nav button').forEach(function(item){item.classList.toggle('active',item===button);});const message=document.getElementById('academyTabMessage');if(message)message.textContent=tab+' — Afrishine Academy. Iyi section izuzuzwa mu ntambwe ikurikira.';} function showPage(id){if(id==='shop'&&!isGoogleMarketplaceUser(currentFirebaseUser)){openMarketplaceLogin();return;}const page=document.getElementById(id);if(!page)return;document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('[data-page]').forEach(a=>a.classList.toggle('active',a.dataset.page===id));if(location.hash!=='#'+id){if(window.history&&history.replaceState){history.replaceState(null,'','#'+id);}else{location.hash=id;}}closeMenu();closeCreateMenu();closeCreator();if(id==='love')refreshLoveAccess();if(id==='inbox')loadInbox();window.scrollTo(0,0);}
+function isPiBrowser(){var ua=(navigator&&navigator.userAgent)||'';return !!(window.Pi)||/PiBrowser/i.test(ua);}
+function canViewMarketplace(){return isPiBrowser()||isGoogleMarketplaceUser(currentFirebaseUser);}
+function showAcademyTab(tab,button){document.querySelectorAll('.academy-bottom-nav button').forEach(function(item){item.classList.toggle('active',item===button);});const message=document.getElementById('academyTabMessage');if(message)message.textContent=tab+' — Afrishine Academy. Iyi section izuzuzwa mu ntambwe ikurikira.';} function showPage(id){if(id==='shop'&&!canViewMarketplace()){openMarketplaceLogin();return;}const page=document.getElementById(id);if(!page)return;document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('[data-page]').forEach(a=>a.classList.toggle('active',a.dataset.page===id));if(location.hash!=='#'+id){if(window.history&&history.replaceState){history.replaceState(null,'','#'+id);}else{location.hash=id;}}closeMenu();closeCreateMenu();closeCreator();if(id==='love')refreshLoveAccess();if(id==='inbox')loadInbox();window.scrollTo(0,0);}
 document.querySelectorAll('[data-page]').forEach(el=>el.addEventListener('click',e=>{e.preventDefault();showPage(el.dataset.page);}));
 const headerSearchInput=document.getElementById('headerSearch');
 function runHeaderSearch(e){e.preventDefault();const q=headerSearchInput.value.trim().toLowerCase();if(!q){headerSearchInput.focus();return;}const routes=[{w:['talent','creator','video','music','dance','artist'],p:'talent'},{w:['community','feed','group','challenge','events'],p:'community'},{w:['shop','product','buy','sell','store'],p:'shop'},{w:['wallet','ast','token','balance','transaction'],p:'wallet'},{w:['academy','learn','course','training','education'],p:'academy'},{w:['travel','trip','booking','destination'],p:'travel'},{w:['job','work','employment'],p:'jobs'},{w:['inbox','message','chat'],p:'inbox'},{w:['profile','account','login','sign in'],p:'profile'},{w:['love','connection'],p:'love'},{w:['contact','support','help'],p:'contact'}];const m=routes.find(r=>r.w.some(w=>q.includes(w)));if(m){showPage(m.p);headerSearchInput.blur();}else notice('No matching section found. Try Talent, Community, Shop, Wallet, Academy or Travel.');}
@@ -349,8 +351,8 @@ if(auth){auth.onAuthStateChanged(async user=>{
    var loginMessage=document.getElementById('marketLoginMessage');if(loginMessage)loginMessage.textContent='Marketplace yemera Google Login gusa. Sohoka wongere winjire ukoresheje Google.';
   }
  }
- if(user&&document.getElementById('shop').classList.contains('active')){
-  if(isGoogleMarketplaceUser(user))loadMarketplacePosts();
+ if(document.getElementById('shop').classList.contains('active')){
+  if(canViewMarketplace())loadMarketplacePosts();
   else{document.getElementById('shop').classList.remove('active');openMarketplaceLogin();}
  }
 });
@@ -358,7 +360,7 @@ auth.getRedirectResult().catch(function(e){console.error('Google redirect result
 }
 
 /* AFRISHINE MARKETPLACE: Google-authenticated posts and community interaction */
-function enterMarketplace(){if(!isGoogleMarketplaceUser(currentFirebaseUser)){openMarketplaceLogin();return;}showPage('shop');loadMarketplacePosts();}
+function enterMarketplace(){if(!canViewMarketplace()){openMarketplaceLogin();return;}showPage('shop');loadMarketplacePosts();}
 function openMarketplaceLogin(){pendingMarketplaceLogin=true;document.getElementById('marketLoginModal').classList.add('open');}
 function closeMarketplaceLogin(){pendingMarketplaceLogin=false;document.getElementById('marketLoginModal').classList.remove('open');}
 async function marketplaceGoogleLogin(){
@@ -377,11 +379,11 @@ async function marketplaceGoogleLogin(){
   if(message)message.textContent=firebaseErrorMessage(e);
  }
 }
-function setMarketplaceFilter(filter){if(!isGoogleMarketplaceUser(currentFirebaseUser)){openMarketplaceLogin();return;}marketplaceFilter=filter;['marketAllBtn','marketBuyBtn','marketSellBtn'].forEach(function(id){var b=document.getElementById(id);if(b)b.classList.remove('active');});var active=document.getElementById(filter==='all'?'marketAllBtn':filter==='buy'?'marketBuyBtn':'marketSellBtn');if(active)active.classList.add('active');loadMarketplacePosts(true);}
+function setMarketplaceFilter(filter){if(!canViewMarketplace()){openMarketplaceLogin();return;}marketplaceFilter=filter;['marketAllBtn','marketBuyBtn','marketSellBtn'].forEach(function(id){var b=document.getElementById(id);if(b)b.classList.remove('active');});var active=document.getElementById(filter==='all'?'marketAllBtn':filter==='buy'?'marketBuyBtn':'marketSellBtn');if(active)active.classList.add('active');loadMarketplacePosts(true);}
 async function publishMarketplacePost(){if(!isGoogleMarketplaceUser(currentFirebaseUser)){openMarketplaceLogin();return;}if(!db){notice('Database ntiyatangije neza. Ongera ufungure app.');return;}var type=document.getElementById('marketType').value,text=document.getElementById('marketText').value.trim(),price=document.getElementById('marketPrice').value.trim(),locationText=document.getElementById('marketLocation').value.trim();if(text.length<8){notice('Andika ibisobanuro birambuye mbere yo gushyiraho itangazo.');return;}if(!locationText){notice('Andika aho uherereye: igihugu, umujyi/akarere n’umurenge.');return;}if(text.length>1200){notice('Ibisobanuro ni birebire cyane.');return;}var btn=document.querySelector('#shop .market-form button.gold');var oldLabel=btn?btn.textContent:'';if(btn){btn.disabled=true;btn.textContent='Posting…';}var name=(currentFirebaseUser.displayName||'Afrishine Member').trim();try{await db.collection('marketplacePosts').add({uid:currentFirebaseUser.uid,authorName:name,authorPhoto:currentFirebaseUser.photoURL||'',type:type,text:text,price:price,location:locationText,createdAt:firebase.firestore.FieldValue.serverTimestamp(),status:'active'});document.getElementById('marketText').value='';document.getElementById('marketPrice').value='';notice('Itangazo ryawe ryashyizwe kuri Marketplace.');await loadMarketplacePosts(true);}catch(e){console.error('Marketplace publish failed:',e);notice(firebaseErrorMessage(e));}finally{if(btn){btn.disabled=false;btn.textContent=oldLabel||'Post on Marketplace';}}}
 async function loadMarketplacePosts(reset=true){
  var feed=document.getElementById('marketplaceFeed');if(!feed)return;
- if(!isGoogleMarketplaceUser(currentFirebaseUser)){feed.innerHTML='<p class="muted">Login with Google to view Marketplace posts.</p>';return;}
+ if(!canViewMarketplace()){feed.innerHTML='<p class="muted">Login with Google to view Marketplace posts.</p>';return;}
  if(!db){feed.innerHTML='<p class="muted">Database ntiyatangije neza. Ongera ugerageze.</p>';return;}
  if(marketplaceLoading)return;marketplaceLoading=true;
  if(reset){marketplaceLastDoc=null;marketplaceHasMore=false;feed.innerHTML='<p class="muted">Loading Marketplace…</p>';}
