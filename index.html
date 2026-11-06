@@ -136,6 +136,24 @@ body{font-size:16px}
 
 .text-link{background:none;border:0;color:var(--gold);padding:0;font:inherit;font-weight:700;text-align:left;cursor:pointer}
 .post-actions{margin-top:12px;flex-wrap:wrap}.comment-area{margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08)}.comment-line{font-size:13px;margin:6px 0;color:#d8dce5}.comment-compose{display:flex;gap:8px;align-items:center;margin-top:8px}.comment-compose .field{flex:1;min-width:0;margin:0}.conversation-row{width:100%;display:flex;flex-direction:column;gap:5px;text-align:left;padding:13px;margin:7px 0;border:1px solid var(--line);border-radius:12px;background:#111722;color:var(--text);cursor:pointer}.conversation-row small{color:var(--muted)}.message-list{display:flex;flex-direction:column;gap:9px;max-height:50vh;overflow:auto;padding:10px 0}.message-bubble{max-width:85%;align-self:flex-start;padding:10px 12px;background:#171e2a;border:1px solid var(--line);border-radius:12px}.message-bubble.mine{align-self:flex-end;background:#292313}.message-bubble p{margin:5px 0}.message-bubble small{color:var(--muted);font-size:11px}.profile-avatar{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:#2b2413;color:var(--gold);font-size:25px;font-weight:800;margin-bottom:12px}
+
+/* AFRISHINE ACADEMY: requested entry buttons and Academy-only navigation */
+.academy-home-card{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;margin-top:16px;padding:15px 18px;border:1px solid #c49a3a;border-radius:16px;background:linear-gradient(110deg,#2a2110,#191e2b);color:#fff;text-align:left;box-shadow:0 5px 18px #0004}
+.academy-home-info{display:flex;align-items:center;gap:12px;min-width:0}
+.academy-home-icon{width:44px;height:44px;flex-shrink:0;display:grid;place-items:center;border-radius:50%;background:#493813;font-size:24px}
+.academy-home-text strong{display:block;color:#ffd46d;font-size:16px;font-weight:900}
+.academy-home-text small{display:block;margin-top:4px;color:#e0d7c4;font-size:12px;line-height:1.45}
+.academy-home-arrow{color:#ffd46d;font-size:24px}
+.menu-drawer a.academy-menu-link{border-color:#a47b25;background:linear-gradient(110deg,#382b12,#202536);color:#ffcf58;font-weight:850}
+.academy-intro,.academy-content,.academy-navigation{margin-top:16px}
+.academy-types{list-style:none;margin:13px 0 3px;padding:0;display:grid;gap:12px}
+.academy-types li{font-size:18px;color:#fff}
+.academy-bottom-nav{display:flex;justify-content:space-between;gap:4px;margin:18px 0 14px;padding:12px 3px;border:1px solid #41495a;border-radius:15px;background:#0d1119}
+.academy-bottom-nav button{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 2px;border:0;border-radius:10px;background:transparent;color:#dce1eb}
+.academy-bottom-nav button span{font-size:27px;line-height:1}
+.academy-bottom-nav button small{font-size:11px;font-weight:750}
+.academy-bottom-nav button.active{color:#ffd05b;background:#302713}
+.academy-nav-note{padding-top:14px;border-top:1px solid #303747;color:#56c887!important;font-weight:800;font-size:14px!important}
 </style>
 </head>
 <body>
@@ -149,6 +167,7 @@ body{font-size:16px}
 <div class="home-eyebrow">YOUR COMMUNITY · YOUR OPPORTUNITIES</div>
 <div class="hero"><h1>Showcase Your Talent.<br><span>Inspire The World.</span></h1><p class="muted">Discover talent, learn new skills, shop, travel and connect with opportunities — all in one place.</p>
 <div class="actions"><button class="gold" onclick="showPage('talent')">Explore Talent Hub</button><button class="secondary" onclick="enterMarketplace()">Vist Marketplace</button></div>
+<button class="academy-home-card" onclick="showPage('academy')"><div class="academy-home-info"><div class="academy-home-icon">🎓</div><div class="academy-home-text"><strong>LEARN WITH AFRISHINE ACADEMY</strong><small>Learn new skills, explore knowledge and grow with Afrishine Academy.</small></div></div><span class="academy-home-arrow">→</span></button>
 <button class="love-home-card" onclick="showPage('love')"><div class="love-home-info"><div class="love-home-icon">❤️</div><div class="love-home-text"><strong>LOVE CONNECTION</strong><small>Connect, discover and build meaningful relationships.</small></div></div><span class="love-home-arrow">→</span></button></div>
 <h2 class="dashboard-heading">Explore Afrishine Hub</h2>
 <section class="ast-wallet-card" aria-label="Afrishine Token wallet"><div class="ast-coin">AST</div><div class="ast-wallet-info"><div class="ast-wallet-label">AFRISHINE TOKEN</div><h2>My Wallet</h2><p>Your AST balance and transaction history will appear here after secure wallet and backend integration.</p></div><button class="secondary wallet-open" onclick="showPage('wallet')">Open My Wallet →</button></section>
@@ -169,7 +188,36 @@ body{font-size:16px}
 <section class="panel"><h2>💞 Love Connection Feed</h2><p>Posts in this feed are separate from Home, Community and Talent Hub.</p><div id="loveFeed"><div class="empty-feed">Loading Love Connection posts…</div></div></section>
 </div></section>
 <section class="page" id="travel"><div class="eyebrow">PLAN YOUR JOURNEY</div><h1>Travel Booking</h1><p class="muted">Find travel services and booking opportunities.</p><section class="panel"><h2>Search Travel</h2><input class="field" id="destination" placeholder="Enter destination"><button class="gold" onclick="notice('Travel booking provider must be connected before reservations can be made.')">Search Trips</button></section></section>
-<section class="page" id="academy"><div class="eyebrow">LEARN · PRACTICE · GROW</div><h1>Afrishine Academy</h1><p class="muted">A learning space for digital skills, creativity, business and financial education.</p><section class="panel"><h2>Courses & Training</h2><p>Course catalogue, lessons, learning progress and certificates will be connected here.</p><button class="gold" onclick="notice('Course catalogue is not connected yet.')">Explore Courses</button></section></section>
+<section class="page" id="academy">
+<div class="eyebrow">LEARN · PRACTICE · GROW</div>
+<h1>Learn With Afrishine Academy</h1>
+<p class="muted">Welcome to Afrishine Academy — ahantu ho kwiga, gusangiza abandi ubumenyi no kwagura ubushobozi bwawe.</p>
+<section class="panel academy-intro">
+<h2>Learn With Afrishine Academy</h2>
+<p>• Izajya igaragara muri Afrishine Hub kugira ngo buri wese abone aho yigira kandi agasangiza abandi ubumenyi.</p>
+<p>• Iyo umuntu ayikanze, izahita imujyana muri Afrishine Academy.</p>
+</section>
+<section class="panel academy-content">
+<h2>2. Ibizaba muri Afrishine Academy</h2>
+<p>Ntituzavanamo uburyo bwo gushyiraho:</p>
+<ul class="academy-types">
+<li>🎥 Video Posting</li><li>🖼️ Photo Posting</li><li>📝 Text Posting</li><li>📚 Books</li>
+</ul>
+</section>
+<section class="panel academy-navigation">
+<h2>3. Bottom Navigation ya Academy</h2>
+<p>Urugero rw’uko navigation izaba imeze</p>
+<nav class="academy-bottom-nav" aria-label="Afrishine Academy navigation">
+<button type="button" class="active" onclick="showAcademyTab('Home',this)"><span>⌂</span><small>Home</small></button>
+<button type="button" onclick="showAcademyTab('Course',this)"><span>♧</span><small>Course</small></button>
+<button type="button" onclick="showAcademyTab('BookMark',this)"><span>▱</span><small>BookMark</small></button>
+<button type="button" onclick="showAcademyTab('Download',this)"><span>⇩</span><small>Download</small></button>
+<button type="button" onclick="showAcademyTab('Profile',this)"><span>♙</span><small>Profile</small></button>
+</nav>
+<p class="academy-nav-note">Iyi navigation izajya igaragara muri Academy gusa.</p>
+<p class="creator-hint" id="academyTabMessage" aria-live="polite">Home — Afrishine Academy.</p>
+</section>
+</section>
 <section class="page" id="jobs"><div class="eyebrow">WORK · CONNECT · GROW</div><h1>Digital Jobs</h1><p class="muted">Discover digital work and connect with employers.</p><section class="panel"><h2>Find Opportunities</h2><p>Job listings, applications and employer profiles will be available after backend integration.</p><div class="actions"><button class="gold" onclick="notice('Job listings are not connected yet.')">Find Jobs</button><button class="secondary" onclick="notice('Employer job posting is not connected yet.')">Post a Job</button></div></section></section>
 <section class="page" id="shop"><div class="eyebrow">BUY · SELL · SUPPORT LOCAL</div><h1>Marketplace</h1><p class="muted">Discover products, ask for what you need and connect directly with sellers across Rwanda.</p><div class="shop-options"><div class="shop-card buy"><div style="font-size:30px">🛍️</div><b>Buy Products</b><p>Find what you need</p><button class="white-btn" onclick="setMarketplaceFilter('buy')">Explore Now →</button></div><div class="shop-card sell"><div style="font-size:30px">🏷️</div><b>Sell Products</b><p>Reach more customers</p><button class="white-btn" onclick="setMarketplaceFilter('sell')">Start Selling →</button></div></div>
 <div class="market-warning">⚠️ Irinde kwizera umuntu mutaziranye cyangwa mutarahura. Ntukohereze amafaranga mbere yo kugenzura igicuruzwa n’umucuruzi. Byaba byiza muhuriye ahantu hizewe, hahurira abantu benshi. Ntugasangize abantu amakuru yawe y’ibanga cyangwa PIN.</div>
@@ -196,9 +244,9 @@ body{font-size:16px}
 </div></section>
 <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenu()"></div>
 <aside class="menu-drawer" id="menuDrawer" aria-label="Main menu"><div class="menu-head"><span>AFRISHINE HUB MENU</span><button class="round" onclick="closeMenu()" aria-label="Close menu">✕</button></div>
-<a href="#home" data-page="home">🏠 Home</a><a href="#talent" data-page="talent">🎬 Talent Hub</a><a href="#love" data-page="love">❤️ Love Connection</a><a href="#travel" data-page="travel">✈️ Travel Booking</a><a href="#academy" data-page="academy">🎓 Afrishine Academy</a><a href="#jobs" data-page="jobs">💼 Digital Jobs</a><a href="#shop" data-page="shop">🛍️ Shop</a><a href="#wallet" data-page="wallet">👛 My Wallet</a><a href="#inbox" data-page="inbox">💬 Inbox</a><a href="#profile" data-page="profile">👤 Profile</a><a href="#settings" data-page="settings">⚙️ Settings and Privacy</a><a href="#contact" data-page="contact">🎧 Contact Us</a></aside>
+<a href="#home" data-page="home">🏠 Home</a><a href="#talent" data-page="talent">🎬 Talent Hub</a><a href="#academy" data-page="academy" class="academy-menu-link">🎓 Learn With Afrishine Academy</a><a href="#love" data-page="love">❤️ Love Connection</a><a href="#travel" data-page="travel">✈️ Travel Booking</a><a href="#academy" data-page="academy">🎓 Afrishine Academy</a><a href="#jobs" data-page="jobs">💼 Digital Jobs</a><a href="#shop" data-page="shop">🛍️ Shop</a><a href="#wallet" data-page="wallet">👛 My Wallet</a><a href="#inbox" data-page="inbox">💬 Inbox</a><a href="#profile" data-page="profile">👤 Profile</a><a href="#settings" data-page="settings">⚙️ Settings and Privacy</a><a href="#contact" data-page="contact">🎧 Contact Us</a></aside>
 <nav class="bottom-nav"><a href="#home" data-page="home" class="active">⌂<small>Home</small></a><a href="#community" data-page="community">◎<small>Community</small></a><a href="#create" class="add" aria-label="Create" onclick="openCreateMenu('hub');return false;">＋</a><a href="#inbox" data-page="inbox">✉<small>Inbox</small></a><a href="#profile" data-page="profile">☺<small>Profile</small></a></nav>
-<div class="market-modal" id="marketLoginModal" role="dialog" aria-modal="true" aria-label="Marketplace sign in"><div class="market-modal-card"><div style="font-size:34px">🔐</div><h2>Login to Marketplace</h2><p class="muted" style="margin:8px auto">Injira ukoresheje Google cyangwa Pi Login yagenzuwe kugira ngo urebe, ushyireho amatangazo kandi uvugane n’abandi.</p><button class="gold" onclick="marketplaceGoogleLogin()">Continue with Google</button><button class="secondary" style="width:100%;margin-top:9px" onclick="marketplacePiLogin()">Login with Pi Network</button><button class="secondary" style="width:100%;margin-top:9px" onclick="closeMarketplaceLogin()">Cancel</button><p class="creator-hint" id="marketLoginMessage"></p></div></div><div id="notice" class="notice"></div>
+<div class="market-modal" id="marketLoginModal" role="dialog" aria-modal="true" aria-label="Marketplace sign in"><div class="market-modal-card"><div style="font-size:34px">🔐</div><h2>Login to Marketplace</h2><p class="muted" style="margin:8px auto">Komeza ukoresheje Google kugira ngo ubashe kureba, gushyiraho amatangazo no kuvugana n’abandi.</p><button class="gold" onclick="marketplaceGoogleLogin()">Continue with Google</button><button class="secondary" style="width:100%;margin-top:9px" onclick="closeMarketplaceLogin()">Cancel</button><p class="creator-hint" id="marketLoginMessage"></p></div></div><div id="notice" class="notice"></div>
 <script>
 /* Android 8+ compatibility helpers: keep older WebViews able to run page actions. */
 (function(){
@@ -233,36 +281,12 @@ const firebaseConfig={
  measurementId:"G-WXNG0SHM9X"
 };
 let auth=null,db=null,currentFirebaseUser=null,cameraStream=null,cameraFacing='user',selectedMediaUrl=null,createSource='hub',marketplaceFilter='all',pendingMarketplaceLogin=false;
-const PI_AUTH_WORKER_URL='https://afrishine-pi-auth.usherluckyelie.workers.dev';
-let marketplacePiVerifiedUid=null;
 let marketplaceLastDoc=null,marketplaceHasMore=false,marketplaceLoading=false;
 const MARKETPLACE_PAGE_SIZE=15;
 try{if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);auth=firebase.auth();db=firebase.firestore();}
 catch(error){console.error('Firebase initialization failed:',error);}
-async function refreshMarketplaceAuthStatus(user){
- marketplacePiVerifiedUid=null;
- if(!user)return false;
- try{
-  var tokenResult=await user.getIdTokenResult(true);
-  if(tokenResult&&tokenResult.claims&&tokenResult.claims.pi_verified===true){
-   marketplacePiVerifiedUid=user.uid;
-   return true;
-  }
- }catch(e){console.warn('Could not refresh Pi verification claim:',e);}
- return false;
-}
-function isGoogleMarketplaceUser(user){
- if(!user)return false;
- var google=!!(user.providerData&&user.providerData.some(function(info){return info.providerId==='google.com';}));
- return google||marketplacePiVerifiedUid===user.uid;
-}
-function marketplacePiLogin(){
- pendingMarketplaceLogin=true;
- document.getElementById('marketLoginModal').classList.remove('open');
- showPage('profile');
- notice('Kanda Login with Pi muri Profile. Injira uri muri Pi Browser.');
-}
-function showPage(id){if(id==='shop'&&!isGoogleMarketplaceUser(currentFirebaseUser)){openMarketplaceLogin();return;}const page=document.getElementById(id);if(!page)return;document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('[data-page]').forEach(a=>a.classList.toggle('active',a.dataset.page===id));if(location.hash!=='#'+id){if(window.history&&history.replaceState){history.replaceState(null,'','#'+id);}else{location.hash=id;}}closeMenu();closeCreateMenu();closeCreator();if(id==='love')refreshLoveAccess();if(id==='inbox')loadInbox();window.scrollTo(0,0);}
+function isGoogleMarketplaceUser(user){if(!user||!user.providerData)return false;return user.providerData.some(function(info){return info.providerId==='google.com';});}
+function showAcademyTab(tab,button){document.querySelectorAll('.academy-bottom-nav button').forEach(function(item){item.classList.toggle('active',item===button);});const message=document.getElementById('academyTabMessage');if(message)message.textContent=tab+' — Afrishine Academy. Iyi section izuzuzwa mu ntambwe ikurikira.';} function showPage(id){if(id==='shop'&&!isGoogleMarketplaceUser(currentFirebaseUser)){openMarketplaceLogin();return;}const page=document.getElementById(id);if(!page)return;document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('[data-page]').forEach(a=>a.classList.toggle('active',a.dataset.page===id));if(location.hash!=='#'+id){if(window.history&&history.replaceState){history.replaceState(null,'','#'+id);}else{location.hash=id;}}closeMenu();closeCreateMenu();closeCreator();if(id==='love')refreshLoveAccess();if(id==='inbox')loadInbox();window.scrollTo(0,0);}
 document.querySelectorAll('[data-page]').forEach(el=>el.addEventListener('click',e=>{e.preventDefault();showPage(el.dataset.page);}));
 const headerSearchInput=document.getElementById('headerSearch');
 function runHeaderSearch(e){e.preventDefault();const q=headerSearchInput.value.trim().toLowerCase();if(!q){headerSearchInput.focus();return;}const routes=[{w:['talent','creator','video','music','dance','artist'],p:'talent'},{w:['community','feed','group','challenge','events'],p:'community'},{w:['shop','product','buy','sell','store'],p:'shop'},{w:['wallet','ast','token','balance','transaction'],p:'wallet'},{w:['academy','learn','course','training','education'],p:'academy'},{w:['travel','trip','booking','destination'],p:'travel'},{w:['job','work','employment'],p:'jobs'},{w:['inbox','message','chat'],p:'inbox'},{w:['profile','account','login','sign in'],p:'profile'},{w:['love','connection'],p:'love'},{w:['contact','support','help'],p:'contact'}];const m=routes.find(r=>r.w.some(w=>q.includes(w)));if(m){showPage(m.p);headerSearchInput.blur();}else notice('No matching section found. Try Talent, Community, Shop, Wallet, Academy or Travel.');}
@@ -299,7 +323,7 @@ if(sharedPostId){const targetPage=new URLSearchParams(location.search).get('kind
 
 /* EMAIL/PASSWORD FIREBASE AUTH */
 function setAuthMessage(message,error=false){const el=document.getElementById('authMessage');el.textContent=message;el.style.color=error?'#ff9b9b':'#b8d9b8';}
-function firebaseErrorMessage(e){const map={'auth/email-already-in-use':'This email already has an account. Please sign in.','auth/invalid-email':'Please enter a valid email address.','auth/weak-password':'Your password must contain at least 6 characters.','auth/user-not-found':'No account was found for this email.','auth/wrong-password':'Incorrect password. Please try again.','auth/invalid-credential':'Email or password is incorrect.','auth/too-many-requests':'Too many attempts. Please wait and try again.','auth/network-request-failed':'Network error. Check your internet connection.','auth/operation-not-allowed':'This sign-in method is not enabled in Firebase Authentication settings.','auth/popup-blocked':'Allow pop-ups for this site and try Google sign-in again.','permission-denied':'Firestore denied this action. Check the published Firestore rules.','unavailable':'Database temporarily unavailable. Try again.'};return map[e.code]||e.message||'Something went wrong. Please try again.';}
+function firebaseErrorMessage(e){const map={'auth/email-already-in-use':'This email already has an account. Please sign in.','auth/invalid-email':'Please enter a valid email address.','auth/weak-password':'Your password must contain at least 6 characters.','auth/user-not-found':'No account was found for this email.','auth/wrong-password':'Incorrect password. Please try again.','auth/invalid-credential':'Email or password is incorrect.','auth/too-many-requests':'Too many attempts. Please wait and try again.','auth/network-request-failed':'Network error. Check your internet connection.','auth/operation-not-allowed':'Enable Google sign-in in Firebase Authentication settings.','auth/popup-blocked':'Allow pop-ups for this site and try Google sign-in again.','permission-denied':'Firestore denied this action. Check the published Firestore rules.','unavailable':'Database temporarily unavailable. Try again.'};return map[e.code]||e.message||'Something went wrong. Please try again.';}
 async function emailSignUp(){if(!auth){setAuthMessage('Firebase did not initialize. Check the Firebase configuration.',true);return;}const username=document.getElementById('authUsername').value.trim(),email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value;if(!username||username.length<3){setAuthMessage('Choose a username with at least 3 characters.',true);return;}if(!/^[a-zA-Z0-9_.-]+$/.test(username)){setAuthMessage('Username can use letters, numbers, dot, dash and underscore only.',true);return;}if(!email||!password){setAuthMessage('Enter your email and password.',true);return;}try{const result=await auth.createUserWithEmailAndPassword(email,password);await result.user.updateProfile({displayName:username});await db.collection('users').doc(result.user.uid).set({username:username,createdAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});await db.collection('publicProfiles').doc(result.user.uid).set({username:username,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});setAuthMessage('Account created successfully. Welcome to Afrishine Hub.');}catch(e){console.error(e);setAuthMessage(firebaseErrorMessage(e),true);}}
 async function emailSignIn(){if(!auth){setAuthMessage('Firebase did not initialize. Check the Firebase configuration.',true);return;}const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value;if(!email||!password){setAuthMessage('Enter your email and password.',true);return;}try{await auth.signInWithEmailAndPassword(email,password);setAuthMessage('You are signed in.');}catch(e){console.error(e);setAuthMessage(firebaseErrorMessage(e),true);}}
 async function googleSignIn(){if(!auth){setAuthMessage('Firebase did not initialize.',true);return;}try{const provider=new firebase.auth.GoogleAuthProvider();const result=await auth.signInWithPopup(provider);const user=result.user;currentFirebaseUser=user;const username=(user.displayName||'').trim()||'Afrishine Member';const userRef=db.collection('users').doc(user.uid);const userSnap=await userRef.get();const profileUpdate={username:username,updatedAt:firebase.firestore.FieldValue.serverTimestamp()};if(!userSnap.exists||!userSnap.data().createdAt)profileUpdate.createdAt=firebase.firestore.FieldValue.serverTimestamp();await userRef.set(profileUpdate,{merge:true});await db.collection('publicProfiles').doc(user.uid).set({username:username,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});setAuthMessage('Google sign-in successful.');if(pendingMarketplaceLogin){pendingMarketplaceLogin=false;closeMarketplaceLogin();showPage('shop');loadMarketplacePosts();}}catch(e){console.error(e);setAuthMessage(firebaseErrorMessage(e),true);const m=document.getElementById('marketLoginMessage');if(m&&pendingMarketplaceLogin)m.textContent=firebaseErrorMessage(e);}}
@@ -307,8 +331,6 @@ async function resetEmailPassword(){if(!auth){setAuthMessage('Firebase did not i
 async function emailSignOut(){try{await auth.signOut();setAuthMessage('You have signed out.');}catch(e){setAuthMessage(firebaseErrorMessage(e),true);}}
 if(auth){auth.onAuthStateChanged(async user=>{
  currentFirebaseUser=user;
- await refreshMarketplaceAuthStatus(user);
- renderPiLoginState(user);
  document.getElementById('emailAuthForm').style.display=user?'none':'block';
  document.getElementById('emailSignedIn').style.display=user?'block':'none';
  if(user){
@@ -317,18 +339,14 @@ if(auth){auth.onAuthStateChanged(async user=>{
   catch(e){console.warn('Could not load user profile',e);}
  }else{currentLoveProfile=null;}
  refreshLoveAccess();
- var marketplaceRedirect=false;
- try{marketplaceRedirect=sessionStorage.getItem('afrishine_marketplace_google_redirect')==='1';}
- catch(storageError){console.warn('Session storage is unavailable:',storageError);}
+ var marketplaceRedirect=sessionStorage.getItem('afrishine_marketplace_google_redirect')==='1';
  if(marketplaceRedirect){
   if(isGoogleMarketplaceUser(user)){
-   try{sessionStorage.removeItem('afrishine_marketplace_google_redirect');}catch(storageError){console.warn(storageError);}
-   pendingMarketplaceLogin=false;
+   sessionStorage.removeItem('afrishine_marketplace_google_redirect');pendingMarketplaceLogin=false;
    closeMarketplaceLogin();showPage('shop');loadMarketplacePosts();
   }else if(user){
-   try{sessionStorage.removeItem('afrishine_marketplace_google_redirect');}catch(storageError){console.warn(storageError);}
-   pendingMarketplaceLogin=false;
-   var loginMessage=document.getElementById('marketLoginMessage');if(loginMessage)loginMessage.textContent='Marketplace yemera Google cyangwa Pi Login yagenzuwe. Sohoka wongere winjire ukoresheje imwe muri zo.';
+   sessionStorage.removeItem('afrishine_marketplace_google_redirect');pendingMarketplaceLogin=false;
+   var loginMessage=document.getElementById('marketLoginMessage');if(loginMessage)loginMessage.textContent='Marketplace yemera Google Login gusa. Sohoka wongere winjire ukoresheje Google.';
   }
  }
  if(user&&document.getElementById('shop').classList.contains('active')){
@@ -336,25 +354,26 @@ if(auth){auth.onAuthStateChanged(async user=>{
   else{document.getElementById('shop').classList.remove('active');openMarketplaceLogin();}
  }
 });
-auth.getRedirectResult().catch(function(e){console.error('Google redirect result:',e);try{sessionStorage.removeItem('afrishine_marketplace_google_redirect');}catch(storageError){console.warn(storageError);}pendingMarketplaceLogin=false;var loginMessage=document.getElementById('marketLoginMessage');if(loginMessage)loginMessage.textContent=firebaseErrorMessage(e);});
+auth.getRedirectResult().catch(function(e){console.error('Google redirect result:',e);sessionStorage.removeItem('afrishine_marketplace_google_redirect');pendingMarketplaceLogin=false;var loginMessage=document.getElementById('marketLoginMessage');if(loginMessage)loginMessage.textContent=firebaseErrorMessage(e);});
 }
 
-/* AFRISHINE MARKETPLACE: Google or server-verified Pi authentication */
+/* AFRISHINE MARKETPLACE: Google-authenticated posts and community interaction */
 function enterMarketplace(){if(!isGoogleMarketplaceUser(currentFirebaseUser)){openMarketplaceLogin();return;}showPage('shop');loadMarketplacePosts();}
 function openMarketplaceLogin(){pendingMarketplaceLogin=true;document.getElementById('marketLoginModal').classList.add('open');}
 function closeMarketplaceLogin(){pendingMarketplaceLogin=false;document.getElementById('marketLoginModal').classList.remove('open');}
 async function marketplaceGoogleLogin(){
  if(!auth){document.getElementById('marketLoginMessage').textContent='Firebase ntiyabashije gutangira. Ongera ugerageze.';return;}
- pendingMarketplaceLogin=true;
  var message=document.getElementById('marketLoginMessage');
- if(message)message.textContent='Connecting to Google…';
  try{
-  // Use the same Firebase popup flow as the main Profile Google sign-in.
-  // This avoids redirect state being lost in partitioned browser storage.
-  await googleSignIn();
- }catch(e){
-  console.error('Marketplace Google sign-in failed:',e);
   pendingMarketplaceLogin=true;
+  sessionStorage.setItem('afrishine_marketplace_google_redirect','1');
+  var provider=new firebase.auth.GoogleAuthProvider();
+  provider.setCustomParameters({prompt:'select_account'});
+  await auth.signInWithRedirect(provider);
+ }catch(e){
+  console.error('Marketplace Google redirect failed:',e);
+  sessionStorage.removeItem('afrishine_marketplace_google_redirect');
+  pendingMarketplaceLogin=false;
   if(message)message.textContent=firebaseErrorMessage(e);
  }
 }
@@ -362,7 +381,7 @@ function setMarketplaceFilter(filter){if(!isGoogleMarketplaceUser(currentFirebas
 async function publishMarketplacePost(){if(!isGoogleMarketplaceUser(currentFirebaseUser)){openMarketplaceLogin();return;}if(!db){notice('Database ntiyatangije neza. Ongera ufungure app.');return;}var type=document.getElementById('marketType').value,text=document.getElementById('marketText').value.trim(),price=document.getElementById('marketPrice').value.trim(),locationText=document.getElementById('marketLocation').value.trim();if(text.length<8){notice('Andika ibisobanuro birambuye mbere yo gushyiraho itangazo.');return;}if(!locationText){notice('Andika aho uherereye: igihugu, umujyi/akarere n’umurenge.');return;}if(text.length>1200){notice('Ibisobanuro ni birebire cyane.');return;}var btn=document.querySelector('#shop .market-form button.gold');var oldLabel=btn?btn.textContent:'';if(btn){btn.disabled=true;btn.textContent='Posting…';}var name=(currentFirebaseUser.displayName||'Afrishine Member').trim();try{await db.collection('marketplacePosts').add({uid:currentFirebaseUser.uid,authorName:name,authorPhoto:currentFirebaseUser.photoURL||'',type:type,text:text,price:price,location:locationText,createdAt:firebase.firestore.FieldValue.serverTimestamp(),status:'active'});document.getElementById('marketText').value='';document.getElementById('marketPrice').value='';notice('Itangazo ryawe ryashyizwe kuri Marketplace.');await loadMarketplacePosts(true);}catch(e){console.error('Marketplace publish failed:',e);notice(firebaseErrorMessage(e));}finally{if(btn){btn.disabled=false;btn.textContent=oldLabel||'Post on Marketplace';}}}
 async function loadMarketplacePosts(reset=true){
  var feed=document.getElementById('marketplaceFeed');if(!feed)return;
- if(!isGoogleMarketplaceUser(currentFirebaseUser)){feed.innerHTML='<p class="muted">Login with Google or verified Pi to view Marketplace posts.</p>';return;}
+ if(!isGoogleMarketplaceUser(currentFirebaseUser)){feed.innerHTML='<p class="muted">Login with Google to view Marketplace posts.</p>';return;}
  if(!db){feed.innerHTML='<p class="muted">Database ntiyatangije neza. Ongera ugerageze.</p>';return;}
  if(marketplaceLoading)return;marketplaceLoading=true;
  if(reset){marketplaceLastDoc=null;marketplaceHasMore=false;feed.innerHTML='<p class="muted">Loading Marketplace…</p>';}
@@ -434,97 +453,8 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-delete-lov
 document.addEventListener('click',e=>{const report=e.target.closest('[data-report-love-post]');if(report)reportLovePost(report.getAttribute('data-report-love-post'),report.getAttribute('data-report-user'));const block=e.target.closest('[data-block-love-user]');if(block)blockLoveUser(block.getAttribute('data-block-love-user'));});
 if(db){db.collection('love_posts').orderBy('createdAt','desc').limit(50).onSnapshot(snap=>{renderLovePosts(snap.docs.map(d=>({id:d.id,...d.data()})));scrollToSharedPost('love_posts');},e=>{console.error('Love feed error:',e);const el=document.getElementById('loveFeed');if(el)el.textContent=firebaseErrorMessage(e);});}
 
-/* SECURE PI LOGIN: Pi access token is verified by the Cloudflare Worker.
-   Firebase custom token is then used as the actual app session. */
-function renderPiLoginState(user){
- var area=document.getElementById('piLoginArea');
- var status=document.getElementById('profileStatus');
- var btn=document.getElementById('piLoginBtn');
- var info=area&&area.querySelector('.pi-info');
- if(user&&marketplacePiVerifiedUid===user.uid){
-  var name=String(user.displayName||'Pi member').replace(/[&<>"']/g,'');
-  if(info){
-   var title=info.querySelector('b'),small=info.querySelector('small');
-   if(title)title.textContent='Welcome @'+name;
-   if(small)small.textContent='Pi account verified by Afrishine Hub';
-  }
-  if(btn){btn.textContent='Pi Verified ✓';btn.disabled=true;}
-  if(status)status.textContent='Pi account verified. Marketplace access is enabled.';
- }else{
-  if(btn){btn.disabled=false;btn.textContent='Login with Pi →';}
-  if(info){
-   var title2=info.querySelector('b'),small2=info.querySelector('small');
-   if(title2)title2.textContent='Login with Pi';
-   if(small2)small2.textContent='Secure access to Afrishine Hub';
-  }
-  if(user&&user.providerData&&user.providerData.some(function(p){return p.providerId==='google.com';})){
-   if(status)status.textContent='Signed in with Google. You can access Marketplace.';
-  }else if(!user){
-   if(status)status.textContent='You are not signed in yet.';
-  }
- }
-}
-(function setupPiLogin(){
- var btn=document.getElementById('piLoginBtn');
- if(!btn)return;
- var originalLabel=btn.textContent;
- try{
-  if(!window.Pi)throw new Error('Pi SDK unavailable');
-  window.Pi.init({version:'2.0',sandbox:false});
- }catch(initError){
-  console.warn('Pi SDK initialization:',initError);
-  btn.textContent='Open in Pi Browser';
-  btn.addEventListener('click',function(){notice('Fungura Afrishine Hub muri Pi Browser kugira ngo ukoreshe Pi Login.');});
-  return;
- }
- btn.addEventListener('click',async function(){
-  if(!auth){notice('Firebase ntiyatangije neza. Ongera ufungure app.');return;}
-  btn.disabled=true;btn.textContent='Verifying Pi…';
-  try{
-   var result=await window.Pi.authenticate(['username'],function(){});
-   var accessToken=result&&result.accessToken;
-   var sdkUsername=result&&result.user&&result.user.username;
-   if(!accessToken||!sdkUsername)throw new Error('Pi ntiyatanze amakuru yose akenewe yo kwemeza konti.');
-   var response=await fetch(PI_AUTH_WORKER_URL+'/auth/pi',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({accessToken:accessToken})
-   });
-   var data=await response.json();
-   if(!response.ok||!data||data.success!==true||!data.customToken){
-    throw new Error((data&&data.error)||'Cloudflare yananiwe kugenzura Pi account.');
-   }
-   var credential=await auth.signInWithCustomToken(data.customToken);
-   currentFirebaseUser=credential.user;
-   await credential.user.getIdToken(true);
-   await refreshMarketplaceAuthStatus(credential.user);
-   if(marketplacePiVerifiedUid!==credential.user.uid){
-    throw new Error('Firebase ntiyabonye Pi verification claim. Reba Cloudflare Worker na Firebase custom token.');
-   }
-   var verifiedUsername=String(data.username||sdkUsername).replace(/[&<>"']/g,'');
-   try{await credential.user.updateProfile({displayName:verifiedUsername});}catch(profileNameError){console.warn('Could not update Firebase display name:',profileNameError);}
-   try{
-    if(db){
-     await db.collection('users').doc(credential.user.uid).set({
-      username:verifiedUsername,authProvider:'pi',
-      updatedAt:firebase.firestore.FieldValue.serverTimestamp()
-     },{merge:true});
-     await db.collection('publicProfiles').doc(credential.user.uid).set({
-      username:verifiedUsername,authProvider:'pi',
-      updatedAt:firebase.firestore.FieldValue.serverTimestamp()
-     },{merge:true});
-    }
-   }catch(profileError){console.warn('Pi profile save failed; authentication remains valid:',profileError);}
-   renderPiLoginState(credential.user);
-   notice('Pi Login yagenzuwe neza. Marketplace irafunguye.');
-   if(pendingMarketplaceLogin){pendingMarketplaceLogin=false;document.getElementById('marketLoginModal').classList.remove('open');showPage('shop');loadMarketplacePosts(true);}
-  }catch(e){
-   console.error('Secure Pi Login failed:',e);
-   notice('Pi Login ntiyagenze neza: '+(e.message||'Ongera ugerageze.'));
-   btn.disabled=false;btn.textContent=originalLabel;
-  }
- });
-})();
+/* PI LOGIN: unchanged and separate from Firebase email login */
+(async function setupPi(){const btn=document.getElementById('piLoginBtn');if(!btn)return;try{if(!window.Pi)throw new Error('Pi SDK unavailable');window.Pi.init({version:'2.0',sandbox:false});btn.addEventListener('click',async()=>{btn.disabled=true;btn.textContent='Connecting…';try{const result=await window.Pi.authenticate(['username'],()=>{});const username=result&&result.user&&result.user.username;if(!username)throw new Error('Pi username was not returned');sessionStorage.setItem('afrishine_pi_username',username);const safe=String(username).replace(/[&<>"']/g,'');document.getElementById('piLoginArea').innerHTML='<div class="pi-info"><div class="pi-symbol">π</div><div><b>Welcome @'+safe+'</b><small>Pi sign-in completed</small></div></div>';document.getElementById('profileStatus').textContent='Signed in with Pi as @'+safe+'. Email sign-in is separate.';}catch(e){console.error(e);notice('Pi Login failed. Reopen in Pi Browser and try again.');btn.disabled=false;btn.textContent='Login with Pi →';}});}catch(e){console.warn('Pi SDK initialization:',e);btn.textContent='Open in Pi Browser';btn.addEventListener('click',()=>notice('Open Afrishine Hub inside Pi Browser to use Pi Login.'));}})();
 </script>
 
 <script>
