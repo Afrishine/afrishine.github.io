@@ -266,6 +266,66 @@ body.academy-active .academy-bottom-nav{position:fixed;z-index:15;left:50%;botto
 <div id="emailAuthForm"><input class="field" type="text" id="authUsername" maxlength="30" placeholder="Username (used when creating an account)" autocomplete="username"><input class="field" type="email" id="authEmail" placeholder="Email address" autocomplete="email"><input class="field" type="password" id="authPassword" placeholder="Password (at least 6 characters)" autocomplete="current-password"><div class="actions"><button class="gold" onclick="emailSignIn()">Sign In</button><button class="secondary" onclick="emailSignUp()">Create Account</button></div><button class="secondary" style="margin-top:10px" onclick="googleSignIn()">Continue with Google</button><button class="secondary" style="margin-top:10px" onclick="resetEmailPassword()">Forgot Password?</button><p class="creator-hint">Username is your public name. Email and password are used to secure your account.</p></div>
 <div id="emailSignedIn" style="display:none"><p id="emailAccountStatus" class="auth-status"></p><button class="secondary" onclick="emailSignOut()">Sign Out</button></div><p id="authMessage" class="auth-status" aria-live="polite"></p></section></section>
 <section class="page" id="settings"><div class="eyebrow">ACCOUNT · SECURITY · PRIVACY</div><h1>Settings and Privacy</h1><p class="muted">Manage your Afrishine Hub account preferences and privacy information.</p><section class="panel"><h2>Account Settings</h2><p>Account preferences and profile settings will be available here.</p></section><section class="panel"><h2>Privacy and Security</h2><p>Your privacy and account security are important to Afrishine Hub.</p></section><section class="panel"><h2>Help and Support</h2><p>For assistance, visit our Contact Us section.</p><button class="gold" onclick="showPage('contact')">Contact Us →</button></section></section>
+<section class="page" id="creatorRewards">
+<div class="eyebrow">CREATE · ENGAGE · GET REWARDED</div>
+<h1>Creator Rewards</h1>
+<p class="muted">A program for creators who share original, valuable content on Afrishine Hub.</p>
+<section class="panel">
+<h2>🏆 Creator Dashboard</h2>
+<p class="muted">Your creator performance at a glance. Verified figures will appear here when the program is connected to the platform data.</p>
+<div class="stats-grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px">
+<div class="stat-card"><small>Followers</small><strong>—</strong></div>
+<div class="stat-card"><small>Valid Views</small><strong>—</strong></div>
+<div class="stat-card"><small>Engagement</small><strong>—</strong></div>
+<div class="stat-card"><small>Estimated Rewards</small><strong>—</strong></div>
+</div>
+<p class="creator-hint" style="margin-top:12px">Imibare n'ibihembo bizagaragara nyuma yo guhuza iyi gahunda na sisitemu ibara ibikorwa byemewe.</p>
+</section>
+<section class="panel">
+<h2>📋 Eligibility Requirements</h2>
+<p>Ibipimo biteganyijwe byo gusaba kwinjira muri Creator Rewards:</p>
+<ul>
+<li>Nibura followers 500.</li>
+<li>Nibura valid views 4,000 mu gihe kizagenwa na Afrishine Hub.</li>
+<li>Konti igomba kuba imeze neza kandi ikurikiza Community Guidelines.</li>
+<li>Content igomba kuba ari umwimerere cyangwa ufite uburenganzira bwo kuyikoresha.</li>
+<li>Nta kugura followers, views cyangwa gukoresha bots n'ubundi buriganya.</li>
+<li>Kwemera Creator Rewards Terms na Privacy Policy.</li>
+<li>Kuzuza ibisabwa by'imyaka n'ibindi bisabwa n'amategeko mbere yo kwishyurwa.</li>
+</ul>
+<p class="creator-hint">Ibi bipimo ni ibyateganyijwe na Afrishine Hub kandi bishobora kuvugururwa na Admin. Kuba wujuje imibare ntibivuze ko wemerewe guhembwa ako kanya.</p>
+</section>
+<section class="panel">
+<h2>📝 Apply for Creator Rewards</h2>
+<p>Gusaba bizafungurwa igihe gahunda izaba yiteguye kandi amategeko n'uburyo bwo kwishyura byemejwe. Kugeza icyo gihe, ushobora gukomeza kubaka audience yawe no gusangiza abantu content yujuje amabwiriza.</p>
+<button class="secondary" type="button" disabled style="opacity:.65;cursor:not-allowed">Applications opening soon</button>
+</section>
+<section class="panel">
+<h2>📊 Creator Analytics</h2>
+<p>Uzajya ubona uko content yawe ikora: views zemewe, engagement, followers ziyongereye n'ibikorwa byakuyeho amanota kubera kutubahiriza amabwiriza.</p>
+</section>
+<section class="panel">
+<h2>👛 Creator Wallet & Reward History</h2>
+<p>Hazajya hagaragara ibihembo byemejwe, uko bibarwa, n'amateka yabyo. Iyi wallet ntirimo kubika cyangwa guhererekanya crypto assets.</p>
+</section>
+<section class="panel">
+<h2>📜 Creator Rules & Monetization Policy</h2>
+<ul>
+<li>Ntukoreshe fake views, fake likes, bots cyangwa konti z'ibinyoma.</li>
+<li>Ntukibe content y'abandi cyangwa ngo ukoreshe ibikoresho utabifitiye uburenganzira.</li>
+<li>Ntukoreshe spam, uburiganya cyangwa uburyo bwo gushuka audience kugira ngo wongere engagement.</li>
+<li>Afrishine Hub ishobora kugenzura ibikorwa, kwima ibihembo bitujuje ibisabwa cyangwa guhagarika konti ikora uburiganya.</li>
+<li>Abakoresha bazahabwa uburyo bwo gusaba ko icyemezo cyongeye gusuzumwa.</li>
+<li>Ibihembo, uburyo bwo kubara no kwishyura bizatangira gusa nyuma yo kwemeza amategeko, ibisabwa n'uburyo bwemewe bwo kwishyura.</li>
+<li>Nta gaciro ka AST, guhinduranya AST na Pi/USDT, cyangwa inyungu z'amafaranga byemezwa muri iyi gahunda muri iki cyiciro.</li>
+<li>Amakuru y'abakoresha azakoreshwa hakurikijwe Privacy Policy n'amategeko arengera amakuru bwite.</li>
+</ul>
+</section>
+<section class="panel">
+<h2>🛡️ Program Status</h2>
+<p><strong>Preparation phase</strong> — Dashboard n'amabwiriza birerekanwa; applications n'ibihembo nyabyo birategereje ko backend, uburyo bwo kugenzura no kwishyura byemezwa.</p>
+</section>
+</section>
 <section class="page" id="contact"><div class="eyebrow">WE ARE HERE TO HELP</div><h1>Contact Us</h1><p class="muted">Get in touch with Afrishine Hub for support, questions and business inquiries.</p><section class="panel"><h2>Contact Information</h2><p>📞 Phone</p><div class="actions"><a class="gold" href="tel:+250788818684">+250 788 818 684</a></div><p style="margin-top:18px">📩 Email</p><div class="actions"><a class="secondary" href="mailto:afrishinehub@gmail.com">afrishinehub@gmail.com</a></div></section><footer>© 2026 Afrishine Hub · Built in Kigali, Rwanda 🇷🇼</footer></section>
 </main></div>
 <div class="create-backdrop" id="createBackdrop" onclick="closeCreateMenu()"></div>
@@ -278,7 +338,7 @@ body.academy-active .academy-bottom-nav{position:fixed;z-index:15;left:50%;botto
 </div></section>
 <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenu()"></div>
 <aside class="menu-drawer" id="menuDrawer" aria-label="Main menu"><div class="menu-head"><span>AFRISHINE HUB MENU</span><button class="round" onclick="closeMenu()" aria-label="Close menu">✕</button></div>
-<a href="#home" data-page="home">🏠 Home</a><a href="#talent" data-page="talent">🎬 Talent Hub</a><a href="#love" data-page="love">❤️ Love Connection</a><a href="#travel" data-page="travel">✈️ Travel Booking</a><a href="#academy" data-page="academy">🎓 Afrishine Academy</a><a href="#jobs" data-page="jobs">💼 Digital Jobs</a><a href="#shop" data-page="shop">🛍️ Shop</a><a href="#wallet" data-page="wallet">👛 My Wallet</a><a href="#inbox" data-page="inbox">💬 Inbox</a><a href="#profile" data-page="profile">👤 Profile</a><a href="#settings" data-page="settings">⚙️ Settings and Privacy</a><a href="#contact" data-page="contact">🎧 Contact Us</a></aside>
+<a href="#home" data-page="home">🏠 Home</a><a href="#talent" data-page="talent">🎬 Talent Hub</a><a href="#love" data-page="love">❤️ Love Connection</a><a href="#travel" data-page="travel">✈️ Travel Booking</a><a href="#academy" data-page="academy">🎓 Afrishine Academy</a><a href="#creatorRewards" data-page="creatorRewards">🏆 Creator Rewards</a><a href="#jobs" data-page="jobs">💼 Digital Jobs</a><a href="#shop" data-page="shop">🛍️ Shop</a><a href="#wallet" data-page="wallet">👛 My Wallet</a><a href="#inbox" data-page="inbox">💬 Inbox</a><a href="#profile" data-page="profile">👤 Profile</a><a href="#settings" data-page="settings">⚙️ Settings and Privacy</a><a href="#contact" data-page="contact">🎧 Contact Us</a></aside>
 <nav class="bottom-nav"><a href="#home" data-page="home" class="active">⌂<small>Home</small></a><a href="#community" data-page="community">◎<small>Community</small></a><a href="#create" class="add" aria-label="Create" onclick="openCreateMenu('hub');return false;">＋</a><a href="#inbox" data-page="inbox">✉<small>Inbox</small></a><a href="#profile" data-page="profile">☺<small>Profile</small></a></nav>
 <div class="market-modal" id="marketLoginModal" role="dialog" aria-modal="true" aria-label="Marketplace sign in"><div class="market-modal-card"><div style="font-size:34px">🔐</div><h2>Login to Marketplace</h2><p class="muted" style="margin:8px auto">Komeza ukoresheje Google kugira ngo ubashe kureba, gushyiraho amatangazo no kuvugana n’abandi.</p><button class="gold" onclick="marketplaceGoogleLogin()">Continue with Google</button><button class="secondary" style="width:100%;margin-top:9px" onclick="closeMarketplaceLogin()">Cancel</button><p class="creator-hint" id="marketLoginMessage"></p></div></div><div id="notice" class="notice"></div>
 <script>
@@ -359,7 +419,7 @@ function showPage(id){if(id==='shop'&&!canViewMarketplace()){openMarketplaceLogi
 document.querySelectorAll('[data-page]').forEach(el=>el.addEventListener('click',e=>{e.preventDefault();showPage(el.dataset.page);}));
 if(document.getElementById('academy').classList.contains('active')){document.body.classList.add('academy-active');renderAcademyCourses('Tech');}
 const headerSearchInput=document.getElementById('headerSearch');
-function runHeaderSearch(e){e.preventDefault();const q=headerSearchInput.value.trim().toLowerCase();if(!q){headerSearchInput.focus();return;}const routes=[{w:['talent','creator','video','music','dance','artist'],p:'talent'},{w:['community','feed','group','challenge','events'],p:'community'},{w:['shop','product','buy','sell','store'],p:'shop'},{w:['wallet','ast','token','balance','transaction'],p:'wallet'},{w:['academy','learn','course','training','education'],p:'academy'},{w:['travel','trip','booking','destination'],p:'travel'},{w:['job','work','employment'],p:'jobs'},{w:['inbox','message','chat'],p:'inbox'},{w:['profile','account','login','sign in'],p:'profile'},{w:['love','connection'],p:'love'},{w:['contact','support','help'],p:'contact'}];const m=routes.find(r=>r.w.some(w=>q.includes(w)));if(m){showPage(m.p);headerSearchInput.blur();}else notice('No matching section found. Try Talent, Community, Shop, Wallet, Academy or Travel.');}
+function runHeaderSearch(e){e.preventDefault();const q=headerSearchInput.value.trim().toLowerCase();if(!q){headerSearchInput.focus();return;}const routes=[{w:['talent','creator','video','music','dance','artist'],p:'talent'},{w:['community','feed','group','challenge','events'],p:'community'},{w:['shop','product','buy','sell','store'],p:'shop'},{w:['wallet','ast','token','balance','transaction'],p:'wallet'},{w:['academy','learn','course','training','education'],p:'academy'},{w:['creator rewards','creator monetization','monetization','creator reward'],p:'creatorRewards'},{w:['travel','trip','booking','destination'],p:'travel'},{w:['job','work','employment'],p:'jobs'},{w:['inbox','message','chat'],p:'inbox'},{w:['profile','account','login','sign in'],p:'profile'},{w:['love','connection'],p:'love'},{w:['contact','support','help'],p:'contact'}];const m=routes.find(r=>r.w.some(w=>q.includes(w)));if(m){showPage(m.p);headerSearchInput.blur();}else notice('No matching section found. Try Talent, Community, Shop, Wallet, Academy or Travel.');}
 function openMenu(){document.getElementById('menuDrawer').classList.add('open');document.getElementById('menuBackdrop').classList.add('open');}
 function closeMenu(){document.getElementById('menuDrawer').classList.remove('open');document.getElementById('menuBackdrop').classList.remove('open');}
 function openCreateMenu(source='hub'){createSource=source;closeMenu();document.getElementById('createMenuTitle').textContent=source==='talent'?'Create on Talent Hub':'Create on Afrishine Hub';document.getElementById('createMenu').classList.add('open');document.getElementById('createBackdrop').classList.add('open');}
