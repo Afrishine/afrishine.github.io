@@ -144,16 +144,37 @@ body{font-size:16px}
 .academy-home-text strong{display:block;color:#ffd46d;font-size:16px;font-weight:900}
 .academy-home-text small{display:block;margin-top:4px;color:#e0d7c4;font-size:12px;line-height:1.45}
 .academy-home-arrow{color:#ffd46d;font-size:24px}
-.menu-drawer a.academy-menu-link{border-color:#a47b25;background:linear-gradient(110deg,#382b12,#202536);color:#ffcf58;font-weight:850}
-.academy-intro,.academy-content,.academy-navigation{margin-top:16px}
-.academy-types{list-style:none;margin:13px 0 3px;padding:0;display:grid;gap:12px}
-.academy-types li{font-size:18px;color:#fff}
-.academy-bottom-nav{display:flex;justify-content:space-between;gap:4px;margin:18px 0 14px;padding:12px 3px;border:1px solid #41495a;border-radius:15px;background:#0d1119}
-.academy-bottom-nav button{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 2px;border:0;border-radius:10px;background:transparent;color:#dce1eb}
-.academy-bottom-nav button span{font-size:27px;line-height:1}
-.academy-bottom-nav button small{font-size:11px;font-weight:750}
-.academy-bottom-nav button.active{color:#ffd05b;background:#302713}
-.academy-nav-note{padding-top:14px;border-top:1px solid #303747;color:#56c887!important;font-weight:800;font-size:14px!important}
+.academy-dashboard{margin:-2px 0 22px;color:#f5f6fb}
+.academy-topbar{display:flex;align-items:center;gap:12px;padding:15px 14px;background:#1b1e2d;border:1px solid #292d3e;border-radius:18px}
+.academy-brand-mark{width:48px;height:48px;display:grid;place-items:center;border:2px solid #dcb65e;border-radius:15px;color:#e9c46f;font-size:25px;flex-shrink:0}
+.academy-brand-name{font-size:21px;line-height:1.08;font-weight:900;flex:1}
+.academy-head-action{width:43px;height:43px;border-radius:50%;border:1px solid #dcb65e;background:#202538;color:#e9c46f;font-size:20px}
+.academy-welcome{margin:16px 0 22px;padding:23px 18px;border:1px solid #292d3e;border-radius:18px;background:linear-gradient(145deg,#191d2d,#111521)}
+.academy-kicker{color:#e9c46f;font-size:12px;font-weight:850;letter-spacing:2px}
+.academy-welcome h2{font-size:29px;line-height:1.12;margin:12px 0 22px;color:#fff}
+.academy-categories{display:flex;gap:9px;flex-wrap:wrap}
+.academy-categories button{min-width:92px;padding:10px 17px;border:1px solid #9c824c;border-radius:11px;background:#202536;color:#e7c574;font-weight:800}
+.academy-categories button.active{background:#e9c46f;color:#171925;border-color:#e9c46f}
+.academy-section-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:22px 2px 13px}
+.academy-section-heading h3{font-size:22px;margin:0;color:#fff}
+.academy-see-all{border:0;background:transparent;color:#e9c46f;font-weight:850;font-size:15px}
+.academy-course-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.academy-course-card{min-width:0;padding:10px;border:1px solid #645334;border-radius:15px;background:#171b28;box-shadow:0 5px 16px #0003}
+.academy-course-art{height:112px;border-radius:11px;display:grid;place-items:center;overflow:hidden;background:linear-gradient(135deg,#14243a,#27354a);border:1px solid #394253;font-size:40px;color:#e9c46f}
+.academy-course-card:nth-child(2) .academy-course-art{background:linear-gradient(135deg,#242b3b,#49391e)}
+.academy-course-card:nth-child(3) .academy-course-art{background:linear-gradient(135deg,#172d40,#243d50)}
+.academy-course-card:nth-child(4) .academy-course-art{background:linear-gradient(135deg,#3a3028,#26394a)}
+.academy-course-card h4{font-size:14px;line-height:1.25;margin:11px 2px 6px;color:#fff}
+.academy-course-card p{font-size:12px;text-align:center;color:#c2c6d1;margin:0 0 10px}
+.academy-course-status{display:block;text-align:center;color:#e9c46f;font-size:11px;font-weight:800;margin-top:8px}
+.academy-course-placeholder{width:100%;border:0;border-radius:8px;padding:8px;background:#2a2d38;color:#e9c46f;font-size:11px;font-weight:800}
+.academy-bottom-nav{display:flex;justify-content:space-between;gap:4px;margin:24px 0 14px;padding:8px 4px;border:1px solid #343a49;border-radius:16px;background:#151a26}
+.academy-bottom-nav button{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:5px;padding:9px 2px;border:1px solid transparent;border-radius:12px;background:transparent;color:#aeb3c0}
+.academy-bottom-nav button span{font-size:25px;line-height:1}
+.academy-bottom-nav button small{font-size:10px;font-weight:750}
+.academy-bottom-nav button.active{color:#f0c86d;background:#292719;border-color:#393324}
+.academy-nav-note{color:#9ca4b5!important;text-align:center;font-size:12px!important;margin:10px 0 0}
+@media(max-width:380px){.academy-course-grid{gap:9px}.academy-course-art{height:94px}.academy-course-card{padding:8px}.academy-welcome h2{font-size:25px}.academy-bottom-nav button small{font-size:9px}}
 </style>
 </head>
 <body>
@@ -189,34 +210,38 @@ body{font-size:16px}
 </div></section>
 <section class="page" id="travel"><div class="eyebrow">PLAN YOUR JOURNEY</div><h1>Travel Booking</h1><p class="muted">Find travel services and booking opportunities.</p><section class="panel"><h2>Search Travel</h2><input class="field" id="destination" placeholder="Enter destination"><button class="gold" onclick="notice('Travel booking provider must be connected before reservations can be made.')">Search Trips</button></section></section>
 <section class="page" id="academy">
-<div class="eyebrow">LEARN · PRACTICE · GROW</div>
-<h1>Learn With Afrishine Academy</h1>
-<p class="muted">Welcome to Afrishine Academy — ahantu ho kwiga, gusangiza abandi ubumenyi no kwagura ubushobozi bwawe.</p>
-<section class="panel academy-intro">
-<h2>Learn With Afrishine Academy</h2>
-<p>• Izajya igaragara muri Afrishine Hub kugira ngo buri wese abone aho yigira kandi agasangiza abandi ubumenyi.</p>
-<p>• Iyo umuntu ayikanze, izahita imujyana muri Afrishine Academy.</p>
-</section>
-<section class="panel academy-content">
-<h2>2. Ibizaba muri Afrishine Academy</h2>
-<p>Ntituzavanamo uburyo bwo gushyiraho:</p>
-<ul class="academy-types">
-<li>🎥 Video Posting</li><li>🖼️ Photo Posting</li><li>📝 Text Posting</li><li>📚 Books</li>
-</ul>
-</section>
-<section class="panel academy-navigation">
-<h2>3. Bottom Navigation ya Academy</h2>
-<p>Urugero rw’uko navigation izaba imeze</p>
-<nav class="academy-bottom-nav" aria-label="Afrishine Academy navigation">
-<button type="button" class="active" onclick="showAcademyTab('Home',this)"><span>⌂</span><small>Home</small></button>
-<button type="button" onclick="showAcademyTab('Course',this)"><span>♧</span><small>Course</small></button>
-<button type="button" onclick="showAcademyTab('BookMark',this)"><span>▱</span><small>BookMark</small></button>
-<button type="button" onclick="showAcademyTab('Download',this)"><span>⇩</span><small>Download</small></button>
-<button type="button" onclick="showAcademyTab('Profile',this)"><span>♙</span><small>Profile</small></button>
-</nav>
-<p class="academy-nav-note">Iyi navigation izajya igaragara muri Academy gusa.</p>
-<p class="creator-hint" id="academyTabMessage" aria-live="polite">Home — Afrishine Academy.</p>
-</section>
+<div class="academy-dashboard">
+  <header class="academy-topbar">
+    <div class="academy-brand-mark" aria-hidden="true">✿</div>
+    <div class="academy-brand-name">Afrishine<br>Academy</div>
+    <button type="button" class="academy-head-action" onclick="notice('Profile settings will be available when Academy accounts are enabled.')" aria-label="Academy profile">A</button>
+    <button type="button" class="academy-head-action" onclick="notice('Academy notifications will appear here.')" aria-label="Notifications">♟</button>
+  </header>
+  <section class="academy-welcome">
+    <div class="academy-kicker">AFRISHINE HUB</div>
+    <h2>Continue Learning</h2>
+    <div class="academy-categories" aria-label="Course categories">
+      <button type="button" class="active" onclick="setAcademyCategory('Tech',this)">Tech</button>
+      <button type="button" onclick="setAcademyCategory('Business',this)">Business</button>
+      <button type="button" onclick="setAcademyCategory('Design',this)">Design</button>
+    </div>
+  </section>
+  <div class="academy-section-heading"><h3>Video Courses</h3><button type="button" class="academy-see-all" onclick="showAcademyTab('Courses',document.querySelector('.academy-bottom-nav button[data-academy-tab=Courses]'))">See all ›</button></div>
+  <div class="academy-course-grid">
+    <article class="academy-course-card"><div class="academy-course-art" aria-hidden="true">⌘</div><h4>UI/UX Fundamentals</h4><p>Course preview</p><button class="academy-course-placeholder" type="button" onclick="notice('Amasomo azashyirwaho hano namara gufungurwa.')">Coming Soon</button></article>
+    <article class="academy-course-card"><div class="academy-course-art" aria-hidden="true">▥</div><h4>Startup Finance Basics</h4><p>Course preview</p><button class="academy-course-placeholder" type="button" onclick="notice('Amasomo azashyirwaho hano namara gufungurwa.')">Coming Soon</button></article>
+    <article class="academy-course-card"><div class="academy-course-art" aria-hidden="true">⌨</div><h4>Python for Beginners</h4><p>Course preview</p><button class="academy-course-placeholder" type="button" onclick="notice('Amasomo azashyirwaho hano namara gufungurwa.')">Coming Soon</button></article>
+    <article class="academy-course-card"><div class="academy-course-art" aria-hidden="true">✎</div><h4>Brand Design Essentials</h4><p>Course preview</p><button class="academy-course-placeholder" type="button" onclick="notice('Amasomo azashyirwaho hano namara gufungurwa.')">Coming Soon</button></article>
+  </div>
+  <nav class="academy-bottom-nav" aria-label="Afrishine Academy navigation">
+    <button type="button" class="active" data-academy-tab="Home" onclick="showAcademyTab('Home',this)"><span>⌂</span><small>Home</small></button>
+    <button type="button" data-academy-tab="Courses" onclick="showAcademyTab('Courses',this)"><span>♧</span><small>Courses</small></button>
+    <button type="button" data-academy-tab="Bookmark" onclick="showAcademyTab('Bookmark',this)"><span>▱</span><small>Bookmark</small></button>
+    <button type="button" data-academy-tab="Downloads" onclick="showAcademyTab('Downloads',this)"><span>⇩</span><small>Downloads</small></button>
+    <button type="button" data-academy-tab="Profile" onclick="showAcademyTab('Profile',this)"><span>♙</span><small>Profile</small></button>
+  </nav>
+  <p class="academy-nav-note" id="academyTabMessage" aria-live="polite">Welcome to Afrishine Academy. Courses will be added soon.</p>
+</div>
 </section>
 <section class="page" id="jobs"><div class="eyebrow">WORK · CONNECT · GROW</div><h1>Digital Jobs</h1><p class="muted">Discover digital work and connect with employers.</p><section class="panel"><h2>Find Opportunities</h2><p>Job listings, applications and employer profiles will be available after backend integration.</p><div class="actions"><button class="gold" onclick="notice('Job listings are not connected yet.')">Find Jobs</button><button class="secondary" onclick="notice('Employer job posting is not connected yet.')">Post a Job</button></div></section></section>
 <section class="page" id="shop"><div class="eyebrow">BUY · SELL · SUPPORT LOCAL</div><h1>Marketplace</h1><p class="muted">Discover products, ask for what you need and connect directly with sellers across Rwanda.</p><div class="shop-options"><div class="shop-card buy"><div style="font-size:30px">🛍️</div><b>Buy Products</b><p>Find what you need</p><button class="white-btn" onclick="setMarketplaceFilter('buy')">Explore Now →</button></div><div class="shop-card sell"><div style="font-size:30px">🏷️</div><b>Sell Products</b><p>Reach more customers</p><button class="white-btn" onclick="setMarketplaceFilter('sell')">Start Selling →</button></div></div>
@@ -244,7 +269,7 @@ body{font-size:16px}
 </div></section>
 <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenu()"></div>
 <aside class="menu-drawer" id="menuDrawer" aria-label="Main menu"><div class="menu-head"><span>AFRISHINE HUB MENU</span><button class="round" onclick="closeMenu()" aria-label="Close menu">✕</button></div>
-<a href="#home" data-page="home">🏠 Home</a><a href="#talent" data-page="talent">🎬 Talent Hub</a><a href="#academy" data-page="academy" class="academy-menu-link">🎓 Learn With Afrishine Academy</a><a href="#love" data-page="love">❤️ Love Connection</a><a href="#travel" data-page="travel">✈️ Travel Booking</a><a href="#academy" data-page="academy">🎓 Afrishine Academy</a><a href="#jobs" data-page="jobs">💼 Digital Jobs</a><a href="#shop" data-page="shop">🛍️ Shop</a><a href="#wallet" data-page="wallet">👛 My Wallet</a><a href="#inbox" data-page="inbox">💬 Inbox</a><a href="#profile" data-page="profile">👤 Profile</a><a href="#settings" data-page="settings">⚙️ Settings and Privacy</a><a href="#contact" data-page="contact">🎧 Contact Us</a></aside>
+<a href="#home" data-page="home">🏠 Home</a><a href="#talent" data-page="talent">🎬 Talent Hub</a><a href="#love" data-page="love">❤️ Love Connection</a><a href="#travel" data-page="travel">✈️ Travel Booking</a><a href="#academy" data-page="academy">🎓 Afrishine Academy</a><a href="#jobs" data-page="jobs">💼 Digital Jobs</a><a href="#shop" data-page="shop">🛍️ Shop</a><a href="#wallet" data-page="wallet">👛 My Wallet</a><a href="#inbox" data-page="inbox">💬 Inbox</a><a href="#profile" data-page="profile">👤 Profile</a><a href="#settings" data-page="settings">⚙️ Settings and Privacy</a><a href="#contact" data-page="contact">🎧 Contact Us</a></aside>
 <nav class="bottom-nav"><a href="#home" data-page="home" class="active">⌂<small>Home</small></a><a href="#community" data-page="community">◎<small>Community</small></a><a href="#create" class="add" aria-label="Create" onclick="openCreateMenu('hub');return false;">＋</a><a href="#inbox" data-page="inbox">✉<small>Inbox</small></a><a href="#profile" data-page="profile">☺<small>Profile</small></a></nav>
 <div class="market-modal" id="marketLoginModal" role="dialog" aria-modal="true" aria-label="Marketplace sign in"><div class="market-modal-card"><div style="font-size:34px">🔐</div><h2>Login to Marketplace</h2><p class="muted" style="margin:8px auto">Komeza ukoresheje Google kugira ngo ubashe kureba, gushyiraho amatangazo no kuvugana n’abandi.</p><button class="gold" onclick="marketplaceGoogleLogin()">Continue with Google</button><button class="secondary" style="width:100%;margin-top:9px" onclick="closeMarketplaceLogin()">Cancel</button><p class="creator-hint" id="marketLoginMessage"></p></div></div><div id="notice" class="notice"></div>
 <script>
@@ -288,7 +313,7 @@ catch(error){console.error('Firebase initialization failed:',error);}
 function isGoogleMarketplaceUser(user){if(!user||!user.providerData)return false;return user.providerData.some(function(info){return info.providerId==='google.com';});}
 function isPiBrowser(){var ua=(navigator&&navigator.userAgent)||'';return !!(window.Pi)||/PiBrowser/i.test(ua);}
 function canViewMarketplace(){return isPiBrowser()||isGoogleMarketplaceUser(currentFirebaseUser);}
-function showAcademyTab(tab,button){document.querySelectorAll('.academy-bottom-nav button').forEach(function(item){item.classList.toggle('active',item===button);});const message=document.getElementById('academyTabMessage');if(message)message.textContent=tab+' — Afrishine Academy. Iyi section izuzuzwa mu ntambwe ikurikira.';} function showPage(id){if(id==='shop'&&!canViewMarketplace()){openMarketplaceLogin();return;}const page=document.getElementById(id);if(!page)return;document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('[data-page]').forEach(a=>a.classList.toggle('active',a.dataset.page===id));if(location.hash!=='#'+id){if(window.history&&history.replaceState){history.replaceState(null,'','#'+id);}else{location.hash=id;}}closeMenu();closeCreateMenu();closeCreator();if(id==='love')refreshLoveAccess();if(id==='inbox')loadInbox();window.scrollTo(0,0);}
+function showAcademyTab(tab,button){document.querySelectorAll('.academy-bottom-nav button').forEach(function(item){item.classList.toggle('active',item===button);});const message=document.getElementById('academyTabMessage');if(message){const notes={Home:'Welcome to Afrishine Academy. Courses will be added soon.',Courses:'Video courses will appear here when course publishing is enabled.',Bookmark:'Your bookmarked courses will appear here.',Downloads:'Your downloaded learning materials will appear here.',Profile:'Your Academy profile will be available here.'};message.textContent=notes[tab]||tab+' — Afrishine Academy.';}} function setAcademyCategory(category,button){document.querySelectorAll('.academy-categories button').forEach(function(item){item.classList.toggle('active',item===button);});const message=document.getElementById('academyTabMessage');if(message)message.textContent=category+' courses will be added soon.';} function showPage(id){if(id==='shop'&&!canViewMarketplace()){openMarketplaceLogin();return;}const page=document.getElementById(id);if(!page)return;document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('[data-page]').forEach(a=>a.classList.toggle('active',a.dataset.page===id));if(location.hash!=='#'+id){if(window.history&&history.replaceState){history.replaceState(null,'','#'+id);}else{location.hash=id;}}closeMenu();closeCreateMenu();closeCreator();if(id==='love')refreshLoveAccess();if(id==='inbox')loadInbox();window.scrollTo(0,0);}
 document.querySelectorAll('[data-page]').forEach(el=>el.addEventListener('click',e=>{e.preventDefault();showPage(el.dataset.page);}));
 const headerSearchInput=document.getElementById('headerSearch');
 function runHeaderSearch(e){e.preventDefault();const q=headerSearchInput.value.trim().toLowerCase();if(!q){headerSearchInput.focus();return;}const routes=[{w:['talent','creator','video','music','dance','artist'],p:'talent'},{w:['community','feed','group','challenge','events'],p:'community'},{w:['shop','product','buy','sell','store'],p:'shop'},{w:['wallet','ast','token','balance','transaction'],p:'wallet'},{w:['academy','learn','course','training','education'],p:'academy'},{w:['travel','trip','booking','destination'],p:'travel'},{w:['job','work','employment'],p:'jobs'},{w:['inbox','message','chat'],p:'inbox'},{w:['profile','account','login','sign in'],p:'profile'},{w:['love','connection'],p:'love'},{w:['contact','support','help'],p:'contact'}];const m=routes.find(r=>r.w.some(w=>q.includes(w)));if(m){showPage(m.p);headerSearchInput.blur();}else notice('No matching section found. Try Talent, Community, Shop, Wallet, Academy or Travel.');}
