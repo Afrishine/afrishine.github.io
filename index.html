@@ -189,6 +189,35 @@ body.academy-active .academy-bottom-nav{position:fixed;z-index:15;left:50%;botto
 .academy-course-tag{display:inline-block;margin:2px 2px 8px;padding:4px 8px;border-radius:20px;background:#292719;color:#e9c46f;font-size:10px;font-weight:800;letter-spacing:.5px}
 @media(max-width:380px){.academy-course-art{height:112px}.academy-course-card h4{font-size:14px}}
 
+
+/* Creator Monetization dashboard */
+#creatorRewards{padding:12px 3px 28px}
+.creator-rewards-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 2px 24px}
+.creator-rewards-brand{font-size:clamp(17px,4vw,25px);font-weight:900;letter-spacing:-.5px;color:#e8eaf0}
+.creator-program-pill{padding:8px 14px;border-radius:30px;background:#dff3e8;color:#36875d;font-weight:800;font-size:13px;white-space:nowrap}
+.creator-dashboard-card{padding:clamp(19px,4vw,32px);border-radius:25px;background:#171b2a;border:1px solid #30364a;box-shadow:0 16px 38px #0004}
+.creator-dashboard-card>h1{font-size:clamp(30px,6vw,48px);line-height:1.12;color:#f1c96d;margin:5px 0 17px}
+.creator-subtitle{font-size:clamp(16px,3.5vw,22px);color:#f3f4f7;margin-bottom:30px}
+.creator-stats-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.creator-stat{min-height:155px;padding:19px 17px;border-radius:23px;background:#292e40;display:flex;flex-direction:column;align-items:flex-start}
+.creator-stat-icon{font-size:34px;line-height:1;color:#f1c96d;margin-bottom:17px}
+.creator-stat strong{font-size:clamp(34px,7vw,48px);line-height:1.1;color:#fff;font-weight:850}
+.creator-stat small{margin-top:auto;padding-top:14px;color:#c2c7d3;font-size:clamp(13px,2.8vw,17px);line-height:1.35}
+.creator-status-card{margin-top:25px;padding:22px 20px 24px;border-radius:23px;background:#292e40}
+.creator-status-card h2{font-size:clamp(20px,4vw,27px);color:#f1c96d;margin:0 0 22px}
+.creator-status-card>strong{display:block;font-size:clamp(27px,5.5vw,39px);line-height:1.15;color:#fff;margin-bottom:12px}
+.creator-status-card p{font-size:clamp(14px,3vw,18px);line-height:1.5;color:#c8ccda}
+.creator-apply-btn{display:block;width:100%;margin-top:25px;padding:19px 14px;border:0;border-radius:24px;background:linear-gradient(120deg,#f5d17d,#eebd55);color:#171b2a;font-size:clamp(17px,3.8vw,24px);font-weight:850;box-shadow:0 5px 15px #0003}
+.creator-apply-btn:active{transform:scale(.99)}
+.creator-eligibility-dialog{width:min( calc(100% - 32px), 440px);margin:auto;padding:0;border:1px solid #41495d;border-radius:22px;background:#1b2030;color:#fff;box-shadow:0 24px 80px #0009}
+.creator-eligibility-dialog::backdrop{background:#03050bcc;backdrop-filter:blur(4px)}
+.creator-dialog-content{padding:28px 24px 24px;text-align:center}
+.creator-dialog-icon{width:58px;height:58px;margin:0 auto 17px;border-radius:50%;display:grid;place-items:center;background:#3a2e20;color:#f1c96d;font-size:30px}
+.creator-dialog-content h2{font-size:24px;margin-bottom:12px;color:#f1c96d}
+.creator-dialog-content p{font-size:15px;line-height:1.65;color:#d0d5e1}
+.creator-dialog-close{margin-top:23px;min-width:125px;padding:11px 22px;border:0;border-radius:22px;background:#f1c96d;color:#171b2a;font-weight:850}
+@media(max-width:380px){.creator-stat{min-height:140px;padding:15px 13px}.creator-dashboard-card{padding:17px 14px}.creator-status-card{padding:19px 16px}}
+
 </style>
 </head>
 <body>
@@ -267,67 +296,37 @@ body.academy-active .academy-bottom-nav{position:fixed;z-index:15;left:50%;botto
 <div id="emailSignedIn" style="display:none"><p id="emailAccountStatus" class="auth-status"></p><button class="secondary" onclick="emailSignOut()">Sign Out</button></div><p id="authMessage" class="auth-status" aria-live="polite"></p></section></section>
 <section class="page" id="settings"><div class="eyebrow">ACCOUNT · SECURITY · PRIVACY</div><h1>Settings and Privacy</h1><p class="muted">Manage your Afrishine Hub account preferences and privacy information.</p><section class="panel"><h2>Account Settings</h2><p>Account preferences and profile settings will be available here.</p></section><section class="panel"><h2>Privacy and Security</h2><p>Your privacy and account security are important to Afrishine Hub.</p></section><section class="panel"><h2>Help and Support</h2><p>For assistance, visit our Contact Us section.</p><button class="gold" onclick="showPage('contact')">Contact Us →</button></section></section>
 <section class="page" id="creatorRewards">
-<div class="eyebrow">CREATE · ENGAGE · GET REWARDED</div>
-<h1>Creator Rewards</h1>
-<p class="muted">A program for creators who share original, valuable content on Afrishine Hub.</p>
-<section class="panel">
-<h2>🏆 Creator Dashboard</h2>
-<p class="muted">Your creator performance at a glance. Verified figures will appear here when the program is connected to the platform data.</p>
-<div class="stats-grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px">
-<div class="stat-card"><small>Followers</small><strong>—</strong></div>
-<div class="stat-card"><small>Valid Views</small><strong>—</strong></div>
-<div class="stat-card"><small>Engagement</small><strong>—</strong></div>
-<div class="stat-card"><small>Estimated Rewards</small><strong>—</strong></div>
-</div>
-<p class="creator-hint" style="margin-top:12px">Imibare n'ibihembo bizagaragara nyuma yo guhuza iyi gahunda na sisitemu ibara ibikorwa byemewe.</p>
-</section>
-<section class="panel">
-<h2>📋 Eligibility Requirements</h2>
-<p>Ibipimo biteganyijwe byo gusaba kwinjira muri Creator Rewards:</p>
-<ul>
-<li>Nibura followers 500.</li>
-<li>Nibura valid views 4,000 mu gihe kizagenwa na Afrishine Hub.</li>
-<li>Konti igomba kuba imeze neza kandi ikurikiza Community Guidelines.</li>
-<li>Content igomba kuba ari umwimerere cyangwa ufite uburenganzira bwo kuyikoresha.</li>
-<li>Nta kugura followers, views cyangwa gukoresha bots n'ubundi buriganya.</li>
-<li>Kwemera Creator Rewards Terms na Privacy Policy.</li>
-<li>Kuzuza ibisabwa by'imyaka n'ibindi bisabwa n'amategeko mbere yo kwishyurwa.</li>
-</ul>
-<p class="creator-hint">Ibi bipimo ni ibyateganyijwe na Afrishine Hub kandi bishobora kuvugururwa na Admin. Kuba wujuje imibare ntibivuze ko wemerewe guhembwa ako kanya.</p>
-</section>
-<section class="panel">
-<h2>📝 Apply for Creator Rewards</h2>
-<p>Gusaba bizafungurwa igihe gahunda izaba yiteguye kandi amategeko n'uburyo bwo kwishyura byemejwe. Kugeza icyo gihe, ushobora gukomeza kubaka audience yawe no gusangiza abantu content yujuje amabwiriza.</p>
-<button class="secondary" type="button" disabled style="opacity:.65;cursor:not-allowed">Applications opening soon</button>
-</section>
-<section class="panel">
-<h2>📊 Creator Analytics</h2>
-<p>Uzajya ubona uko content yawe ikora: views zemewe, engagement, followers ziyongereye n'ibikorwa byakuyeho amanota kubera kutubahiriza amabwiriza.</p>
-</section>
-<section class="panel">
-<h2>👛 Creator Wallet & Reward History</h2>
-<p>Hazajya hagaragara ibihembo byemejwe, uko bibarwa, n'amateka yabyo. Iyi wallet ntirimo kubika cyangwa guhererekanya crypto assets.</p>
-</section>
-<section class="panel">
-<h2>📜 Creator Rules & Monetization Policy</h2>
-<ul>
-<li>Ntukoreshe fake views, fake likes, bots cyangwa konti z'ibinyoma.</li>
-<li>Ntukibe content y'abandi cyangwa ngo ukoreshe ibikoresho utabifitiye uburenganzira.</li>
-<li>Ntukoreshe spam, uburiganya cyangwa uburyo bwo gushuka audience kugira ngo wongere engagement.</li>
-<li>Afrishine Hub ishobora kugenzura ibikorwa, kwima ibihembo bitujuje ibisabwa cyangwa guhagarika konti ikora uburiganya.</li>
-<li>Abakoresha bazahabwa uburyo bwo gusaba ko icyemezo cyongeye gusuzumwa.</li>
-<li>Ibihembo, uburyo bwo kubara no kwishyura bizatangira gusa nyuma yo kwemeza amategeko, ibisabwa n'uburyo bwemewe bwo kwishyura.</li>
-<li>Nta gaciro ka AST, guhinduranya AST na Pi/USDT, cyangwa inyungu z'amafaranga byemezwa muri iyi gahunda muri iki cyiciro.</li>
-<li>Amakuru y'abakoresha azakoreshwa hakurikijwe Privacy Policy n'amategeko arengera amakuru bwite.</li>
-</ul>
-</section>
-<section class="panel">
-<h2>🛡️ Program Status</h2>
-<p><strong>Preparation phase</strong> — Dashboard n'amabwiriza birerekanwa; applications n'ibihembo nyabyo birategereje ko backend, uburyo bwo kugenzura no kwishyura byemezwa.</p>
-</section>
+  <div class="creator-rewards-top">
+    <div class="creator-rewards-brand">AFRISHINE HUB</div>
+    <span class="creator-program-pill">Creator Program</span>
+  </div>
+  <section class="creator-dashboard-card">
+    <h1>Creator Monetization</h1>
+    <p class="creator-subtitle">Turn your creativity into rewards.</p>
+    <div class="creator-stats-grid">
+      <div class="creator-stat"><span class="creator-stat-icon">♧</span><strong>500</strong><small>Followers required</small></div>
+      <div class="creator-stat"><span class="creator-stat-icon">◎</span><strong>4,000</strong><small>Valid views</small></div>
+      <div class="creator-stat"><span class="creator-stat-icon">♡</span><strong>500</strong><small>Valid engagements</small></div>
+      <div class="creator-stat"><span class="creator-stat-icon">▣</span><strong>3+</strong><small>Original public posts</small></div>
+    </div>
+    <div class="creator-status-card">
+      <h2>Your Monetization Status</h2>
+      <strong>Not Yet Eligible</strong>
+      <p>Your account has not met the eligibility requirements for the Creator Program yet.</p>
+    </div>
+    <button class="creator-apply-btn" type="button" onclick="showCreatorEligibilityMessage()">Apply for Monetization</button>
+  </section>
 </section>
 <section class="page" id="contact"><div class="eyebrow">WE ARE HERE TO HELP</div><h1>Contact Us</h1><p class="muted">Get in touch with Afrishine Hub for support, questions and business inquiries.</p><section class="panel"><h2>Contact Information</h2><p>📞 Phone</p><div class="actions"><a class="gold" href="tel:+250788818684">+250 788 818 684</a></div><p style="margin-top:18px">📩 Email</p><div class="actions"><a class="secondary" href="mailto:afrishinehub@gmail.com">afrishinehub@gmail.com</a></div></section><footer>© 2026 Afrishine Hub · Built in Kigali, Rwanda 🇷🇼</footer></section>
 </main></div>
+<dialog class="creator-eligibility-dialog" id="creatorEligibilityDialog" aria-labelledby="creatorEligibilityTitle" aria-describedby="creatorEligibilityText">
+  <div class="creator-dialog-content">
+    <div class="creator-dialog-icon" aria-hidden="true">!</div>
+    <h2 id="creatorEligibilityTitle">You Are Not Eligible Yet</h2>
+    <p id="creatorEligibilityText">Thank you for your interest in Afrishine Hub Creator Monetization. Your account does not currently meet the program's eligibility requirements. Keep creating original content and growing your audience. You may apply when you meet the requirements.</p>
+    <button class="creator-dialog-close" type="button" onclick="closeCreatorEligibilityMessage()" autofocus>Understood</button>
+  </div>
+</dialog>
 <div class="create-backdrop" id="createBackdrop" onclick="closeCreateMenu()"></div>
 <div class="create-menu" id="createMenu" role="dialog" aria-label="Create menu"><div class="create-menu-head"><h2 id="createMenuTitle">Create on Afrishine Hub</h2><button class="round" onclick="closeCreateMenu()" aria-label="Close create menu">✕</button></div><button class="create-option" onclick="createAction('post')"><span>📝</span> Create Post</button><button class="create-option" onclick="createAction('photo')"><span>🖼️</span> Upload Photo</button><button class="create-option" onclick="createAction('video')"><span>🎬</span> Upload Video</button><button class="create-option" onclick="createAction('live')"><span>🔴</span> Go Live</button></div>
 <div class="creator-backdrop" id="creatorBackdrop" onclick="closeCreator()"></div>
@@ -596,6 +595,15 @@ if(db){db.collection('love_posts').orderBy('createdAt','desc').limit(50).onSnaps
     });
   }
 })();
+
+function showCreatorEligibilityMessage(){
+  const dialog=document.getElementById('creatorEligibilityDialog');
+  if(dialog && !dialog.open) dialog.showModal();
+}
+function closeCreatorEligibilityMessage(){
+  const dialog=document.getElementById('creatorEligibilityDialog');
+  if(dialog && dialog.open) dialog.close();
+}
 </script>
 
 </body>
