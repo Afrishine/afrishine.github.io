@@ -148,7 +148,7 @@ body{font-size:16px}
 <section class="page active" id="home">
 <div class="home-eyebrow">YOUR COMMUNITY · YOUR OPPORTUNITIES</div>
 <div class="hero"><h1>Showcase Your Talent.<br><span>Inspire The World.</span></h1><p class="muted">Discover talent, learn new skills, shop, travel and connect with opportunities — all in one place.</p>
-<div class="actions"><button class="gold" onclick="showPage('talent')">Explore Talent Hub</button><button class="secondary" onclick="enterMarketplace()">Visit Marketplace</button></div>
+<div class="actions"><button class="gold" onclick="showPage('talent')">Explore Talent Hub</button><button class="secondary" onclick="enterMarketplace()">Vist Marketplace</button></div>
 <button class="love-home-card" onclick="showPage('love')"><div class="love-home-info"><div class="love-home-icon">❤️</div><div class="love-home-text"><strong>LOVE CONNECTION</strong><small>Connect, discover and build meaningful relationships.</small></div></div><span class="love-home-arrow">→</span></button></div>
 <h2 class="dashboard-heading">Explore Afrishine Hub</h2>
 <section class="ast-wallet-card" aria-label="Afrishine Token wallet"><div class="ast-coin">AST</div><div class="ast-wallet-info"><div class="ast-wallet-label">AFRISHINE TOKEN</div><h2>My Wallet</h2><p>Your AST balance and transaction history will appear here after secure wallet and backend integration.</p></div><button class="secondary wallet-open" onclick="showPage('wallet')">Open My Wallet →</button></section>
@@ -225,7 +225,7 @@ body{font-size:16px}
 /* FIREBASE CONFIGURATION: Auth + Firestore only; Firebase Storage is not enabled. */
 const firebaseConfig={
  apiKey:"AIzaSyBnrdoguyhUd_E3I5RHqcQxHNVLa6kIMX4",
- authDomain:"afrishinegithubio.vercel.app",
+ authDomain:"afrishine-hub.firebaseapp.com",
  projectId:"afrishine-hub",
  storageBucket:"afrishine-hub.firebasestorage.app",
  messagingSenderId:"553901207884",
@@ -317,13 +317,17 @@ if(auth){auth.onAuthStateChanged(async user=>{
   catch(e){console.warn('Could not load user profile',e);}
  }else{currentLoveProfile=null;}
  refreshLoveAccess();
- var marketplaceRedirect=sessionStorage.getItem('afrishine_marketplace_google_redirect')==='1';
+ var marketplaceRedirect=false;
+ try{marketplaceRedirect=sessionStorage.getItem('afrishine_marketplace_google_redirect')==='1';}
+ catch(storageError){console.warn('Session storage is unavailable:',storageError);}
  if(marketplaceRedirect){
   if(isGoogleMarketplaceUser(user)){
-   sessionStorage.removeItem('afrishine_marketplace_google_redirect');pendingMarketplaceLogin=false;
+   try{sessionStorage.removeItem('afrishine_marketplace_google_redirect');}catch(storageError){console.warn(storageError);}
+   pendingMarketplaceLogin=false;
    closeMarketplaceLogin();showPage('shop');loadMarketplacePosts();
   }else if(user){
-   sessionStorage.removeItem('afrishine_marketplace_google_redirect');pendingMarketplaceLogin=false;
+   try{sessionStorage.removeItem('afrishine_marketplace_google_redirect');}catch(storageError){console.warn(storageError);}
+   pendingMarketplaceLogin=false;
    var loginMessage=document.getElementById('marketLoginMessage');if(loginMessage)loginMessage.textContent='Marketplace yemera Google cyangwa Pi Login yagenzuwe. Sohoka wongere winjire ukoresheje imwe muri zo.';
   }
  }
@@ -332,7 +336,7 @@ if(auth){auth.onAuthStateChanged(async user=>{
   else{document.getElementById('shop').classList.remove('active');openMarketplaceLogin();}
  }
 });
-auth.getRedirectResult().catch(function(e){console.error('Google redirect result:',e);sessionStorage.removeItem('afrishine_marketplace_google_redirect');pendingMarketplaceLogin=false;var loginMessage=document.getElementById('marketLoginMessage');if(loginMessage)loginMessage.textContent=firebaseErrorMessage(e);});
+auth.getRedirectResult().catch(function(e){console.error('Google redirect result:',e);try{sessionStorage.removeItem('afrishine_marketplace_google_redirect');}catch(storageError){console.warn(storageError);}pendingMarketplaceLogin=false;var loginMessage=document.getElementById('marketLoginMessage');if(loginMessage)loginMessage.textContent=firebaseErrorMessage(e);});
 }
 
 /* AFRISHINE MARKETPLACE: Google or server-verified Pi authentication */
@@ -341,17 +345,16 @@ function openMarketplaceLogin(){pendingMarketplaceLogin=true;document.getElement
 function closeMarketplaceLogin(){pendingMarketplaceLogin=false;document.getElementById('marketLoginModal').classList.remove('open');}
 async function marketplaceGoogleLogin(){
  if(!auth){document.getElementById('marketLoginMessage').textContent='Firebase ntiyabashije gutangira. Ongera ugerageze.';return;}
+ pendingMarketplaceLogin=true;
  var message=document.getElementById('marketLoginMessage');
+ if(message)message.textContent='Connecting to Google…';
  try{
-  pendingMarketplaceLogin=true;
-  sessionStorage.setItem('afrishine_marketplace_google_redirect','1');
-  var provider=new firebase.auth.GoogleAuthProvider();
-  provider.setCustomParameters({prompt:'select_account'});
-  await auth.signInWithRedirect(provider);
+  // Use the same Firebase popup flow as the main Profile Google sign-in.
+  // This avoids redirect state being lost in partitioned browser storage.
+  await googleSignIn();
  }catch(e){
-  console.error('Marketplace Google redirect failed:',e);
-  sessionStorage.removeItem('afrishine_marketplace_google_redirect');
-  pendingMarketplaceLogin=false;
+  console.error('Marketplace Google sign-in failed:',e);
+  pendingMarketplaceLogin=true;
   if(message)message.textContent=firebaseErrorMessage(e);
  }
 }
