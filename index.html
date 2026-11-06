@@ -175,6 +175,20 @@ body{font-size:16px}
 .academy-bottom-nav button.active{color:#f0c86d;background:#292719;border-color:#393324}
 .academy-nav-note{color:#9ca4b5!important;text-align:center;font-size:12px!important;margin:10px 0 0}
 @media(max-width:380px){.academy-course-grid{gap:9px}.academy-course-art{height:94px}.academy-course-card{padding:8px}.academy-welcome h2{font-size:25px}.academy-bottom-nav button small{font-size:9px}}
+/* Academy gets its own bottom navigation; the Hub navigation returns on exit. */
+body.academy-active{padding-bottom:112px}
+body.academy-active .bottom-nav{display:none}
+body.academy-active #academy{padding-bottom:125px}
+body.academy-active .academy-bottom-nav{position:fixed;z-index:15;left:50%;bottom:calc(7px + env(safe-area-inset-bottom));transform:translateX(-50%);width:calc(100% - 24px);max-width:956px;margin:0;padding:8px 5px;background:#151a26;box-shadow:0 -8px 28px #0008;border-color:#343a49}
+.academy-course-card{cursor:pointer;transition:transform .16s ease,border-color .16s ease}
+.academy-course-card:active{transform:scale(.985);border-color:#e9c46f}
+.academy-course-art{height:145px;font-size:48px}
+.academy-course-card h4{font-size:16px;min-height:40px}
+.academy-course-card p{font-size:14px;margin:0 0 12px}
+.academy-course-placeholder{min-height:44px;font-size:14px}
+.academy-course-tag{display:inline-block;margin:2px 2px 8px;padding:4px 8px;border-radius:20px;background:#292719;color:#e9c46f;font-size:10px;font-weight:800;letter-spacing:.5px}
+@media(max-width:380px){.academy-course-art{height:112px}.academy-course-card h4{font-size:14px}}
+
 </style>
 </head>
 <body>
@@ -227,12 +241,7 @@ body{font-size:16px}
     </div>
   </section>
   <div class="academy-section-heading"><h3>Video Courses</h3><button type="button" class="academy-see-all" onclick="showAcademyTab('Courses',document.querySelector('.academy-bottom-nav button[data-academy-tab=Courses]'))">See all ›</button></div>
-  <div class="academy-course-grid">
-    <article class="academy-course-card"><div class="academy-course-art" aria-hidden="true">⌘</div><h4>UI/UX Fundamentals</h4><p>Course preview</p><button class="academy-course-placeholder" type="button" onclick="notice('Amasomo azashyirwaho hano namara gufungurwa.')">Coming Soon</button></article>
-    <article class="academy-course-card"><div class="academy-course-art" aria-hidden="true">▥</div><h4>Startup Finance Basics</h4><p>Course preview</p><button class="academy-course-placeholder" type="button" onclick="notice('Amasomo azashyirwaho hano namara gufungurwa.')">Coming Soon</button></article>
-    <article class="academy-course-card"><div class="academy-course-art" aria-hidden="true">⌨</div><h4>Python for Beginners</h4><p>Course preview</p><button class="academy-course-placeholder" type="button" onclick="notice('Amasomo azashyirwaho hano namara gufungurwa.')">Coming Soon</button></article>
-    <article class="academy-course-card"><div class="academy-course-art" aria-hidden="true">✎</div><h4>Brand Design Essentials</h4><p>Course preview</p><button class="academy-course-placeholder" type="button" onclick="notice('Amasomo azashyirwaho hano namara gufungurwa.')">Coming Soon</button></article>
-  </div>
+  <div class="academy-course-grid" id="academyCourseGrid" aria-live="polite"></div>
   <nav class="academy-bottom-nav" aria-label="Afrishine Academy navigation">
     <button type="button" class="active" data-academy-tab="Home" onclick="showAcademyTab('Home',this)"><span>⌂</span><small>Home</small></button>
     <button type="button" data-academy-tab="Courses" onclick="showAcademyTab('Courses',this)"><span>♧</span><small>Courses</small></button>
@@ -313,8 +322,42 @@ catch(error){console.error('Firebase initialization failed:',error);}
 function isGoogleMarketplaceUser(user){if(!user||!user.providerData)return false;return user.providerData.some(function(info){return info.providerId==='google.com';});}
 function isPiBrowser(){var ua=(navigator&&navigator.userAgent)||'';return !!(window.Pi)||/PiBrowser/i.test(ua);}
 function canViewMarketplace(){return isPiBrowser()||isGoogleMarketplaceUser(currentFirebaseUser);}
-function showAcademyTab(tab,button){document.querySelectorAll('.academy-bottom-nav button').forEach(function(item){item.classList.toggle('active',item===button);});const message=document.getElementById('academyTabMessage');if(message){const notes={Home:'Welcome to Afrishine Academy. Courses will be added soon.',Courses:'Video courses will appear here when course publishing is enabled.',Bookmark:'Your bookmarked courses will appear here.',Downloads:'Your downloaded learning materials will appear here.',Profile:'Your Academy profile will be available here.'};message.textContent=notes[tab]||tab+' — Afrishine Academy.';}} function setAcademyCategory(category,button){document.querySelectorAll('.academy-categories button').forEach(function(item){item.classList.toggle('active',item===button);});const message=document.getElementById('academyTabMessage');if(message)message.textContent=category+' courses will be added soon.';} function showPage(id){if(id==='shop'&&!canViewMarketplace()){openMarketplaceLogin();return;}const page=document.getElementById(id);if(!page)return;document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('[data-page]').forEach(a=>a.classList.toggle('active',a.dataset.page===id));if(location.hash!=='#'+id){if(window.history&&history.replaceState){history.replaceState(null,'','#'+id);}else{location.hash=id;}}closeMenu();closeCreateMenu();closeCreator();if(id==='love')refreshLoveAccess();if(id==='inbox')loadInbox();window.scrollTo(0,0);}
+const academyCourses={
+ Tech:[
+  {icon:'⌘',title:'UI/UX Fundamentals',detail:'Design better digital experiences',tag:'USER EXPERIENCE'},
+  {icon:'⌨',title:'Python for Beginners',detail:'Start your journey in programming',tag:'PROGRAMMING'},
+  {icon:'&lt;/&gt;',title:'Web Development Essentials',detail:'Explore how modern websites work',tag:'WEB DEVELOPMENT'},
+  {icon:'✦',title:'Artificial Intelligence Basics',detail:'Discover the world of AI',tag:'ARTIFICIAL INTELLIGENCE'}
+ ],
+ Business:[
+  {icon:'▥',title:'Startup Finance Basics',detail:'Understand money in a new business',tag:'FINANCE'},
+  {icon:'◈',title:'Entrepreneurship Essentials',detail:'Turn ideas into opportunities',tag:'ENTREPRENEURSHIP'},
+  {icon:'▤',title:'Financial Literacy',detail:'Build smart money habits',tag:'MONEY SKILLS'},
+  {icon:'↗',title:'Digital Marketing',detail:'Learn how brands grow online',tag:'MARKETING'}
+ ],
+ Design:[
+  {icon:'✎',title:'Brand Design Essentials',detail:'Build a memorable visual identity',tag:'BRANDING'},
+  {icon:'▧',title:'Graphic Design Basics',detail:'Explore colour, layout and visuals',tag:'GRAPHIC DESIGN'},
+  {icon:'◇',title:'UI Design Principles',detail:'Create clear and useful interfaces',tag:'UI DESIGN'},
+  {icon:'▶',title:'Video Editing Basics',detail:'Shape stories through video',tag:'VIDEO'}
+ ]
+};
+function renderAcademyCourses(category){
+ const grid=document.getElementById('academyCourseGrid');if(!grid)return;
+ const courses=academyCourses[category]||[];
+ grid.innerHTML=courses.map(function(course){
+  const title=course.title.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const detail=course.detail.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const tag=course.tag.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return `<article class="academy-course-card" role="button" tabindex="0" aria-label="${title} — Coming Soon" onclick="openAcademyCourse(&quot;${title}&quot;)" onkeydown="if(event.key===&quot;Enter&quot;){event.preventDefault();openAcademyCourse(&quot;${title}&quot;)}"><div class="academy-course-art" aria-hidden="true">${course.icon}</div><span class="academy-course-tag">${tag}</span><h4>${title}</h4><p>${detail}</p><button class="academy-course-placeholder" type="button" onclick="event.stopPropagation();openAcademyCourse(&quot;${title}&quot;)">Coming Soon</button></article>`;
+ }).join('');
+}
+function openAcademyCourse(title){notice('Coming Soon — '+title+' will be available when this course is launched.');}
+function showAcademyTab(tab,button){document.querySelectorAll('.academy-bottom-nav button').forEach(function(item){item.classList.toggle('active',item===button);});const message=document.getElementById('academyTabMessage');if(message){const notes={Home:'Welcome to Afrishine Academy. Explore the course categories above.',Courses:'Explore Tech, Business and Design courses. New lessons will be announced here.',Bookmark:'Your bookmarked courses will appear here when this feature is enabled.',Downloads:'Your downloaded learning materials will appear here when downloads are enabled.',Profile:'Your Academy profile will be available here.'};message.textContent=notes[tab]||tab+' — Afrishine Academy.';}if(tab==='Courses'){document.querySelector('.academy-section-heading').scrollIntoView({behavior:'smooth',block:'start'});}}
+function setAcademyCategory(category,button){document.querySelectorAll('.academy-categories button').forEach(function(item){item.classList.toggle('active',item===button);});renderAcademyCourses(category);const heading=document.querySelector('.academy-section-heading h3');if(heading)heading.textContent=category+' Courses';}
+function showPage(id){if(id==='shop'&&!canViewMarketplace()){openMarketplaceLogin();return;}const page=document.getElementById(id);if(!page)return;document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.body.classList.toggle('academy-active',id==='academy');document.querySelectorAll('[data-page]').forEach(a=>a.classList.toggle('active',a.dataset.page===id));if(location.hash!=='#'+id){if(window.history&&history.replaceState){history.replaceState(null,'','#'+id);}else{location.hash=id;}}closeMenu();closeCreateMenu();closeCreator();if(id==='academy'){renderAcademyCourses('Tech');const heading=document.querySelector('.academy-section-heading h3');if(heading)heading.textContent='Tech Courses';}if(id==='love')refreshLoveAccess();if(id==='inbox')loadInbox();window.scrollTo(0,0);}
 document.querySelectorAll('[data-page]').forEach(el=>el.addEventListener('click',e=>{e.preventDefault();showPage(el.dataset.page);}));
+if(document.getElementById('academy').classList.contains('active')){document.body.classList.add('academy-active');renderAcademyCourses('Tech');}
 const headerSearchInput=document.getElementById('headerSearch');
 function runHeaderSearch(e){e.preventDefault();const q=headerSearchInput.value.trim().toLowerCase();if(!q){headerSearchInput.focus();return;}const routes=[{w:['talent','creator','video','music','dance','artist'],p:'talent'},{w:['community','feed','group','challenge','events'],p:'community'},{w:['shop','product','buy','sell','store'],p:'shop'},{w:['wallet','ast','token','balance','transaction'],p:'wallet'},{w:['academy','learn','course','training','education'],p:'academy'},{w:['travel','trip','booking','destination'],p:'travel'},{w:['job','work','employment'],p:'jobs'},{w:['inbox','message','chat'],p:'inbox'},{w:['profile','account','login','sign in'],p:'profile'},{w:['love','connection'],p:'love'},{w:['contact','support','help'],p:'contact'}];const m=routes.find(r=>r.w.some(w=>q.includes(w)));if(m){showPage(m.p);headerSearchInput.blur();}else notice('No matching section found. Try Talent, Community, Shop, Wallet, Academy or Travel.');}
 function openMenu(){document.getElementById('menuDrawer').classList.add('open');document.getElementById('menuBackdrop').classList.add('open');}
