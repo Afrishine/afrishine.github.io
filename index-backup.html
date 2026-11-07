@@ -396,7 +396,7 @@ body.video-viewer-open{overflow:hidden}
 <div class="creator-backdrop" id="creatorBackdrop" onclick="closeCreator()"></div>
 <section class="creator-workspace" id="creatorWorkspace" role="dialog" aria-modal="true"><div class="creator-inner"><div class="creator-header"><h2 id="creatorTitle">Create Post</h2><button class="creator-close" onclick="closeCreator()" aria-label="Close">✕</button></div>
 <div id="postEditor" style="display:none"><textarea id="postText" placeholder="What would you like to share with the Afrishine Hub community?"></textarea><div class="creator-actions"><button class="gold" onclick="previewPost()">Preview Post</button></div><div class="preview-box" id="postPreview"><b>Post Preview</b><div class="preview-text" id="postPreviewText"></div><p class="creator-hint">Preview of your text post.</p><div class="creator-actions"><button class="gold" onclick="publishTextPost()">Publish Post</button><button class="secondary" onclick="editPost()">Edit</button></div></div></div>
-<div id="mediaEditor" style="display:none"><p class="creator-hint" id="mediaInstructions">Choose a file from your phone.</p><input class="hidden-input" type="file" id="photoInput" accept="image/*"><input class="hidden-input" type="file" id="videoInput" accept="video/*"><button class="gold" id="chooseMediaButton" onclick="chooseMedia()">Choose from Gallery</button><div class="preview-box" id="mediaPreview"><b id="mediaPreviewTitle">Preview</b><img id="photoPreview" alt="Selected photo preview" style="display:none"><video id="videoPreview" controls playsinline style="display:none"></video><p class="creator-hint">This file is previewed only on your device. Public photo/video upload requires Firebase Storage on the Blaze plan. No upload or billing is started here.</p><div class="creator-actions"><button class="gold" onclick="mediaUploadNotice()">Post</button><button class="secondary" onclick="chooseMedia()">Choose Another</button></div></div></div>
+<div id="mediaEditor" style="display:none"><p class="creator-hint" id="mediaInstructions">Choose a file from your phone.</p><input class="hidden-input" type="file" id="photoInput" accept="image/*"><input class="hidden-input" type="file" id="videoInput" accept="video/*"><button class="gold" id="chooseMediaButton" onclick="chooseMedia()">Choose from Gallery</button><div class="preview-box" id="mediaPreview"><b id="mediaPreviewTitle">Preview</b><img id="photoPreview" alt="Selected photo preview" style="display:none"><video id="videoPreview" controls playsinline style="display:none"></video><p class="creator-hint">Choose Post to upload this photo or video to Afrishine Hub. Maximum file size: 100 MB. Sign-in is required.</p><div class="creator-actions"><button class="gold" onclick="mediaUploadNotice()">Post</button><button class="secondary" onclick="chooseMedia()">Choose Another</button></div></div></div>
 <div id="liveEditor" style="display:none"><p class="creator-hint">Allow camera and microphone access when your phone asks. Your camera preview will appear below.</p><video id="liveVideo" class="camera-video" autoplay muted playsinline></video><div class="creator-actions"><button class="gold" id="cameraButton" onclick="startCamera()">Start Camera Preview</button><button class="secondary" onclick="switchCamera()">Switch Camera</button><button class="secondary" onclick="stopCamera()">Stop Camera</button></div><div class="panel"><h2>Live Streaming</h2><p id="liveStatus">Camera preview is not connected to a public live broadcast.</p><div class="creator-actions"><button class="gold" onclick="liveBroadcastNotice()">Start Live</button></div></div></div>
 </div></section>
 <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenu()"></div>
@@ -434,7 +434,7 @@ body.video-viewer-open{overflow:hidden}
 })();
 </script>
 <script>
-/* FIREBASE CONFIGURATION: Auth + Firestore only; Firebase Storage is not enabled. */
+/* Firebase Auth + Firestore. Media files are uploaded through the Afrishine Cloudflare Worker. */
 const firebaseConfig={
  apiKey:"AIzaSyBnrdoguyhUd_E3I5RHqcQxHNVLa6kIMX4",
  authDomain:"afrishine-hub.firebaseapp.com",
@@ -444,7 +444,7 @@ const firebaseConfig={
  appId:"1:553901207884:web:81d4dce86149267ae59fe9",
  measurementId:"G-WXNG0SHM9X"
 };
-let auth=null,db=null,currentFirebaseUser=null,cameraStream=null,cameraFacing='user',selectedMediaUrl=null,createSource='hub',marketplaceFilter='all',pendingMarketplaceLogin=false;
+let auth=null,db=null,currentFirebaseUser=null,cameraStream=null,cameraFacing='user',selectedMediaUrl=null,selectedMediaFile=null,selectedMediaType=null,createSource='hub',marketplaceFilter='all',pendingMarketplaceLogin=false;
 let marketplaceLastDoc=null,marketplaceHasMore=false,marketplaceLoading=false;
 const MARKETPLACE_PAGE_SIZE=15;
 try{if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);auth=firebase.auth();db=firebase.firestore();}
@@ -506,8 +506,45 @@ function editPost(){document.getElementById('postPreview').classList.remove('sho
 function chooseMedia(){const p=document.getElementById('photoInput'),v=document.getElementById('videoInput');if(p.dataset.active==='yes')p.click();else if(v.dataset.active==='yes')v.click();}
 document.getElementById('photoInput').addEventListener('change',function(){const f=this.files&&this.files[0];if(!f)return;if(!f.type.startsWith('image/')){notice('Please select a valid image.');return;}showMediaPreview(f,'photo');});
 document.getElementById('videoInput').addEventListener('change',function(){const f=this.files&&this.files[0];if(!f)return;if(!f.type.startsWith('video/')){notice('Please select a valid video.');return;}showMediaPreview(f,'video');});
-function showMediaPreview(file,type){if(selectedMediaUrl)URL.revokeObjectURL(selectedMediaUrl);selectedMediaUrl=URL.createObjectURL(file);const p=document.getElementById('photoPreview'),v=document.getElementById('videoPreview');p.style.display='none';v.style.display='none';v.pause();v.removeAttribute('src');if(type==='photo'){p.src=selectedMediaUrl;p.style.display='block';document.getElementById('mediaPreviewTitle').textContent='Photo Preview';}else{v.src=selectedMediaUrl;v.style.display='block';document.getElementById('mediaPreviewTitle').textContent='Video Preview';}document.getElementById('mediaPreview').classList.add('show');}
-function mediaUploadNotice(){notice('Photo/video preview works. Public media upload requires Firebase Storage on Blaze; nothing was uploaded.');}
+function showMediaPreview(file,type){selectedMediaFile=file;selectedMediaType=type;if(selectedMediaUrl)URL.revokeObjectURL(selectedMediaUrl);selectedMediaUrl=URL.createObjectURL(file);const p=document.getElementById('photoPreview'),v=document.getElementById('videoPreview');p.style.display='none';v.style.display='none';v.pause();v.removeAttribute('src');if(type==='photo'){p.src=selectedMediaUrl;p.style.display='block';document.getElementById('mediaPreviewTitle').textContent='Photo Preview';}else{v.src=selectedMediaUrl;v.style.display='block';document.getElementById('mediaPreviewTitle').textContent='Video Preview';}document.getElementById('mediaPreview').classList.add('show');}
+async function mediaUploadNotice(){
+ const file=selectedMediaFile;
+ if(!file){notice('Choose a photo or video first.');return;}
+ if(!auth||!currentFirebaseUser){notice('Please sign in before uploading media.');showPage('profile');return;}
+ if(file.size>100*1024*1024){notice('This file is larger than the 100 MB limit. Choose a smaller file.');return;}
+ const allowed=['image/jpeg','image/png','image/webp','image/gif','video/mp4','video/webm','video/quicktime'];
+ if(!allowed.includes(file.type)){notice('This file format is not supported. Use JPG, PNG, WEBP, GIF, MP4, WEBM or MOV.');return;}
+ const postButton=document.querySelector('#mediaPreview .creator-actions button.gold');
+ if(postButton){postButton.disabled=true;postButton.textContent='Uploading…';}
+ try{
+  const token=await currentFirebaseUser.getIdToken();
+  const endpoint='https://afrishine-media.usherluckyelie.workers.dev/upload?filename='+encodeURIComponent(file.name||'media');
+  const response=await fetch(endpoint,{method:'POST',headers:{'Authorization':'Bearer '+token,'Content-Type':file.type},body:file});
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok||!result.success)throw new Error(result.error||'Media upload failed. Please try again.');
+  const postTextField=document.getElementById('postText');const caption=(postTextField?postTextField.value:'').trim();
+  await db.collection('posts').add({
+   uid:currentFirebaseUser.uid,
+   authorName:currentFirebaseUser.displayName||'Afrishine Member',
+   text:caption,
+   type:selectedMediaType==='video'?'video':'image',
+   mediaType:selectedMediaType==='video'?'video':'image',
+   mediaUrl:result.url,
+   mediaKey:result.key,
+   source:createSource,
+   createdAt:firebase.firestore.FieldValue.serverTimestamp()
+  });
+  document.getElementById('postText').value='';
+  document.getElementById('mediaPreview').classList.remove('show');
+  document.getElementById('photoInput').value='';
+  document.getElementById('videoInput').value='';
+  selectedMediaFile=null;selectedMediaType=null;
+  if(selectedMediaUrl){URL.revokeObjectURL(selectedMediaUrl);selectedMediaUrl=null;}
+  closeCreator();
+  notice('Your media post has been published successfully.');
+ }catch(error){console.error('Afrishine media upload:',error);notice(error.message||'Upload failed.');}
+ finally{if(postButton){postButton.disabled=false;postButton.textContent='Post';}}
+}
 async function publishTextPost(){const text=document.getElementById('postText').value.trim();if(!text){notice('Write something before publishing.');return;}if(!auth||!currentFirebaseUser){notice('Please create an email account or sign in before publishing a text post.');showPage('profile');return;}const btn=document.querySelector('#postPreview button.gold');if(btn){btn.disabled=true;btn.textContent='Publishing…';}
 try{await db.collection('posts').add({uid:currentFirebaseUser.uid,authorName:currentFirebaseUser.displayName||'Afrishine Member',text,type:'text',source:createSource,createdAt:firebase.firestore.FieldValue.serverTimestamp()});document.getElementById('postText').value='';document.getElementById('postPreview').classList.remove('show');closeCreator();notice(createSource==='talent'?'Your post has been published to Talent Hub and Home.':'Your post has been published to Community and Home.');}
 catch(error){console.error(error);notice(firebaseErrorMessage(error));}finally{if(btn){btn.disabled=false;btn.textContent='Publish Post';}}}
@@ -614,7 +651,7 @@ async function reportMarketplacePost(id,uid){if(!isGoogleMarketplaceUser(current
 /* FIRESTORE POSTS FEED: rendered as text, escaped before HTML insertion */
 function safeText(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function postDate(ts){try{return ts&&ts.toDate?ts.toDate().toLocaleString():'Just now';}catch(e){return 'Recently';}}
-function renderPostList(elementId,posts,emptyMessage){const el=document.getElementById(elementId);if(!el)return;if(!posts.length){el.innerHTML='<div class="empty-feed">'+emptyMessage+'</div>';return;}el.innerHTML=posts.map(p=>{const mine=currentFirebaseUser&&p.uid===currentFirebaseUser.uid;return '<article class="post-card" data-engagement="posts" data-post-id="'+safeText(p.id)+'" data-author-uid="'+safeText(p.uid)+'"><div class="post-meta"><button class="text-link" data-open-profile="'+safeText(p.uid)+'">'+safeText(marketplacePublicName(p.authorName))+'</button><span>'+safeText(postDate(p.createdAt))+'</span></div>'+(p.isRepost?'<p class="creator-hint">🔁 Repost · Originally shared by '+safeText(p.originalAuthor||'Afrishine Member')+'</p>':'')+'<div class="post-body">'+safeText(p.text||'')+'</div><div class="actions post-actions"><button class="secondary" data-like="'+safeText(p.id)+'" data-kind="posts">♡ Like <span data-like-count>0</span></button><button class="secondary" data-focus-comment="'+safeText(p.id)+'">💬 Comment</button><button class="secondary" data-share-post="'+safeText(p.id)+'" data-kind="posts">↗ Share</button><button class="secondary" data-repost="'+safeText(p.id)+'" data-kind="posts">🔁 Repost</button>'+(mine?'':'<button class="secondary" data-message-user="'+safeText(p.uid)+'" data-message-name="'+safeText(marketplacePublicName(p.authorName))+'">✉ Message</button>')+'</div><div class="comment-area"><div data-comments-list></div><div class="comment-compose"><input class="field" data-comment-input placeholder="Write a comment…" maxlength="500"><button class="gold" data-send-comment="'+safeText(p.id)+'" data-kind="posts">Send</button></div></div>'+(mine?'<button class="post-delete" data-delete-post="'+safeText(p.id)+'">Delete my post</button>':'')+'</article>';}).join('');el.querySelectorAll('[data-engagement]').forEach(card=>loadPostEngagement(card));}
+function renderPostList(elementId,posts,emptyMessage){const el=document.getElementById(elementId);if(!el)return;if(!posts.length){el.innerHTML='<div class="empty-feed">'+emptyMessage+'</div>';return;}el.innerHTML=posts.map(p=>{const mine=currentFirebaseUser&&p.uid===currentFirebaseUser.uid;const mediaUrl=p.mediaUrl||p.videoUrl||p.mediaURL||p.mediaURL||'';const mediaType=p.mediaType||(p.type==='video'?'video':(p.type==='image'?'image':''));const mediaMarkup=mediaUrl?(mediaType==='video'?'<video class="post-media-video" src="'+safeText(mediaUrl)+'" controls playsinline preload="metadata" style="width:100%;max-height:520px;border-radius:14px;background:#080a10"></video>':'<img class="post-media-image" src="'+safeText(mediaUrl)+'" alt="Shared media" loading="lazy" style="width:100%;max-height:520px;object-fit:contain;border-radius:14px;background:#080a10">') : '';return '<article class="post-card" data-engagement="posts" data-post-id="'+safeText(p.id)+'" data-author-uid="'+safeText(p.uid)+'"><div class="post-meta"><button class="text-link" data-open-profile="'+safeText(p.uid)+'">'+safeText(marketplacePublicName(p.authorName))+'</button><span>'+safeText(postDate(p.createdAt))+'</span></div>'+(p.isRepost?'<p class="creator-hint">🔁 Repost · Originally shared by '+safeText(p.originalAuthor||'Afrishine Member')+'</p>':'')+'<div class="post-body">'+safeText(p.text||'')+'</div>'+mediaMarkup+'<div class="actions post-actions"><button class="secondary" data-like="'+safeText(p.id)+'" data-kind="posts">♡ Like <span data-like-count>0</span></button><button class="secondary" data-focus-comment="'+safeText(p.id)+'">💬 Comment</button><button class="secondary" data-share-post="'+safeText(p.id)+'" data-kind="posts">↗ Share</button><button class="secondary" data-repost="'+safeText(p.id)+'" data-kind="posts">🔁 Repost</button>'+(mine?'':'<button class="secondary" data-message-user="'+safeText(p.uid)+'" data-message-name="'+safeText(marketplacePublicName(p.authorName))+'">✉ Message</button>')+'</div><div class="comment-area"><div data-comments-list></div><div class="comment-compose"><input class="field" data-comment-input placeholder="Write a comment…" maxlength="500"><button class="gold" data-send-comment="'+safeText(p.id)+'" data-kind="posts">Send</button></div></div>'+(mine?'<button class="post-delete" data-delete-post="'+safeText(p.id)+'">Delete my post</button>':'')+'</article>';}).join('');el.querySelectorAll('[data-engagement]').forEach(card=>loadPostEngagement(card));}
 function renderPosts(posts){const talentPosts=posts.filter(p=>p.source==='talent');const communityPosts=posts.filter(p=>p.source!=='talent');renderPostList('homeFeed',posts,'No posts yet. Be the first to share something with Afrishine Hub.');renderPostList('talentFeed',talentPosts,'No Talent Hub posts yet. Be the first to showcase your talent.');renderPostList('communityFeed',communityPosts,'No Community posts yet. Be the first to share with the Community.');}
 function scrollToSharedPost(kind){if(!window.ahSharedPostId)return;const card=document.querySelector('[data-engagement="'+kind+'"][data-post-id="'+window.ahSharedPostId+'"]');if(card){card.scrollIntoView({behavior:'smooth',block:'center'});card.style.outline='2px solid var(--gold)';window.ahSharedPostId=null;}}
 // LIKES, COMMENTS, MEMBER PROFILES AND DIRECT MESSAGES
