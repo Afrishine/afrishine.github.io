@@ -651,7 +651,7 @@ async function reportMarketplacePost(id,uid){if(!isGoogleMarketplaceUser(current
 /* FIRESTORE POSTS FEED: rendered as text, escaped before HTML insertion */
 function safeText(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function postDate(ts){try{return ts&&ts.toDate?ts.toDate().toLocaleString():'Just now';}catch(e){return 'Recently';}}
-function renderPostList(elementId,posts,emptyMessage){const el=document.getElementById(elementId);if(!el)return;if(!posts.length){el.innerHTML='<div class="empty-feed">'+emptyMessage+'</div>';return;}el.innerHTML=posts.map(p=>{const mine=currentFirebaseUser&&p.uid===currentFirebaseUser.uid;const mediaUrl=p.mediaUrl||p.videoUrl||p.mediaURL||p.mediaURL||'';const mediaType=p.mediaType||(p.type==='video'?'video':(p.type==='image'?'image':''));const mediaMarkup=mediaUrl?(mediaType==='video'?'<video class="post-media-video" src="'+safeText(mediaUrl)+'" controls playsinline preload="metadata" style="width:100%;max-height:520px;border-radius:14px;background:#080a10"></video>':'<img class="post-media-image" src="'+safeText(mediaUrl)+'" alt="Shared media" loading="lazy" style="width:100%;max-height:520px;object-fit:contain;border-radius:14px;background:#080a10">') : '';return '<article class="post-card" data-engagement="posts" data-post-id="'+safeText(p.id)+'" data-author-uid="'+safeText(p.uid)+'"><div class="post-meta"><button class="text-link" data-open-profile="'+safeText(p.uid)+'">'+safeText(marketplacePublicName(p.authorName))+'</button><span>'+safeText(postDate(p.createdAt))+'</span></div>'+(p.isRepost?'<p class="creator-hint">🔁 Repost · Originally shared by '+safeText(p.originalAuthor||'Afrishine Member')+'</p>':'')+'<div class="post-body">'+safeText(p.text||'')+'</div>'+mediaMarkup+'<div class="actions post-actions"><button class="secondary" data-like="'+safeText(p.id)+'" data-kind="posts">♡ Like <span data-like-count>0</span></button><button class="secondary" data-focus-comment="'+safeText(p.id)+'">💬 Comment</button><button class="secondary" data-share-post="'+safeText(p.id)+'" data-kind="posts">↗ Share</button><button class="secondary" data-repost="'+safeText(p.id)+'" data-kind="posts">🔁 Repost</button>'+(mine?'':'<button class="secondary" data-message-user="'+safeText(p.uid)+'" data-message-name="'+safeText(marketplacePublicName(p.authorName))+'">✉ Message</button>')+'</div><div class="comment-area"><div data-comments-list></div><div class="comment-compose"><input class="field" data-comment-input placeholder="Write a comment…" maxlength="500"><button class="gold" data-send-comment="'+safeText(p.id)+'" data-kind="posts">Send</button></div></div>'+(mine?'<button class="post-delete" data-delete-post="'+safeText(p.id)+'">Delete my post</button>':'')+'</article>';}).join('');el.querySelectorAll('[data-engagement]').forEach(card=>loadPostEngagement(card));}
+function renderPostList(elementId,posts,emptyMessage){const el=document.getElementById(elementId);if(!el)return;posts=posts.filter(p=>p.visibility!=='private'||(currentFirebaseUser&&p.uid===currentFirebaseUser.uid));if(!posts.length){el.innerHTML='<div class="empty-feed">'+emptyMessage+'</div>';return;}el.innerHTML=posts.map(p=>{const mine=currentFirebaseUser&&p.uid===currentFirebaseUser.uid;const mediaUrl=p.mediaUrl||p.videoUrl||p.mediaURL||p.mediaURL||'';const mediaType=p.mediaType||(p.type==='video'?'video':(p.type==='image'?'image':''));const mediaMarkup=mediaUrl?(mediaType==='video'?'<video class="post-media-video" src="'+safeText(mediaUrl)+'" controls playsinline preload="metadata" style="width:100%;max-height:520px;border-radius:14px;background:#080a10"></video>':'<img class="post-media-image" src="'+safeText(mediaUrl)+'" alt="Shared media" loading="lazy" style="width:100%;max-height:520px;object-fit:contain;border-radius:14px;background:#080a10">') : '';return '<article class="post-card" data-engagement="posts" data-post-id="'+safeText(p.id)+'" data-author-uid="'+safeText(p.uid)+'" data-visibility="'+safeText(p.visibility||'public')+'"><div class="post-meta"><button class="text-link" data-open-profile="'+safeText(p.uid)+'">'+safeText(marketplacePublicName(p.authorName))+'</button><span>'+safeText(postDate(p.createdAt))+'</span></div>'+(p.isRepost?'<p class="creator-hint">🔁 Repost · Originally shared by '+safeText(p.originalAuthor||'Afrishine Member')+'</p>':'')+'<div class="post-body">'+safeText(p.text||'')+'</div>'+mediaMarkup+'<div class="actions post-actions"><button class="secondary" data-like="'+safeText(p.id)+'" data-kind="posts">♡ Like <span data-like-count>0</span></button><button class="secondary" data-focus-comment="'+safeText(p.id)+'">💬 Comment</button><button class="secondary" data-share-post="'+safeText(p.id)+'" data-kind="posts">↗ Share</button><button class="secondary" data-repost="'+safeText(p.id)+'" data-kind="posts">🔁 Repost</button>'+(mine?'':'<button class="secondary" data-message-user="'+safeText(p.uid)+'" data-message-name="'+safeText(marketplacePublicName(p.authorName))+'">✉ Message</button>')+'</div><div class="comment-area"><div data-comments-list></div><div class="comment-compose"><input class="field" data-comment-input placeholder="Write a comment…" maxlength="500"><button class="gold" data-send-comment="'+safeText(p.id)+'" data-kind="posts">Send</button></div></div>'+(mine?'<button class="post-delete" data-delete-post="'+safeText(p.id)+'">Delete my post</button>':'')+'</article>';}).join('');el.querySelectorAll('[data-engagement]').forEach(card=>loadPostEngagement(card));}
 function renderPosts(posts){const talentPosts=posts.filter(p=>p.source==='talent');const communityPosts=posts.filter(p=>p.source!=='talent');renderPostList('homeFeed',posts,'No posts yet. Be the first to share something with Afrishine Hub.');renderPostList('talentFeed',talentPosts,'No Talent Hub posts yet. Be the first to showcase your talent.');renderPostList('communityFeed',communityPosts,'No Community posts yet. Be the first to share with the Community.');}
 function scrollToSharedPost(kind){if(!window.ahSharedPostId)return;const card=document.querySelector('[data-engagement="'+kind+'"][data-post-id="'+window.ahSharedPostId+'"]');if(card){card.scrollIntoView({behavior:'smooth',block:'center'});card.style.outline='2px solid var(--gold)';window.ahSharedPostId=null;}}
 // LIKES, COMMENTS, MEMBER PROFILES AND DIRECT MESSAGES
@@ -845,9 +845,9 @@ async function uploadGeneralMedia(){const file=window.selectedMediaFile||selecte
  let duration=0;if(type==='video'){duration=await videoDuration(file);if(duration>MAX_FREE_VIDEO_SECONDS){say('Video yawe irengeje umunota 1. Gahunda ya $5 kuri video ndende ntirashyirwaho uburyo bwo kwishyura. Ntidushobora kuyohereza kugeza payment system ihujwe.');return;}}
  const button=document.querySelector('#mediaPreview .creator-actions button.gold');if(button){button.disabled=true;button.textContent='Uploading…';}
  try{const uploadFile=type==='photo'?await compressImage(file):file;const up=await workerUpload(uploadFile);const caption=($('postText')&&$('postText').value.trim())||'';const title=($('ahMediaTitle')&&$('ahMediaTitle').value.trim())||'';await dbx.collection('posts').add({uid:u.uid,authorName:u.displayName||'Afrishine Member',text:caption,title,type,mediaType:type,mediaUrl:up.url,mediaKey:up.key,source:window.createSource||createSource||'hub',createdAt:serverTime(),...(type==='video'?{durationSeconds:Math.round(duration)}:{})});say('Media yashyizweho neza.');if(typeof closeCreator==='function')closeCreator();if($('ahMediaTitle'))$('ahMediaTitle').value='';if($('postText'))$('postText').value='';}catch(e){console.error(e);say(firebaseErrorMessage(e));}finally{if(button){button.disabled=false;button.textContent='Post';}}}
-async function uploadLovePost(){const u=user(),dbx=firestore();if(!u){say('Injira mbere.');return;}const text=$('lovePostText').value.trim(),photo=$('ahLovePhoto')&&$('ahLovePhoto').files[0];if(!text){say('Andika ubutumwa bwawe.');return;}try{let imageUrl='',imageKey='';if(photo){if(!await checkWorkerQuota())return;const up=await workerUpload(await compressImage(photo));imageUrl=up.url;imageKey=up.key;}const lp=window.currentLoveProfile||currentLoveProfile;if(!lp||lp.loveEligible!==true){say('Banza wuzuze Love Profile y’imyaka 18+.');return;}const whatsapp=$('shareLoveWhatsapp').checked?(lp.whatsapp||''):'';await dbx.collection('love_posts').add({uid:u.uid,authorName:lp.username||u.displayName||'Member',age:lp.age,text,whatsapp,title:text.slice(0,80),imageUrl,imageKey,createdAt:serverTime()});$('lovePostText').value='';if($('ahLovePhoto'))$('ahLovePhoto').value='';say('Love Connection post yashyizweho.');}catch(e){console.error(e);say(firebaseErrorMessage(e));}}
+async function uploadLovePost(){const u=user(),dbx=firestore();if(!u){say('Injira mbere.');return;}const text=$('lovePostText').value.trim(),photo=$('ahLovePhoto')&&$('ahLovePhoto').files[0];if(!text){say('Andika ubutumwa bwawe.');return;}try{let imageUrl='',imageKey='';if(photo){if(!await checkWorkerQuota())return;const up=await workerUpload(await compressImage(photo));imageUrl=up.url;imageKey=up.key;}const lp=window.currentLoveProfile||currentLoveProfile;if(!lp||lp.loveEligible!==true){say('Banza wuzuze Love Profile y’imyaka 18+.');return;}const publicSnap=await dbx.collection('publicProfiles').doc(u.uid).get();const profileUsername=publicSnap.exists?(publicSnap.data().username||lp.username||u.displayName||'Member'):(lp.username||u.displayName||'Member');const whatsapp=$('shareLoveWhatsapp').checked?(lp.whatsapp||''):'';await dbx.collection('love_posts').add({uid:u.uid,authorName:profileUsername,age:lp.age,text,whatsapp,title:text.slice(0,80),imageUrl,imageKey,createdAt:serverTime()});$('lovePostText').value='';if($('ahLovePhoto'))$('ahLovePhoto').value='';say('Love Connection post yashyizweho.');}catch(e){console.error(e);say(firebaseErrorMessage(e));}}
 function injectMarketplaceFields(){const form=document.querySelector('#shop .market-form');if(!form||$('ahMarketImages'))return;const f=document.createElement('input');f.type='file';f.id='ahMarketImages';f.className='field';f.accept='image/jpeg,image/png,image/webp';f.multiple=true;f.setAttribute('aria-label','Product photos');const condition=document.createElement('select');condition.id='ahMarketCondition';condition.className='field';condition.innerHTML='<option value="new">Condition: New</option><option value="used">Condition: Used</option>';const hint=document.createElement('p');hint.className='creator-hint';hint.textContent='Hitamo amafoto agera kuri 5. Ku bicuruzwa bishya cyangwa byakoreshejwe.';const btn=form.querySelector('button.gold');form.insertBefore(f,btn);form.insertBefore(condition,btn);form.insertBefore(hint,btn);}
-async function publishMarketEnhanced(){if(!(typeof isGoogleMarketplaceUser==='function'&&isGoogleMarketplaceUser(user()))){openMarketplaceLogin();return;}const dbx=firestore(),u=user();const type=$('marketType').value,text=$('marketText').value.trim(),price=$('marketPrice').value.trim(),loc=$('marketLocation').value.trim(),condition=$('ahMarketCondition').value,files=Array.from(($('ahMarketImages')&&$('ahMarketImages').files)||[]).slice(0,5);if(text.length<8||!loc){say('Andika ibisobanuro n’aho igicuruzwa giherereye.');return;}try{const imageUrls=[],imageKeys=[];for(const file of files){if(!file.type.startsWith('image/'))continue;if(!await checkWorkerQuota())return;const up=await workerUpload(await compressImage(file));imageUrls.push(up.url);imageKeys.push(up.key);}await dbx.collection('marketplacePosts').add({uid:u.uid,authorName:u.displayName||'Afrishine Member',authorPhoto:u.photoURL||'',type,text,price,location:loc,condition,imageUrls,imageKeys,createdAt:serverTime(),status:'active'});$('marketText').value='';$('marketPrice').value='';$('ahMarketImages').value='';say('Itangazo ryawe ryashyizwe kuri Marketplace.');await loadMarketplacePosts(true);}catch(e){console.error(e);say(firebaseErrorMessage(e));}}
+async function publishMarketEnhanced(){if(!(typeof isGoogleMarketplaceUser==='function'&&isGoogleMarketplaceUser(user()))){openMarketplaceLogin();return;}const dbx=firestore(),u=user();const type=$('marketType').value,text=$('marketText').value.trim(),price=$('marketPrice').value.trim(),loc=$('marketLocation').value.trim(),condition=$('ahMarketCondition').value,files=Array.from(($('ahMarketImages')&&$('ahMarketImages').files)||[]).slice(0,5);if(text.length<8||!loc){say('Andika ibisobanuro n’aho igicuruzwa giherereye.');return;}try{const profileSnap=await dbx.collection('publicProfiles').doc(u.uid).get();const profileName=profileSnap.exists?(profileSnap.data().username||u.displayName||'Afrishine Member'):(u.displayName||'Afrishine Member');const imageUrls=[],imageKeys=[];for(const file of files){if(!file.type.startsWith('image/'))continue;if(!await checkWorkerQuota())return;const up=await workerUpload(await compressImage(file));imageUrls.push(up.url);imageKeys.push(up.key);}await dbx.collection('marketplacePosts').add({uid:u.uid,authorName:u.displayName||'Afrishine Member',authorPhoto:u.photoURL||'',type,text,price,location:loc,condition,imageUrls,imageKeys,createdAt:serverTime(),status:'active'});$('marketText').value='';$('marketPrice').value='';$('ahMarketImages').value='';say('Itangazo ryawe ryashyizwe kuri Marketplace.');await loadMarketplacePosts(true);}catch(e){console.error(e);say(firebaseErrorMessage(e));}}
 
 async function loadSellerTrust(uid,card){try{const dbx=firestore();const profile=await dbx.collection('publicProfiles').doc(uid).get();const d=profile.exists?profile.data():{};const badge=card.querySelector('.ah-badge');if(d.verified===true&&!badge){const b=document.createElement('span');b.className='ah-badge';b.textContent='✓ Verified Seller';const head=card.querySelector('.market-post-head');if(head)head.appendChild(b);}const reviews=await dbx.collection('marketplaceReviews').where('sellerUid','==',uid).limit(100).get();if(reviews.size){const avg=reviews.docs.reduce((n,x)=>n+Number(x.data().rating||0),0)/reviews.size;const rating=document.createElement('p');rating.className='creator-hint ah-rating';rating.textContent='★'.repeat(Math.round(avg))+'☆'.repeat(5-Math.round(avg))+' ('+avg.toFixed(1)+'/5 · '+reviews.size+' reviews)';card.appendChild(rating);}}catch(e){console.warn('Seller trust info',e);}}
 async function addMarketReview(postId,sellerUid){const u=user();if(!u){say('Injira mbere yo gutanga review.');return;}if(sellerUid===u.uid)return;const rating=Number(prompt('Tanga amanota kuva kuri 1 kugeza kuri 5:'));if(!Number.isInteger(rating)||rating<1||rating>5)return;const text=(prompt('Andika uko waguranye n’uyu mucuruzi (optional):')||'').slice(0,300);try{await firestore().collection('marketplaceReviews').add({postId,sellerUid,reviewerUid:u.uid,reviewerName:u.displayName||'Member',rating,text,createdAt:serverTime()});say('Review yawe yoherejwe.');}catch(e){say(firebaseErrorMessage(e));}}
@@ -870,6 +870,183 @@ function setup(){injectStyles();injectProfileUI();injectInboxSearch();injectMedi
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);else setup();
 const a=authObj();if(a&&typeof a.onAuthStateChanged==='function')a.onAuthStateChanged(async u=>{if(u){setTimeout(async()=>{await loadMyProfile();injectInboxSearch();addPostSaveButtons();},400);}else{if($('ahMyName'))$('ahMyName').textContent='Sign in to edit your profile';}});
 window.addEventListener('load',()=>{setTimeout(()=>{injectProfileUI();injectInboxSearch();injectMediaFields();injectMarketplaceFields();loadMyProfile();},900);});
+
+// ==============================
+// PROFILE ORGANIZATION + POST MENU + SAVED MEDIA FIXES
+// ==============================
+function ahEnhanceProfile(){
+ const panel=$('ahProfileEditor'); if(!panel||panel.dataset.enhanced==='1')return;
+ panel.dataset.enhanced='1';
+ // Make verification details opt-in so they do not dominate the profile.
+ const verifyTitle=Array.from(panel.querySelectorAll('h3')).find(x=>x.textContent.includes('Professional Verification'));
+ if(verifyTitle){
+   const nodes=[verifyTitle,verifyTitle.nextElementSibling,verifyTitle.nextElementSibling?.nextElementSibling,verifyTitle.nextElementSibling?.nextElementSibling?.nextElementSibling,verifyTitle.nextElementSibling?.nextElementSibling?.nextElementSibling?.nextElementSibling];
+   const wrap=document.createElement('div');wrap.id='ahVerifyDetailsPanel';wrap.className='ah-hidden';
+   verifyTitle.parentNode.insertBefore(wrap,verifyTitle);
+   nodes.filter(Boolean).forEach(n=>wrap.appendChild(n));
+   const toggle=document.createElement('button');toggle.type='button';toggle.className='secondary';toggle.id='ahVerifyToggle';toggle.textContent='Professional Verification';
+   toggle.onclick=()=>{wrap.classList.toggle('ah-hidden');toggle.textContent=wrap.classList.contains('ah-hidden')?'Professional Verification':'Hide Verification';};
+   const saved=$('ahSavedList');(saved||wrap).insertAdjacentElement('afterend',toggle);
+   toggle.insertAdjacentElement('afterend',wrap);
+ }
+ // Separate the user's own posts and videos from saved posts.
+ if(!$('ahMyPostsOpen')){
+   const group=document.createElement('div');group.style='display:flex;gap:8px;flex-wrap:wrap;margin:12px 0';
+   group.innerHTML='<button class="secondary" id="ahMyPostsOpen">📚 My Posts</button><button class="secondary" id="ahMyVideosOpen">🎬 My Videos</button>';
+   const savedBtn=$('ahSavedOpen'); if(savedBtn)savedBtn.insertAdjacentElement('afterend',group); else panel.appendChild(group);
+   const lists=document.createElement('div');lists.innerHTML='<div id="ahMyPostsList"></div><div id="ahMyVideosList" class="ah-hidden"></div>';group.insertAdjacentElement('afterend',lists);
+   $('ahMyPostsOpen').onclick=()=>{ $('ahMyPostsList').classList.remove('ah-hidden');$('ahMyVideosList').classList.add('ah-hidden');loadMyPosts(false);};
+   $('ahMyVideosOpen').onclick=()=>{ $('ahMyVideosList').classList.remove('ah-hidden');$('ahMyPostsList').classList.add('ah-hidden');loadMyPosts(true);};
+ }
+ // Save button becomes a saved state and is re-enabled only after edits.
+ const save=$('ahSaveProfile');
+ if(save&&!save.dataset.stateful){
+   save.dataset.stateful='1';
+   ['ahProfilePhoto','ahProfileUsername','ahProfileBio','ahProfileLocation'].forEach(id=>{const x=$(id);if(x)x.addEventListener('input',()=>{save.disabled=false;save.textContent='Save Profile';});});
+   const oldSave=saveProfile;
+   window.ahSaveProfileAction=oldSave;
+   save.onclick=async()=>{save.disabled=true;save.textContent='Saving…';try{await oldSave();if(($('ahProfileMsg').textContent||'').includes('neza')){save.textContent='✓ Profile Saved';}}finally{if(save.textContent==='Saving…'){save.disabled=false;save.textContent='Save Profile';}}};
+ }
+}
+async function loadMyPosts(videosOnly){
+ const u=user(),dbx=firestore();if(!u||!dbx){say('Banza winjire muri konti.');return;}
+ const id=videosOnly?'ahMyVideosList':'ahMyPostsList',el=$(id);if(!el)return;
+ el.innerHTML='<p class="creator-hint">Loading…</p>';
+ try{
+   const snap=await dbx.collection('posts').where('uid','==',u.uid).limit(100).get();
+   let docs=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>{
+     const ta=a.createdAt&&a.createdAt.toMillis?a.createdAt.toMillis():0;
+     const tb=b.createdAt&&b.createdAt.toMillis?b.createdAt.toMillis():0;return tb-ta;
+   });
+   if(videosOnly)docs=docs.filter(x=>x.type==='video'||x.mediaType==='video');
+   if(!docs.length){el.innerHTML='<p class="creator-hint">'+(videosOnly?'Nta video urashyiraho.':'Nta post urashyiraho.')+'</p>';return;}
+   el.innerHTML=docs.map(p=>{
+     const media=p.mediaUrl?((p.mediaType==='video'||p.type==='video')?'<video controls playsinline preload="metadata" style="width:100%;max-height:260px;border-radius:12px" src="'+esc(p.mediaUrl)+'"></video>':'<img loading="lazy" style="width:100%;max-height:260px;object-fit:contain;border-radius:12px" src="'+esc(p.mediaUrl)+'">'):'';
+     const title=p.title?'<h4>'+esc(p.title)+'</h4>':'';
+     const privacy=p.visibility==='private'?'Private':'Public';
+     return '<article class="post-card" style="padding:12px;margin:10px 0">'+title+'<p>'+esc(p.text||'')+'</p>'+media+'<p class="creator-hint">'+privacy+' · '+esc(p.type||'text')+'</p><button class="secondary" data-ah-privacy="'+esc(p.id)+'">'+(p.visibility==='private'?'Make Public':'Make Private')+'</button><button class="post-delete" data-ah-delete="'+esc(p.id)+'">Delete</button></article>';
+   }).join('');
+   el.querySelectorAll('[data-ah-privacy]').forEach(b=>b.onclick=()=>{const p=docs.find(x=>x.id===b.dataset.ahPrivacy);window.ahSetVisibility(p.id,p.visibility==='private'?'public':'private');});
+   el.querySelectorAll('[data-ah-delete]').forEach(b=>b.onclick=()=>window.ahDeleteOwnPost(b.dataset.ahDelete));
+ }catch(e){el.textContent=firebaseErrorMessage(e);}
+}
+window.ahSetVisibility=async(id,visibility)=>{
+ const u=user();if(!u)return;
+ try{const ref=firestore().collection('posts').doc(id),snap=await ref.get();if(!snap.exists||snap.data().uid!==u.uid)throw new Error('Iyi post si iyawe.');await ref.update({visibility,updatedAt:serverTime()});say(visibility==='private'?'Post yahinduwe Private.':'Post yahinduwe Public.');loadMyPosts(false);loadMyPosts(true);}
+ catch(e){say(firebaseErrorMessage(e));}
+};
+window.ahDeleteOwnPost=async(id)=>{
+ const u=user();if(!u||!confirm('Urashaka gusiba iyi post?'))return;
+ try{const ref=firestore().collection('posts').doc(id),snap=await ref.get();if(!snap.exists||snap.data().uid!==u.uid)throw new Error('Iyi post si iyawe.');const mediaKey=snap.data().mediaKey;await ref.delete();if(mediaKey&&typeof workerDelete==='function'){try{await workerDelete(mediaKey);}catch(e){console.warn('Media cleanup failed',e);}}say('Post yasibwe.');loadMyPosts(false);loadMyPosts(true);}
+ catch(e){say(firebaseErrorMessage(e));}
+};
+// Saved posts now show the actual saved text/photo/video rather than only document IDs.
+async function loadSavedPosts(){
+ const u=user(),dbx=firestore();if(!u){say('Injira mbere.');return;}
+ const el=$('ahSavedList');if(!el)return;el.innerHTML='<p>Loading…</p>';
+ try{
+  const snap=await dbx.collection('savedPosts').where('uid','==',u.uid).limit(50).get();
+  if(snap.empty){el.innerHTML='<p class="creator-hint">Nta posts wabika kugeza ubu.</p>';return;}
+  const rows=await Promise.all(snap.docs.map(async d=>{
+    const x=d.data(),kind=x.kind||'posts';
+    try{const post=await dbx.collection(kind).doc(x.postId).get();if(!post.exists)return '';const p=post.data();
+      const media=p.mediaUrl||p.imageUrl||'',isVideo=p.mediaType==='video'||p.type==='video';
+      const visual=media?(isVideo?'<video controls playsinline preload="metadata" style="width:100%;max-height:240px;border-radius:10px" src="'+esc(media)+'"></video>':'<img loading="lazy" style="width:100%;max-height:240px;object-fit:contain;border-radius:10px" src="'+esc(media)+'">'):'';
+      return '<article class="post-card" style="padding:10px;margin:8px 0"><b>'+esc(p.authorName||'Afrishine Member')+'</b><p>'+esc(p.text||'')+'</p>'+visual+'<button class="secondary" data-ah-unsave="'+esc(d.id)+'">Remove from Saved</button></article>';
+    }catch(e){return '';}
+  }));
+  el.innerHTML=rows.join('')||'<p class="creator-hint">Nta post wabitswe iboneka ubu.</p>';
+  el.querySelectorAll('[data-ah-unsave]').forEach(b=>b.onclick=()=>window.ahUnsavePost(b.dataset.ahUnsave));
+ }catch(e){el.textContent=firebaseErrorMessage(e);}
+}
+// Add an overflow menu to each of the signed-in user's posts.
+function ahAttachPostMenus(root){
+ (root||document).querySelectorAll('[data-engagement="posts"]').forEach(card=>{
+  if(card.dataset.ahMenuReady==='1')return;
+  if(!currentFirebaseUser||card.dataset.authorUid!==currentFirebaseUser.uid)return;
+  card.dataset.ahMenuReady='1';
+  const bar=card.querySelector('.post-actions');if(!bar)return;
+  const menu=document.createElement('details');menu.className='ah-post-menu';menu.innerHTML='<summary aria-label="Post options">⋮</summary><div class="ah-post-menu-items"><button data-ah-menu-action="delete">Delete</button><button data-ah-menu-action="share">Share</button><button data-ah-menu-action="privacy">'+(card.dataset.visibility==='private'?'Make Public':'Make Private')+'</button></div>';
+  bar.appendChild(menu);
+  menu.addEventListener('click',async ev=>{
+   const b=ev.target.closest('[data-ah-menu-action]');if(!b)return;
+   const id=card.dataset.postId,action=b.dataset.ahMenuAction;
+   if(action==='delete')window.ahDeleteOwnPost(id);
+   if(action==='share')sharePost('posts',id);
+   if(action==='privacy'){const ref=firestore().collection('posts').doc(id);try{const snap=await ref.get();const next=snap.data().visibility==='private'?'public':'private';await ref.update({visibility:next,updatedAt:serverTime()});card.dataset.visibility=next;b.textContent=next==='private'?'Make Public':'Make Private';say(next==='private'?'Post yahinduwe Private.':'Post yahinduwe Public.');}catch(e){say(firebaseErrorMessage(e));}}
+  });
+ });
+}
+// A tiny observer keeps menus and the profile controls present after live feed updates.
+function ahInstallObservers(){
+ ahEnhanceProfile();
+ ['homeFeed','communityFeed','talentFeed'].forEach(id=>{const el=$(id);if(el&&!el.dataset.ahObserved){el.dataset.ahObserved='1';new MutationObserver(()=>ahAttachPostMenus(el)).observe(el,{childList:true,subtree:true});ahAttachPostMenus(el);}});
+}
+const ahOldProfileLoad=loadMyProfile;
+loadMyProfile=async function(){await ahOldProfileLoad();ahEnhanceProfile();};
+const ahOldProfileSetup=setup;
+setup=function(){ahOldProfileSetup();ahInstallObservers();};
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ahInstallObservers);else ahInstallObservers();
+window.addEventListener('load',()=>setTimeout(ahInstallObservers,1000));
+
+
+// ==============================
+// GLOBAL DASHBOARD SEARCH
+// Search public member profiles and public community posts.
+// ==============================
+(function installGlobalSearch(){
+ const input=document.getElementById('headerSearch');
+ const form=document.getElementById('headerSearchForm');
+ if(!input||!form)return;
+ const style=document.createElement('style');
+ style.textContent=`.ah-global-search-results{position:absolute;z-index:10050;top:calc(100% + 9px);right:0;width:min(92vw,440px);max-height:min(72vh,560px);overflow:auto;background:#111722;border:1px solid #465064;border-radius:16px;box-shadow:0 16px 40px #0009;padding:10px;color:#fff}.header-actions{position:relative}.ah-search-heading{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#ffca55;padding:8px 9px 5px}.ah-search-result{display:flex;flex-direction:column;gap:3px;width:100%;padding:11px 10px;border:0;border-bottom:1px solid #303747;background:transparent;color:#fff;text-align:left;border-radius:8px}.ah-search-result:active,.ah-search-result:hover{background:#202938}.ah-search-result small{color:#aeb6c5;font-size:12px}.ah-search-empty{padding:13px;color:#aeb6c5;font-size:13px}.ah-search-type{font-size:10px;color:#ffca55;text-transform:uppercase;letter-spacing:.07em}.ah-search-close{float:right;border:0;background:transparent;color:#aeb6c5;font-size:18px;padding:2px 7px}`;
+ document.head.appendChild(style);
+ const wrap=form.parentElement;
+ const panel=document.createElement('div');panel.className='ah-global-search-results';panel.id='ahGlobalSearchResults';panel.hidden=true;wrap.appendChild(panel);
+ let timer=null,sequence=0;
+ const norm=v=>String(v||'').toLocaleLowerCase().trim();
+ const escHtml=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function close(){panel.hidden=true;}
+ function showMessage(msg){panel.innerHTML='<div class="ah-search-empty">'+escHtml(msg)+'</div>';panel.hidden=false;}
+ function draw(users,posts,q){
+  let html='<button class="ah-search-close" type="button" aria-label="Close search">×</button>';
+  if(users.length){html+='<div class="ah-search-heading">Abantu / Accounts</div>'+users.map(u=>'<button type="button" class="ah-search-result" data-ah-user="'+escHtml(u.uid)+'"><span class="ah-search-type">Profile</span><b>'+escHtml(u.username||u.displayName||'Afrishine Member')+'</b><small>'+escHtml(u.location||u.bio||'Member wa Afrishine Hub')+'</small></button>').join('');}
+  if(posts.length){html+='<div class="ah-search-heading">Posts zijyanye n’ijambo washakishije</div>'+posts.map(p=>'<button type="button" class="ah-search-result" data-ah-post="'+escHtml(p._collection||'posts')+'|'+escHtml(p.id)+'"><span class="ah-search-type">'+(p.type==='video'?'Video':p.type==='image'?'Photo':'Post')+'</span><b>'+escHtml(p.title||p.text||'Post ya '+(p.authorName||'member'))+'</b><small>'+escHtml(p.authorName||'Afrishine Member')+' · '+escHtml((p.text||'').slice(0,110))+'</small></button>').join('');}
+  if(!users.length&&!posts.length)html+='<div class="ah-search-empty">Nta muntu cyangwa post bihuye na “'+escHtml(q)+'” byabonetse.</div>';
+  panel.innerHTML=html;panel.hidden=false;
+  const closeBtn=panel.querySelector('.ah-search-close');if(closeBtn)closeBtn.onclick=close;
+  panel.querySelectorAll('[data-ah-user]').forEach(b=>b.onclick=()=>{close();if(typeof openMemberProfile==='function')openMemberProfile(b.dataset.ahUser);else{showPage('profile');notice('Fungura Profile kugira ngo urebe uyu munyamuryango.');}});
+  panel.querySelectorAll('[data-ah-post]').forEach(b=>b.onclick=async()=>{close();try{const parts=b.dataset.ahPost.split('|'),collection=parts[0],id=parts[1];const snap=await firestore().collection(collection).doc(id).get();if(!snap.exists){notice('Iyi post ntikiboneka.');return;}const post={id:snap.id,...snap.data()};if(post.visibility==='private'&&(!currentFirebaseUser||post.uid!==currentFirebaseUser.uid)){notice('Iyi post ni Private.');return;}if(collection==='love_posts'){showPage('love');if(typeof renderLovePosts==='function')renderLovePosts([post]);}else if(collection==='marketplacePosts'){if(!canViewMarketplace()){openMarketplaceLogin();return;}showPage('shop');if(typeof appendMarketplacePosts==='function'){$('marketplaceFeed').innerHTML='';appendMarketplacePosts([post]);}}else{showPage('home');if(typeof renderPostList==='function')renderPostList('homeFeed',[post],'Post not found.');}setTimeout(()=>{const root=collection==='love_posts'?'#loveFeed':collection==='marketplacePosts'?'#marketplaceFeed':'#homeFeed';const card=document.querySelector(root+' [data-post-id="'+CSS.escape(post.id)+'"], '+root+' [data-market-post="'+CSS.escape(post.id)+'"]');if(card)card.scrollIntoView({behavior:'smooth',block:'center'});},120);}catch(err){notice(firebaseErrorMessage(err));}});
+ }
+ async function search(q){
+  const token=++sequence;
+  if(q.length<2){close();return;}
+  showMessage('Turimo gushakisha…');
+  try{
+   const db=firestore();
+   const [profileResult,postResult,loveResult,marketResult]=await Promise.allSettled([
+    db.collection('publicProfiles').limit(300).get(),
+    db.collection('posts').limit(400).get(),
+    db.collection('love_posts').limit(200).get(),
+    db.collection('marketplacePosts').limit(200).get()
+   ]);
+   if(token!==sequence)return;
+   const users=profileResult.status==='fulfilled'?profileResult.value.docs.map(d=>({uid:d.id,...d.data()})).filter(x=>norm(x.username).includes(q)||norm(x.displayName).includes(q)||norm(x.bio).includes(q)).slice(0,8):[];
+   const allPosts=[];
+   if(postResult.status==='fulfilled')allPosts.push(...postResult.value.docs.map(d=>({_collection:'posts',id:d.id,...d.data()})));
+   if(loveResult.status==='fulfilled')allPosts.push(...loveResult.value.docs.map(d=>({_collection:'love_posts',id:d.id,...d.data()})));
+   if(marketResult.status==='fulfilled')allPosts.push(...marketResult.value.docs.map(d=>({_collection:'marketplacePosts',id:d.id,...d.data()})));
+   const posts=allPosts.filter(x=>x.visibility!=='private'||(currentFirebaseUser&&x.uid===currentFirebaseUser.uid)).filter(x=>norm(x.title).includes(q)||norm(x.text).includes(q)||norm(x.authorName).includes(q)||norm(x.username).includes(q)).sort((a,b)=>{const at=a.createdAt?.toMillis?a.createdAt.toMillis():0,bt=b.createdAt?.toMillis?b.createdAt.toMillis():0;return bt-at;}).slice(0,12);
+   if(profileResult.status==='rejected'&&postResult.status==='rejected'&&loveResult.status==='rejected'&&marketResult.status==='rejected')throw profileResult.reason||postResult.reason;
+   draw(users,posts,q);
+  }catch(err){if(token===sequence)showMessage(firebaseErrorMessage(err)||'Search ntiyabashije gukora. Ongera ugerageze.');}
+ }
+ form.onsubmit=e=>{e.preventDefault();search(norm(input.value));};
+ input.addEventListener('input',()=>{clearTimeout(timer);const q=norm(input.value);if(q.length<2){close();return;}timer=setTimeout(()=>search(q),350);});
+ document.addEventListener('click',e=>{if(!wrap.contains(e.target))close();});
+ input.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+})();
+
 })();
 
 </script>
