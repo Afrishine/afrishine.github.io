@@ -989,6 +989,64 @@ setup=function(){ahOldProfileSetup();ahInstallObservers();};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ahInstallObservers);else ahInstallObservers();
 window.addEventListener('load',()=>setTimeout(ahInstallObservers,1000));
 
+
+// ==============================
+// GLOBAL DASHBOARD SEARCH
+// Search public member profiles and public community posts.
+// ==============================
+(function installGlobalSearch(){
+ const input=document.getElementById('headerSearch');
+ const form=document.getElementById('headerSearchForm');
+ if(!input||!form)return;
+ const style=document.createElement('style');
+ style.textContent=`.ah-global-search-results{position:absolute;z-index:10050;top:calc(100% + 9px);right:0;width:min(92vw,440px);max-height:min(72vh,560px);overflow:auto;background:#111722;border:1px solid #465064;border-radius:16px;box-shadow:0 16px 40px #0009;padding:10px;color:#fff}.header-actions{position:relative}.ah-search-heading{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#ffca55;padding:8px 9px 5px}.ah-search-result{display:flex;flex-direction:column;gap:3px;width:100%;padding:11px 10px;border:0;border-bottom:1px solid #303747;background:transparent;color:#fff;text-align:left;border-radius:8px}.ah-search-result:active,.ah-search-result:hover{background:#202938}.ah-search-result small{color:#aeb6c5;font-size:12px}.ah-search-empty{padding:13px;color:#aeb6c5;font-size:13px}.ah-search-type{font-size:10px;color:#ffca55;text-transform:uppercase;letter-spacing:.07em}.ah-search-close{float:right;border:0;background:transparent;color:#aeb6c5;font-size:18px;padding:2px 7px}`;
+ document.head.appendChild(style);
+ const wrap=form.parentElement;
+ const panel=document.createElement('div');panel.className='ah-global-search-results';panel.id='ahGlobalSearchResults';panel.hidden=true;wrap.appendChild(panel);
+ let timer=null,sequence=0;
+ const norm=v=>String(v||'').toLocaleLowerCase().trim();
+ const escHtml=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function close(){panel.hidden=true;}
+ function showMessage(msg){panel.innerHTML='<div class="ah-search-empty">'+escHtml(msg)+'</div>';panel.hidden=false;}
+ function draw(users,posts,q){
+  let html='<button class="ah-search-close" type="button" aria-label="Close search">×</button>';
+  if(users.length){html+='<div class="ah-search-heading">Abantu / Accounts</div>'+users.map(u=>'<button type="button" class="ah-search-result" data-ah-user="'+escHtml(u.uid)+'"><span class="ah-search-type">Profile</span><b>'+escHtml(u.username||u.displayName||'Afrishine Member')+'</b><small>'+escHtml(u.location||u.bio||'Member wa Afrishine Hub')+'</small></button>').join('');}
+  if(posts.length){html+='<div class="ah-search-heading">Posts zijyanye n’ijambo washakishije</div>'+posts.map(p=>'<button type="button" class="ah-search-result" data-ah-post="'+escHtml(p._collection||'posts')+'|'+escHtml(p.id)+'"><span class="ah-search-type">'+(p.type==='video'?'Video':p.type==='image'?'Photo':'Post')+'</span><b>'+escHtml(p.title||p.text||'Post ya '+(p.authorName||'member'))+'</b><small>'+escHtml(p.authorName||'Afrishine Member')+' · '+escHtml((p.text||'').slice(0,110))+'</small></button>').join('');}
+  if(!users.length&&!posts.length)html+='<div class="ah-search-empty">Nta muntu cyangwa post bihuye na “'+escHtml(q)+'” byabonetse.</div>';
+  panel.innerHTML=html;panel.hidden=false;
+  const closeBtn=panel.querySelector('.ah-search-close');if(closeBtn)closeBtn.onclick=close;
+  panel.querySelectorAll('[data-ah-user]').forEach(b=>b.onclick=()=>{close();if(typeof openMemberProfile==='function')openMemberProfile(b.dataset.ahUser);else{showPage('profile');notice('Fungura Profile kugira ngo urebe uyu munyamuryango.');}});
+  panel.querySelectorAll('[data-ah-post]').forEach(b=>b.onclick=async()=>{close();try{const parts=b.dataset.ahPost.split('|'),collection=parts[0],id=parts[1];const snap=await firestore().collection(collection).doc(id).get();if(!snap.exists){notice('Iyi post ntikiboneka.');return;}const post={id:snap.id,...snap.data()};if(post.visibility==='private'&&(!currentFirebaseUser||post.uid!==currentFirebaseUser.uid)){notice('Iyi post ni Private.');return;}if(collection==='love_posts'){showPage('love');if(typeof renderLovePosts==='function')renderLovePosts([post]);}else if(collection==='marketplacePosts'){if(!canViewMarketplace()){openMarketplaceLogin();return;}showPage('shop');if(typeof appendMarketplacePosts==='function'){$('marketplaceFeed').innerHTML='';appendMarketplacePosts([post]);}}else{showPage('home');if(typeof renderPostList==='function')renderPostList('homeFeed',[post],'Post not found.');}setTimeout(()=>{const root=collection==='love_posts'?'#loveFeed':collection==='marketplacePosts'?'#marketplaceFeed':'#homeFeed';const card=document.querySelector(root+' [data-post-id="'+CSS.escape(post.id)+'"], '+root+' [data-market-post="'+CSS.escape(post.id)+'"]');if(card)card.scrollIntoView({behavior:'smooth',block:'center'});},120);}catch(err){notice(firebaseErrorMessage(err));}});
+ }
+ async function search(q){
+  const token=++sequence;
+  if(q.length<2){close();return;}
+  showMessage('Turimo gushakisha…');
+  try{
+   const db=firestore();
+   const [profileResult,postResult,loveResult,marketResult]=await Promise.allSettled([
+    db.collection('publicProfiles').limit(300).get(),
+    db.collection('posts').limit(400).get(),
+    db.collection('love_posts').limit(200).get(),
+    db.collection('marketplacePosts').limit(200).get()
+   ]);
+   if(token!==sequence)return;
+   const users=profileResult.status==='fulfilled'?profileResult.value.docs.map(d=>({uid:d.id,...d.data()})).filter(x=>norm(x.username).includes(q)||norm(x.displayName).includes(q)||norm(x.bio).includes(q)).slice(0,8):[];
+   const allPosts=[];
+   if(postResult.status==='fulfilled')allPosts.push(...postResult.value.docs.map(d=>({_collection:'posts',id:d.id,...d.data()})));
+   if(loveResult.status==='fulfilled')allPosts.push(...loveResult.value.docs.map(d=>({_collection:'love_posts',id:d.id,...d.data()})));
+   if(marketResult.status==='fulfilled')allPosts.push(...marketResult.value.docs.map(d=>({_collection:'marketplacePosts',id:d.id,...d.data()})));
+   const posts=allPosts.filter(x=>x.visibility!=='private'||(currentFirebaseUser&&x.uid===currentFirebaseUser.uid)).filter(x=>norm(x.title).includes(q)||norm(x.text).includes(q)||norm(x.authorName).includes(q)||norm(x.username).includes(q)).sort((a,b)=>{const at=a.createdAt?.toMillis?a.createdAt.toMillis():0,bt=b.createdAt?.toMillis?b.createdAt.toMillis():0;return bt-at;}).slice(0,12);
+   if(profileResult.status==='rejected'&&postResult.status==='rejected'&&loveResult.status==='rejected'&&marketResult.status==='rejected')throw profileResult.reason||postResult.reason;
+   draw(users,posts,q);
+  }catch(err){if(token===sequence)showMessage(firebaseErrorMessage(err)||'Search ntiyabashije gukora. Ongera ugerageze.');}
+ }
+ form.onsubmit=e=>{e.preventDefault();search(norm(input.value));};
+ input.addEventListener('input',()=>{clearTimeout(timer);const q=norm(input.value);if(q.length<2){close();return;}timer=setTimeout(()=>search(q),350);});
+ document.addEventListener('click',e=>{if(!wrap.contains(e.target))close();});
+ input.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+})();
+
 })();
 
 </script>
