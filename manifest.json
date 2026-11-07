@@ -4,12 +4,21 @@
   "name": "Afrishine Hub",
   "short_name": "Afrishine",
   "description": "Africa's all-in-one platform for Talent, Love Connection, Shopping, Travel, Digital Jobs and Learning.",
+  "lang": "en",
+  "dir": "ltr",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#080a10",
   "theme_color": "#ffbf1f",
+  "categories": [
+    "social",
+    "entertainment",
+    "business",
+    "shopping",
+    "education"
+  ],
   "icons": [
     {
       "src": "/icon-192.png",
