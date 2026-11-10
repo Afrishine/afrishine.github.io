@@ -487,7 +487,7 @@ body.marketplace-active>.bottom-nav,body.marketplace-active .bottom-nav{display:
   </div>
 </div>
 
-<section class="page" id="wallet"><div class="eyebrow">AFRISHINE TOKEN</div><h1>My Wallet</h1><p class="muted">AST wallet, transaction activity and supported payment services.</p><section class="panel"><div class="eyebrow">AVAILABLE BALANCE</div><h2>— AST</h2><p>Your real balance will be shown after secure wallet integration. No token balance or conversion is simulated.</p></section><section class="panel"><h2>Wallet Services</h2><p>Send AST · Receive AST · Gift History · Transaction History · AST ↔ Pi</p><div class="actions"><button class="gold" onclick="notice('AST transfers need a secure wallet backend.')">Send AST</button><button class="secondary" onclick="notice('AST to Pi conversion is not enabled. It needs an approved, secure exchange mechanism.')">AST ↔ Pi</button><button class="secondary" onclick="notice('Transaction history will appear after wallet integration.')">History</button></div></section></section>
+<section class="page" id="wallet"><div class="eyebrow">AFRISHINE TOKEN</div><h1>My Wallet</h1><p class="muted">AST wallet, transaction activity and supported payment services.</p><section class="panel"><div class="eyebrow">AVAILABLE BALANCE</div><h2>— AST</h2><p>Your real balance will be shown after secure wallet integration. No token balance or conversion is simulated.</p></section><section class="panel"><h2>Wallet Services</h2><p>Send AST · Receive AST · Gift History · Transaction History · AST ↔ Pi</p><div class="actions"><button class="gold" onclick="afOpenFeatureGate('verification')">Send AST</button><button class="secondary" onclick="afOpenFeatureGate('verification')">AST ↔ Pi</button><button class="secondary" onclick="afOpenFeatureGate('verification')">History</button></div></section></section>
 <section class="page" id="inbox"><div class="eyebrow">STAY CONNECTED</div><h1>Inbox</h1><p class="muted">Messages, updates and creator conversations.</p><section class="panel"><h2>Your Conversations</h2><div id="inboxList"><p class="muted">Sign in to view your messages.</p></div></section></section>
 <section class="page" id="memberProfile"><div class="eyebrow">AFRISHINE MEMBER</div><h1>Member Profile</h1><section class="panel" id="memberProfileContent"><p class="muted">Loading profile…</p></section><button class="secondary" onclick="showPage('home')">← Back to Home</button></section>
 <section class="page" id="profile"><div class="eyebrow">YOUR AFRISHINE ACCOUNT</div><h1>My Profile</h1><p class="muted">Manage your account and public creator profile.</p>
@@ -1247,7 +1247,12 @@ function addMarketplaceComment(id) {
         return;
     } var input = document.getElementById('marketComment_' + id), text = input && input.value.trim(); if (!text)
         return; try {
+        var marketPostSnap = yield db.collection('marketplacePosts').doc(id).get();
+        var marketOwnerUid = marketPostSnap.exists ? marketPostSnap.data().uid : null;
         yield db.collection('marketplacePosts').doc(id).collection('comments').add({ uid: currentFirebaseUser.uid, authorName: currentFirebaseUser.displayName || 'Afrishine Member', text: text, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        if (marketOwnerUid && marketOwnerUid !== currentFirebaseUser.uid && typeof window.afCreateNotification === 'function') {
+            window.afCreateNotification(marketOwnerUid, 'marketplace_comment', 'New Marketplace comment', (currentFirebaseUser.displayName || 'A member') + ' commented on your listing.', 'shop');
+        }
         input.value = '';
         loadMarketplaceComments(id);
     }
@@ -1342,13 +1347,19 @@ function togglePostLike(kind, id, btn) {
         showPage('profile');
         return;
     } try {
-        const ref = db.collection(kind).doc(id).collection('likes').doc(currentFirebaseUser.uid), snap = yield ref.get();
+        const parentPostRef = db.collection(kind).doc(id);
+        const parentPostSnap = yield parentPostRef.get();
+        const postOwnerUid = parentPostSnap.exists ? parentPostSnap.data().uid : null;
+        const ref = parentPostRef.collection('likes').doc(currentFirebaseUser.uid), snap = yield ref.get();
         if (snap.exists) {
             yield ref.delete();
             btn.innerHTML = '♡ Like <span data-like-count>0</span>';
         }
         else {
             yield ref.set({ uid: currentFirebaseUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+            if (postOwnerUid && postOwnerUid !== currentFirebaseUser.uid && typeof window.afCreateNotification === 'function') {
+                window.afCreateNotification(postOwnerUid, 'post_like', 'New like', (currentFirebaseUser.displayName || 'A member') + ' liked your post.', kind === 'love_posts' ? 'love' : 'talent');
+            }
             btn.innerHTML = '♥ Liked <span data-like-count>0</span>';
         }
         const card = btn.closest('[data-engagement]');
@@ -1371,7 +1382,12 @@ function addPostComment(kind, id, card) {
         notice('Comment is too long.');
         return;
     } try {
+        const commentPostSnap = yield db.collection(kind).doc(id).get();
+        const commentOwnerUid = commentPostSnap.exists ? commentPostSnap.data().uid : null;
         yield db.collection(kind).doc(id).collection('comments').add({ uid: currentFirebaseUser.uid, authorName: currentFirebaseUser.displayName || 'Afrishine Member', text, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        if (commentOwnerUid && commentOwnerUid !== currentFirebaseUser.uid && typeof window.afCreateNotification === 'function') {
+            window.afCreateNotification(commentOwnerUid, 'post_comment', 'New comment', (currentFirebaseUser.displayName || 'A member') + ' commented on your post.', kind === 'love_posts' ? 'love' : 'talent');
+        }
         input.value = '';
         yield loadPostEngagement(card);
     }
@@ -1508,8 +1524,14 @@ function sendDirectMessage() {
         return;
     } try {
         const ref = db.collection('conversations').doc(activeConversationId);
+        const conversationSnap = yield ref.get();
+        const participants = conversationSnap.exists ? (conversationSnap.data().participants || []) : [];
+        const recipientUid = participants.find(function (uid) { return uid !== currentFirebaseUser.uid; });
         yield ref.collection('messages').add({ senderUid: currentFirebaseUser.uid, senderName: currentFirebaseUser.displayName || 'Member', text, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
         yield ref.set({ lastMessage: text.slice(0, 120), updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
+        if (recipientUid && typeof window.afCreateNotification === 'function') {
+            window.afCreateNotification(recipientUid, 'message', 'New message', (currentFirebaseUser.displayName || 'A member') + ' sent you a message.', 'inbox');
+        }
         input.value = '';
         yield openConversation(activeConversationId, activeConversationName);
     }
@@ -2448,6 +2470,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             else {
                 yield ref.set({ followerUid: u.uid, followingUid: targetUid, createdAt: serverTime() });
                 btn.textContent = '✓ Following';
+                if (typeof window.afCreateNotification === 'function') {
+                    window.afCreateNotification(targetUid, 'follow', 'New follower', (u.displayName || 'Someone') + ' started following you.', 'profile');
+                }
             }
         }
         catch (e) {
@@ -3607,7 +3632,7 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
  var previousShowPage=window.showPage;
  if(typeof previousShowPage==='function'){
   window.showPage=function(id){
-   if(id==='wallet'||id==='jobs'){window.afOpenGate('verificationGate');return}
+   if(id==='jobs'){window.afOpenGate('verificationGate');return}
    if(id==='academy'||id==='travel'){window.afOpenGate('subscriptionGate');return}
    return previousShowPage(id);
   };
@@ -3623,6 +3648,141 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
  var confirmField=document.getElementById('authConfirmPassword');if(confirmField){confirmField.addEventListener('input',function(){var p=document.getElementById('authPassword');confirmField.setCustomValidity(p&&confirmField.value&&p.value!==confirmField.value?'Passwords do not match.':'')})}
  // Keep the profile's guest registration options visible and Pi login limited to Pi Browser.
  var piArea=document.getElementById('piLoginArea');if(piArea){var pi=false;try{pi=typeof isPiBrowser==='function'&&isPiBrowser()}catch(e){}if(!pi){var pp=piArea.closest('.panel');if(pp)pp.style.display='none'}}
+})();
+</script>
+
+
+<script id="afrishine-feature-gates-notifications">
+(function(){
+ 'use strict';
+ var returnPage='home', notificationUnsub=null;
+ function el(id){return document.getElementById(id)}
+ function user(){return window.currentFirebaseUser || (window.auth && window.auth.currentUser) || (typeof currentFirebaseUser!=='undefined'?currentFirebaseUser:null)}
+ function dbx(){return window.db || (typeof db!=='undefined'?db:null)}
+ function safe(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+ function closeModal(){var m=el('afFeatureModal');if(m)m.remove()}
+ function activePage(){var p=document.querySelector('.page.active');return p&&p.id?p.id:'home'}
+ function ensureModal(){
+  if(el('afFeatureModal'))return;
+  var style=document.createElement('style');
+  style.textContent=
+   '#afFeatureModal{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(3,6,13,.82);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}'+
+   '.af-feature-card{width:min(100%,520px);background:#191f30;border:1px solid #30394f;border-radius:28px;padding:28px 24px 24px;text-align:center;box-shadow:0 24px 80px #0009;color:#f4f6fc}'+
+   '.af-feature-icon{width:82px;height:82px;border-radius:50%;margin:0 auto 22px;background:#3a3420;color:#ffbd08;display:grid;place-items:center;font-size:42px;font-weight:800}'+
+   '.af-feature-card h2{font-size:25px;line-height:1.2;margin:0 0 14px}.af-feature-card p{color:#aab2c5;font-size:16px;line-height:1.65;margin:0 0 20px}'+
+   '.af-feature-card input{width:100%;box-sizing:border-box;background:#101522;border:1px solid #46506a;color:#fff;border-radius:13px;padding:14px 15px;font-size:16px;margin:0 0 14px;min-height:50px}'+
+   '.af-feature-actions{display:grid;gap:12px}.af-feature-actions button{border:0;border-radius:15px;min-height:58px;padding:12px 16px;font-size:16px;font-weight:700;cursor:pointer}'+
+   '.af-feature-primary{background:#ffbd08;color:#171717}.af-feature-secondary{background:#252d3e;color:#f1f3f8}.af-feature-status{min-height:20px;font-size:13px;color:#ffcf54;margin:0 0 10px}'+
+   '@media(max-width:420px){.af-feature-card{padding:24px 18px 20px;border-radius:24px}.af-feature-card h2{font-size:23px}.af-feature-card p{font-size:15px}}';
+  document.head.appendChild(style);
+ }
+ function showModal(kind){
+  ensureModal();closeModal();
+  var u=user(), title='', message='', icon='✓', primary='Get Verified', secondary='Close', email='';
+  if(kind==='verification'){
+   title='Not eligible yet';
+   message="A Verified Badge is for creators and members who meet our requirements. You don't qualify at the moment. Complete your profile, keep posting, and check back soon.";
+   icon='✧';primary='Notify me';secondary='Close';email=u&&u.email?u.email:'';
+  }else if(kind==='subscription'){
+   title='Subscription';
+   message='Subscriptions are available to accounts with a Verified Badge. Get verified first, then come back to unlock this feature.';
+   icon='★';
+  }else if(kind==='boost'){
+   title='Boost Your Post';
+   message="Boost is available to accounts with a Verified Badge. Once you're verified, you'll be able to promote your posts and reach more people.";
+   icon='↗';
+  }else if(kind==='ads'){
+   title='Ads';
+   message='Ads are available to accounts with a Verified Badge. Get verified first, then return to start advertising on Afrishine Hub.';
+   icon='⚑';
+  }
+  var modal=document.createElement('div');modal.id='afFeatureModal';modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-labelledby','afFeatureTitle');
+  modal.innerHTML='<section class="af-feature-card"><div class="af-feature-icon" aria-hidden="true">'+icon+'</div><h2 id="afFeatureTitle">'+safe(title)+'</h2><p>'+safe(message)+'</p>'+
+   (kind==='verification'?'<input id="afVerificationEmail" type="email" autocomplete="email" placeholder="Your email address" value="'+safe(email)+'" aria-label="Your email address"><div class="af-feature-status" id="afVerificationStatus" aria-live="polite"></div>':'')+
+   '<div class="af-feature-actions">'+(kind==='verification'?'<button class="af-feature-primary" id="afFeaturePrimary">Notify me</button>':'<button class="af-feature-primary" id="afFeaturePrimary">Get Verified</button>')+'<button class="af-feature-secondary" id="afFeatureClose">'+safe(secondary)+'</button></div></section>';
+  document.body.appendChild(modal);
+  el('afFeatureClose').addEventListener('click',function(){closeModal()});
+  el('afFeaturePrimary').addEventListener('click',function(){
+   if(kind==='verification'){saveInterest();return}
+   showModal('verification');
+  });
+  modal.addEventListener('click',function(e){if(e.target===modal)closeModal()});
+ }
+ function saveInterest(){
+  var u=user(), d=dbx(), input=el('afVerificationEmail'), email=input?input.value.trim():'', status=el('afVerificationStatus');
+  if(!u){if(status)status.textContent='Please sign in or create an account before requesting an email notification.';return}
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){if(status)status.textContent='Enter a valid email address.';if(input)input.focus();return}
+  if(!d){if(status)status.textContent='Connection unavailable. Please try again.';return}
+  var btn=el('afFeaturePrimary');if(btn){btn.disabled=true;btn.textContent='Saving…'}
+  d.collection('verificationInterest').doc(u.uid).set({
+   uid:u.uid,email:email,createdAt:(window.firebase&&firebase.firestore)?firebase.firestore.FieldValue.serverTimestamp():new Date(),
+   updatedAt:(window.firebase&&firebase.firestore)?firebase.firestore.FieldValue.serverTimestamp():new Date(),
+   status:'interested'
+  },{merge:true}).then(function(){
+   closeModal();
+   if(typeof window.notice==='function')window.notice('Thank you! Your interest in the Verified Badge has been saved. We will notify you when applications open.');
+  }).catch(function(err){
+   if(status)status.textContent=err&&err.code==='permission-denied'?'We could not save your request yet. The Firestore verificationInterest rule must be published first.':'Could not save your request. Please try again.';
+   if(btn){btn.disabled=false;btn.textContent='Notify me'}
+   console.error('Verification interest save failed:',err);
+  });
+ }
+ window.afOpenFeatureGate=function(kind){returnPage=activePage();showModal(kind||'verification')};
+ window.afOpenGate=function(id){returnPage=activePage();showModal(id==='subscriptionGate'?'subscription':'verification')};
+ window.afReturnFromGate=function(){closeModal();if(returnPage&&typeof window.showPage==='function')window.showPage(returnPage)};
+ window.afCreateNotification=function(recipientUid,type,title,body,targetPage){
+  var u=user(),d=dbx();if(!u||!d||!recipientUid||recipientUid===u.uid)return Promise.resolve();
+  return d.collection('notifications').add({
+   recipientUid:recipientUid,actorUid:u.uid,type:type||'update',title:title||'New update',
+   body:body||'You have a new update on Afrishine Hub.',targetPage:targetPage||'inbox',
+   createdAt:firebase.firestore.FieldValue.serverTimestamp(),read:false
+  }).catch(function(e){console.warn('Notification could not be created:',e)});
+ };
+ function renderNotifications(snap){
+  var box=el('afNotificationsList');if(!box)return;
+  var docs=snap.docs.slice().sort(function(a,b){var x=a.data().createdAt,y=b.data().createdAt;return (y&&y.toMillis?y.toMillis():0)-(x&&x.toMillis?x.toMillis():0)});
+  if(!docs.length){box.innerHTML='<p class="muted">You are all caught up. New messages, followers and activity will appear here.</p>';return}
+  box.innerHTML=docs.map(function(doc){var n=doc.data();return '<button type="button" class="af-notification-row" data-af-notification="'+safe(doc.id)+'" data-af-target="'+safe(n.targetPage||'inbox')+'"><b>'+safe(n.title||'New notification')+'</b><span>'+safe(n.body||'You have a new update.')+'</span><small>'+(n.createdAt&&n.createdAt.toDate?n.createdAt.toDate().toLocaleString():'Just now')+(n.read?'':' · New')+'</small></button>'}).join('');
+  Array.prototype.forEach.call(box.querySelectorAll('[data-af-notification]'),function(b){b.addEventListener('click',function(){
+   var id=b.getAttribute('data-af-notification'),target=b.getAttribute('data-af-target')||'inbox';
+   dUpdateRead(id);if(typeof window.showPage==='function')window.showPage(target);
+  })});
+ }
+ function dUpdateRead(id){var d=dbx(),u=user();if(!d||!u)return;d.collection('notifications').doc(id).update({read:true}).catch(function(e){console.warn(e)})}
+ function startNotifications(){
+  var u=user(),d=dbx();if(notificationUnsub){notificationUnsub();notificationUnsub=null}
+  var box=el('afNotificationsList');if(!box)return;
+  if(!u||!d){box.innerHTML='<p class="muted">Sign in to receive notifications.</p>';return}
+  box.innerHTML='<p class="muted">Loading notifications…</p>';
+  notificationUnsub=d.collection('notifications').where('recipientUid','==',u.uid).limit(50).onSnapshot(renderNotifications,function(e){console.warn('Notifications:',e);box.innerHTML='<p class="muted">Notifications are temporarily unavailable.</p>'});
+ }
+ // Show a notification center within Inbox, preserving the existing conversations.
+ var inbox=el('inbox');
+ if(inbox&&!el('afNotificationsPanel')){
+  var panel=document.createElement('section');panel.className='panel';panel.id='afNotificationsPanel';
+  panel.innerHTML='<h2>Notifications</h2><div id="afNotificationsList"><p class="muted">Sign in to receive notifications.</p></div>';
+  var conversations=inbox.querySelector('.panel');if(conversations)inbox.insertBefore(panel,conversations);
+ }
+ // Start live updates when Inbox opens; listeners are detached when the account changes.
+ var originalShow=window.showPage;
+ if(typeof originalShow==='function'){
+  window.showPage=function(id){var result=originalShow(id);if(id==='inbox')startNotifications();return result};
+ }
+ document.addEventListener('click',function(e){
+  var b=e.target.closest('.wallet-open');if(b){e.preventDefault();if(typeof window.showPage==='function')window.showPage('wallet')}
+ });
+ // Profile menu actions: premium features lead to their matching eligibility explanation.
+ var oldMenu=window.ahProfileMenuAction;
+ window.ahProfileMenuAction=function(action){
+  if(action==='Verification'){window.afOpenFeatureGate('verification');return}
+  if(action==='Subscription'){window.afOpenFeatureGate('subscription');return}
+  if(action==='Boost Your Post'){window.afOpenFeatureGate('boost');return}
+  if(action==='Ads'){window.afOpenFeatureGate('ads');return}
+  if(typeof oldMenu==='function')return oldMenu(action);
+ };
+ // Route all wallet actions to the Verified Badge gate while keeping the wallet itself accessible.
+ var wallet=el('wallet');
+ if(wallet){Array.prototype.forEach.call(wallet.querySelectorAll('button'),function(b){if(!b.classList.contains('wallet-open'))b.onclick=function(){window.afOpenFeatureGate('verification')}})}
 })();
 </script>
 
