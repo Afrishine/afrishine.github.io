@@ -405,17 +405,7 @@ body.marketplace-active>.bottom-nav,body.marketplace-active .bottom-nav{display:
 <section class="panel"><h2>✍️ Create a Love Connection Post</h2><p>Example: “I am looking for a partner. I am 20 years old. I would like to meet someone respectful.”</p><textarea class="field" id="lovePostText" maxlength="1000" rows="4" placeholder="Write your message here..."></textarea><label style="display:flex;align-items:center;gap:9px;color:#c4c9d4;font-size:12px;margin:8px 0"><input type="checkbox" id="shareLoveWhatsapp"> Include my WhatsApp number on this post</label><button class="gold" onclick="publishLovePost()">Publish Love Post</button><p class="creator-hint">Only text posts are enabled for now. Think carefully before sharing contact details publicly.</p><p class="auth-status" id="lovePostStatus"></p></section>
 <section class="panel"><h2>💞 Love Connection Feed</h2><p>Posts in this feed are separate from Home, Community and Talent Hub.</p><div id="loveFeed"><div class="empty-feed">Loading Love Connection posts…</div></div></section>
 </div></section>
-<section class="page" id="travelAcademy">
-<div class="eyebrow">EXPLORE · LEARN · TRAVEL</div>
-<h1>Travel Academy</h1>
-<p class="muted">Build travel knowledge, discover destinations and prepare for smarter journeys with Afrishine Hub.</p>
-<section class="panel"><h2>Learn About Travel</h2>
-<p>Explore travel planning, destination guides, responsible tourism and practical tips for travellers.</p>
-<div class="actions"><button class="gold" type="button" onclick="openFeatureWaitlist('Travel Academy')">Join the Waitlist</button></div></section>
-<section class="panel"><h2>What You Can Explore</h2>
-<p>Destination knowledge · Travel planning · Travel safety · Culture and experiences</p></section>
-</section>
-<section class="page" id="travel"><div class="eyebrow">PLAN YOUR JOURNEY</div><h1>Travel Booking</h1><p class="muted">Find travel services and booking opportunities.</p><section class="panel"><h2>Search Travel</h2><input class="field" id="destination" placeholder="Enter destination"><button class="gold" onclick="notice('Travel booking provider must be connected before reservations can be made.')">Search Trips</button></section></section>
+<section class="page" id="travel"><div class="eyebrow">PLAN YOUR JOURNEY</div><h1>Travel Booking</h1><p class="muted">Discover travel options and prepare for your next journey with Afrishine Hub.</p><section class="panel"><h2>Travel Booking</h2><p>Be among the first to access travel booking services through Afrishine Hub.</p><div class="actions"><button class="gold" type="button" onclick="openFeatureWaitlist('Travel Booking')">Join The Waitlist</button></div></section></section>
 <section class="page" id="academy">
 <div class="academy-dashboard">
   <header class="academy-topbar">
@@ -427,6 +417,8 @@ body.marketplace-active>.bottom-nav,body.marketplace-active .bottom-nav{display:
   <section class="academy-welcome">
     <div class="academy-kicker">AFRISHINE HUB</div>
     <h2>Continue Learning</h2>
+    <p>Join the waitlist to receive updates about Afrishine Academy.</p>
+    <button type="button" class="gold" onclick="openFeatureWaitlist('Afrishine Academy')">Join The Waitlist</button>
     <div class="academy-categories" aria-label="Course categories">
       <button type="button" class="active" onclick="setAcademyCategory('Tech',this)">Tech</button>
       <button type="button" onclick="setAcademyCategory('Business',this)">Business</button>
@@ -445,7 +437,7 @@ body.marketplace-active>.bottom-nav,body.marketplace-active .bottom-nav{display:
   <p class="academy-nav-note" id="academyTabMessage" aria-live="polite">Welcome to Afrishine Academy. Courses will be added soon.</p>
 </div>
 </section>
-<section class="page" id="jobs"><div class="eyebrow">WORK · CONNECT · GROW</div><h1>Digital Jobs</h1><p class="muted">Discover remote opportunities, showcase your skills and connect with employers through Afrishine Hub.</p><section class="panel"><h2>Find Opportunities</h2><p>Digital job listings, applications and employer tools are being prepared as part of the Afrishine Hub experience.</p><div class="actions"><button class="gold" type="button" onclick="openFeatureWaitlist('Digital Jobs — Find Jobs')">Join the Waitlist</button><button class="secondary" type="button" onclick="openFeatureWaitlist('Digital Jobs — Employer Tools')">Employer Waitlist</button></div></section><section class="panel"><h2>For Job Seekers and Employers</h2><p>Be among the first to hear when digital job opportunities and employer services become available.</p></section></section>
+<section class="page" id="jobs"><div class="eyebrow">WORK · CONNECT · GROW</div><h1>Digital Jobs</h1><p class="muted">Discover remote opportunities, showcase your skills and connect with employers through Afrishine Hub.</p><section class="panel"><h2>Find Opportunities</h2><p>Digital job listings, applications and employer tools are being prepared as part of the Afrishine Hub experience.</p><div class="actions"><button class="gold" type="button" onclick="openFeatureWaitlist('Digital Jobs — Find Jobs')">Join The Waitlist</button><button class="secondary" type="button" onclick="openFeatureWaitlist('Digital Jobs — Employer Tools')">Join The Waitlist</button></div></section><section class="panel"><h2>For Job Seekers and Employers</h2><p>Be among the first to hear when digital job opportunities and employer services become available.</p></section></section>
 <section class="page" id="shop">
   <div class="market-topbar">
     <button class="market-back" type="button" onclick="marketGoBack()" aria-label="Back">‹</button>
@@ -497,7 +489,7 @@ body.marketplace-active>.bottom-nav,body.marketplace-active .bottom-nav{display:
   </div>
 </div>
 
-<section class="page" id="wallet"><div class="eyebrow">AFRISHINE TOKEN</div><h1>My Wallet</h1><p class="muted">AST wallet, transaction activity and supported payment services.</p><section class="panel"><div class="eyebrow">AVAILABLE BALANCE</div><h2>— AST</h2><p>Your real balance will be shown after secure wallet integration. No token balance or conversion is simulated.</p></section><section class="panel"><h2>Wallet Services</h2><p>Send AST · Receive AST · Gift History · Transaction History · AST ↔ Pi</p><div class="actions"><button class="gold" onclick="openFeatureWaitlist('Send AST')">Send AST</button><button class="secondary" onclick="openFeatureWaitlist('AST ↔ Pi')">AST ↔ Pi</button><button class="secondary" onclick="openFeatureWaitlist('Wallet History')">History</button></div></section></section>
+<section class="page" id="wallet"><div class="eyebrow">AFRISHINE TOKEN</div><h1>My Wallet</h1><p class="muted">AST wallet, transaction activity and supported payment services.</p><section class="panel"><div class="eyebrow">AVAILABLE BALANCE</div><h2>— AST</h2><p>Your real balance will be shown after secure wallet integration. No token balance or conversion is simulated.</p></section><section class="panel"><h2>Wallet Services</h2><p>Send AST · Receive AST · Gift History · Transaction History · AST ↔ Pi</p><div class="actions"><button class="gold" type="button" onclick="openFeatureWaitlist('Send AST')">Join The Waitlist</button><button class="secondary" type="button" onclick="openFeatureWaitlist('AST ↔ Pi')">Join The Waitlist</button><button class="secondary" type="button" onclick="openFeatureWaitlist('Wallet History')">Join The Waitlist</button></div></section></section>
 <section class="page" id="inbox"><div class="eyebrow">STAY CONNECTED</div><h1>Inbox</h1><p class="muted">Messages, updates and creator conversations.</p><section class="panel"><h2>Your Conversations</h2><div id="inboxList"><p class="muted">Sign in to view your messages.</p></div></section></section>
 <section class="page" id="memberProfile"><div class="eyebrow">AFRISHINE MEMBER</div><h1>Member Profile</h1><section class="panel" id="memberProfileContent"><p class="muted">Loading profile…</p></section><button class="secondary" onclick="showPage('home')">← Back to Home</button></section>
 <section class="page" id="profile"><div class="eyebrow">YOUR AFRISHINE ACCOUNT</div><h1>My Profile</h1><p class="muted">Manage your account and public creator profile.</p>
@@ -565,7 +557,7 @@ body.marketplace-active>.bottom-nav,body.marketplace-active .bottom-nav{display:
 </div></section>
 <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenu()"></div>
 <aside class="menu-drawer" id="menuDrawer" aria-label="Main menu"><div class="menu-head"><span>AFRISHINE HUB MENU</span><button class="round" onclick="closeMenu()" aria-label="Close menu">✕</button></div>
-<a href="#home" data-page="home">🏠 Home</a><a href="#talent" data-page="talent">🎬 Talent Hub</a><a href="#love" data-page="love">❤️ Love Connection</a><a href="#travelAcademy" data-page="travelAcademy">✈️ Travel Academy</a><a href="#travel" data-page="travel">🧳 Travel Booking</a><a href="#academy" data-page="academy">🎓 Afrishine Academy</a><a href="#creatorRewards" data-page="creatorRewards">🏆 Creator Rewards</a><a href="#jobs" data-page="jobs">💼 Digital Jobs</a><a href="#shop" data-page="shop">🛍️ Shop</a><a href="#wallet" data-page="wallet">👛 My Wallet</a><a href="#inbox" data-page="inbox">♧ Notifications &amp; Inbox</a><a href="#profile" data-page="profile">👤 Profile</a><a href="#settings" data-page="settings">⚙️ Settings and Privacy</a><a href="#contact" data-page="contact">🎧 Contact Us</a></aside>
+<a href="#home" data-page="home">🏠 Home</a><a href="#talent" data-page="talent">🎬 Talent Hub</a><a href="#love" data-page="love">❤️ Love Connection</a><a href="#travel" data-page="travel">🧳 Travel Booking</a><a href="#academy" data-page="academy">🎓 Afrishine Academy</a><a href="#creatorRewards" data-page="creatorRewards">🏆 Creator Rewards</a><a href="#jobs" data-page="jobs">💼 Digital Jobs</a><a href="#shop" data-page="shop">🛍️ Shop</a><a href="#wallet" data-page="wallet">👛 My Wallet</a><a href="#inbox" data-page="inbox">♧ Notifications &amp; Inbox</a><a href="#profile" data-page="profile">👤 Profile</a><a href="#settings" data-page="settings">⚙️ Settings and Privacy</a><a href="#contact" data-page="contact">🎧 Contact Us</a></aside>
 <nav class="bottom-nav"><a href="#home" data-page="home" class="active">⌂<small>Home</small></a><a href="#community" data-page="community">◎<small>Community</small></a><a href="#create" class="add" aria-label="Create" onclick="openCreateMenu('hub');return false;">＋</a><a href="#inbox" data-page="inbox">✉<small>Inbox</small></a><a href="#profile" data-page="profile">☺<small>Profile</small></a></nav>
 <div class="video-viewer" id="videoViewer" aria-label="Full screen video viewer">
  <div class="video-viewer-top">
@@ -666,7 +658,7 @@ function renderAcademyCourses(category) {
         const title = course.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         const detail = course.detail.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         const tag = course.tag.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        return `<article class="academy-course-card"><div class="academy-course-art" aria-hidden="true">${course.icon}</div><span class="academy-course-tag">${tag}</span><h4>${title}</h4><p>${detail}</p><button class="academy-course-placeholder" type="button" onclick="openFeatureWaitlist(&quot;Afrishine Academy — ${title}&quot;)">Join the Waitlist</button></article>`;
+        return `<article class="academy-course-card"><div class="academy-course-art" aria-hidden="true">${course.icon}</div><span class="academy-course-tag">${tag}</span><h4>${title}</h4><p>${detail}</p><button class="academy-course-placeholder" type="button" onclick="openFeatureWaitlist(&quot;Afrishine Academy — ${title}&quot;)">Join The Waitlist</button></article>`;
     }).join('');
 }
 function openAcademyCourse(title) { openFeatureWaitlist('Afrishine Academy — ' + title); }
@@ -706,7 +698,7 @@ const headerSearchInput = document.getElementById('headerSearch');
 function runHeaderSearch(e) { e.preventDefault(); const q = headerSearchInput.value.trim().toLowerCase(); if (!q) {
     headerSearchInput.focus();
     return;
-} const routes = [{ w: ['talent', 'creator', 'video', 'music', 'dance', 'artist'], p: 'talent' }, { w: ['community', 'feed', 'group', 'challenge', 'events'], p: 'community' }, { w: ['shop', 'product', 'buy', 'sell', 'store'], p: 'shop' }, { w: ['wallet', 'ast', 'token', 'balance', 'transaction'], p: 'wallet' }, { w: ['academy', 'learn', 'course', 'training', 'education'], p: 'academy' }, { w: ['creator rewards', 'creator monetization', 'monetization', 'creator reward'], p: 'creatorRewards' }, { w: ['travel academy'], p: 'travelAcademy' }, { w: ['travel', 'trip', 'booking', 'destination'], p: 'travel' }, { w: ['job', 'work', 'employment'], p: 'jobs' }, { w: ['inbox', 'message', 'chat'], p: 'inbox' }, { w: ['profile', 'account', 'login', 'sign in'], p: 'profile' }, { w: ['love', 'connection'], p: 'love' }, { w: ['contact', 'support', 'help'], p: 'contact' }]; const m = routes.find(r => r.w.some(w => q.includes(w))); if (m) {
+} const routes = [{ w: ['talent', 'creator', 'video', 'music', 'dance', 'artist'], p: 'talent' }, { w: ['community', 'feed', 'group', 'challenge', 'events'], p: 'community' }, { w: ['shop', 'product', 'buy', 'sell', 'store'], p: 'shop' }, { w: ['wallet', 'ast', 'token', 'balance', 'transaction'], p: 'wallet' }, { w: ['academy', 'learn', 'course', 'training', 'education'], p: 'academy' }, { w: ['creator rewards', 'creator monetization', 'monetization', 'creator reward'], p: 'creatorRewards' }, { w: ['travel', 'trip', 'booking', 'destination'], p: 'travel' }, { w: ['job', 'work', 'employment'], p: 'jobs' }, { w: ['inbox', 'message', 'chat'], p: 'inbox' }, { w: ['profile', 'account', 'login', 'sign in'], p: 'profile' }, { w: ['love', 'connection'], p: 'love' }, { w: ['contact', 'support', 'help'], p: 'contact' }]; const m = routes.find(r => r.w.some(w => q.includes(w))); if (m) {
     showPage(m.p);
     headerSearchInput.blur();
 }
@@ -3693,7 +3685,7 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
    var u=user(),email=u&&u.email?u.email:'';
    var modal=document.createElement('div');modal.id='afWaitlistModal';
    modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-labelledby','afWaitlistTitle');
-   modal.innerHTML='<section class="af-feature-card"><div class="af-feature-icon" aria-hidden="true">✦</div><h2 id="afWaitlistTitle">'+safe(waitlistFeature)+'</h2><p>Be among the first to know when this service becomes available. Join the waitlist and we will notify you when there is an update.</p><input id="afWaitlistEmail" type="email" autocomplete="email" placeholder="Your email address" value="'+safe(email)+'" aria-label="Your email address"><div class="af-feature-status" id="afWaitlistStatus" aria-live="polite"></div><div class="af-feature-actions"><button class="af-feature-primary" id="afWaitlistNotify" type="button">Notify Me</button><button class="af-feature-secondary" id="afWaitlistCancel" type="button">Cancel</button></div></section>';
+   modal.innerHTML='<section class="af-feature-card"><div class="af-feature-icon" aria-hidden="true">✦</div><h2 id="afWaitlistTitle">'+safe(waitlistFeature)+'</h2><p>Be the first to know when this service becomes available in your area. Join The Waitlist and We&#39;ll notify you as soon as you&#39;re eligible.</p><input id="afWaitlistEmail" type="email" autocomplete="email" placeholder="Your email address" value="'+safe(email)+'" aria-label="Your email address"><div class="af-feature-status" id="afWaitlistStatus" aria-live="polite"></div><div class="af-feature-actions"><button class="af-feature-primary" id="afWaitlistNotify" type="button">Notify Me</button><button class="af-feature-secondary" id="afWaitlistCancel" type="button">Cancel</button></div></section>';
    var style=document.getElementById('afWaitlistStyle');
    if(!style){style=document.createElement('style');style.id='afWaitlistStyle';style.textContent='#afWaitlistModal{position:fixed;inset:0;z-index:100001;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(3,6,13,.84);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}#afWaitlistModal .af-feature-card{width:min(100%,520px);background:#191f30;border:1px solid #8a7445;border-radius:26px;padding:27px 23px;text-align:center;color:#f4f6fc;box-shadow:0 24px 80px #0009}#afWaitlistModal h2{font-size:25px;margin:0 0 12px}#afWaitlistModal p{color:#aab2c5;font-size:15px;line-height:1.65;margin:0 0 18px}#afWaitlistModal input{width:100%;box-sizing:border-box;background:#101522;border:1px solid #46506a;color:#fff;border-radius:13px;padding:14px 15px;font-size:16px;margin:0 0 12px;min-height:50px}#afWaitlistModal .af-feature-actions{display:grid;gap:10px}#afWaitlistModal .af-feature-actions button{border:0;border-radius:14px;min-height:52px;padding:12px 16px;font-size:16px;font-weight:800;cursor:pointer}#afWaitlistModal .af-feature-primary{background:#e6c77f;color:#171b25}#afWaitlistModal .af-feature-secondary{background:#252d3e;color:#f1f3f8}#afWaitlistModal .af-feature-status{min-height:20px;font-size:13px;color:#ffcf54;margin:0 0 9px}';document.head.appendChild(style)}
    document.body.appendChild(modal);
@@ -3834,9 +3826,6 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
   if(action==='Ads'){window.afOpenFeatureGate('ads');return}
   if(typeof oldMenu==='function')return oldMenu(action);
  };
- // Route all wallet actions to the Verified Badge gate while keeping the wallet itself accessible.
- var wallet=el('wallet');
- if(wallet){Array.prototype.forEach.call(wallet.querySelectorAll('button'),function(b){if(!b.classList.contains('wallet-open'))b.onclick=function(){window.afOpenFeatureGate('verification')}})}
 })();
 </script>
 
