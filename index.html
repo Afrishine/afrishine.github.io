@@ -453,11 +453,11 @@ body.marketplace-active>.bottom-nav,body.marketplace-active .bottom-nav{display:
     <button class="secondary" onclick="marketSetView('New')">New</button>
     <button class="secondary" onclick="marketSetView('Used')">Used</button>
   </div>
-  <div class="market-warning">⚠️ Banza ugenzure igicuruzwa n’umucuruzi mbere yo kwishyura. Hura n’umucuruzi ahantu hizewe kandi ntugasangize umuntu PIN cyangwa amakuru yawe y’ibanga.</div>
+  <div class="market-warning">⚠️ Always inspect the product and meet the seller in a safe public place before paying. Never share your PIN or private account information.</div>
   <div class="market-products-heading"><h2>Products</h2><span id="marketProductCount">Loading…</span></div>
   <div id="marketplaceFeed" class="market-product-grid"><div class="empty-feed">Loading products…</div></div>
   <div id="marketSavedView" style="display:none"><h2>Saved Products</h2><div id="marketSavedFeed" class="market-product-grid"></div></div>
-  <div id="marketChatView" style="display:none"><h2>Your Shop Chats</h2><p class="creator-hint">Kanda Chat ku gicuruzwa kugira ngo utangire kuganira n’umucuruzi.</p><div id="marketChatContent"></div></div>
+  <div id="marketChatView" style="display:none"><h2>Your Shop Chats</h2><p class="creator-hint">Select a product and tap Chat to Seller to start a conversation.</p><div id="marketChatContent"></div></div>
   <div id="marketProfileView" style="display:none"><h2>Shop Profile</h2><div id="marketProfileContent" class="panel"></div></div>
   <div class="market-bottom-nav">
     <button class="active" onclick="marketBottom('home')"><span>⌂</span><small>Home</small></button>
@@ -472,16 +472,16 @@ body.marketplace-active>.bottom-nav,body.marketplace-active .bottom-nav{display:
 </div>
 <div id="marketSellModal" class="market-modal" role="dialog" aria-modal="true" aria-label="Post a product">
   <div class="market-modal-panel market-sell-panel"><div class="market-modal-head"><div><div class="eyebrow">SELL ON AFRISHINE</div><h2>Post a Product</h2></div><button class="secondary" onclick="marketCloseSell()">✕</button></div>
-    <p class="creator-hint">Hitamo nibura amafoto 3. Ifoto ya mbere ni yo izaba Thumbnail. Video si ngombwa.</p>
+    <p class="creator-hint">Select at least 3 product photos. The first photo will be the thumbnail. Video is optional.</p>
     <label class="market-label">Product Photos (minimum 3)</label><input class="field" id="marketProductPhotos" type="file" accept="image/*" multiple>
     <div id="marketPhotoPreview" class="market-photo-preview"></div>
     <label class="market-label">Product Video (optional)</label><input class="field" id="marketProductVideo" type="file" accept="video/*">
-    <label class="market-label">Product Title / Izina</label><input class="field" id="marketProductTitle" maxlength="100" placeholder="Urugero: CCTV Camera 4 Channels">
-    <label class="market-label">Description</label><textarea class="field" id="marketProductDescription" maxlength="1500" placeholder="Sobanura neza ibicuruzwa byawe..."></textarea>
-    <label class="market-label">Price (RWF)</label><input class="field" id="marketProductPrice" type="number" min="1" placeholder="Urugero: 50000">
+    <label class="market-label">Product Title</label><input class="field" id="marketProductTitle" maxlength="100" placeholder="e.g. CCTV Camera, 4 Channels">
+    <label class="market-label">Description</label><textarea class="field" id="marketProductDescription" maxlength="1500" placeholder="Describe your product clearly..."></textarea>
+    <label class="market-label" for="marketProductCurrency">Price Currency</label><select class="field" id="marketProductCurrency"><option value="RWF">FRW · Rwandan Franc</option><option value="USD">USD · US Dollar ($)</option></select><label class="market-label" for="marketProductPrice">Product Price</label><input class="field" id="marketProductPrice" type="number" min="1" step="any" inputmode="decimal" placeholder="e.g. 20">
     <label class="market-label">Condition</label><select class="field" id="marketProductCondition"><option value="New">New</option><option value="Used">Used</option></select>
     <label class="market-label">Category</label><select class="field" id="marketProductCategory"><option>Home Appliances</option><option>Electronics</option><option>CCTV & Security</option><option>Phones & Accessories</option><option>Fashion & Shoes</option><option>Furniture</option><option>Vehicles</option><option>Beauty & Health</option><option>Construction</option><option>Agriculture</option><option>Sports</option><option>Other</option></select>
-    <label class="market-label">Country / Location</label><select class="field" id="marketProductLocation"><option value="Rwanda, Kigali">Rwanda / Kigali</option><option value="Rwanda, Rwamagana">Rwanda / Rwamagana</option><option value="Rwanda, Gicumbi">Rwanda / Gicumbi</option><option value="Rwanda, Musanze">Rwanda / Musanze</option><option value="Rwanda, Huye">Rwanda / Huye</option><option value="Rwanda, Rubavu">Rwanda / Rubavu</option><option value="Rwanda, Muhanga">Rwanda / Muhanga</option><option value="Rwanda, Nyagatare">Rwanda / Nyagatare</option><option value="Rwanda, Other">Rwanda / Other</option></select>
+    <label class="market-label">Country / Location</label><select class="field" id="marketProductLocation"><option value="Rwanda, Kigali">Kigali, Rwanda</option><option value="Rwanda, Rwamagana">Rwamagana, Rwanda</option><option value="Rwanda, Gicumbi">Gicumbi, Rwanda</option><option value="Rwanda, Musanze">Musanze, Rwanda</option><option value="Rwanda, Huye">Huye, Rwanda</option><option value="Rwanda, Rubavu">Rubavu, Rwanda</option><option value="Rwanda, Muhanga">Muhanga, Rwanda</option><option value="Rwanda, Nyagatare">Nyagatare, Rwanda</option><option value="Rwanda, Other">Other, Rwanda</option></select>
     <button class="gold market-publish-btn" id="marketPublishButton" onclick="marketPublishProduct()">Done · Publish Product</button>
     <p class="creator-hint" id="marketUploadStatus" aria-live="polite"></p>
   </div>
@@ -493,7 +493,7 @@ body.marketplace-active>.bottom-nav,body.marketplace-active .bottom-nav{display:
 <section class="page" id="profile"><div class="eyebrow">YOUR AFRISHINE ACCOUNT</div><h1>My Profile</h1><p class="muted">Manage your account and public creator profile.</p>
 <section class="panel"><h2>Pi Network Account</h2><p>Sign in using your Pi Network account.</p><section class="pi-login" id="piLoginArea"><div class="pi-info"><div class="pi-symbol">π</div><div><b>Login with Pi</b><small>Secure access to Afrishine Hub</small></div></div><button class="gold" id="piLoginBtn">Login with Pi →</button></section><p id="profileStatus">You are not signed in yet.</p></section>
 <section class="panel"><h2>Email Account</h2><p>Create an account or sign in with your email address. Email accounts use Firebase Authentication.</p>
-<div id="emailAuthForm"><input class="field" type="text" id="authUsername" maxlength="30" placeholder="Username (used when creating an account)" autocomplete="username"><input class="field" type="email" id="authEmail" placeholder="Email address" autocomplete="email"><input class="field" type="password" id="authPassword" placeholder="Password (at least 6 characters)" autocomplete="current-password"><div class="actions"><button class="gold" onclick="emailSignIn()">Sign In</button><button class="secondary" onclick="emailSignUp()">Create Account</button></div><button class="secondary" style="margin-top:10px" onclick="googleSignIn()">Continue with Google</button><button class="secondary" style="margin-top:10px" onclick="resetEmailPassword()">Forgot Password?</button><p class="creator-hint">Username is your public name. Email and password are used to secure your account.</p></div>
+<div id="emailAuthForm"><input class="field" type="text" id="authUsername" maxlength="30" placeholder="Username (used when creating an account)" autocomplete="username"><input class="field" type="email" id="authEmail" placeholder="Email address" autocomplete="email"><input class="field" type="password" id="authPassword" placeholder="Password (at least 6 characters)" autocomplete="new-password"><input class="field" type="password" id="authConfirmPassword" placeholder="Confirm password (for new accounts)" autocomplete="new-password"><div class="actions"><button class="gold" onclick="emailSignIn()">Sign In</button><button class="secondary" onclick="emailSignUp()">Create Account</button></div><button class="secondary" style="margin-top:10px" onclick="googleSignIn()">Continue with Google</button><button class="secondary" style="margin-top:10px" onclick="resetEmailPassword()">Forgot Password?</button><p class="creator-hint">Username is your public name. Email and password are used to secure your account.</p></div>
 <div id="emailSignedIn" style="display:none"><p id="emailAccountStatus" class="auth-status"></p><button class="secondary" onclick="emailSignOut()">Sign Out</button></div><p id="authMessage" class="auth-status" aria-live="polite"></p></section></section>
 <section class="page" id="settings"><div class="eyebrow">ACCOUNT · SECURITY · PRIVACY</div><h1>Settings and Privacy</h1><p class="muted">Manage your Afrishine Hub account preferences and privacy information.</p><section class="panel"><h2>Account Settings</h2><p>Account preferences and profile settings will be available here.</p></section><section class="panel"><h2>Privacy and Security</h2><p>Your privacy and account security are important to Afrishine Hub.</p></section><section class="panel"><h2>Help and Support</h2><p>For assistance, visit our Contact Us section.</p><button class="gold" onclick="showPage('contact')">Contact Us →</button></section></section>
 <section class="page" id="creatorRewards">
@@ -518,7 +518,9 @@ body.marketplace-active>.bottom-nav,body.marketplace-active .bottom-nav{display:
     <button class="creator-apply-btn" type="button" onclick="showCreatorEligibilityMessage()">Apply for Monetization</button>
   </section>
 </section>
-<section class="page" id="contact"><div class="eyebrow">WE ARE HERE TO HELP</div><h1>Contact Us</h1><p class="muted">Get in touch with Afrishine Hub for support, questions and business inquiries.</p><section class="panel"><h2>Contact Information</h2><p>📞 Phone</p><div class="actions"><a class="gold" href="tel:+250788818684">+250 788 818 684</a></div><p style="margin-top:18px">📩 Email</p><div class="actions"><a class="secondary" href="mailto:afrishinehub@gmail.com">afrishinehub@gmail.com</a></div></section><footer>© 2026 Afrishine Hub · Built in Kigali, Rwanda 🇷🇼</footer></section>
+<section class="page" id="contact"><div class="eyebrow">WE ARE HERE TO HELP</div><h1>Contact Us</h1><p class="muted">Get in touch with Afrishine Hub for support, questions and business inquiries.</p><section class="panel"><h2>Contact Information</h2><p>📞 Phone</p><div class="actions"><a class="gold" href="tel:+250788818684">+250 788 818 684</a></div><p style="margin-top:18px">📩 Email</p><div class="actions"><a class="secondary" href="mailto:afrishinehub@gmail.com">afrishinehub@gmail.com</a></div></section>
+<section class="page" id="verificationGate"><div class="eyebrow">ACCOUNT ACCESS</div><h1>Get a Verified Badge</h1><section class="panel eligibility-panel"><div class="creator-dialog-icon" aria-hidden="true">✓</div><h2>You Are Not Eligible Now</h2><p>This feature is not available for your account at the moment. Afrishine Hub is preparing a secure verification process. You can continue using the services currently available and return when verification opens.</p><button class="gold" type="button" onclick="afReturnFromGate()">You Are Eligible Now</button></section></section>
+<section class="page" id="subscriptionGate"><div class="eyebrow">MEMBERSHIP ACCESS</div><h1>Subscription</h1><section class="panel eligibility-panel"><div class="creator-dialog-icon" aria-hidden="true">★</div><h2>You Are Not Eligible Now</h2><p>This subscription feature is not open yet. We are preparing the membership experience and will make it available when it is ready. Thank you for your patience.</p><button class="gold" type="button" onclick="afReturnFromGate()">You Are Eligible Now</button></section></section><footer>© 2026 Afrishine Hub · Built in Kigali, Rwanda 🇷🇼</footer></section>
 </main></div>
 <dialog class="creator-eligibility-dialog" id="creatorEligibilityDialog" aria-labelledby="creatorEligibilityTitle" aria-describedby="creatorEligibilityText">
   <div class="creator-dialog-content">
@@ -547,7 +549,7 @@ body.marketplace-active>.bottom-nav,body.marketplace-active .bottom-nav{display:
  </div>
  <div class="video-viewer-feed" id="videoViewerFeed"></div>
 </div>
-<div class="market-modal" id="marketLoginModal" role="dialog" aria-modal="true" aria-label="Marketplace sign in"><div class="market-modal-card"><div style="font-size:34px">🔐</div><h2>Login to Marketplace</h2><p class="muted" style="margin:8px auto">Komeza ukoresheje Google kugira ngo ubashe kureba, gushyiraho amatangazo no kuvugana n’abandi.</p><button class="gold" onclick="marketplaceGoogleLogin()">Continue with Google</button><button class="secondary" style="width:100%;margin-top:9px" onclick="closeMarketplaceLogin()">Cancel</button><p class="creator-hint" id="marketLoginMessage"></p></div></div><div id="notice" class="notice"></div>
+<div class="market-modal" id="marketLoginModal" role="dialog" aria-modal="true" aria-label="Marketplace sign in"><div class="market-modal-card"><div style="font-size:34px">🔐</div><h2>Login to Marketplace</h2><p class="muted" style="margin:8px auto">Continue with Google to browse products, publish listings and contact other members.</p><button class="gold" onclick="marketplaceGoogleLogin()">Continue with Google</button><button class="secondary" style="width:100%;margin-top:9px" onclick="closeMarketplaceLogin()">Cancel</button><p class="creator-hint" id="marketLoginMessage"></p></div></div><div id="notice" class="notice"></div>
 <script>
 /* Android 8+ compatibility helpers: keep older WebViews able to run page actions. */
 (function () {
@@ -911,14 +913,20 @@ function emailSignUp() {
     return __awaiter(this, void 0, void 0, function* () { if (!auth) {
         setAuthMessage('Firebase did not initialize. Check the Firebase configuration.', true);
         return;
-    } const username = document.getElementById('authUsername').value.trim(), email = document.getElementById('authEmail').value.trim(), password = document.getElementById('authPassword').value; if (!username || username.length < 3) {
+    } const username = document.getElementById('authUsername').value.trim(), email = document.getElementById('authEmail').value.trim(), password = document.getElementById('authPassword').value, confirmPassword = document.getElementById('authConfirmPassword').value; if (!username || username.length < 3) {
         setAuthMessage('Choose a username with at least 3 characters.', true);
         return;
     } if (!/^[a-zA-Z0-9_.-]+$/.test(username)) {
         setAuthMessage('Username can use letters, numbers, dot, dash and underscore only.', true);
         return;
-    } if (!email || !password) {
-        setAuthMessage('Enter your email and password.', true);
+    } if (!email || !password || !confirmPassword) {
+        setAuthMessage('Enter your email, password and password confirmation.', true);
+        return;
+    } if (password.length < 6) {
+        setAuthMessage('Your password must contain at least 6 characters.', true);
+        return;
+    } if (password !== confirmPassword) {
+        setAuthMessage('Your passwords do not match. Please check and try again.', true);
         return;
     } try {
         const result = yield auth.createUserWithEmailAndPassword(email, password);
@@ -1067,7 +1075,7 @@ function closeMarketplaceLogin() { pendingMarketplaceLogin = false; document.get
 function marketplaceGoogleLogin() {
     return __awaiter(this, void 0, void 0, function* () {
         if (!auth) {
-            document.getElementById('marketLoginMessage').textContent = 'Firebase ntiyabashije gutangira. Ongera ugerageze.';
+            document.getElementById('marketLoginMessage').textContent = 'Firebase could not start. Please try again.';
             return;
         }
         var message = document.getElementById('marketLoginMessage');
@@ -1098,13 +1106,13 @@ function publishMarketplacePost() {
         openMarketplaceLogin();
         return;
     } if (!db) {
-        notice('Database ntiyatangije neza. Ongera ufungure app.');
+        notice('The database did not initialize. Please reload the app.');
         return;
     } var type = document.getElementById('marketType').value, text = document.getElementById('marketText').value.trim(), price = document.getElementById('marketPrice').value.trim(), locationText = document.getElementById('marketLocation').value.trim(); if (text.length < 8) {
-        notice('Andika ibisobanuro birambuye mbere yo gushyiraho itangazo.');
+        notice('Enter a detailed description before publishing your listing.');
         return;
     } if (!locationText) {
-        notice('Andika aho uherereye: igihugu, umujyi/akarere n’umurenge.');
+        notice('Enter your location, including country and city or district.');
         return;
     } if (text.length > 1200) {
         notice('Ibisobanuro ni birebire cyane.');
@@ -1116,7 +1124,7 @@ function publishMarketplacePost() {
         yield db.collection('marketplacePosts').add({ uid: currentFirebaseUser.uid, authorName: name, authorPhoto: currentFirebaseUser.photoURL || '', type: type, text: text, price: price, location: locationText, createdAt: firebase.firestore.FieldValue.serverTimestamp(), status: 'active' });
         document.getElementById('marketText').value = '';
         document.getElementById('marketPrice').value = '';
-        notice('Itangazo ryawe ryashyizwe kuri Marketplace.');
+        notice('Your Marketplace listing has been published.');
         yield loadMarketplacePosts(true);
     }
     catch (e) {
@@ -1140,7 +1148,7 @@ function loadMarketplacePosts() {
             return;
         }
         if (!db) {
-            feed.innerHTML = '<p class="muted">Database ntiyatangije neza. Ongera ugerageze.</p>';
+            feed.innerHTML = '<p class="muted">The database did not initialize. Please try again.</p>';
             return;
         }
         if (marketplaceLoading)
@@ -1166,7 +1174,7 @@ function loadMarketplacePosts() {
                 posts = posts.filter(function (p) { return p.type === marketplaceFilter; });
             if (reset) {
                 if (!posts.length && !marketplaceHasMore)
-                    feed.innerHTML = '<div class="empty-feed">Nta matangazo arahari. Ba uwa mbere ushyireho itangazo.</div>';
+                    feed.innerHTML = '<div class="empty-feed">No listings yet. Be the first to publish one.</div>';
                 else
                     feed.innerHTML = '';
             }
@@ -1235,7 +1243,7 @@ function addMarketplaceComment(id) {
         openMarketplaceLogin();
         return;
     } if (!db) {
-        notice('Database ntiyatangije neza. Ongera ugerageze.');
+        notice('The database did not initialize. Please try again.');
         return;
     } var input = document.getElementById('marketComment_' + id), text = input && input.value.trim(); if (!text)
         return; try {
@@ -1253,7 +1261,7 @@ function deleteMarketplacePost(id) {
         return;
     } if (!confirm('Delete your Marketplace post?'))
         return; if (!db) {
-        notice('Database ntiyatangije neza. Ongera ugerageze.');
+        notice('The database did not initialize. Please try again.');
         return;
     } try {
         var ref = db.collection('marketplacePosts').doc(id), snap = yield ref.get();
@@ -1274,7 +1282,7 @@ function reportMarketplacePost(id, uid) {
         openMarketplaceLogin();
         return;
     } if (!db) {
-        notice('Database ntiyatangije neza. Ongera ugerageze.');
+        notice('The database did not initialize. Please try again.');
         return;
     } var reason = prompt('Why are you reporting this listing?'); if (!reason || !reason.trim())
         return; try {
@@ -2228,13 +2236,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     function workerUpload(file) { return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () { try {
         const u = user();
         if (!u)
-            throw new Error('Banza winjire muri konti yawe.');
+            throw new Error('Please sign in to your account first.');
         const token = yield u.getIdToken();
         const url = MEDIA_WORKER + '/upload?filename=' + encodeURIComponent(file.name || 'media');
         const res = yield fetch(url, { method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': file.type }, body: file });
         const data = yield res.json().catch(() => ({}));
         if (!res.ok || !data.success)
-            throw new Error(data.error || 'Upload yanze. Ongera ugerageze.');
+            throw new Error(data.error || 'Upload failed. Please try again.');
         resolve(data);
     }
     catch (e) {
@@ -2263,7 +2271,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     function checkDailyMedia(type) {
         return __awaiter(this, void 0, void 0, function* () { const u = user(), dbx = firestore(); if (!u || !dbx)
             return true; const snap = yield dbx.collection('posts').where('uid', '==', u.uid).limit(150).get(); const start = todayStart().getTime(); const count = snap.docs.reduce((n, d) => { const p = d.data(), ts = p.createdAt && p.createdAt.toDate ? p.createdAt.toDate().getTime() : 0; return n + (p.type === type && ts >= start ? 1 : 0); }, 0); if (count >= (type === 'video' ? MAX_DAILY_VIDEO : MAX_DAILY_PHOTO)) {
-            say(type === 'video' ? 'Uyu munsi wamaze gushyiraho video imwe. Ongera ugerageze ejo.' : 'Uyu munsi wamaze gushyiraho ifoto imwe. Ongera ugerageze ejo.');
+            say(type === 'video' ? 'You have already published a video today. Please try again tomorrow.' : 'You have already published a photo today. Please try again tomorrow.');
             return false;
         } return true; });
     }
@@ -2277,7 +2285,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             const used = Number((_c = (_b = (_a = d.usedBytes) !== null && _a !== void 0 ? _a : d.used) !== null && _b !== void 0 ? _b : d.totalBytes) !== null && _c !== void 0 ? _c : 0);
             const limit = Number((_e = (_d = d.limitBytes) !== null && _d !== void 0 ? _d : d.limit) !== null && _e !== void 0 ? _e : STORAGE_LIMIT_BYTES);
             if (used >= Math.min(limit, STORAGE_LIMIT_BYTES)) {
-                say('Ububiko bwa Afrishine Hub bugeze kuri 9.5 GB. Nta yindi media upload ishoboka kugeza ububiko bwongerewe.');
+                say('Afrishine Hub storage has reached 9.5 GB. New media uploads are paused until storage is increased.');
                 return false;
             }
             return true;
@@ -2319,7 +2327,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         const panel = document.createElement('section');
         panel.className = 'panel';
         panel.id = 'ahProfileEditor';
-        panel.innerHTML = `<h2>My Public Profile</h2><div class="ah-profile-grid"><img id="ahMyAvatar" class="ah-avatar" alt="Profile photo"><div><b id="ahMyName">Sign in to edit your profile</b><p class="creator-hint">Izina rya Google rizagaragara kuri konti ya Google.</p></div></div><label class="creator-hint">Profile photo</label><input class="field" id="ahProfilePhoto" type="file" accept="image/jpeg,image/png,image/webp"><input class="ah-input" id="ahProfileUsername" maxlength="30" placeholder="Username"><textarea class="ah-input" id="ahProfileBio" maxlength="300" rows="3" placeholder="Bio / About me"></textarea><input class="ah-input" id="ahProfileLocation" maxlength="100" placeholder="Location"><button class="gold" id="ahSaveProfile">Save Profile</button><p class="auth-status" id="ahProfileMsg"></p><div class="ah-inline" style="margin-top:12px"><span class="ah-stat"><b id="ahFollowerCount">0</b><small>Followers</small></span><span class="ah-stat"><b id="ahFollowingCount">0</b><small>Following</small></span></div><button class="secondary" id="ahSavedOpen" style="margin-top:10px">🔖 My Saved Posts</button><div id="ahSavedList"></div><hr style="border-color:#303747;margin:16px 0"><h3>Professional Verification</h3><p class="creator-hint">Saba gusaba kugenzurwa nk'umucuruzi cyangwa umunyamwuga. Badge ntihabwa umuntu mu buryo bwikora.</p><input class="ah-input" id="ahVerifyProfession" placeholder="Umwuga / Business"><textarea class="ah-input" id="ahVerifyDetails" maxlength="500" placeholder="Sobanura impamvu usaba verification"></textarea><button class="secondary" id="ahRequestVerify">Request Verification</button><p id="ahVerifyMsg" class="creator-hint"></p>`;
+        panel.innerHTML = `<h2>My Public Profile</h2><div class="ah-profile-grid"><img id="ahMyAvatar" class="ah-avatar" alt="Profile photo"><div><b id="ahMyName">Sign in to edit your profile</b><p class="creator-hint">Your Google display name will appear on your Google account profile.</p></div></div><label class="creator-hint">Profile photo</label><input class="field" id="ahProfilePhoto" type="file" accept="image/jpeg,image/png,image/webp"><input class="ah-input" id="ahProfileUsername" maxlength="30" placeholder="Username"><textarea class="ah-input" id="ahProfileBio" maxlength="300" rows="3" placeholder="Bio / About me"></textarea><input class="ah-input" id="ahProfileLocation" maxlength="100" placeholder="Location"><button class="gold" id="ahSaveProfile">Save Profile</button><p class="auth-status" id="ahProfileMsg"></p><div class="ah-inline" style="margin-top:12px"><span class="ah-stat"><b id="ahFollowerCount">0</b><small>Followers</small></span><span class="ah-stat"><b id="ahFollowingCount">0</b><small>Following</small></span></div><button class="secondary" id="ahSavedOpen" style="margin-top:10px">🔖 My Saved Posts</button><div id="ahSavedList"></div><hr style="border-color:#303747;margin:16px 0"><h3>Professional Verification</h3><p class="creator-hint">Request verification as a business or professional. Verification badges are not granted automatically.</p><input class="ah-input" id="ahVerifyProfession" placeholder="Umwuga / Business"><textarea class="ah-input" id="ahVerifyDetails" maxlength="500" placeholder="Sobanura impamvu usaba verification"></textarea><button class="secondary" id="ahRequestVerify">Request Verification</button><p id="ahVerifyMsg" class="creator-hint"></p>`;
         page.appendChild(panel);
         $('ahSaveProfile').onclick = saveProfile;
         $('ahRequestVerify').onclick = requestVerification;
@@ -2329,7 +2337,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         return __awaiter(this, void 0, void 0, function* () {
             const u = user(), dbx = firestore();
             if (!u) {
-                say('Banza winjire muri konti.');
+                say('Please sign in first.');
                 return;
             }
             try {
@@ -2337,7 +2345,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                 const f = $('ahProfilePhoto').files[0];
                 if (f) {
                     if (!f.type.startsWith('image/'))
-                        throw new Error('Hitamo ifoto yemewe.');
+                        throw new Error('Please choose a supported image.');
                     const up = yield workerUpload(yield compressImage(f));
                     photoURL = up.url;
                 }
@@ -2375,10 +2383,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     }
     function requestVerification() {
         return __awaiter(this, void 0, void 0, function* () { const u = user(), dbx = firestore(); if (!u) {
-            say('Banza winjire muri konti.');
+            say('Please sign in first.');
             return;
         } const profession = $('ahVerifyProfession').value.trim(), details = $('ahVerifyDetails').value.trim(); if (profession.length < 2 || details.length < 10) {
-            $('ahVerifyMsg').textContent = 'Andika umwuga n' + '\'' + 'impamvu irambuye.';
+            $('ahVerifyMsg').textContent = 'Enter your profession and' + '\'' + 'a detailed reason for verification.';
             return;
         } try {
             yield dbx.collection('verificationRequests').add({ uid: u.uid, displayName: u.displayName || 'Afrishine Member', profession, details, status: 'pending', createdAt: serverTime() });
@@ -2390,11 +2398,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     }
     function loadSavedPosts() {
         return __awaiter(this, void 0, void 0, function* () { const u = user(), dbx = firestore(); if (!u) {
-            say('Injira mbere.');
+            say('Please sign in first.');
             return;
         } const el = $('ahSavedList'); el.innerHTML = '<p>Loading…</p>'; try {
             const snap = yield dbx.collection('savedPosts').where('uid', '==', u.uid).limit(50).get();
-            el.innerHTML = snap.docs.map(d => { const x = d.data(); return `<p class="creator-hint">🔖 ${esc(x.kind || 'posts')} · ${esc(x.postId || '')} <button class="secondary" onclick="ahUnsavePost('${esc(d.id)}')">Remove</button></p>`; }).join('') || '<p class="creator-hint">Nta posts wabika kugeza ubu.</p>';
+            el.innerHTML = snap.docs.map(d => { const x = d.data(); return `<p class="creator-hint">🔖 ${esc(x.kind || 'posts')} · ${esc(x.postId || '')} <button class="secondary" onclick="ahUnsavePost('${esc(d.id)}')">Remove</button></p>`; }).join('') || '<p class="creator-hint">You have not saved any posts yet.</p>';
         }
         catch (e) {
             el.textContent = firebaseErrorMessage(e);
@@ -2409,7 +2417,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     } });
     function toggleSavePost(kind, id, btn) {
         return __awaiter(this, void 0, void 0, function* () { const u = user(), dbx = firestore(); if (!u) {
-            say('Injira mbere yo kubika post.');
+            say('Please sign in before saving a post.');
             return;
         } const docId = u.uid + '_' + kind + '_' + id, ref = dbx.collection('savedPosts').doc(docId); try {
             const snap = yield ref.get();
@@ -2428,7 +2436,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     }
     function toggleFollow(targetUid, btn) {
         return __awaiter(this, void 0, void 0, function* () { const u = user(), dbx = firestore(); if (!u) {
-            say('Injira mbere yo gukurikira umuntu.');
+            say('Please sign in before following a member.');
             return;
         } if (!targetUid || targetUid === u.uid)
             return; const id = u.uid + '_' + targetUid, ref = dbx.collection('follows').doc(id); try {
@@ -2448,12 +2456,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     }
     function searchMembers() {
         return __awaiter(this, void 0, void 0, function* () { const q = $('ahMemberSearch').value.trim().toLowerCase(), box = $('ahSearchResults'); if (q.length < 2) {
-            box.innerHTML = '<p class="creator-hint">Andika nibura inyuguti 2.</p>';
+            box.innerHTML = '<p class="creator-hint">Enter at least 2 characters.</p>';
             return;
         } try {
             const snap = yield firestore().collection('publicProfiles').limit(100).get();
             const matches = snap.docs.map(d => (Object.assign({ uid: d.id }, d.data()))).filter(x => (x.username || '').toLowerCase().includes(q) || (x.displayName || '').toLowerCase().includes(q)).slice(0, 15);
-            box.innerHTML = matches.map(x => `<button onclick="openMemberProfile('${esc(x.uid)}')"><b>${esc(x.username || x.displayName || 'Afrishine Member')}</b><small> · ${esc(x.location || '')}</small></button>`).join('') || '<p class="creator-hint">Nta muntu ubonetse.</p>';
+            box.innerHTML = matches.map(x => `<button onclick="openMemberProfile('${esc(x.uid)}')"><b>${esc(x.username || x.displayName || 'Afrishine Member')}</b><small> · ${esc(x.location || '')}</small></button>`).join('') || '<p class="creator-hint">No members found.</p>';
         }
         catch (e) {
             box.textContent = firebaseErrorMessage(e);
@@ -2482,18 +2490,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         f.after(hint);
     } }
     function videoDuration(file) {
-        return __awaiter(this, void 0, void 0, function* () { return new Promise((resolve, reject) => { const v = document.createElement('video'); v.preload = 'metadata'; const url = URL.createObjectURL(file); v.onloadedmetadata = () => { const d = v.duration; URL.revokeObjectURL(url); resolve(d); }; v.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Ntibyashobotse gusoma uburebure bwa video.')); }; v.src = url; }); });
+        return __awaiter(this, void 0, void 0, function* () { return new Promise((resolve, reject) => { const v = document.createElement('video'); v.preload = 'metadata'; const url = URL.createObjectURL(file); v.onloadedmetadata = () => { const d = v.duration; URL.revokeObjectURL(url); resolve(d); }; v.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Could not read the video duration.')); }; v.src = url; }); });
     }
     function uploadGeneralMedia() {
         return __awaiter(this, void 0, void 0, function* () {
             const file = window.selectedMediaFile || selectedMediaFile, type = window.selectedMediaType || selectedMediaType;
             if (!file) {
-                say('Hitamo ifoto cyangwa video.');
+                say('Please select a photo or video.');
                 return;
             }
             const u = user(), dbx = firestore();
             if (!u) {
-                say('Banza winjire.');
+                say('Please sign in first.');
                 showPage('profile');
                 return;
             }
@@ -2524,7 +2532,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                 const caption = ($('postText') && $('postText').value.trim()) || '';
                 const title = ($('ahMediaTitle') && $('ahMediaTitle').value.trim()) || '';
                 yield dbx.collection('posts').add(Object.assign({ uid: u.uid, authorName: u.displayName || 'Afrishine Member', text: caption, title, type, mediaType: type, mediaUrl: up.url, mediaKey: up.key, source: window.createSource || createSource || 'hub', createdAt: serverTime() }, (type === 'video' ? { durationSeconds: Math.round(duration) } : {})));
-                say('Media yashyizweho neza.');
+                say('Your media has been uploaded successfully.');
                 if (typeof closeCreator === 'function')
                     closeCreator();
                 if ($('ahMediaTitle'))
@@ -2546,10 +2554,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     }
     function uploadLovePost() {
         return __awaiter(this, void 0, void 0, function* () { const u = user(), dbx = firestore(); if (!u) {
-            say('Injira mbere.');
+            say('Please sign in first.');
             return;
         } const text = $('lovePostText').value.trim(), photo = $('ahLovePhoto') && $('ahLovePhoto').files[0]; if (!text) {
-            say('Andika ubutumwa bwawe.');
+            say('Write your message.');
             return;
         } try {
             let imageUrl = '', imageKey = '';
@@ -2562,7 +2570,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             }
             const lp = window.currentLoveProfile || currentLoveProfile;
             if (!lp || lp.loveEligible !== true) {
-                say('Banza wuzuze Love Profile y’imyaka 18+.');
+                say('Please complete your 18+ Love Profile first.');
                 return;
             }
             const publicSnap = yield dbx.collection('publicProfiles').doc(u.uid).get();
@@ -2572,7 +2580,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             $('lovePostText').value = '';
             if ($('ahLovePhoto'))
                 $('ahLovePhoto').value = '';
-            say('Love Connection post yashyizweho.');
+            say('Your Love Connection post has been published.');
         }
         catch (e) {
             console.error(e);
@@ -2580,13 +2588,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         } });
     }
     function injectMarketplaceFields() { const form = document.querySelector('#shop .market-form'); if (!form || $('ahMarketImages'))
-        return; const f = document.createElement('input'); f.type = 'file'; f.id = 'ahMarketImages'; f.className = 'field'; f.accept = 'image/jpeg,image/png,image/webp'; f.multiple = true; f.setAttribute('aria-label', 'Product photos'); const condition = document.createElement('select'); condition.id = 'ahMarketCondition'; condition.className = 'field'; condition.innerHTML = '<option value="new">Condition: New</option><option value="used">Condition: Used</option>'; const hint = document.createElement('p'); hint.className = 'creator-hint'; hint.textContent = 'Hitamo amafoto agera kuri 5. Ku bicuruzwa bishya cyangwa byakoreshejwe.'; const btn = form.querySelector('button.gold'); form.insertBefore(f, btn); form.insertBefore(condition, btn); form.insertBefore(hint, btn); }
+        return; const f = document.createElement('input'); f.type = 'file'; f.id = 'ahMarketImages'; f.className = 'field'; f.accept = 'image/jpeg,image/png,image/webp'; f.multiple = true; f.setAttribute('aria-label', 'Product photos'); const condition = document.createElement('select'); condition.id = 'ahMarketCondition'; condition.className = 'field'; condition.innerHTML = '<option value="new">Condition: New</option><option value="used">Condition: Used</option>'; const hint = document.createElement('p'); hint.className = 'creator-hint'; hint.textContent = 'Select up to 5 photos for new or used products.'; const btn = form.querySelector('button.gold'); form.insertBefore(f, btn); form.insertBefore(condition, btn); form.insertBefore(hint, btn); }
     function publishMarketEnhanced() {
         return __awaiter(this, void 0, void 0, function* () { if (!(typeof isGoogleMarketplaceUser === 'function' && isGoogleMarketplaceUser(user()))) {
             openMarketplaceLogin();
             return;
         } const dbx = firestore(), u = user(); const type = $('marketType').value, text = $('marketText').value.trim(), price = $('marketPrice').value.trim(), loc = $('marketLocation').value.trim(), condition = $('ahMarketCondition').value, files = Array.from(($('ahMarketImages') && $('ahMarketImages').files) || []).slice(0, 5); if (text.length < 8 || !loc) {
-            say('Andika ibisobanuro n’aho igicuruzwa giherereye.');
+            say('Enter a product description and location.');
             return;
         } try {
             const profileSnap = yield dbx.collection('publicProfiles').doc(u.uid).get();
@@ -2605,7 +2613,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             $('marketText').value = '';
             $('marketPrice').value = '';
             $('ahMarketImages').value = '';
-            say('Itangazo ryawe ryashyizwe kuri Marketplace.');
+            say('Your Marketplace listing has been published.');
             yield loadMarketplacePosts(true);
         }
         catch (e) {
@@ -2642,11 +2650,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     }
     function addMarketReview(postId, sellerUid) {
         return __awaiter(this, void 0, void 0, function* () { const u = user(); if (!u) {
-            say('Injira mbere yo gutanga review.');
+            say('Please sign in before submitting a review.');
             return;
         } if (sellerUid === u.uid)
             return; const rating = Number(prompt('Tanga amanota kuva kuri 1 kugeza kuri 5:')); if (!Number.isInteger(rating) || rating < 1 || rating > 5)
-            return; const text = (prompt('Andika uko waguranye n’uyu mucuruzi (optional):') || '').slice(0, 300); try {
+            return; const text = (prompt('Describe your experience with this seller (optional):') || '').slice(0, 300); try {
             yield firestore().collection('marketplaceReviews').add({ postId, sellerUid, reviewerUid: u.uid, reviewerName: u.displayName || 'Member', rating, text, createdAt: serverTime() });
             say('Review yawe yoherejwe.');
         }
@@ -2957,7 +2965,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         return __awaiter(this, void 0, void 0, function* () {
             const u = user(), dbx = firestore();
             if (!u || !dbx) {
-                say('Banza winjire muri konti.');
+                say('Please sign in first.');
                 return;
             }
             const id = videosOnly ? 'ahMyVideosList' : 'ahMyPostsList', el = $(id);
@@ -2974,7 +2982,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                 if (videosOnly)
                     docs = docs.filter(x => x.type === 'video' || x.mediaType === 'video');
                 if (!docs.length) {
-                    el.innerHTML = '<p class="creator-hint">' + (videosOnly ? 'Nta video urashyiraho.' : 'Nta post urashyiraho.') + '</p>';
+                    el.innerHTML = '<p class="creator-hint">' + (videosOnly ? 'You have not published any videos yet.' : 'You have not published any posts yet.') + '</p>';
                     return;
                 }
                 el.innerHTML = docs.map(p => {
@@ -3039,7 +3047,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         return __awaiter(this, void 0, void 0, function* () {
             const u = user(), dbx = firestore();
             if (!u) {
-                say('Injira mbere.');
+                say('Please sign in first.');
                 return;
             }
             const el = $('ahSavedList');
@@ -3049,7 +3057,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             try {
                 const snap = yield dbx.collection('savedPosts').where('uid', '==', u.uid).limit(50).get();
                 if (snap.empty) {
-                    el.innerHTML = '<p class="creator-hint">Nta posts wabika kugeza ubu.</p>';
+                    el.innerHTML = '<p class="creator-hint">You have not saved any posts yet.</p>';
                     return;
                 }
                 const rows = yield Promise.all(snap.docs.map((d) => __awaiter(this, void 0, void 0, function* () {
@@ -3067,7 +3075,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                         return '';
                     }
                 })));
-                el.innerHTML = rows.join('') || '<p class="creator-hint">Nta post wabitswe iboneka ubu.</p>';
+                el.innerHTML = rows.join('') || '<p class="creator-hint">No saved posts are available yet.</p>';
                 el.querySelectorAll('[data-ah-unsave]').forEach(b => b.onclick = () => window.ahUnsavePost(b.dataset.ahUnsave));
             }
             catch (e) {
@@ -3168,7 +3176,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                 html += '<div class="ah-search-heading">Posts zijyanye n’ijambo washakishije</div>' + posts.map(p => '<button type="button" class="ah-search-result" data-ah-post="' + escHtml(p._collection || 'posts') + '|' + escHtml(p.id) + '"><span class="ah-search-type">' + (p.type === 'video' ? 'Video' : p.type === 'image' ? 'Photo' : 'Post') + '</span><b>' + escHtml(p.title || p.text || 'Post ya ' + (p.authorName || 'member')) + '</b><small>' + escHtml(p.authorName || 'Afrishine Member') + ' · ' + escHtml((p.text || '').slice(0, 110)) + '</small></button>').join('');
             }
             if (!users.length && !posts.length)
-                html += '<div class="ah-search-empty">Nta muntu cyangwa post bihuye na “' + escHtml(q) + '” byabonetse.</div>';
+                html += '<div class="ah-search-empty">No members or posts match “' + escHtml(q) + '”. No results found.</div>';
             panel.innerHTML = html;
             panel.hidden = false;
             const closeBtn = panel.querySelector('.ah-search-close');
@@ -3178,7 +3186,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                 openMemberProfile(b.dataset.ahUser);
             else {
                 showPage('profile');
-                notice('Fungura Profile kugira ngo urebe uyu munyamuryango.');
+                notice('Open Profile to view this member.');
             } });
             panel.querySelectorAll('[data-ah-post]').forEach(b => b.onclick = () => __awaiter(this, void 0, void 0, function* () { close(); try {
                 const parts = b.dataset.ahPost.split('|'), collection = parts[0], id = parts[1];
@@ -3253,7 +3261,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                 }
                 catch (err) {
                     if (token === sequence)
-                        showMessage(firebaseErrorMessage(err) || 'Search ntiyabashije gukora. Ongera ugerageze.');
+                        showMessage(firebaseErrorMessage(err) || 'Search failed. Please try again.');
                 }
             });
         }
@@ -3288,7 +3296,7 @@ function mRequireLogin(){if(!mUser()||!isGoogleMarketplaceUser(mUser())){mLogin(
 function mSaved(){try{localStorage.setItem('afrishine_market_saved_v1',JSON.stringify(marketSavedIds))}catch(e){}}
 function mProduct(p){return p&&p.product===true || p&&Array.isArray(p.images)}
 function mImage(p){return (p.images&&p.images[0])||p.imageUrl||''}
-function mPrice(p){var n=Number(p.price);return n?new Intl.NumberFormat('en-US').format(n)+' Frw':(p.price||'Price on request')}
+function mPrice(p){if(typeof p.price==='string'&&p.price.trim())return p.price.trim();var n=Number(p.price);return n?new Intl.NumberFormat('en-US').format(n)+' RWF':'Price on request'}
 function mCard(p){
  var id=mEsc(p.id),img=mEsc(mImage(p)),saved=marketSavedIds.indexOf(p.id)>=0;
  var condition=mEsc(p.condition||'New'),title=mEsc(p.title||p.text||'Product'),location=mEsc(p.location||'Rwanda');
@@ -3308,8 +3316,8 @@ window.marketBottom=function(which){
  if(which==='sell'){marketOpenSell();return}
  marketShowPanel(which);
  if(which==='saved')marketRenderSaved();
- if(which==='chat'){var c=document.getElementById('marketChatContent');if(c)c.innerHTML=mUser()?'<p class="muted">Hitamo igicuruzwa, ukande Chat to Seller kugira ngo utangire ikiganiro.</p>':'<p class="muted">Injira ukoresheje Google kugira ngo urebe ibiganiro byawe.</p>'}
- if(which==='profile'){var p=document.getElementById('marketProfileContent');if(p)p.innerHTML=mUser()?'<b>'+mEsc(mUser().displayName||'Afrishine Member')+'</b><p class="creator-hint">Google account signed in.</p><button class="secondary" onclick="auth.signOut()">Sign Out</button>':'<p class="muted">Nta muntu winjiye.</p><button class="gold" onclick="marketOpenLogin()">Login with Google</button>'}
+ if(which==='chat'){var c=document.getElementById('marketChatContent');if(c)c.innerHTML=mUser()?'<p class="muted">Choose a product and tap Chat to Seller to start a conversation.</p>':'<p class="muted">Sign in with Google to view your conversations.</p>'}
+ if(which==='profile'){var p=document.getElementById('marketProfileContent');if(p)p.innerHTML=mUser()?'<b>'+mEsc(mUser().displayName||'Afrishine Member')+'</b><p class="creator-hint">Google account signed in.</p><button class="secondary" onclick="auth.signOut()">Sign Out</button>':'<p class="muted">You are not signed in.</p><button class="gold" onclick="marketOpenLogin()">Login with Google</button>'}
 };
 window.marketOpenLogin=mLogin;
 window.marketOpenSell=function(){if(!mRequireLogin())return;document.getElementById('marketSellModal').classList.add('open')};
@@ -3321,19 +3329,19 @@ window.marketRenderProducts=function(condition){
  var q=(document.getElementById('marketSearchInput').value||'').trim().toLowerCase();
  var filtered=marketProducts.filter(function(p){var text=[p.title,p.description,p.text,p.category,p.location].join(' ').toLowerCase();return (!q||text.indexOf(q)>=0)&&(!condition||condition==='all'||(p.condition||'').toLowerCase()===condition.toLowerCase())});
  document.getElementById('marketProductCount').textContent=filtered.length+' products';
- feed.innerHTML=filtered.map(mCard).join('')||'<div class="empty-feed" style="grid-column:1/-1">Nta bicuruzwa bihuye n’icyo washakishije. Gerageza irindi zina.</div>';
+ feed.innerHTML=filtered.map(mCard).join('')||'<div class="empty-feed" style="grid-column:1/-1">No products match your search. Try another keyword.</div>';
 };
-function marketRenderSaved(){var feed=document.getElementById('marketSavedFeed');if(!feed)return;var list=marketProducts.filter(function(p){return marketSavedIds.indexOf(p.id)>=0});feed.innerHTML=list.map(mCard).join('')||'<p class="empty-feed">Nta gicuruzwa urabika muri Saved.</p>'}
+function marketRenderSaved(){var feed=document.getElementById('marketSavedFeed');if(!feed)return;var list=marketProducts.filter(function(p){return marketSavedIds.indexOf(p.id)>=0});feed.innerHTML=list.map(mCard).join('')||'<p class="empty-feed">You have no saved products yet.</p>'}
 window.marketRenderSaved=marketRenderSaved;
 window.marketLoadProducts=async function(){
  var feed=document.getElementById('marketplaceFeed');if(!feed)return;
- if(!mDb()){feed.innerHTML='<p class="empty-feed">Database ntiyatangije neza. Ongera ugerageze.</p>';return}
+ if(!mDb()){feed.innerHTML='<p class="empty-feed">The database did not initialize. Please try again.</p>';return}
  feed.innerHTML='<p class="empty-feed">Loading products…</p>';
  try{
   var snap=await mDb().collection('marketplacePosts').orderBy('createdAt','desc').limit(100).get();
   marketProducts=snap.docs.map(function(d){var p=d.data();p.id=d.id;return p}).filter(function(p){return p.status!=='deleted'&&(mProduct(p)||p.type==='sell')});
   marketRenderProducts();
- }catch(e){console.error('Marketplace read:',e);feed.innerHTML='<p class="empty-feed">Ntibishobotse kubona ibicuruzwa. Reba Firestore Rules zemera gusoma marketplacePosts.</p>'}
+ }catch(e){console.error('Marketplace read:',e);feed.innerHTML='<p class="empty-feed">Could not load products. Check that Firestore Rules allow reading marketplacePosts.</p>'}
 };
 window.loadMarketplacePosts=window.marketLoadProducts;
 window.setMarketplaceFilter=function(f){marketSetView(f==='buy'?'all':f==='sell'?'all':'all')};
@@ -3353,11 +3361,11 @@ window.marketOpenDetails=function(id){
  '<div class="market-detail-actions"><button class="gold" onclick="marketContactSeller(\''+mEsc(p.uid)+'\',\''+mEsc(seller).replace(/'/g,'&#39;')+'\')">✉ Chat to Seller</button><button class="secondary" onclick="marketToggleSaved(\''+mEsc(id)+'\')">♡ Save</button></div>';
  document.getElementById('marketProductDetails').innerHTML=html;document.getElementById('marketProductModal').classList.add('open');
 };
-window.marketContactSeller=function(uid,name){if(!mRequireLogin())return;if(!uid||uid===mUser().uid){mNotice('Iki ni igicuruzwa cyawe.');return}if(typeof startConversation==='function'){marketCloseDetails();startConversation(uid,name)}else mNotice('Chat service ntiraboneka.')}
+window.marketContactSeller=function(uid,name){if(!mRequireLogin())return;if(!uid||uid===mUser().uid){mNotice('This is your own product.');return}if(typeof startConversation==='function'){marketCloseDetails();startConversation(uid,name)}else mNotice('Chat is currently unavailable.')}
 var photoInput=document.getElementById('marketProductPhotos');
 if(photoInput)photoInput.addEventListener('change',function(){var box=document.getElementById('marketPhotoPreview');box.innerHTML='';Array.from(this.files||[]).slice(0,8).forEach(function(f){if(!f.type.startsWith('image/'))return;var u=URL.createObjectURL(f),im=document.createElement('img');im.src=u;box.appendChild(im)})});
 async function marketUpload(file){
- var u=mUser();if(!u)throw new Error('Banza winjire ukoresheje Google.');
+ var u=mUser();if(!u)throw new Error('Please sign in with Google first.');
  var token=await u.getIdToken();
  var response=await fetch(marketWorker+'/upload?filename='+encodeURIComponent(file.name||'market-media'),{method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':file.type||'application/octet-stream'},body:file});
  var data=await response.json().catch(function(){return {}});
@@ -3373,17 +3381,17 @@ window.marketPublishProduct=async function(){
  var photos=Array.from(document.getElementById('marketProductPhotos').files||[]).filter(function(f){return f.type.startsWith('image/')}).slice(0,8);
  var video=document.getElementById('marketProductVideo').files[0];
  var title=document.getElementById('marketProductTitle').value.trim(),description=document.getElementById('marketProductDescription').value.trim(),price=Number(document.getElementById('marketProductPrice').value),locationText=document.getElementById('marketProductLocation').value;
- if(photos.length<3){mNotice('Hitamo nibura amafoto 3 y’igicuruzwa.');return}
- if(!title||description.length<8||!price||price<1){mNotice('Uzuza Title, Description n’igiciro nyacyo.');return}
+ if(photos.length<3){mNotice('Please select at least 3 product photos.');return}
+ if(!title||description.length<8||!price||price<1){mNotice('Please enter a valid title, description and price.');return}
  var btn=document.getElementById('marketPublishButton'),status=document.getElementById('marketUploadStatus');btn.disabled=true;status.textContent='Uploading photos…';
  try{
   var imageUrls=[];for(var i=0;i<photos.length;i++){status.textContent='Uploading photo '+(i+1)+' / '+photos.length;imageUrls.push(await marketUpload(await marketCompress(photos[i])))}
   var videoUrl='';if(video){status.textContent='Uploading video…';videoUrl=await marketUpload(video)}
   status.textContent='Saving product…';
-  await mDb().collection('marketplacePosts').add({uid:mUser().uid,authorName:mUser().displayName||'Afrishine Seller',authorPhoto:mUser().photoURL||'',type:'sell',product:true,title:title,description:description,text:description,price:price,condition:document.getElementById('marketProductCondition').value,category:document.getElementById('marketProductCategory').value,location:locationText,images:imageUrls,videoUrl:videoUrl,createdAt:firebase.firestore.FieldValue.serverTimestamp(),status:'active'});
+  await mDb().collection('marketplacePosts').add({uid:mUser().uid,authorName:mUser().displayName||'Afrishine Seller',authorPhoto:mUser().photoURL||'',type:'sell',product:true,title:title,description:description,text:description,price:(document.getElementById('marketProductCurrency').value==='USD'?'$':'FRW ')+String(price),condition:document.getElementById('marketProductCondition').value,category:document.getElementById('marketProductCategory').value,location:locationText,images:imageUrls,videoUrl:videoUrl,createdAt:firebase.firestore.FieldValue.serverTimestamp(),status:'active'});
   ['marketProductTitle','marketProductDescription','marketProductPrice','marketProductPhotos','marketProductVideo'].forEach(function(id){document.getElementById(id).value=''});
-  document.getElementById('marketPhotoPreview').innerHTML='';marketCloseSell();mNotice('Igicuruzwa cyashyizwe kuri Marketplace neza.');await marketLoadProducts();
- }catch(e){console.error(e);status.textContent=e.message||'Ntibyashobotse gushyiraho igicuruzwa.';mNotice(status.textContent)}
+  document.getElementById('marketPhotoPreview').innerHTML='';marketCloseSell();mNotice('Your product has been published successfully.');await marketLoadProducts();
+ }catch(e){console.error(e);status.textContent=e.message||'Could not publish the product.';mNotice(status.textContent)}
  finally{btn.disabled=false}
 };
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){marketCloseDetails();marketCloseSell()}});
@@ -3441,7 +3449,7 @@ function ensureProfile(){
  var legacy=Array.from(page.children).filter(function(n){return n.classList&&n.classList.contains('panel')});
  var pi=byId('piLoginArea');if(pi&&!isPi()){var p=pi.closest('.panel');if(p)p.style.display='none'}
  var hero=document.createElement('section');hero.className='panel ah-profile-hero';hero.id='ahProfileDashboard';
- hero.innerHTML='<img class="ah-avatar" id="ahDashboardAvatar" alt="Profile photo"><div class="ah-profile-identity"><h2 id="ahDashboardName">Guest</h2><p class="creator-hint" id="ahDashboardBio">Login or create an account to manage your Afrishine profile.</p><div class="ah-profile-stats"><span id="ahPostCount">0<small>posts</small></span><span id="ahFollowerStat">0<small>followers</small></span><span id="ahFollowingStat">0<small>following</small></span></div><div class="ah-profile-actions"><button class="secondary" type="button" onclick="ahProfileEdit()">Edit profile</button><button class="secondary" type="button" onclick="ahShareProfile()">Share profile</button></div></div><details class="ah-profile-more"><summary aria-label="Profile options">⋮</summary><div class="ah-profile-menu"><button onclick="ahProfileMenuAction(&#39;Settings&#39;)">⚙ Settings</button><button onclick="ahProfileMenuAction(&#39;Edit Profile&#39;)">☷ Edit Profile</button><button onclick="ahProfileMenuAction(&#39;Change Profile Photo&#39;)">◎ Change Profile Photo</button><button onclick="ahProfileMenuAction(&#39;Change Password&#39;)">▣ Change Password</button><button onclick="ahProfileMenuAction(&#39;Privacy&#39;)">⌂ Privacy</button><button onclick="ahProfileMenuAction(&#39;Notifications&#39;)">♧ Notifications</button><button onclick="ahProfileMenuAction(&#39;Verification&#39;)">✓ Account Verification</button><button onclick="ahProfileMenuAction(&#39;Help&#39;)">? Help</button><button onclick="ahProfileMenuAction(&#39;Logout&#39;)">↪ Logout</button></div></details>';
+ hero.innerHTML='<img class="ah-avatar" id="ahDashboardAvatar" alt="Profile photo"><div class="ah-profile-identity"><h2 id="ahDashboardName">Guest</h2><p class="creator-hint" id="ahDashboardBio">Sign in or create an account to manage your profile.</p><div class="ah-profile-stats"><span id="ahPostCount">0<small>posts</small></span><span id="ahFollowerStat">0<small>followers</small></span><span id="ahFollowingStat">0<small>following</small></span></div><div class="ah-profile-actions"><button class="secondary" type="button" onclick="ahProfileEdit()">Edit Profile</button><button class="secondary" type="button" onclick="ahShareProfile()">Share Profile</button></div></div><details class="ah-profile-more" id="ahProfileMore"><summary aria-label="Profile options">⋮</summary><div class="ah-profile-menu"><div class="ah-menu-section">Account</div><button onclick="ahProfileMenuAction(&#39;Settings&#39;)">☷ &nbsp; Settings</button><button onclick="ahProfileMenuAction(&#39;Edit Profile&#39;)">✎ &nbsp; Edit Profile</button><button onclick="ahProfileMenuAction(&#39;Change Profile Photo&#39;)">▧ &nbsp; Change Profile Photo</button><button onclick="ahProfileMenuAction(&#39;Change Password&#39;)">▣ &nbsp; Change Password</button><button onclick="ahProfileMenuAction(&#39;Privacy&#39;)">◇ &nbsp; Privacy</button><button onclick="ahProfileMenuAction(&#39;Notifications&#39;)">♧ &nbsp; Notifications</button><div class="ah-menu-divider"></div><div class="ah-menu-section">Grow Your Profile</div><button class="ah-menu-gold" onclick="ahProfileMenuAction(&#39;Verification&#39;)">✧ &nbsp; Get a Verified Badge</button><button class="ah-menu-gold" onclick="ahProfileMenuAction(&#39;Subscription&#39;)">☆ &nbsp; Subscription</button><button class="ah-menu-gold" onclick="ahProfileMenuAction(&#39;Boost Your Post&#39;)">↗ &nbsp; Boost Your Post</button><button class="ah-menu-gold" onclick="ahProfileMenuAction(&#39;Ads&#39;)">⚑ &nbsp; Ads</button><div class="ah-menu-divider"></div><button onclick="ahProfileMenuAction(&#39;Help&#39;)">? &nbsp; Help</button><button class="ah-menu-logout" onclick="ahProfileMenuAction(&#39;Logout&#39;)">⇥ &nbsp; Logout</button></div></details>';
  var back=document.createElement('button');back.type='button';back.className='secondary ah-profile-back';back.id='ahProfileBack';back.textContent='← Back';back.style.display='none';back.onclick=function(){showPage(returnPage||'home')};
  page.insertBefore(back,page.firstChild);page.insertBefore(hero,back.nextSibling);
  var tabs=document.createElement('div');tabs.className='ah-profile-tabs';tabs.id='ahProfileTabs';
@@ -3488,17 +3496,17 @@ function profileAuthRequired(action){
  if(currentUser())return true;
  returnPage=previousPage&&previousPage!=='profile'?previousPage:'home';
  showPage('profile');setAuthVisibility();
- note('Kora konti cyangwa winjire kugira ngo '+(action||'ukomeze')+'.');
+ note('Create an account or sign in to '+(action||'ukomeze')+'.');
  return false;
 }
 window.ahProfileEdit=function(){var editor=byId('ahProfileEditor');if(!currentUser()){profileAuthRequired('uhindure Profile');return}if(editor){editor.style.display='block';editor.scrollIntoView({behavior:'smooth',block:'start'})} };
 window.ahShareProfile=function(){var u=currentUser();if(!u){profileAuthRequired('usangize Profile');return}var url=location.origin+location.pathname+'?member='+encodeURIComponent(u.uid);if(navigator.share)navigator.share({title:'Afrishine Hub Profile',url:url}).catch(function(){});else if(navigator.clipboard)navigator.clipboard.writeText(url).then(function(){note('Profile link yakoporowe.')});else note(url)};
 window.ahProfileMenuAction=function(action){
  var editor=byId('ahProfileEditor');
- if(action==='Logout'){if(auth&&auth.signOut)auth.signOut().then(function(){showPage('profile');setAuthVisibility();note('Wasohotse muri konti.')}).catch(function(e){note(e.message)});return}
+ if(action==='Logout'){if(auth&&auth.signOut)auth.signOut().then(function(){showPage('profile');setAuthVisibility();note('You have signed out.')}).catch(function(e){note(e.message)});return}
  if(action==='Edit Profile'){window.ahProfileEdit();return}
  if(action==='Change Profile Photo'){if(!profileAuthRequired('uhindure ifoto'))return;var input=byId('ahProfilePhoto');if(input)input.click();else window.ahProfileEdit();return}
- if(action==='Verification'){if(!profileAuthRequired('usaba verification'))return;var v=byId('ahVerifyToggle'),wrap=byId('ahVerifyDetailsPanel');if(wrap)wrap.classList.remove('ah-hidden');if(v)v.scrollIntoView({behavior:'smooth',block:'center'});return}
+ if(action==='Verification'){window.afOpenGate('verificationGate');return}if(action==='Subscription'){window.afOpenGate('subscriptionGate');return}if(action==='Boost Your Post'||action==='Ads'){window.afOpenGate('subscriptionGate');return}
  if(action==='Settings'||action==='Privacy'){showPage('settings');return}
  if(action==='Change Password'){var email= currentUser()&&currentUser().email;if(email&&typeof resetEmailPassword==='function'){if(confirm('Kohereza email yo guhindura password?'))resetEmailPassword()}else note('Password settings zigaragara kuri email account.');return}
  if(action==='Notifications'){note('Notification settings zizongerwamo mu ntambwe ikurikira.');return}
@@ -3513,7 +3521,7 @@ async function renderOwnedPosts(mode){
   if(mode==='My Video')rows=rows.filter(function(p){return p.type==='video'||p.mediaType==='video'});
   if(mode==='Repost')rows=rows.filter(function(p){return p.isRepost===true});
   if(mode==='Private')rows=rows.filter(function(p){return p.visibility==='private'});
-  if(!rows.length){out.innerHTML='<p class="creator-hint">Nta makuru ahari muri '+safe(mode)+'.</p>';return}
+  if(!rows.length){out.innerHTML='<p class="creator-hint">There is no content in '+safe(mode)+'.</p>';return}
   out.innerHTML=rows.map(function(p){var media=p.mediaUrl?((p.mediaType==='video'||p.type==='video')?'<video controls playsinline preload="metadata" style="width:100%;max-height:280px;border-radius:12px" src="'+safe(p.mediaUrl)+'"></video>':'<img loading="lazy" style="width:100%;max-height:280px;object-fit:contain;border-radius:12px" src="'+safe(p.mediaUrl)+'">'):'';
    return '<article class="post-card"><div class="post-meta"><b>'+safe(p.authorName||u.displayName||'You')+'</b><span>'+safe(p.visibility||'public')+'</span></div><p class="post-body">'+safe(p.text||p.title||'')+'</p>'+media+'<div class="actions"><button class="secondary" onclick="ahSetVisibility(&#39;'+safe(p.id)+'&#39;,&#39;'+(p.visibility==='private'?'public':'private')+'&#39;)">'+(p.visibility==='private'?'Make Public':'Make Private')+'</button><button class="post-delete" onclick="ahDeleteOwnPost(&#39;'+safe(p.id)+'&#39;)">Delete</button></div></article>';
   }).join('');
@@ -3526,7 +3534,7 @@ async function renderLiked(){
   var snap=await d.collectionGroup('likes').where('uid','==',u.uid).limit(60).get();
   var docs=await Promise.all(snap.docs.map(async function(l){var parent=l.ref.parent.parent;if(!parent)return null;var p=await parent.get();return p.exists?Object.assign({id:p.id,kind:parent.parent.id},p.data()):null}));
   docs=docs.filter(Boolean);
-  out.innerHTML=docs.length?docs.map(function(p){return '<article class="post-card"><b>'+safe(p.authorName||'Afrishine Member')+'</b><p class="post-body">'+safe(p.text||'')+'</p><p class="creator-hint">Liked post</p></article>'}).join(''):'<p class="creator-hint">Nta posts urakunda kugeza ubu.</p>';
+  out.innerHTML=docs.length?docs.map(function(p){return '<article class="post-card"><b>'+safe(p.authorName||'Afrishine Member')+'</b><p class="post-body">'+safe(p.text||'')+'</p><p class="creator-hint">Liked post</p></article>'}).join(''):'<p class="creator-hint">You have not liked any posts yet.</p>';
  }catch(e){out.innerHTML='<p class="creator-hint">Likes ntizashoboye kwerekanwa. '+safe(e.message||'')+'</p>'}
 }
 async function renderSaved(){
@@ -3536,7 +3544,7 @@ async function renderSaved(){
   var snap=await d.collection('savedPosts').where('uid','==',u.uid).limit(60).get();
   var rows=await Promise.all(snap.docs.map(async function(x){var v=x.data();try{var p=await d.collection(v.kind||'posts').doc(v.postId).get();return p.exists?Object.assign({id:p.id},p.data()):null}catch(e){return null}}));
   rows=rows.filter(Boolean);
-  out.innerHTML=rows.length?rows.map(function(p){var media=p.mediaUrl?((p.mediaType==='video'||p.type==='video')?'<video controls playsinline style="width:100%;max-height:260px;border-radius:12px" src="'+safe(p.mediaUrl)+'"></video>':'<img loading="lazy" style="width:100%;max-height:260px;object-fit:contain;border-radius:12px" src="'+safe(p.mediaUrl)+'">'):'';return '<article class="post-card"><b>'+safe(p.authorName||'Afrishine Member')+'</b><p class="post-body">'+safe(p.text||'')+'</p>'+media+'</article>'}).join(''):'<p class="creator-hint">Nta posts wabika kugeza ubu.</p>';
+  out.innerHTML=rows.length?rows.map(function(p){var media=p.mediaUrl?((p.mediaType==='video'||p.type==='video')?'<video controls playsinline style="width:100%;max-height:260px;border-radius:12px" src="'+safe(p.mediaUrl)+'"></video>':'<img loading="lazy" style="width:100%;max-height:260px;object-fit:contain;border-radius:12px" src="'+safe(p.mediaUrl)+'">'):'';return '<article class="post-card"><b>'+safe(p.authorName||'Afrishine Member')+'</b><p class="post-body">'+safe(p.text||'')+'</p>'+media+'</article>'}).join(''):'<p class="creator-hint">You have not saved any posts yet.</p>';
  }catch(e){out.textContent=e.message||'Saved posts ntizabonetse.'}
 }
 window.ahProfileTab=function(tab){
@@ -3563,12 +3571,58 @@ window.openCreator=function(type){if(!profileAuthRequired('ukore post'))return;r
 var originalMarketBottom=window.marketBottom;
 window.marketBottom=function(which){if(which==='profile'){showPage('profile');return}return originalMarketBottom&&originalMarketBottom(which)};
 var originalMarketSell=window.marketOpenSell;
-window.marketOpenSell=function(){if(!profileAuthRequired('ushyire igicuruzwa kuri Marketplace'))return;return originalMarketSell&&originalMarketSell()};
+window.marketOpenSell=function(){if(!profileAuthRequired('publish a product on the Marketplace.'))return;return originalMarketSell&&originalMarketSell()};
 var originalLoveSave=window.saveLoveProfile;
 if(typeof originalLoveSave==='function')window.saveLoveProfile=function(){if(!profileAuthRequired('ukore Love Connection'))return;return originalLoveSave()};
 document.addEventListener('DOMContentLoaded',function(){ensureProfile();setAuthVisibility()});
 window.addEventListener('load',function(){setTimeout(function(){ensureProfile();setAuthVisibility();updateDashboard()},1200)});
 if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChanged(function(){setTimeout(function(){ensureProfile();setAuthVisibility();updateDashboard();if(currentUser())window.ahProfileTab(activeTab)},350)});
+})();
+</script>
+
+
+<style>
+/* Profile menu and eligibility screens */
+.ah-profile-more>summary{display:none;width:48px;height:48px;border:2px solid #e6aa00;background:#171d29;color:#ffbd19;font-size:27px;box-shadow:0 0 0 7px #d99e1720}
+.ah-profile-menu{width:min(300px,82vw);max-height:min(78vh,720px);overflow-y:auto;padding:12px;background:#171e2d;border:1px solid #344057;border-radius:20px}
+.ah-menu-section{padding:8px 11px;color:#929db2;font-size:13px;font-weight:800;letter-spacing:.5px}
+.ah-profile-menu button{min-height:46px;padding:10px 12px;font-size:15px;border-radius:10px}
+.ah-profile-menu button:active{background:#30394b}
+.ah-profile-menu .ah-menu-gold{color:#ffc32b}
+.ah-profile-menu .ah-menu-logout{color:#ff7777}
+.ah-menu-divider{height:1px;background:#30394b;margin:9px 4px}
+.eligibility-panel{max-width:600px;margin:24px auto!important;text-align:center;padding:25px!important}
+.eligibility-panel h2{font-size:23px;margin:12px 0}
+.eligibility-panel p{margin:10px 0 18px;line-height:1.7}
+.eligibility-panel .gold{width:100%;max-width:340px}
+@media(max-width:420px){.ah-profile-menu{width:min(285px,84vw)}.ah-profile-menu button{font-size:14px;min-height:44px}}
+</style>
+<script id="afrishine-release-readiness-fixes">
+(function(){
+ 'use strict';
+ var gateReturnPage='home';
+ window.afOpenGate=function(id){var active=document.querySelector('.page.active');gateReturnPage=active&&active.id!=='verificationGate'&&active.id!=='subscriptionGate'?active.id:(window.afPreviousPage||'home');if(typeof window.showPage==='function')window.showPage(id)};
+ window.afReturnFromGate=function(){var target=gateReturnPage||'home';if(typeof window.showPage==='function')window.showPage(target)};
+ // Gate unfinished premium / verified-only areas without exposing unfinished screens.
+ var previousShowPage=window.showPage;
+ if(typeof previousShowPage==='function'){
+  window.showPage=function(id){
+   if(id==='wallet'||id==='jobs'){window.afOpenGate('verificationGate');return}
+   if(id==='academy'||id==='travel'){window.afOpenGate('subscriptionGate');return}
+   return previousShowPage(id);
+  };
+ }
+ // Profile header control becomes the three-dot profile menu only while Profile is open.
+ var headerMenu=document.querySelector('.header-actions .menu-button');
+ function syncHeaderMenu(){if(!headerMenu)return;var onProfile=!!document.getElementById('profile')&&document.getElementById('profile').classList.contains('active');headerMenu.textContent=onProfile?'⋮':'☰';headerMenu.setAttribute('aria-label',onProfile?'Open profile menu':'Open main menu');headerMenu.title=onProfile?'Profile options':'Main menu'}
+ if(headerMenu){headerMenu.addEventListener('click',function(e){var onProfile=document.getElementById('profile')&&document.getElementById('profile').classList.contains('active');if(!onProfile)return;e.stopImmediatePropagation();var details=document.getElementById('ahProfileMore');if(details)details.open=!details.open;},true)}
+ var observer=new MutationObserver(syncHeaderMenu);document.querySelectorAll('.page').forEach(function(el){observer.observe(el,{attributes:true,attributeFilter:['class']})});syncHeaderMenu();
+ // Close the profile dropdown after choosing an action.
+ document.addEventListener('click',function(e){var b=e.target.closest('.ah-profile-menu button');if(b){var d=document.getElementById('ahProfileMore');if(d)d.open=false}});
+ // Ensure English labels and confirmation behavior are consistent.
+ var confirmField=document.getElementById('authConfirmPassword');if(confirmField){confirmField.addEventListener('input',function(){var p=document.getElementById('authPassword');confirmField.setCustomValidity(p&&confirmField.value&&p.value!==confirmField.value?'Passwords do not match.':'')})}
+ // Keep the profile's guest registration options visible and Pi login limited to Pi Browser.
+ var piArea=document.getElementById('piLoginArea');if(piArea){var pi=false;try{pi=typeof isPiBrowser==='function'&&isPiBrowser()}catch(e){}if(!pi){var pp=piArea.closest('.panel');if(pp)pp.style.display='none'}}
 })();
 </script>
 
