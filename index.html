@@ -413,7 +413,7 @@ a.ct-btn:active{background:#1a2030}
 <button class="academy-home-card" onclick="showPage('academy')"><div class="academy-home-info"><div class="academy-home-icon">🎓</div><div class="academy-home-text"><strong>LEARN WITH AFRISHINE ACADEMY</strong><small>Learn new skills, explore knowledge and grow with Afrishine Academy.</small></div></div><span class="academy-home-arrow">→</span></button>
 <button class="love-home-card" onclick="showPage('love')"><div class="love-home-info"><div class="love-home-icon">❤️</div><div class="love-home-text"><strong>LOVE CONNECTION</strong><small>Connect, discover and build meaningful relationships.</small></div></div><span class="love-home-arrow">→</span></button></div>
 <h2 class="dashboard-heading">Explore Afrishine Hub</h2>
-<section class="ast-wallet-card" aria-label="Afrishine Token wallet"><div class="ast-coin">AST</div><div class="ast-wallet-info"><div class="ast-wallet-label">AFRISHINE TOKEN</div><h2>My Wallet</h2><p>Your wallet is ready. Your AST balance and transaction history will appear here after your account verification is complete.</p></div><button class="secondary wallet-open" onclick="showPage('wallet')">Open My Wallet →</button></section>
+<section class="ast-wallet-card" aria-label="Afrishine Token wallet"><div class="ast-coin">AST</div><div class="ast-wallet-info"><div class="ast-wallet-label">AFRISHINE TOKEN</div><h2>My Wallet</h2><p>Your AST balance and transaction history will appear here once wallet services launch.</p></div><button class="secondary wallet-open" onclick="showPage('wallet')">Open My Wallet →</button></section>
 <section class="home-video-section" aria-label="Afrishine video feed">
 <div class="home-video-heading"><div><h2>Videos For You ▶</h2><p>Discover short videos from the Afrishine community.</p></div><span class="eyebrow">FOR YOU</span></div>
 <div class="home-video-feed" id="homeVideoFeed"><div class="video-empty"><div class="empty-icon">🎬</div><strong>No videos yet</strong><p>When members publish videos, they will appear here. Videos play silently while you scroll; tap a video to watch it full screen.</p></div></div>
@@ -486,7 +486,7 @@ a.ct-btn:active{background:#1a2030}
     <label class="market-label" for="marketProductCurrency">Price Currency</label><select class="field" id="marketProductCurrency"><option value="RWF">FRW · Rwandan Franc</option><option value="USD">USD · US Dollar ($)</option></select><label class="market-label" for="marketProductPrice">Product Price</label><input class="field" id="marketProductPrice" type="number" min="1" step="any" inputmode="decimal" placeholder="e.g. 20">
     <label class="market-label" for="marketProductCondition">Condition</label><select class="field" id="marketProductCondition"><option value="New">New</option><option value="Used">Used</option></select>
     <label class="market-label" for="marketProductCategory">Category</label><select class="field" id="marketProductCategory"><option>Home Appliances</option><option>Electronics</option><option>CCTV & Security</option><option>Phones & Accessories</option><option>Fashion & Shoes</option><option>Furniture</option><option>Vehicles</option><option>Beauty & Health</option><option>Construction</option><option>Agriculture</option><option>Sports</option><option>Other</option></select>
-    <label class="market-label" for="marketProductLocation">Location</label><select class="field" id="marketProductLocation"><option value="Rwanda, Kigali"> Rwanda/Kigali</option><option value="Rwamagana">Rwamagana</option> </option><option value=" Gicumbi">Gicumbi </option><option value=", Musanze">Musanze </option><option value=", Huye">Huye </option><option value=", Rubavu">Rubavu </option><option value=" Muhanga">Muhanga </option><option value=" Nyagatare">Nyagatare </option><option value=", Other">Other </option></select>
+    <label class="market-label" for="marketProductLocation">Location</label><select class="field" id="marketProductLocation"><option value="Rwanda, Kigali">Kigali, Rwanda</option><option value="Rwanda, Rwamagana">Rwamagana, Rwanda</option><option value="Rwanda, Gicumbi">Gicumbi, Rwanda</option><option value="Rwanda, Musanze">Musanze, Rwanda</option><option value="Rwanda, Huye">Huye, Rwanda</option><option value="Rwanda, Rubavu">Rubavu, Rwanda</option><option value="Rwanda, Muhanga">Muhanga, Rwanda</option><option value="Rwanda, Nyagatare">Nyagatare, Rwanda</option><option value="Rwanda, Other">Other, Rwanda</option></select>
     <button class="gold market-publish-btn" id="marketPublishButton" onclick="marketPublishProduct()">Done · Publish Product</button>
     <p class="creator-hint" id="marketUploadStatus" aria-live="polite"></p>
   </div>
@@ -1241,7 +1241,9 @@ function deleteMarketplacePost(id) {
             notice('You can only delete your own post.');
             return;
         }
+        const marketPostData = snap.data();
         yield ref.delete();
+        [].concat(marketPostData.images || [], marketPostData.imageUrls || [], marketPostData.videoUrl ? [marketPostData.videoUrl] : []).forEach(function (mediaUrl) { if (typeof workerDelete === 'function') workerDelete(mediaUrl).catch(function () { }); });
         notice('Marketplace post deleted.');
         loadMarketplacePosts(true);
     }
@@ -1747,7 +1749,9 @@ function deleteMyLovePost(id) {
             notice('You can only delete your own post.');
             return;
         }
+        const lovePostData = snap.data();
         yield ref.delete();
+        if (lovePostData.imageKey && typeof workerDelete === 'function') workerDelete(lovePostData.imageKey).catch(function () { });
         notice('Love Connection post deleted.');
     }
     catch (e) {
@@ -2237,7 +2241,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         const res = yield fetch(url, { method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': file.type }, body: file });
         const data = yield res.json().catch(() => ({}));
         if (!res.ok || !data.success)
-            throw new Error(data.error || 'Upload failed. Please try again.');
+            { afWorkerFailure(data, res.status); throw new Error(data.error || 'Upload failed. Please try again.'); }
         resolve(data);
     }
     catch (e) {
@@ -2260,7 +2264,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         }
         catch (e) {
             console.warn('Image compression skipped', e);
-            return file;
+        if (!/^image\/(jpeg|png|webp)$/.test(file.type)) {
+            throw new Error(afMediaProblem('photo'));
+        }
+        return file;
         } });
     }
     function checkDailyMedia(type) {
@@ -2279,10 +2286,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             const d = yield r.json();
             const used = Number((_c = (_b = (_a = d.usedBytes) !== null && _a !== void 0 ? _a : d.used) !== null && _b !== void 0 ? _b : d.totalBytes) !== null && _c !== void 0 ? _c : 0);
             const limit = Number((_e = (_d = d.limitBytes) !== null && _d !== void 0 ? _d : d.limit) !== null && _e !== void 0 ? _e : STORAGE_LIMIT_BYTES);
-            if (used >= Math.min(limit, STORAGE_LIMIT_BYTES)) {
-                say('Media uploads are temporarily unavailable. Please try again later.');
-                return false;
-            }
+            if (d.canUpload === false || (d.canUpload === undefined && used >= Math.min(limit, STORAGE_LIMIT_BYTES))) {
+            afPopup({ icon: '📦', message: window.AF_QUOTA_MESSAGE });
+            return false;
+        }
             return true;
         }
         catch (e) {
@@ -2488,7 +2495,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         f.after(hint);
     } }
     function videoDuration(file) {
-        return __awaiter(this, void 0, void 0, function* () { return new Promise((resolve, reject) => { const v = document.createElement('video'); v.preload = 'metadata'; const url = URL.createObjectURL(file); v.onloadedmetadata = () => { const d = v.duration; URL.revokeObjectURL(url); resolve(d); }; v.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Could not read the video duration.')); }; v.src = url; }); });
+        return __awaiter(this, void 0, void 0, function* () { return new Promise((resolve, reject) => { const v = document.createElement('video'); v.preload = 'metadata'; const url = URL.createObjectURL(file); v.onloadedmetadata = () => { const d = v.duration; if (d === Infinity) { v.ontimeupdate = () => { v.ontimeupdate = null; const real = v.duration; URL.revokeObjectURL(url); resolve(isFinite(real) ? real : 0); }; v.currentTime = 1e7; } else { URL.revokeObjectURL(url); resolve(d); } }; v.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Could not read the video duration.')); }; v.src = url; }); });
     }
     function uploadGeneralMedia() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -2503,17 +2510,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                 showPage('profile');
                 return;
             }
-            if (file.size > 100 * 1024 * 1024) {
-                say('This file is larger than the 100 MB limit.');
-                return;
-            }
+            if (type !== 'video' && file.size > 100 * 1024 * 1024) {
+        say('This file is larger than the 100 MB limit.');
+        return;
+    }
             if (!(yield checkDailyMedia(type)))
                 return;
             if (!(yield checkWorkerQuota()))
                 return;
             let duration = 0;
             if (type === 'video') {
-                duration = yield videoDuration(file);
+                try {
+            duration = yield videoDuration(file);
+        }
+        catch (e) {
+            afMediaProblem('video');
+            return;
+        }
                 if (duration > MAX_FREE_VIDEO_SECONDS) {
                     say('Videos longer than 1 minute are not supported yet. Please upload a shorter video.');
                     return;
@@ -2525,7 +2538,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                 button.textContent = 'Uploading…';
             }
             try {
-                const uploadFile = type === 'photo' ? yield compressImage(file) : file;
+                let uploadFile;
+        if (type === 'photo') {
+            uploadFile = yield compressImage(file);
+        }
+        else {
+            uploadFile = yield afPrepareVideo(file, function (text) { if (button) button.textContent = text; });
+            if (button) button.textContent = 'Uploading…';
+        }
                 const up = yield workerUpload(uploadFile);
                 const caption = ($('postText') && $('postText').value.trim()) || '';
                 const title = ($('ahMediaTitle') && $('ahMediaTitle').value.trim()) || '';
@@ -3379,7 +3399,7 @@ async function marketUpload(file){
  var token=await u.getIdToken();
  var response=await fetch(marketWorker+'/upload?filename='+encodeURIComponent(file.name||'market-media'),{method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':file.type||'application/octet-stream'},body:file});
  var data=await response.json().catch(function(){return {}});
- if(!response.ok||!data.success||!data.url)throw new Error(data.error||'Media upload failed. Please try again.');
+ if(!response.ok||!data.success||!data.url){afWorkerFailure(data,response.status);throw new Error(data.error||'Media upload failed. Please try again.')}
  return data.url;
 }
 async function marketCompress(file){
@@ -3392,12 +3412,12 @@ window.marketPublishProduct=async function(){
  var video=document.getElementById('marketProductVideo').files[0];
  var title=document.getElementById('marketProductTitle').value.trim(),description=document.getElementById('marketProductDescription').value.trim(),price=Number(document.getElementById('marketProductPrice').value),locationText=document.getElementById('marketProductLocation').value;
  if(photos.length<3){mNotice('Please select at least 3 product photos.');return}
- if(video&&(!/^video\//.test(video.type)||video.size>100*1024*1024)){mNotice('Please choose a valid video smaller than 100 MB.');return}
+ if(video&&!/^video\//.test(video.type||'')&&!/\.(mp4|mov|m4v|webm|3gp)$/i.test(video.name||'')){mNotice('Please choose a valid video file.');return}
  if(!title||description.length<8||!price||price<1){mNotice('Please enter a valid title, description and price.');return}
  var btn=document.getElementById('marketPublishButton'),status=document.getElementById('marketUploadStatus');btn.disabled=true;status.textContent='Uploading photos…';
  try{
   var imageUrls=[];for(var i=0;i<photos.length;i++){status.textContent='Uploading photo '+(i+1)+' / '+photos.length;imageUrls.push(await marketUpload(await marketCompress(photos[i])))}
-  var videoUrl='';if(video){status.textContent='Uploading video…';videoUrl=await marketUpload(video)}
+  var videoUrl='';if(video){status.textContent='Uploading video…';videoUrl=await marketUpload(await afPrepareVideo(video,function(t){status.textContent=t}))}
   status.textContent='Saving product…';
   await mDb().collection('marketplacePosts').add({uid:mUser().uid,authorName:mUser().displayName||'Afrishine Seller',authorPhoto:mUser().photoURL||'',type:'sell',product:true,title:title,description:description,text:description,price:(document.getElementById('marketProductCurrency').value==='USD'?'$':'FRW ')+String(price),condition:document.getElementById('marketProductCondition').value,category:document.getElementById('marketProductCategory').value,location:locationText,images:imageUrls,videoUrl:videoUrl,createdAt:firebase.firestore.FieldValue.serverTimestamp(),status:'active'});
   ['marketProductTitle','marketProductDescription','marketProductPrice','marketProductPhotos','marketProductVideo'].forEach(function(id){document.getElementById(id).value=''});
@@ -3871,6 +3891,220 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
     };
     var prevShowPage = window.showPage;
     window.showPage = function (id) { hideToast(); closeGate(); return prevShowPage(id); };
+    /* ---- Cloudflare media cleanup: frees storage when a post is deleted ---- */
+    window.workerDelete = function (keyOrUrl) {
+        var base = 'https://afrishine-media.usherluckyelie.workers.dev';
+        var key = String(keyOrUrl || '');
+        if (key.indexOf(base + '/media/') === 0) key = key.slice((base + '/media/').length);
+        try { key = decodeURIComponent(key); } catch (_) { }
+        var u = (typeof currentFirebaseUser !== 'undefined') ? currentFirebaseUser : null;
+        if (!u || !key) return Promise.reject(new Error('Missing user or file'));
+        return u.getIdToken().then(function (token) {
+            return fetch(base + '/delete', { method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify({ key: key }) });
+        }).then(function (r) {
+            return r.json().catch(function () { return {}; }).then(function (d) { if (!r.ok || !d.success) throw new Error(d.error || 'Delete failed'); return d; });
+        });
+    };
+
+    /* ---- Upload helpers: friendly popups, video conversion, format checks ---- */
+    window.AF_QUOTA_MESSAGE = 'You have already used your credits. Please try uploading again after one week, or verify your account to upload immediately.';
+    window.AF_MEDIA = { maxBytes: 100 * 1024 * 1024, targetBytes: 92 * 1024 * 1024, maxConvertSeconds: 120, maxVideoBps: 16000000, audioBps: 128000, maxSide: 1920, fps: 30 };
+    var MEDIA_WORKER_URL = 'https://afrishine-media.usherluckyelie.workers.dev';
+    var MSG_VIDEO = "This video format can't be processed. Please edit it and export it as MP4 (H.264), then upload it again.";
+    var MSG_PHOTO = "This photo format can't be processed. Please edit it and save it as JPG or PNG, then upload it again.";
+    function plain(text) { return String(text).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+    window.afPopup = function (opts) {
+        window.__afPopupMsg = opts.message;
+        window.__afPopupAt = Date.now();
+        openGate((opts.icon ? '<div class="gate-icon" aria-hidden="true">' + opts.icon + '</div>' : '') + (opts.title ? '<h2>' + plain(opts.title) + '</h2>' : '') + '<p>' + plain(opts.message) + '</p>');
+    };
+    var prevNotice = window.notice;
+    window.notice = function (text) {
+        if (text && window.__afPopupMsg === text && Date.now() - (window.__afPopupAt || 0) < 4000) return;
+        return prevNotice(text);
+    };
+    window.afMediaProblem = function (kind) {
+        var message = kind === 'photo' ? MSG_PHOTO : MSG_VIDEO;
+        window.afPopup({ icon: '🛠️', title: 'Edit needed', message: message });
+        return message;
+    };
+    window.afWorkerFailure = function (data, status) {
+        var code = data && data.code;
+        if (code === 'STORAGE_LIMIT_REACHED') window.afPopup({ icon: '📦', message: window.AF_QUOTA_MESSAGE });
+        else if (code === 'DAILY_LIMIT_REACHED') window.afPopup({ icon: '⏳', message: data.error });
+        else if (code === 'FILE_TYPE_NOT_ALLOWED') window.afPopup({ icon: '🛠️', title: 'Edit needed', message: "This file format can't be processed. Please edit it and export it as JPG, PNG or MP4, then upload it again." });
+        else if (code === 'FILE_TOO_LARGE') window.afPopup({ icon: '🛠️', title: 'Edit needed', message: 'This file is larger than the 100 MB limit. Please trim or compress it, then upload it again.' });
+    };
+    window.afCanUpload = function () {
+        var u = (typeof currentFirebaseUser !== 'undefined') ? currentFirebaseUser : null;
+        if (!u) return Promise.resolve(true);
+        return u.getIdToken().then(function (token) {
+            return fetch(MEDIA_WORKER_URL + '/usage', { headers: { Authorization: 'Bearer ' + token } });
+        }).then(function (r) {
+            if (!r.ok) return true;
+            return r.json().then(function (d) {
+                if (d.canUpload === false) { window.afPopup({ icon: '📦', message: window.AF_QUOTA_MESSAGE }); return false; }
+                return true;
+            });
+        }).catch(function () { return true; });
+    };
+    function inferVideoType(file) {
+        var t = (file.type || '').toLowerCase();
+        if (t.indexOf('video/') === 0) return t;
+        var m = /\.([a-z0-9]+)$/i.exec(file.name || '');
+        var ext = m ? m[1].toLowerCase() : '';
+        return ({ mp4: 'video/mp4', m4v: 'video/mp4', mov: 'video/quicktime', webm: 'video/webm' })[ext] || t;
+    }
+    function hasFourCC(bytes, cc) {
+        var a = cc.charCodeAt(0), b = cc.charCodeAt(1), c = cc.charCodeAt(2), d = cc.charCodeAt(3);
+        for (var i = 0; i < bytes.length - 3; i++) { if (bytes[i] === a && bytes[i + 1] === b && bytes[i + 2] === c && bytes[i + 3] === d) return true; }
+        return false;
+    }
+    /* iPhone HEVC (H.265) videos play on iPhones but not on many other phones, so they are converted to H.264. */
+    function looksLikeHevc(file) {
+        var size = file.size, head = Math.min(size, 2 * 1024 * 1024), tail = Math.min(size, 6 * 1024 * 1024);
+        return Promise.all([file.slice(0, head).arrayBuffer(), file.slice(Math.max(0, size - tail), size).arrayBuffer()]).then(function (parts) {
+            return parts.some(function (buf) { var b = new Uint8Array(buf); return hasFourCC(b, 'hvc1') || hasFourCC(b, 'hev1') || hasFourCC(b, 'dvh1'); });
+        }).catch(function () { return false; });
+    }
+    /* Can this browser open the file at all? */
+    function checkPlayable(file) {
+        return new Promise(function (resolve) {
+            var v = document.createElement('video'), url = URL.createObjectURL(file), done = false;
+            function end(ok) { if (done) return; done = true; clearTimeout(timer); try { v.removeAttribute('src'); v.load(); } catch (_) { } URL.revokeObjectURL(url); resolve(ok); }
+            var timer = setTimeout(function () { end(false); }, 15000);
+            v.preload = 'auto'; v.muted = true;
+            v.onloadeddata = function () { end(!!v.videoWidth); };
+            v.onerror = function () { end(false); };
+            v.src = url;
+        });
+    }
+    function pickRecorderMime() {
+        var list = ['video/mp4;codecs=avc1.640028,mp4a.40.2', 'video/mp4;codecs=avc1.4d0028,mp4a.40.2', 'video/mp4;codecs=avc1,mp4a.40.2', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'];
+        for (var i = 0; i < list.length; i++) { try { if (MediaRecorder.isTypeSupported(list[i])) return list[i]; } catch (_) { } }
+        return '';
+    }
+    function transcodeVideo(file, onStatus) {
+        return new Promise(function (resolve, reject) {
+            var M = window.AF_MEDIA, finished = false, started = false;
+            var url = URL.createObjectURL(file), video = document.createElement('video');
+            var canvas, ctx, recorder, ac, stream, chunks = [], stallTimer = null, loadTimer = null, lastTime = -1, stalls = 0, rafId = 0;
+            video.playsInline = true; video.setAttribute('playsinline', ''); video.preload = 'auto';
+            video.style.cssText = 'position:fixed;left:-9999px;top:0;width:2px;height:2px;opacity:0;pointer-events:none';
+            document.body.appendChild(video);
+            function cleanup() {
+                clearTimeout(loadTimer); clearInterval(stallTimer);
+                if (rafId) cancelAnimationFrame(rafId);
+                try { video.pause(); } catch (_) { }
+                try { if (stream) stream.getTracks().forEach(function (t) { t.stop(); }); } catch (_) { }
+                try { if (ac && ac.state !== 'closed') ac.close(); } catch (_) { }
+                try { video.removeAttribute('src'); video.load(); } catch (_) { }
+                if (video.parentNode) video.parentNode.removeChild(video);
+                URL.revokeObjectURL(url);
+            }
+            function fail(message) {
+                if (finished) return;
+                finished = true;
+                try { if (recorder && recorder.state !== 'inactive') { recorder.onstop = null; recorder.stop(); } } catch (_) { }
+                cleanup();
+                window.afPopup({ icon: '🛠️', title: 'Edit needed', message: message });
+                reject(new Error(message));
+            }
+            if (!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) {
+                finished = true; cleanup();
+                var m = 'Your browser cannot optimize this video. Please trim it or export it under 100 MB (MP4), then upload it again.';
+                window.afPopup({ icon: '🛠️', title: 'Edit needed', message: m });
+                return reject(new Error(m));
+            }
+            function draw() {
+                if (finished || video.ended) return;
+                try { ctx.drawImage(video, 0, 0, canvas.width, canvas.height); } catch (_) { }
+                if (video.requestVideoFrameCallback) video.requestVideoFrameCallback(draw); else rafId = requestAnimationFrame(draw);
+            }
+            function start() {
+                if (started || finished) return;
+                started = true; clearTimeout(loadTimer);
+                if (!video.videoWidth || !video.videoHeight) return fail(MSG_VIDEO);
+                if (video.duration === Infinity) {
+                    /* Some browser-made WebM files report no length: seek to the end to learn it. */
+                    video.ontimeupdate = function () { video.ontimeupdate = null; video.onseeked = function () { video.onseeked = null; begin(video.duration); }; video.currentTime = 0; };
+                    video.currentTime = 1e7;
+                    return;
+                }
+                begin(video.duration);
+            }
+            function begin(d) {
+                var vw = video.videoWidth, vh = video.videoHeight;
+                if (!isFinite(d) || d <= 0 || !vw || !vh) return fail(MSG_VIDEO);
+                if (d > M.maxConvertSeconds) return fail('This video is too long to optimize automatically. Please trim it or export it under 100 MB, then upload it again.');
+                var videoBps = Math.min(M.maxVideoBps, Math.floor((M.targetBytes * 8 * 0.9) / d - M.audioBps));
+                if (videoBps < 1000000) return fail('This video is too long to keep its quality under 100 MB. Please trim it, then upload it again.');
+                var scale = Math.min(1, M.maxSide / Math.max(vw, vh));
+                canvas = document.createElement('canvas');
+                canvas.width = Math.max(2, Math.round(vw * scale / 2) * 2);
+                canvas.height = Math.max(2, Math.round(vh * scale / 2) * 2);
+                ctx = canvas.getContext('2d', { alpha: false });
+                stream = canvas.captureStream(M.fps);
+                try {
+                    var AC = window.AudioContext || window.webkitAudioContext;
+                    ac = new AC();
+                    if (ac.resume) ac.resume();
+                    var source = ac.createMediaElementSource(video), dest = ac.createMediaStreamDestination();
+                    source.connect(dest);
+                    dest.stream.getAudioTracks().forEach(function (t) { stream.addTrack(t); });
+                } catch (_) { /* no audio track available */ }
+                var mime = pickRecorderMime();
+                try {
+                    recorder = new MediaRecorder(stream, mime ? { mimeType: mime, videoBitsPerSecond: videoBps, audioBitsPerSecond: M.audioBps } : { videoBitsPerSecond: videoBps });
+                } catch (_) { return fail(MSG_VIDEO); }
+                var outType = (recorder.mimeType || mime || 'video/webm').split(';')[0];
+                recorder.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
+                recorder.onerror = function () { fail(MSG_VIDEO); };
+                recorder.onstop = function () {
+                    if (finished) return;
+                    var blob = new Blob(chunks, { type: outType });
+                    if (!blob.size) return fail(MSG_VIDEO);
+                    if (blob.size > M.maxBytes) return fail('We could not compress this video below 100 MB without losing quality. Please trim it, then upload it again.');
+                    finished = true; cleanup();
+                    var base = (file.name || 'video').replace(/\.[^.]+$/, '').replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 60) || 'video';
+                    resolve(new File([blob], base + (outType === 'video/mp4' ? '.mp4' : '.webm'), { type: outType, lastModified: Date.now() }));
+                };
+                recorder.start(1000);
+                video.onended = function () { setTimeout(function () { if (recorder.state !== 'inactive') recorder.stop(); }, 300); };
+                video.ontimeupdate = function () { if (onStatus) onStatus('Optimizing video… ' + Math.min(99, Math.round(video.currentTime / d * 100)) + '%'); };
+                stallTimer = setInterval(function () {
+                    if (video.currentTime === lastTime) { stalls++; if (stalls >= 6) fail('Video optimization stopped. Please keep this screen open and try again.'); }
+                    else { stalls = 0; lastTime = video.currentTime; }
+                }, 4000);
+                if (onStatus) onStatus('Optimizing video… 0%');
+                video.play().then(draw).catch(function () { fail('Your browser blocked video optimization. Please tap Post again, or export the video under 100 MB and upload it again.'); });
+            }
+            video.onloadeddata = start;
+            video.onerror = function () { if (!started) fail(MSG_VIDEO); };
+            loadTimer = setTimeout(function () { if (!started) fail(MSG_VIDEO); }, 20000);
+            video.src = url;
+        });
+    }
+    /* Videos up to 100 MB in MP4/WebM/MOV (H.264) upload as they are. Bigger videos, other
+       formats and iPhone HEVC videos are converted to a smaller H.264 video first. */
+    window.afPrepareVideo = function (file, onStatus) {
+        var M = window.AF_MEDIA, type = inferVideoType(file);
+        var allowed = ['video/mp4', 'video/webm', 'video/quicktime'].indexOf(type) !== -1;
+        var big = file.size > M.maxBytes;
+        var check = (!big && allowed && type !== 'video/webm') ? looksLikeHevc(file) : Promise.resolve(false);
+        return check.then(function (hevc) {
+            if (allowed && !big && !hevc) {
+                return checkPlayable(file).then(function (ok) {
+                    if (!ok) { window.afMediaProblem('video'); throw new Error(MSG_VIDEO); }
+                    return type === file.type ? file : new File([file], file.name || 'video', { type: type, lastModified: file.lastModified });
+                });
+            }
+            return window.afCanUpload().then(function (ok) {
+                if (!ok) throw new Error(window.AF_QUOTA_MESSAGE);
+                return transcodeVideo(file, onStatus);
+            });
+        });
+    };
     /* Android / browser Back button moves between pages */
     window.addEventListener('popstate', function () {
         closeGate(); hideToast();
