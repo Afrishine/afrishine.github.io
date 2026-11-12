@@ -151,50 +151,7 @@ body{font-size:16px}
 .academy-home-text strong{display:block;color:#ffd46d;font-size:16px;font-weight:900}
 .academy-home-text small{display:block;margin-top:4px;color:#e0d7c4;font-size:12px;line-height:1.45}
 .academy-home-arrow{color:#ffd46d;font-size:24px}
-.academy-dashboard{margin:-2px 0 22px;color:#f5f6fb}
-.academy-topbar{display:flex;align-items:center;gap:12px;padding:15px 14px;background:#1b1e2d;border:1px solid #292d3e;border-radius:18px}
-.academy-brand-mark{width:48px;height:48px;display:grid;place-items:center;border:2px solid #dcb65e;border-radius:15px;color:#e9c46f;font-size:25px;flex-shrink:0}
-.academy-brand-name{font-size:21px;line-height:1.08;font-weight:900;flex:1}
-.academy-head-action{width:43px;height:43px;border-radius:50%;border:1px solid #dcb65e;background:#202538;color:#e9c46f;font-size:20px}
-.academy-welcome{margin:16px 0 22px;padding:23px 18px;border:1px solid #292d3e;border-radius:18px;background:linear-gradient(145deg,#191d2d,#111521)}
-.academy-kicker{color:#e9c46f;font-size:12px;font-weight:850;letter-spacing:2px}
-.academy-welcome h2{font-size:29px;line-height:1.12;margin:12px 0 22px;color:#fff}
-.academy-categories{display:flex;gap:9px;flex-wrap:wrap}
-.academy-categories button{min-width:92px;padding:10px 17px;border:1px solid #9c824c;border-radius:11px;background:#202536;color:#e7c574;font-weight:800}
-.academy-categories button.active{background:#e9c46f;color:#171925;border-color:#e9c46f}
-.academy-section-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:22px 2px 13px}
-.academy-section-heading h3{font-size:22px;margin:0;color:#fff}
-.academy-see-all{border:0;background:transparent;color:#e9c46f;font-weight:850;font-size:15px}
-.academy-course-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
-.academy-course-card{min-width:0;padding:10px;border:1px solid #645334;border-radius:15px;background:#171b28;box-shadow:0 5px 16px #0003}
-.academy-course-art{height:112px;border-radius:11px;display:grid;place-items:center;overflow:hidden;background:linear-gradient(135deg,#14243a,#27354a);border:1px solid #394253;font-size:40px;color:#e9c46f}
-.academy-course-card:nth-child(2) .academy-course-art{background:linear-gradient(135deg,#242b3b,#49391e)}
-.academy-course-card:nth-child(3) .academy-course-art{background:linear-gradient(135deg,#172d40,#243d50)}
-.academy-course-card:nth-child(4) .academy-course-art{background:linear-gradient(135deg,#3a3028,#26394a)}
-.academy-course-card h4{font-size:14px;line-height:1.25;margin:11px 2px 6px;color:#fff}
-.academy-course-card p{font-size:12px;text-align:center;color:#c2c6d1;margin:0 0 10px}
-.academy-course-status{display:block;text-align:center;color:#e9c46f;font-size:11px;font-weight:800;margin-top:8px}
-.academy-course-placeholder{width:100%;border:0;border-radius:8px;padding:8px;background:#2a2d38;color:#e9c46f;font-size:11px;font-weight:800}
-.academy-bottom-nav{display:flex;justify-content:space-between;gap:4px;margin:24px 0 14px;padding:8px 4px;border:1px solid #343a49;border-radius:16px;background:#151a26}
-.academy-bottom-nav button{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:5px;padding:9px 2px;border:1px solid transparent;border-radius:12px;background:transparent;color:#aeb3c0}
-.academy-bottom-nav button span{font-size:25px;line-height:1}
-.academy-bottom-nav button small{font-size:10px;font-weight:750}
-.academy-bottom-nav button.active{color:#f0c86d;background:#292719;border-color:#393324}
-.academy-nav-note{color:#9ca4b5!important;text-align:center;font-size:12px!important;margin:10px 0 0}
-@media(max-width:380px){.academy-course-grid{gap:9px}.academy-course-art{height:94px}.academy-course-card{padding:8px}.academy-welcome h2{font-size:25px}.academy-bottom-nav button small{font-size:9px}}
 /* Academy gets its own bottom navigation; the Hub navigation returns on exit. */
-body.academy-active{padding-bottom:112px}
-body.academy-active .bottom-nav{display:none}
-body.academy-active #academy{padding-bottom:125px}
-body.academy-active .academy-bottom-nav{position:fixed;z-index:15;left:50%;bottom:calc(7px + env(safe-area-inset-bottom));transform:translateX(-50%);width:calc(100% - 24px);max-width:956px;margin:0;padding:8px 5px;background:#151a26;box-shadow:0 -8px 28px #0008;border-color:#343a49}
-.academy-course-card{cursor:pointer;transition:transform .16s ease,border-color .16s ease}
-.academy-course-card:active{transform:scale(.985);border-color:#e9c46f}
-.academy-course-art{height:145px;font-size:48px}
-.academy-course-card h4{font-size:16px;min-height:40px}
-.academy-course-card p{font-size:14px;margin:0 0 12px}
-.academy-course-placeholder{min-height:44px;font-size:14px}
-.academy-course-tag{display:inline-block;margin:2px 2px 8px;padding:4px 8px;border-radius:20px;background:#292719;color:#e9c46f;font-size:10px;font-weight:800;letter-spacing:.5px}
-@media(max-width:380px){.academy-course-art{height:112px}.academy-course-card h4{font-size:14px}}
 
 
 /* Creator Monetization dashboard */
@@ -364,6 +321,74 @@ button,a,input,select,textarea{touch-action:manipulation}
 .notice{pointer-events:none}
 .legal-list{margin:8px 0 0 18px;color:var(--muted);font-size:14px;line-height:1.7}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* LANDING PAGES (Jobs, Travel, Academy) */
+.lp{max-width:640px;margin:0 auto;padding-bottom:6px}
+.lp-back{background:none;border:0;color:var(--muted);font-weight:700;font-size:14px;padding:6px 2px;margin-bottom:8px}
+.lp-hero{position:relative;overflow:hidden;border-radius:24px;padding:22px 18px 20px;background:radial-gradient(circle at 88% 14%,#2a5bd7 0,transparent 52%),linear-gradient(160deg,#0f2f78,#0a1740 58%,#0a0f22);border:1px solid #23376b}
+.lp-art{position:absolute;right:14px;top:10px;font-size:66px;line-height:1;filter:drop-shadow(0 10px 22px #0009);pointer-events:none}
+.lp-pill{position:relative;display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:var(--gold);color:#101010;font-weight:800;font-size:14px}
+.lp-hero h2{position:relative;font-size:33px;line-height:1.08;margin:18px 0 8px;color:#fff}
+.lp-hero h2 b{color:var(--gold)}
+.lp-tag{position:relative;font-weight:800;font-size:18px;margin:0 0 10px;color:#fff}
+.lp-text{position:relative;color:#d3dcf2;line-height:1.55;font-size:15px;margin:0 0 18px}
+.lp-cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:54px;padding:14px 18px;border:0;border-radius:999px;background:linear-gradient(180deg,#ffc83a,#f5a800);color:#111;font-weight:900;font-size:17px;box-shadow:0 8px 22px #f5a80040}
+.lp-hero .lp-cta{width:auto;min-width:210px;max-width:100%;position:relative}
+.lp-cta:active,.lp-card:active,.lp-course button:active{transform:scale(.98)}
+.lp-sec{margin-top:20px}
+.lp-sec h3{display:flex;align-items:center;gap:8px;font-size:19px;margin:0 0 4px;color:#fff}
+.lp-sec h3 span{color:var(--gold)}
+.lp-sub{margin:0 0 12px;color:var(--muted);font-size:14px}
+.lp-why{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px;border-radius:20px;border:1px solid #23376b;background:linear-gradient(160deg,#0d2252,#0a1330)}
+.lp-why h3{margin-bottom:12px}
+.lp-why ul{list-style:none;margin:0;padding:0;display:grid;gap:9px;font-size:15px}
+.lp-why li::before{content:'✓';display:inline-grid;place-items:center;width:20px;height:20px;margin-right:9px;border-radius:50%;background:var(--gold);color:#111;font-size:12px;font-weight:900}
+.lp-badge{flex-shrink:0;text-align:center;font-size:50px;line-height:1}
+.lp-badge b{display:block;font-size:19px;color:#fff;letter-spacing:1px;background:#1d4ed8;border-radius:10px;padding:2px 10px;margin-top:-6px}
+.lp-grid{display:grid;gap:10px}.lp-grid.c3{grid-template-columns:repeat(3,minmax(0,1fr))}.lp-grid.c2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.lp-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:14px 8px;min-height:92px;border-radius:16px;border:1px solid #27397a;background:linear-gradient(160deg,#112456,#0b1531);color:#fff;font-weight:700;font-size:14px;text-align:center}
+.lp-card i{font-style:normal;font-size:30px;line-height:1}
+.lp-card small{color:#b9c6e6;font-weight:500;font-size:12px}
+.lp-card.big{min-height:118px;align-items:flex-start;justify-content:flex-end;text-align:left;padding:14px}
+.lp-card.big i{font-size:36px;margin-bottom:auto}
+.lp-trust{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:14px;padding:12px 8px;border-radius:16px;border:1px solid #27397a;background:#0c1633;text-align:center;font-size:12.5px;color:#d6def2}
+.lp-trust span{display:flex;flex-direction:column;align-items:center;gap:4px}.lp-trust i{font-style:normal;font-size:22px}
+.lp-note{text-align:center;color:var(--muted);font-size:13px;margin:12px 6px 0;line-height:1.5}
+.lp-bottom{margin-top:16px}
+.lp-course{display:flex;flex-direction:column;gap:6px;padding:9px;border-radius:16px;border:1px solid #27397a;background:linear-gradient(170deg,#112456,#0b1531);text-align:left;min-width:0}
+.lp-course .ico{height:70px;border-radius:12px;display:grid;place-items:center;font-size:38px;background:radial-gradient(circle at 50% 30%,#2a5bd7aa,#0a1330)}
+.lp-course strong{font-size:14px;color:#fff}
+.lp-course p{margin:0;color:#b9c6e6;font-size:11.5px;line-height:1.4;flex:1}
+.lp-course button{border:0;border-radius:999px;padding:8px 4px;background:var(--gold);color:#111;font-weight:800;font-size:11.5px}
+@media(max-width:350px){.lp-grid.c3{grid-template-columns:repeat(2,minmax(0,1fr))}.lp-hero h2{font-size:28px}}
+/* POPUPS + TOAST */
+.gate-overlay{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(3,6,13,.82);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}
+.gate-card{width:min(100%,460px);background:#191f30;border:1px solid #30394f;border-radius:26px;padding:26px 22px 22px;text-align:center;box-shadow:0 24px 80px #0009;color:#f4f6fc}
+.gate-icon{width:74px;height:74px;border-radius:50%;margin:0 auto 18px;background:#3a3420;display:grid;place-items:center;font-size:36px}
+.gate-card h2{font-size:23px;line-height:1.2;margin:0 0 12px}
+.gate-card p{color:#aab2c5;font-size:16px;line-height:1.6;margin:0 0 20px}
+.gate-list{list-style:none;margin:0 0 20px;padding:0;text-align:left;display:grid;gap:10px;color:#d9deea;font-size:15.5px;line-height:1.45}
+.gate-list li{display:flex;gap:10px;align-items:flex-start;padding:11px 12px;border-radius:12px;background:#10141d;border:1px solid #2b3347}
+.gate-list li::before{content:'•';color:var(--gold);font-weight:900}
+.gate-cancel{width:100%;min-height:54px;border:0;border-radius:15px;background:#252d3e;color:#f1f3f8;font-weight:700;font-size:16px}
+#afSmallToast{position:fixed;left:50%;transform:translateX(-50%);bottom:100px;max-width:min(88vw,380px);padding:9px 14px;border-radius:12px;background:#1d2434;border:1px solid #3a455f;color:#d9deea;font-size:12.5px;line-height:1.45;text-align:center;z-index:9999;display:none;pointer-events:none}
+/* NOTIFICATIONS */
+.bottom-nav a{position:relative}
+.nav-badge{position:absolute;top:2px;left:calc(50% + 6px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#ff4d4d;color:#fff;font-size:11px;font-weight:800;line-height:18px;text-align:center;display:none}
+.af-notif-tools{display:flex;justify-content:flex-end;margin-bottom:10px}
+.af-notif-tools button{padding:8px 14px;font-size:13px}
+.af-notification-row{display:block;width:100%;text-align:left;padding:12px 14px;margin:0 0 8px;border:1px solid var(--line);border-radius:14px;background:#10141d;color:#fff}
+.af-notification-row.new{border-color:var(--gold);background:#1d1a10}
+.af-notification-row b{display:block;font-size:15px}
+.af-notification-row span{display:block;color:var(--muted);font-size:14px;margin-top:3px}
+.af-notification-row small{display:block;margin-top:4px;color:#8d97ab;font-size:12px}
+/* CONTACT */
+.ct-grid{display:grid;gap:10px}
+.ct-btn{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;border:1px solid var(--line);background:#10141d;color:#fff;text-decoration:none;font-weight:700;font-size:15px}
+.ct-btn i{font-style:normal;width:42px;height:42px;display:grid;place-items:center;border-radius:12px;font-size:21px;background:#202738;flex-shrink:0}
+.ct-btn small{display:block;color:var(--muted);font-weight:500;font-size:13px;margin-top:2px}
+.ct-btn.wa i{background:#16452d}.ct-btn.mail i{background:#3a2a14}.ct-btn.fb i{background:#1b3a73;font-family:Arial,sans-serif;font-weight:900}.ct-btn.yt i{background:#5a1717}
+a.ct-btn:active{background:#1a2030}
 </style>
 </head>
 <body>
@@ -371,7 +396,7 @@ button,a,input,select,textarea{touch-action:manipulation}
 <div class="app">
 <header>
 <a class="brand" href="#home" data-page="home"><b class="brand-mark">AH</b><span><strong><span style="color:var(--gold)">Afrishine</span> Hub</strong><small>Your Hub, Your Solutions</small></span></a>
-<div class="header-actions"><form class="header-search" id="headerSearchForm" role="search" onsubmit="runHeaderSearch(event)"><span style="color:var(--gold);font-size:21px">⌕</span><input id="headerSearch" type="search" placeholder="Search members, posts, shop..." aria-label="Search Afrishine Hub" autocomplete="off"></form><button class="round menu-button" onclick="openMenu()" aria-label="Open menu">☰</button></div>
+<div class="header-actions"><form class="header-search" id="headerSearchForm" role="search" onsubmit="runHeaderSearch(event)"><span style="color:var(--gold);font-size:21px">⌕</span><input id="headerSearch" type="search" placeholder="Search..." aria-label="Search Afrishine Hub" autocomplete="off"></form><button class="round menu-button" onclick="openMenu()" aria-label="Open menu">☰</button></div>
 </header>
 <main>
 <section class="page active" id="home">
@@ -409,37 +434,13 @@ button,a,input,select,textarea{touch-action:manipulation}
 <section class="panel"><h2>✍️ Create a Love Connection Post</h2><p>Example: “I am looking for a partner. I am 20 years old. I would like to meet someone respectful.”</p><textarea class="field" id="lovePostText" maxlength="1000" rows="4" placeholder="Write your message here..."></textarea><label style="display:flex;align-items:center;gap:9px;color:#c4c9d4;font-size:12px;margin:8px 0"><input type="checkbox" id="shareLoveWhatsapp"> Include my WhatsApp number on this post</label><button class="gold" onclick="publishLovePost()">Publish Love Post</button><p class="creator-hint">Think carefully before sharing contact details publicly, and never send money to someone you only know online.</p><p class="auth-status" id="lovePostStatus"></p></section>
 <section class="panel"><h2>💞 Love Connection Feed</h2><p>Posts in this feed are separate from Home, Community and Talent Hub.</p><div id="loveFeed"><div class="empty-feed">Loading Love Connection posts…</div></div></section>
 </div></section>
-<section class="page" id="travel"><div class="eyebrow">PLAN YOUR JOURNEY</div><h1>Travel Booking</h1><p class="muted">Find travel services and booking opportunities.</p><section class="panel"><h2>Search Travel</h2><input class="field" id="destination" placeholder="Enter destination"><button class="gold" onclick="notice('Travel booking is coming soon.')">Search Trips</button></section></section>
-<section class="page" id="academy">
-<div class="academy-dashboard">
-  <header class="academy-topbar">
-    <div class="academy-brand-mark" aria-hidden="true">✿</div>
-    <div class="academy-brand-name">Afrishine<br>Academy</div>
-    <button type="button" class="academy-head-action" onclick="notice('Profile settings will be available when Academy accounts are enabled.')" aria-label="Academy profile">A</button>
-    <button type="button" class="academy-head-action" onclick="notice('Academy notifications will appear here.')" aria-label="Notifications">♟</button>
-  </header>
-  <section class="academy-welcome">
-    <div class="academy-kicker">AFRISHINE HUB</div>
-    <h2>Continue Learning</h2>
-    <div class="academy-categories" aria-label="Course categories">
-      <button type="button" class="active" onclick="setAcademyCategory('Tech',this)">Tech</button>
-      <button type="button" onclick="setAcademyCategory('Business',this)">Business</button>
-      <button type="button" onclick="setAcademyCategory('Design',this)">Design</button>
-    </div>
-  </section>
-  <div class="academy-section-heading"><h3>Video Courses</h3><button type="button" class="academy-see-all" onclick="showAcademyTab('Courses',document.querySelector('.academy-bottom-nav button[data-academy-tab=Courses]'))">See all ›</button></div>
-  <div class="academy-course-grid" id="academyCourseGrid" aria-live="polite"></div>
-  <nav class="academy-bottom-nav" aria-label="Afrishine Academy navigation">
-    <button type="button" data-academy-tab="Home" onclick="showPage('home')" aria-label="Return to Afrishine Hub Main Dashboard" title="Return to Afrishine Hub Main Dashboard"><span>⌂</span><small>Home</small></button>
-    <button type="button" data-academy-tab="Courses" onclick="showAcademyTab('Courses',this)"><span>♧</span><small>Courses</small></button>
-    <button type="button" data-academy-tab="Bookmark" onclick="showAcademyTab('Bookmark',this)"><span>▱</span><small>Bookmark</small></button>
-    <button type="button" data-academy-tab="Downloads" onclick="showAcademyTab('Downloads',this)"><span>⇩</span><small>Downloads</small></button>
-    <button type="button" data-academy-tab="Profile" onclick="showAcademyTab('Profile',this)"><span>♙</span><small>Profile</small></button>
-  </nav>
-  <p class="academy-nav-note" id="academyTabMessage" aria-live="polite">Welcome to Afrishine Academy. Courses will be added soon.</p>
-</div>
-</section>
-<section class="page" id="jobs"><div class="eyebrow">WORK · CONNECT · GROW</div><h1>Digital Jobs</h1><p class="muted">Discover digital work and connect with employers.</p><section class="panel"><h2>Find Opportunities</h2><p>Job listings, applications and employer profiles are coming soon.</p><div class="actions"><button class="gold" onclick="notice('Job listings are coming soon.')">Find Jobs</button><button class="secondary" onclick="notice('Employer job posting is coming soon.')">Post a Job</button></div></section></section>
+<section class="page" id="travel"><div class="lp"><button class="lp-back" type="button" onclick="showPage('home')">‹ Back</button><section class="lp-hero"><div class="lp-art" aria-hidden="true">✈️</div><span class="lp-pill">✈ Travel Booking</span><h2>Explore the World with <b>Afrishine</b></h2><p class="lp-tag">Book Flights, Hotels &amp; More</p><p class="lp-text">Plan your next journey easily and travel with confidence.</p><button type="button" class="lp-cta" onclick="afGate('travel')">Booking Now →</button></section>
+<section class="lp-sec"><h3><span>★</span> Search Trip</h3><div class="lp-grid c2"><button type="button" class="lp-card big" onclick="afGate('travel')"><i aria-hidden="true">✈️</i>Flight Booking<small>Book the best fares</small></button><button type="button" class="lp-card big" onclick="afGate('travel')"><i aria-hidden="true">🏨</i>Hotel Booking<small>Stay in comfort</small></button><button type="button" class="lp-card big" onclick="afGate('travel')"><i aria-hidden="true">🚗</i>Car Rentals<small>Travel with ease</small></button><button type="button" class="lp-card big" onclick="afGate('travel')"><i aria-hidden="true">🏝️</i>Tour Packages<small>Explore amazing places</small></button></div><div class="lp-trust"><span><i>🛡️</i>Safe &amp; Secure</span><span><i>🎧</i>24/7 Support</span><span><i>🌍</i>Best Prices</span></div></section><div class="lp-bottom"><button type="button" class="lp-cta" onclick="afGate('travel')">Search Trip →</button><p class="lp-note">Be the first to know when this service becomes available in your area.</p></div></div></section>
+<section class="page" id="academy"><div class="lp"><button class="lp-back" type="button" onclick="showPage('home')">‹ Back</button><section class="lp-hero"><div class="lp-art" aria-hidden="true">🎓</div><span class="lp-pill">🎓 Online Learning</span><h2>Welcome to <b>Afrishine Academy</b></h2><p class="lp-tag">Learn. Grow. Succeed.</p><p class="lp-text">Gain in-demand skills and unlock better opportunities in AI, Business, Trading and more.</p><button type="button" class="lp-cta" onclick="afGate('academy')">Start Learning →</button></section>
+<section class="lp-sec"><h3>Our Course Categories</h3><p class="lp-sub">Explore a wide range of courses designed for your success.</p><div class="lp-grid c3"><div class="lp-course"><div class="ico" aria-hidden="true">🤖</div><strong>AI &amp; Innovation</strong><p>Artificial Intelligence, Prompt Engineering &amp; AI Tools.</p><button type="button" onclick="afGate('academy')">Explore Courses →</button></div><div class="lp-course"><div class="ico" aria-hidden="true">📊</div><strong>Trading</strong><p>Forex, Gold (XAUUSD) &amp; Technical Analysis.</p><button type="button" onclick="afGate('academy')">Explore Courses →</button></div><div class="lp-course"><div class="ico" aria-hidden="true">🏙️</div><strong>Business</strong><p>Entrepreneurship, Digital Marketing &amp; Online Business.</p><button type="button" onclick="afGate('academy')">Explore Courses →</button></div><div class="lp-course"><div class="ico" aria-hidden="true">💻</div><strong>Technology</strong><p>Programming, Web Development &amp; Cyber Safety.</p><button type="button" onclick="afGate('academy')">Explore Courses →</button></div><div class="lp-course"><div class="ico" aria-hidden="true">🪙</div><strong>Finance</strong><p>Personal Finance, Investment &amp; Financial Literacy.</p><button type="button" onclick="afGate('academy')">Explore Courses →</button></div><div class="lp-course"><div class="ico" aria-hidden="true">📷</div><strong>Creative Skills</strong><p>Graphic Design, Video Editing &amp; Photography.</p><button type="button" onclick="afGate('academy')">Explore Courses →</button></div></div><div class="lp-trust"><span><i>🏆</i>Expert Instructors</span><span><i>📜</i>Certificate of Completion</span><span><i>🎧</i>24/7 Support</span></div></section><div class="lp-bottom"><button type="button" class="lp-cta" onclick="afGate('academy')">▶ Start Learning</button><p class="lp-note">Build a brighter future with Afrishine Academy</p></div></div></section>
+<section class="page" id="jobs"><div class="lp"><button class="lp-back" type="button" onclick="showPage('home')">‹ Back</button><section class="lp-hero"><div class="lp-art" aria-hidden="true">💼</div><span class="lp-pill">💼 Digital Jobs</span><h2>Find Your <b>Dream Job</b></h2><p class="lp-tag">Work. Grow. Succeed.</p><p class="lp-text">Discover verified job opportunities from top employers and companies around the world.</p><button type="button" class="lp-cta" onclick="afGate('jobs')">Explore Now →</button></section>
+<section class="lp-sec"><div class="lp-why"><div><h3><span>★</span> Why Choose Afrishine Jobs?</h3><ul><li>Verified Job Listings</li><li>Remote &amp; Local Opportunities</li><li>Career Growth Support</li><li>Skill Development Resources</li></ul></div><div class="lp-badge" aria-hidden="true">💼<b>JOBS</b></div></div></section>
+<section class="lp-sec"><h3><span>📈</span> Find Job</h3><div class="lp-grid c3"><button type="button" class="lp-card" onclick="afGate('jobs')"><i aria-hidden="true">💻</i>IT &amp; Tech</button><button type="button" class="lp-card" onclick="afGate('jobs')"><i aria-hidden="true">📣</i>Marketing</button><button type="button" class="lp-card" onclick="afGate('jobs')"><i aria-hidden="true">📈</i>Business</button><button type="button" class="lp-card" onclick="afGate('jobs')"><i aria-hidden="true">🩺</i>Health</button><button type="button" class="lp-card" onclick="afGate('jobs')"><i aria-hidden="true">🎓</i>Education</button><button type="button" class="lp-card" onclick="afGate('jobs')"><i aria-hidden="true">⚙️</i>Others</button></div></section><div class="lp-bottom"><button type="button" class="lp-cta" onclick="afGate('jobs')">Find Job →</button><p class="lp-note">Be the first to know when new job opportunities are available.</p></div></div></section>
 <section class="page" id="shop">
   <div class="market-topbar">
     <button class="market-back" type="button" onclick="marketGoBack()" aria-label="Back">‹</button>
@@ -491,7 +492,7 @@ button,a,input,select,textarea{touch-action:manipulation}
   </div>
 </div>
 
-<section class="page" id="wallet"><div class="eyebrow">AFRISHINE TOKEN</div><h1>My Wallet</h1><p class="muted">AST wallet, transaction activity and supported payment services.</p><section class="panel"><div class="eyebrow">AVAILABLE BALANCE</div><h2>— AST</h2><p>Your balance will appear here once wallet services launch.</p></section><section class="panel"><h2>Wallet Services</h2><p>Send AST · Receive AST · Gift History · Transaction History · AST ↔ Pi</p><div class="actions"><button class="gold" onclick="afOpenFeatureGate('verification')">Send AST</button><button class="secondary" onclick="afOpenFeatureGate('verification')">AST ↔ Pi</button><button class="secondary" onclick="afOpenFeatureGate('verification')">History</button></div></section></section>
+<section class="page" id="wallet"><div class="eyebrow">AFRISHINE TOKEN</div><h1>My Wallet</h1><p class="muted">AST wallet, transaction activity and supported payment services.</p><section class="panel"><div class="eyebrow">AVAILABLE BALANCE</div><h2>— AST</h2><p>Your balance will appear here once wallet services launch.</p></section><section class="panel"><h2>Wallet Services</h2><p>Send AST · Receive AST · Gift History · Transaction History · AST ↔ Pi</p><div class="actions"><button class="gold" onclick="afWalletToast()">Send AST</button><button class="secondary" onclick="afWalletToast()">AST ↔ Pi</button><button class="secondary" onclick="afWalletToast()">History</button></div></section></section>
 <section class="page" id="inbox"><div class="eyebrow">STAY CONNECTED</div><h1>Inbox</h1><p class="muted">Messages, updates and creator conversations.</p><section class="panel"><h2>Your Conversations</h2><div id="inboxList"><p class="muted">Sign in to view your messages.</p></div></section></section>
 <section class="page" id="memberProfile"><div class="eyebrow">AFRISHINE MEMBER</div><h1>Member Profile</h1><section class="panel" id="memberProfileContent"><p class="muted">Loading profile…</p></section><button class="secondary" onclick="showPage('home')">← Back to Home</button></section>
 <section class="page" id="profile"><div class="eyebrow">YOUR AFRISHINE ACCOUNT</div><h1>My Profile</h1><p class="muted">Manage your account and public creator profile.</p>
@@ -522,7 +523,19 @@ button,a,input,select,textarea{touch-action:manipulation}
     <button class="creator-apply-btn" type="button" onclick="showCreatorEligibilityMessage()">Apply for Monetization</button>
   </section>
 </section>
-<section class="page" id="contact"><div class="eyebrow">WE ARE HERE TO HELP</div><h1>Contact Us</h1><p class="muted">Get in touch with Afrishine Hub for support, questions and business inquiries.</p><section class="panel"><h2>Contact Information</h2><p>📞 Phone</p><div class="actions"><a class="gold" href="tel:+250788818684">+250 788 818 684</a></div><p style="margin-top:18px">📩 Email</p><div class="actions"><a class="secondary" href="mailto:afrishinehub@gmail.com">afrishinehub@gmail.com</a></div></section><footer>© 2026 Afrishine Hub · Built in Kigali, Rwanda 🇷🇼</footer></section>
+<section class="page" id="contact"><div class="eyebrow">WE ARE HERE TO HELP</div><h1>Contact Us</h1><p class="muted">Get in touch with Afrishine Hub for support, questions and business inquiries.</p>
+<section class="panel"><h2>About Afrishine Hub</h2><p>Afrishine Hub is a Rwandan digital platform where creators share their talent, people buy and sell in the Marketplace, and members access more services such as learning, jobs and travel, all in one place.</p></section>
+<section class="panel"><h2>Get in Touch</h2><div class="ct-grid">
+<a class="ct-btn wa" href="https://wa.me/250788818684" target="_blank" rel="noopener"><i aria-hidden="true">💬</i><span>Chat on WhatsApp<small>+250 788 818 684</small></span></a>
+<a class="ct-btn" href="tel:+250788818684"><i aria-hidden="true">📞</i><span>Call us<small>+250 788 818 684</small></span></a>
+<a class="ct-btn mail" href="mailto:afrishinehub@gmail.com"><i aria-hidden="true">✉️</i><span>Send an email<small>afrishinehub@gmail.com</small></span></a>
+<div class="ct-btn"><i aria-hidden="true">📍</i><span>Head Office<small>Kigali, Rwanda</small></span></div></div></section>
+<section class="panel"><h2>Follow Us</h2><div class="ct-grid">
+<a class="ct-btn fb" href="https://www.facebook.com/share/19zpBybgCV/" target="_blank" rel="noopener"><i aria-hidden="true">f</i><span>Facebook<small>Follow Afrishine Hub</small></span></a>
+<a class="ct-btn wa" href="https://whatsapp.com/channel/0029VakOak4BPzjdnt75pL1c" target="_blank" rel="noopener"><i aria-hidden="true">📢</i><span>WhatsApp Channel<small>Follow the Afrishine Hub channel</small></span></a>
+<a class="ct-btn yt" href="https://www.youtube.com/@Eli-Afrishayne" target="_blank" rel="noopener"><i aria-hidden="true">▶</i><span>YouTube<small>Watch and subscribe</small></span></a></div></section>
+<section class="panel"><h2>Website</h2><a class="ct-btn" href="https://afrishinegithubio.vercel.app" target="_blank" rel="noopener"><i aria-hidden="true">🌐</i><span>afrishinegithubio.vercel.app<small>Official website</small></span></a></section>
+<footer>© 2026 Afrishine Hub · Head Office: Kigali, Rwanda 🇷🇼</footer></section>
 </main></div>
 <dialog class="creator-eligibility-dialog" id="creatorEligibilityDialog" aria-labelledby="creatorEligibilityTitle" aria-describedby="creatorEligibilityText">
   <div class="creator-dialog-content">
@@ -533,12 +546,11 @@ button,a,input,select,textarea{touch-action:manipulation}
   </div>
 </dialog>
 <div class="create-backdrop" id="createBackdrop" onclick="closeCreateMenu()"></div>
-<div class="create-menu" id="createMenu" role="dialog" aria-label="Create menu"><div class="create-menu-head"><h2 id="createMenuTitle">Create on Afrishine Hub</h2><button class="round" onclick="closeCreateMenu()" aria-label="Close create menu">✕</button></div><button class="create-option" onclick="createAction('post')"><span>📝</span> Create Post</button><button class="create-option" onclick="createAction('photo')"><span>🖼️</span> Upload Photo</button><button class="create-option" onclick="createAction('video')"><span>🎬</span> Upload Video</button><button class="create-option" onclick="createAction('live')"><span>🔴</span> Go Live · Coming Soon</button></div>
+<div class="create-menu" id="createMenu" role="dialog" aria-label="Create menu"><div class="create-menu-head"><h2 id="createMenuTitle">Create on Afrishine Hub</h2><button class="round" onclick="closeCreateMenu()" aria-label="Close create menu">✕</button></div><button class="create-option" onclick="createAction('post')"><span>📝</span> Create Post</button><button class="create-option" onclick="createAction('photo')"><span>🖼️</span> Upload Photo</button><button class="create-option" onclick="createAction('video')"><span>🎬</span> Upload Video</button><button class="create-option" onclick="createAction('live')"><span>🔴</span> Go Live</button></div>
 <div class="creator-backdrop" id="creatorBackdrop" onclick="closeCreator()"></div>
 <section class="creator-workspace" id="creatorWorkspace" role="dialog" aria-modal="true"><div class="creator-inner"><div class="creator-header"><h2 id="creatorTitle">Create Post</h2><button class="creator-close" onclick="closeCreator()" aria-label="Close">✕</button></div>
 <div id="postEditor" style="display:none"><textarea id="postText" placeholder="What would you like to share with the Afrishine Hub community?"></textarea><div class="creator-actions"><button class="gold" onclick="previewPost()">Preview Post</button></div><div class="preview-box" id="postPreview"><b>Post Preview</b><div class="preview-text" id="postPreviewText"></div><p class="creator-hint">Preview of your text post.</p><div class="creator-actions"><button class="gold" onclick="publishTextPost()">Publish Post</button><button class="secondary" onclick="editPost()">Edit</button></div></div></div>
 <div id="mediaEditor" style="display:none"><p class="creator-hint" id="mediaInstructions">Choose a file from your phone.</p><input class="hidden-input" type="file" id="photoInput" accept="image/*"><input class="hidden-input" type="file" id="videoInput" accept="video/*"><button class="gold" id="chooseMediaButton" onclick="chooseMedia()">Choose from Gallery</button><div class="preview-box" id="mediaPreview"><b id="mediaPreviewTitle">Preview</b><img id="photoPreview" alt="Selected photo preview" style="display:none"><video id="videoPreview" controls playsinline style="display:none"></video><p class="creator-hint">Choose Post to upload this photo or video to Afrishine Hub. Maximum file size: 100 MB. Sign-in is required.</p><div class="creator-actions"><button class="gold" onclick="mediaUploadNotice()">Post</button><button class="secondary" onclick="chooseMedia()">Choose Another</button></div></div></div>
-<div id="liveEditor" style="display:none"><p class="creator-hint">Allow camera and microphone access when your phone asks. Your camera preview will appear below.</p><video id="liveVideo" class="camera-video" autoplay muted playsinline></video><div class="creator-actions"><button class="gold" id="cameraButton" onclick="startCamera()">Start Camera Preview</button><button class="secondary" onclick="switchCamera()">Switch Camera</button><button class="secondary" onclick="stopCamera()">Stop Camera</button></div><div class="panel"><h2>Live Streaming</h2><p id="liveStatus">Live broadcasting is coming soon. You can preview your camera here.</p><div class="creator-actions"><button class="gold" onclick="liveBroadcastNotice()">Start Live</button></div></div></div>
 </div></section>
 <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenu()"></div>
 <aside class="menu-drawer" id="menuDrawer" aria-label="Main menu"><div class="menu-head"><span>AFRISHINE HUB MENU</span><button class="round" onclick="closeMenu()" aria-label="Close menu">✕</button></div>
@@ -618,71 +630,21 @@ function isGoogleMarketplaceUser(user) { if (!user || !user.providerData)
     return false; return user.providerData.some(function (info) { return info.providerId === 'google.com'; }); }
 function isPiBrowser() { var ua = (navigator && navigator.userAgent) || ''; return !!(window.Pi) || /PiBrowser/i.test(ua); }
 function canViewMarketplace() { return isPiBrowser() || isGoogleMarketplaceUser(currentFirebaseUser); }
-const academyCourses = {
-    Tech: [
-        { icon: '⌘', title: 'UI/UX Fundamentals', detail: 'Design better digital experiences', tag: 'USER EXPERIENCE' },
-        { icon: '⌨', title: 'Python for Beginners', detail: 'Start your journey in programming', tag: 'PROGRAMMING' },
-        { icon: '&lt;/&gt;', title: 'Web Development Essentials', detail: 'Explore how modern websites work', tag: 'WEB DEVELOPMENT' },
-        { icon: '✦', title: 'Artificial Intelligence Basics', detail: 'Discover the world of AI', tag: 'ARTIFICIAL INTELLIGENCE' }
-    ],
-    Business: [
-        { icon: '▥', title: 'Startup Finance Basics', detail: 'Understand money in a new business', tag: 'FINANCE' },
-        { icon: '◈', title: 'Entrepreneurship Essentials', detail: 'Turn ideas into opportunities', tag: 'ENTREPRENEURSHIP' },
-        { icon: '▤', title: 'Financial Literacy', detail: 'Build smart money habits', tag: 'MONEY SKILLS' },
-        { icon: '↗', title: 'Digital Marketing', detail: 'Learn how brands grow online', tag: 'MARKETING' }
-    ],
-    Design: [
-        { icon: '✎', title: 'Brand Design Essentials', detail: 'Build a memorable visual identity', tag: 'BRANDING' },
-        { icon: '▧', title: 'Graphic Design Basics', detail: 'Explore colour, layout and visuals', tag: 'GRAPHIC DESIGN' },
-        { icon: '◇', title: 'UI Design Principles', detail: 'Create clear and useful interfaces', tag: 'UI DESIGN' },
-        { icon: '▶', title: 'Video Editing Basics', detail: 'Shape stories through video', tag: 'VIDEO' }
-    ]
-};
-function renderAcademyCourses(category) {
-    const grid = document.getElementById('academyCourseGrid');
-    if (!grid)
-        return;
-    const courses = academyCourses[category] || [];
-    grid.innerHTML = courses.map(function (course) {
-        const title = course.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-        const detail = course.detail.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        const tag = course.tag.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        return `<article class="academy-course-card" role="button" tabindex="0" aria-label="${title} — Coming Soon" onclick="openAcademyCourse(&quot;${title}&quot;)" onkeydown="if(event.key===&quot;Enter&quot;){event.preventDefault();openAcademyCourse(&quot;${title}&quot;)}"><div class="academy-course-art" aria-hidden="true">${course.icon}</div><span class="academy-course-tag">${tag}</span><h4>${title}</h4><p>${detail}</p><button class="academy-course-placeholder" type="button" onclick="event.stopPropagation();openAcademyCourse(&quot;${title}&quot;)">Coming Soon</button></article>`;
-    }).join('');
-}
-function openAcademyCourse(title) { notice('Coming Soon — ' + title + ' will be available when this course is launched.'); }
-function showAcademyTab(tab, button) { document.querySelectorAll('.academy-bottom-nav button').forEach(function (item) { item.classList.toggle('active', item === button); }); const message = document.getElementById('academyTabMessage'); if (message) {
-    const notes = { Home: 'Welcome to Afrishine Academy. Explore the course categories above.', Courses: 'Explore Tech, Business and Design courses. New lessons will be announced here.', Bookmark: 'Your bookmarked courses will appear here when this feature is enabled.', Downloads: 'Your downloaded learning materials will appear here when downloads are enabled.', Profile: 'Your Academy profile will be available here.' };
-    message.textContent = notes[tab] || tab + ' — Afrishine Academy.';
-} if (tab === 'Courses') {
-    document.querySelector('.academy-section-heading').scrollIntoView({ behavior: 'smooth', block: 'start' });
-} }
-function setAcademyCategory(category, button) { document.querySelectorAll('.academy-categories button').forEach(function (item) { item.classList.toggle('active', item === button); }); renderAcademyCourses(category); const heading = document.querySelector('.academy-section-heading h3'); if (heading)
-    heading.textContent = category + ' Courses'; }
 function showPage(id) { if (id === 'shop' && !canViewMarketplace()) {
     openMarketplaceLogin();
     return;
 } const page = document.getElementById(id); if (!page)
-    return; document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === id)); document.body.classList.toggle('academy-active', id === 'academy'); document.querySelectorAll('[data-page]').forEach(a => a.classList.toggle('active', a.dataset.page === id)); if ((location.hash || '#home') !== '#' + id) {
+    return; document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === id)); document.querySelectorAll('[data-page]').forEach(a => a.classList.toggle('active', a.dataset.page === id)); if ((location.hash || '#home') !== '#' + id) {
     if (window.history && history.pushState) {
         history.pushState(null, '', '#' + id);
     }
     else {
         location.hash = id;
     }
-} closeMenu(); closeCreateMenu(); closeCreator(); if (id === 'academy') {
-    renderAcademyCourses('Tech');
-    const heading = document.querySelector('.academy-section-heading h3');
-    if (heading)
-        heading.textContent = 'Tech Courses';
-} if (id === 'love')
+} closeMenu(); closeCreateMenu(); closeCreator(); if (id === 'love')
     refreshLoveAccess(); if (id === 'inbox')
     loadInbox(); window.scrollTo(0, 0); }
 document.querySelectorAll('[data-page]').forEach(el => el.addEventListener('click', e => { e.preventDefault(); showPage(el.dataset.page); }));
-if (document.getElementById('academy').classList.contains('active')) {
-    document.body.classList.add('academy-active');
-    renderAcademyCourses('Tech');
-}
 const headerSearchInput = document.getElementById('headerSearch');
 function runHeaderSearch(e) { e.preventDefault(); const q = headerSearchInput.value.trim().toLowerCase(); if (!q) {
     headerSearchInput.focus();
@@ -701,7 +663,7 @@ function createAction(type) { closeCreateMenu(); openCreator(type); }
 function openCreator(type) {
     closeCreateMenu();
     closeCreator(false);
-    ['postEditor', 'mediaEditor', 'liveEditor'].forEach(id => document.getElementById(id).style.display = 'none');
+    ['postEditor', 'mediaEditor'].forEach(id => document.getElementById(id).style.display = 'none');
     const titles = { post: 'Create Post', photo: 'Upload Photo', video: 'Upload Video', live: 'Go Live' };
     document.getElementById('creatorTitle').textContent = titles[type] || 'Create';
     if (type === 'post') {
@@ -719,10 +681,6 @@ function openCreator(type) {
         document.getElementById('videoPreview').style.display = 'none';
         document.getElementById('photoInput').dataset.active = type === 'photo' ? 'yes' : 'no';
         document.getElementById('videoInput').dataset.active = type === 'video' ? 'yes' : 'no';
-    }
-    if (type === 'live') {
-        document.getElementById('liveEditor').style.display = 'block';
-        document.getElementById('liveStatus').textContent = 'Live broadcasting is coming soon. You can preview your camera here.';
     }
     document.getElementById('creatorBackdrop').classList.add('open');
     document.getElementById('creatorWorkspace').classList.add('open');
@@ -869,37 +827,12 @@ function publishTextPost() {
         }
     });
 }
-function startCamera() {
-    return __awaiter(this, void 0, void 0, function* () { if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        notice('Camera access is not supported here. Open this site in a supported browser over HTTPS.');
-        return;
-    } stopCamera(); try {
-        cameraStream = yield navigator.mediaDevices.getUserMedia({ video: { facingMode: cameraFacing }, audio: true });
-        const v = document.getElementById('liveVideo');
-        v.srcObject = cameraStream;
-        yield v.play();
-        document.getElementById('liveStatus').textContent = 'Camera preview is active. Live broadcasting is coming soon.';
-        document.getElementById('cameraButton').textContent = 'Restart Camera Preview';
-    }
-    catch (e) {
-        console.error(e);
-        document.getElementById('liveStatus').textContent = 'Camera or microphone access was not granted.';
-        notice('Allow camera and microphone permissions, then try again.');
-    } });
-}
-function switchCamera() {
-    return __awaiter(this, void 0, void 0, function* () { cameraFacing = cameraFacing === 'user' ? 'environment' : 'user'; if (cameraStream)
-        yield startCamera();
-    else
-        notice('Tap Start Camera Preview first.'); });
-}
 function stopCamera() { if (cameraStream) {
     cameraStream.getTracks().forEach(t => t.stop());
     cameraStream = null;
 } const v = document.getElementById('liveVideo'); if (v)
     v.srcObject = null; const b = document.getElementById('cameraButton'); if (b)
     b.textContent = 'Start Camera Preview'; }
-function liveBroadcastNotice() { notice('Live broadcasting is coming soon.'); }
 function notice(message) { const el = document.getElementById('notice'); el.textContent = message; el.style.display = 'block'; clearTimeout(window.ahNoticeTimer); window.ahNoticeTimer = setTimeout(() => el.style.display = 'none', 4000); }
 function confirmLoveAge() { document.getElementById('loveAgeGate').style.display = 'none'; document.getElementById('loveContent').style.display = 'block'; }
 const firstPage = location.hash.replace('#', '');
@@ -1308,7 +1241,9 @@ function deleteMarketplacePost(id) {
             notice('You can only delete your own post.');
             return;
         }
+        const marketPostData = snap.data();
         yield ref.delete();
+        [].concat(marketPostData.images || [], marketPostData.imageUrls || [], marketPostData.videoUrl ? [marketPostData.videoUrl] : []).forEach(function (mediaUrl) { if (typeof workerDelete === 'function') workerDelete(mediaUrl).catch(function () { }); });
         notice('Marketplace post deleted.');
         loadMarketplacePosts(true);
     }
@@ -1347,7 +1282,7 @@ function renderPostList(elementId, posts, emptyMessage) { const el = document.ge
     el.innerHTML = '<div class="empty-feed">' + emptyMessage + '</div>';
     return;
 } el.innerHTML = posts.map(p => { const mine = currentFirebaseUser && p.uid === currentFirebaseUser.uid; const mediaUrl = p.mediaUrl || p.videoUrl || p.mediaURL || p.mediaURL || ''; const mediaType = p.mediaType || (p.type === 'video' ? 'video' : (p.type === 'image' ? 'image' : '')); const mediaMarkup = mediaUrl ? (mediaType === 'video' ? '<video class="post-media-video" src="' + safeText(mediaUrl) + '" controls playsinline preload="metadata" style="width:100%;max-height:520px;border-radius:14px;background:#080a10"></video>' : '<img class="post-media-image" src="' + safeText(mediaUrl) + '" alt="Shared media" loading="lazy" style="width:100%;max-height:520px;object-fit:contain;border-radius:14px;background:#080a10">') : ''; return '<article class="post-card" data-engagement="posts" data-post-id="' + safeText(p.id) + '" data-author-uid="' + safeText(p.uid) + '" data-visibility="' + safeText(p.visibility || 'public') + '"><div class="post-meta"><button class="text-link" data-open-profile="' + safeText(p.uid) + '">' + safeText(marketplacePublicName(p.authorName)) + '</button><span>' + safeText(postDate(p.createdAt)) + '</span></div>' + (p.isRepost ? '<p class="creator-hint">🔁 Repost · Originally shared by ' + safeText(p.originalAuthor || 'Afrishine Member') + '</p>' : '') + '<div class="post-body">' + safeText(p.text || '') + '</div>' + mediaMarkup + '<div class="actions post-actions"><button class="secondary" data-like="' + safeText(p.id) + '" data-kind="posts">♡ Like <span data-like-count>0</span></button><button class="secondary" data-focus-comment="' + safeText(p.id) + '">💬 Comment</button><button class="secondary" data-share-post="' + safeText(p.id) + '" data-kind="posts">↗ Share</button><button class="secondary" data-repost="' + safeText(p.id) + '" data-kind="posts">🔁 Repost</button>' + (mine ? '' : '<button class="secondary" data-message-user="' + safeText(p.uid) + '" data-message-name="' + safeText(marketplacePublicName(p.authorName)) + '">✉ Message</button>') + '</div><div class="comment-area"><div data-comments-list></div><div class="comment-compose"><input class="field" data-comment-input placeholder="Write a comment…" maxlength="500"><button class="gold" data-send-comment="' + safeText(p.id) + '" data-kind="posts">Send</button></div></div>' + (mine ? '<button class="post-delete" data-delete-post="' + safeText(p.id) + '">Delete my post</button>' : '') + '</article>'; }).join(''); el.querySelectorAll('[data-engagement]').forEach(queueEngagement); }
-function renderPosts(posts) { const talentPosts = posts.filter(p => p.source === 'talent'); const communityPosts = posts.filter(p => p.source !== 'talent'); renderPostList('homeFeed', posts, 'No posts yet. Be the first to share something with Afrishine Hub.'); renderPostList('talentFeed', talentPosts, 'No Talent Hub posts yet. Be the first to showcase your talent.'); renderPostList('communityFeed', communityPosts, 'No Community posts yet. Be the first to share with the Community.'); }
+function renderPosts(posts) { window.__afLatestPosts = posts; if (typeof window.afRefreshNotifications === 'function') setTimeout(window.afRefreshNotifications, 0); const talentPosts = posts.filter(p => p.source === 'talent'); const communityPosts = posts.filter(p => p.source !== 'talent'); renderPostList('homeFeed', posts, 'No posts yet. Be the first to share something with Afrishine Hub.'); renderPostList('talentFeed', talentPosts, 'No Talent Hub posts yet. Be the first to showcase your talent.'); renderPostList('communityFeed', communityPosts, 'No Community posts yet. Be the first to share with the Community.'); }
 function scrollToSharedPost(kind) { if (!window.ahSharedPostId)
     return; const card = document.querySelector('[data-engagement="' + kind + '"][data-post-id="' + window.ahSharedPostId + '"]'); if (card) {
     card.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1814,7 +1749,9 @@ function deleteMyLovePost(id) {
             notice('You can only delete your own post.');
             return;
         }
+        const lovePostData = snap.data();
         yield ref.delete();
+        if (lovePostData.imageKey && typeof workerDelete === 'function') workerDelete(lovePostData.imageKey).catch(function () { });
         notice('Love Connection post deleted.');
     }
     catch (e) {
@@ -2304,7 +2241,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         const res = yield fetch(url, { method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': file.type }, body: file });
         const data = yield res.json().catch(() => ({}));
         if (!res.ok || !data.success)
-            throw new Error(data.error || 'Upload failed. Please try again.');
+            { afWorkerFailure(data, res.status); throw new Error(data.error || 'Upload failed. Please try again.'); }
         resolve(data);
     }
     catch (e) {
@@ -2327,7 +2264,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         }
         catch (e) {
             console.warn('Image compression skipped', e);
-            return file;
+        if (!/^image\/(jpeg|png|webp)$/.test(file.type)) {
+            throw new Error(afMediaProblem('photo'));
+        }
+        return file;
         } });
     }
     function checkDailyMedia(type) {
@@ -2346,10 +2286,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             const d = yield r.json();
             const used = Number((_c = (_b = (_a = d.usedBytes) !== null && _a !== void 0 ? _a : d.used) !== null && _b !== void 0 ? _b : d.totalBytes) !== null && _c !== void 0 ? _c : 0);
             const limit = Number((_e = (_d = d.limitBytes) !== null && _d !== void 0 ? _d : d.limit) !== null && _e !== void 0 ? _e : STORAGE_LIMIT_BYTES);
-            if (used >= Math.min(limit, STORAGE_LIMIT_BYTES)) {
-                say('Media uploads are temporarily unavailable. Please try again later.');
-                return false;
-            }
+            if (d.canUpload === false || (d.canUpload === undefined && used >= Math.min(limit, STORAGE_LIMIT_BYTES))) {
+            afPopup({ icon: '📦', message: window.AF_QUOTA_MESSAGE });
+            return false;
+        }
             return true;
         }
         catch (e) {
@@ -2555,7 +2495,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         f.after(hint);
     } }
     function videoDuration(file) {
-        return __awaiter(this, void 0, void 0, function* () { return new Promise((resolve, reject) => { const v = document.createElement('video'); v.preload = 'metadata'; const url = URL.createObjectURL(file); v.onloadedmetadata = () => { const d = v.duration; URL.revokeObjectURL(url); resolve(d); }; v.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Could not read the video duration.')); }; v.src = url; }); });
+        return __awaiter(this, void 0, void 0, function* () { return new Promise((resolve, reject) => { const v = document.createElement('video'); v.preload = 'metadata'; const url = URL.createObjectURL(file); v.onloadedmetadata = () => { const d = v.duration; if (d === Infinity) { v.ontimeupdate = () => { v.ontimeupdate = null; const real = v.duration; URL.revokeObjectURL(url); resolve(isFinite(real) ? real : 0); }; v.currentTime = 1e7; } else { URL.revokeObjectURL(url); resolve(d); } }; v.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Could not read the video duration.')); }; v.src = url; }); });
     }
     function uploadGeneralMedia() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -2570,17 +2510,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                 showPage('profile');
                 return;
             }
-            if (file.size > 100 * 1024 * 1024) {
-                say('This file is larger than the 100 MB limit.');
-                return;
-            }
+            if (type !== 'video' && file.size > 100 * 1024 * 1024) {
+        say('This file is larger than the 100 MB limit.');
+        return;
+    }
             if (!(yield checkDailyMedia(type)))
                 return;
             if (!(yield checkWorkerQuota()))
                 return;
             let duration = 0;
             if (type === 'video') {
-                duration = yield videoDuration(file);
+                try {
+            duration = yield videoDuration(file);
+        }
+        catch (e) {
+            afMediaProblem('video');
+            return;
+        }
                 if (duration > MAX_FREE_VIDEO_SECONDS) {
                     say('Videos longer than 1 minute are not supported yet. Please upload a shorter video.');
                     return;
@@ -2592,7 +2538,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                 button.textContent = 'Uploading…';
             }
             try {
-                const uploadFile = type === 'photo' ? yield compressImage(file) : file;
+                let uploadFile;
+        if (type === 'photo') {
+            uploadFile = yield compressImage(file);
+        }
+        else {
+            uploadFile = yield afPrepareVideo(file, function (text) { if (button) button.textContent = text; });
+            if (button) button.textContent = 'Uploading…';
+        }
                 const up = yield workerUpload(uploadFile);
                 const caption = ($('postText') && $('postText').value.trim()) || '';
                 const title = ($('ahMediaTitle') && $('ahMediaTitle').value.trim()) || '';
@@ -3446,7 +3399,7 @@ async function marketUpload(file){
  var token=await u.getIdToken();
  var response=await fetch(marketWorker+'/upload?filename='+encodeURIComponent(file.name||'market-media'),{method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':file.type||'application/octet-stream'},body:file});
  var data=await response.json().catch(function(){return {}});
- if(!response.ok||!data.success||!data.url)throw new Error(data.error||'Media upload failed. Please try again.');
+ if(!response.ok||!data.success||!data.url){afWorkerFailure(data,response.status);throw new Error(data.error||'Media upload failed. Please try again.')}
  return data.url;
 }
 async function marketCompress(file){
@@ -3459,12 +3412,12 @@ window.marketPublishProduct=async function(){
  var video=document.getElementById('marketProductVideo').files[0];
  var title=document.getElementById('marketProductTitle').value.trim(),description=document.getElementById('marketProductDescription').value.trim(),price=Number(document.getElementById('marketProductPrice').value),locationText=document.getElementById('marketProductLocation').value;
  if(photos.length<3){mNotice('Please select at least 3 product photos.');return}
- if(video&&(!/^video\//.test(video.type)||video.size>100*1024*1024)){mNotice('Please choose a valid video smaller than 100 MB.');return}
+ if(video&&!/^video\//.test(video.type||'')&&!/\.(mp4|mov|m4v|webm|3gp)$/i.test(video.name||'')){mNotice('Please choose a valid video file.');return}
  if(!title||description.length<8||!price||price<1){mNotice('Please enter a valid title, description and price.');return}
  var btn=document.getElementById('marketPublishButton'),status=document.getElementById('marketUploadStatus');btn.disabled=true;status.textContent='Uploading photos…';
  try{
   var imageUrls=[];for(var i=0;i<photos.length;i++){status.textContent='Uploading photo '+(i+1)+' / '+photos.length;imageUrls.push(await marketUpload(await marketCompress(photos[i])))}
-  var videoUrl='';if(video){status.textContent='Uploading video…';videoUrl=await marketUpload(video)}
+  var videoUrl='';if(video){status.textContent='Uploading video…';videoUrl=await marketUpload(await afPrepareVideo(video,function(t){status.textContent=t}))}
   status.textContent='Saving product…';
   await mDb().collection('marketplacePosts').add({uid:mUser().uid,authorName:mUser().displayName||'Afrishine Seller',authorPhoto:mUser().photoURL||'',type:'sell',product:true,title:title,description:description,text:description,price:(document.getElementById('marketProductCurrency').value==='USD'?'$':'FRW ')+String(price),condition:document.getElementById('marketProductCondition').value,category:document.getElementById('marketProductCategory').value,location:locationText,images:imageUrls,videoUrl:videoUrl,createdAt:firebase.firestore.FieldValue.serverTimestamp(),status:'active'});
   ['marketProductTitle','marketProductDescription','marketProductPrice','marketProductPhotos','marketProductVideo'].forEach(function(id){document.getElementById(id).value=''});
@@ -3684,8 +3637,6 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
  var previousShowPage=window.showPage;
  if(typeof previousShowPage==='function'){
   window.showPage=function(id){
-   if(id==='jobs'){window.afOpenGate('verificationGate');return}
-   if(id==='academy'||id==='travel'){window.afOpenGate('subscriptionGate');return}
    return previousShowPage(id);
   };
  }
@@ -3790,24 +3741,75 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
    createdAt:firebase.firestore.FieldValue.serverTimestamp(),read:false
   }).catch(function(e){console.warn('Notification could not be created:',e)});
  };
- function renderNotifications(snap){
-  var box=el('afNotificationsList');if(!box)return;
-  var docs=snap.docs.slice().sort(function(a,b){var x=a.data().createdAt,y=b.data().createdAt;return (y&&y.toMillis?y.toMillis():0)-(x&&x.toMillis?x.toMillis():0)});
-  if(!docs.length){box.innerHTML='<p class="muted">You are all caught up. New messages, followers and activity will appear here.</p>';return}
-  box.innerHTML=docs.map(function(doc){var n=doc.data();return '<button type="button" class="af-notification-row" data-af-notification="'+safe(doc.id)+'" data-af-target="'+safe(n.targetPage||'inbox')+'"><b>'+safe(n.title||'New notification')+'</b><span>'+safe(n.body||'You have a new update.')+'</span><small>'+(n.createdAt&&n.createdAt.toDate?n.createdAt.toDate().toLocaleString():'Just now')+(n.read?'':' · New')+'</small></button>'}).join('');
-  Array.prototype.forEach.call(box.querySelectorAll('[data-af-notification]'),function(b){b.addEventListener('click',function(){
-   var id=b.getAttribute('data-af-notification'),target=b.getAttribute('data-af-target')||'inbox';
-   dUpdateRead(id);if(typeof window.showPage==='function')window.showPage(target);
-  })});
- }
- function dUpdateRead(id){var d=dbx(),u=user();if(!d||!u)return;d.collection('notifications').doc(id).update({read:true}).catch(function(e){console.warn(e)})}
- function startNotifications(){
-  var u=user(),d=dbx();if(notificationUnsub){notificationUnsub();notificationUnsub=null}
-  var box=el('afNotificationsList');if(!box)return;
-  if(!u||!d){box.innerHTML='<p class="muted">Sign in to receive notifications.</p>';return}
-  box.innerHTML='<p class="muted">Loading notifications…</p>';
-  notificationUnsub=d.collection('notifications').where('recipientUid','==',u.uid).limit(50).onSnapshot(renderNotifications,function(e){console.warn('Notifications:',e);box.innerHTML='<p class="muted">Notifications are temporarily unavailable.</p>'});
- }
+  var notifDocs=[], followingUids=new Set(), readLocal=new Set();
+  function seenKey(){var u=user();return 'afrishine_notif_seen_'+(u?u.uid:'guest')}
+  function getSeen(){try{return Number(localStorage.getItem(seenKey())||0)}catch(e){return 0}}
+  function setSeen(t){try{localStorage.setItem(seenKey(),String(t))}catch(e){}}
+  function ms(t){return t&&t.toMillis?t.toMillis():(t&&t.toDate?t.toDate().getTime():0)}
+  function updateBadge(n){
+   var link=document.querySelector('.bottom-nav a[data-page="inbox"]');if(!link)return;
+   var b=link.querySelector('.nav-badge');if(!b){b=document.createElement('span');b.className='nav-badge';b.setAttribute('aria-hidden','true');link.appendChild(b)}
+   b.textContent=n>9?'9+':String(n);b.style.display=n>0?'block':'none';
+   link.setAttribute('aria-label',n>0?'Inbox, '+n+' new notifications':'Inbox');
+  }
+  function followItems(){
+   var u=user(),posts=window.__afLatestPosts||[],out=[],cutoff=Date.now()-14*86400000;
+   if(!u||!followingUids.size)return out;
+   posts.forEach(function(p){
+    if(!p||!followingUids.has(p.uid)||p.uid===u.uid||p.visibility==='private')return;
+    var t=ms(p.createdAt);if(!t||t<cutoff)return;
+    var what=String(p.title||p.text||'').trim();if(what.length>90)what=what.slice(0,90)+'…';
+    if(!what)what=p.type==='video'?'Shared a new video.':p.type==='image'?'Shared a new photo.':'Shared a new post.';
+    out.push({id:'feed-'+p.id,title:'New post from '+(p.authorName||'someone you follow'),body:what,time:t,target:p.source==='talent'?'talent':'home',read:false,doc:false});
+   });
+   out.sort(function(x,y){return y.time-x.time});
+   return out.slice(0,20);
+  }
+  function paintNotifications(){
+   var box=el('afNotificationsList');
+   var u=user();
+   if(!u){if(box)box.innerHTML='<p class="muted">Sign in to receive notifications.</p>';updateBadge(0);return}
+   var seen=getSeen();
+   var items=notifDocs.map(function(d){var n=d.data();return {id:d.id,title:n.title||'New notification',body:n.body||'You have a new update.',time:ms(n.createdAt),target:n.targetPage||'inbox',read:!!n.read||readLocal.has(d.id),doc:true}})
+    .concat(followItems().map(function(f){f.read=f.time<=seen;return f}));
+   items.sort(function(x,y){return y.time-x.time});
+   var unread=items.filter(function(i){return !i.read}).length;
+   updateBadge(unread);
+   if(!box)return;
+   if(!items.length){box.innerHTML='<p class="muted">You are all caught up. New messages, followers and posts from people you follow will appear here.</p>';return}
+   box.innerHTML=(unread?'<div class="af-notif-tools"><button type="button" class="secondary" id="afMarkAllRead">Mark all as read</button></div>':'')+items.map(function(n){
+    return '<button type="button" class="af-notification-row'+(n.read?'':' new')+'" data-af-id="'+safe(n.id)+'" data-af-doc="'+(n.doc?'1':'')+'" data-af-time="'+n.time+'" data-af-target="'+safe(n.target)+'"><b>'+safe(n.title)+'</b><span>'+safe(n.body)+'</span><small>'+(n.time?new Date(n.time).toLocaleString():'Just now')+(n.read?'':' · New')+'</small></button>';
+   }).join('');
+   Array.prototype.forEach.call(box.querySelectorAll('.af-notification-row'),function(btn){btn.addEventListener('click',function(){
+    var id=btn.getAttribute('data-af-id'),target=btn.getAttribute('data-af-target')||'inbox';
+    if(btn.getAttribute('data-af-doc')==='1'){readLocal.add(id);dUpdateRead(id)}else setSeen(Math.max(getSeen(),Number(btn.getAttribute('data-af-time'))||0));
+    if(typeof window.showPage==='function')window.showPage(target);
+   })});
+   var all=el('afMarkAllRead');
+   if(all)all.addEventListener('click',function(){
+    var d=dbx();setSeen(Date.now());notifDocs.forEach(function(x){readLocal.add(x.id)});
+    if(d){try{var batch=d.batch(),n=0;notifDocs.forEach(function(x){readLocal.add(x.id);if(!x.data().read){batch.update(d.collection('notifications').doc(x.id),{read:true});n++}});if(n)batch.commit().catch(function(e){console.warn(e)})}catch(e){console.warn(e)}}
+    paintNotifications();
+   });
+  }
+  function dUpdateRead(id){var d=dbx(),u=user();if(!d||!u)return;d.collection('notifications').doc(id).update({read:true}).catch(function(e){console.warn(e)})}
+  function loadFollowing(){
+   var u=user(),d=dbx();followingUids=new Set();
+   if(!u||!d){paintNotifications();return}
+   d.collection('follows').where('followerUid','==',u.uid).limit(200).get().then(function(snap){snap.docs.forEach(function(x){var v=x.data();if(v&&v.followingUid)followingUids.add(v.followingUid)});paintNotifications()}).catch(function(e){console.warn('Following list:',e)});
+  }
+  function startNotifications(){
+   var u=user(),d=dbx();if(notificationUnsub){notificationUnsub();notificationUnsub=null}
+   notifDocs=[];
+   var box=el('afNotificationsList');
+   if(!u||!d){paintNotifications();return}
+   if(box)box.innerHTML='<p class="muted">Loading notifications…</p>';
+   notificationUnsub=d.collection('notifications').where('recipientUid','==',u.uid).limit(50).onSnapshot(function(snap){notifDocs=snap.docs.slice();paintNotifications()},function(e){console.warn('Notifications:',e);if(box)box.innerHTML='<p class="muted">Notifications are temporarily unavailable.</p>'});
+   loadFollowing();
+  }
+  window.afRefreshNotifications=paintNotifications;
+  if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChanged(function(){startNotifications()});
+  window.afReloadFollowing=loadFollowing;
  // Show a notification center within Inbox, preserving the existing conversations.
  var inbox=el('inbox');
  if(inbox&&!el('afNotificationsPanel')){
@@ -3818,7 +3820,7 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
  // Start live updates when Inbox opens; listeners are detached when the account changes.
  var originalShow=window.showPage;
  if(typeof originalShow==='function'){
-  window.showPage=function(id){var result=originalShow(id);if(id==='inbox')startNotifications();return result};
+  window.showPage=function(id){var result=originalShow(id);if(id==='inbox'){if(notificationUnsub){loadFollowing();paintNotifications()}else startNotifications()}return result};
  }
  document.addEventListener('click',function(e){
   var b=e.target.closest('.wallet-open');if(b){e.preventDefault();if(typeof window.showPage==='function')window.showPage('wallet')}
@@ -3834,7 +3836,7 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
  };
  // Route all wallet actions to the Verified Badge gate while keeping the wallet itself accessible.
  var wallet=el('wallet');
- if(wallet){Array.prototype.forEach.call(wallet.querySelectorAll('button'),function(b){if(!b.classList.contains('wallet-open'))b.onclick=function(){window.afOpenFeatureGate('verification')}})}
+ if(wallet){Array.prototype.forEach.call(wallet.querySelectorAll('button'),function(b){if(!b.classList.contains('wallet-open'))b.onclick=function(){window.afWalletToast()}})}
 })();
 </script>
 
@@ -3846,8 +3848,266 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
         if (!auth || !auth.currentUser) { notice('You are not signed in.'); return; }
         auth.signOut().then(function () { notice('You have signed out.'); showPage('home'); }).catch(function (e) { notice(firebaseErrorMessage(e)); });
     };
+
+    /* ---- Feature popups, wallet message, Go Live requirements ---- */
+    var GATES = {
+        travel: { icon: '✈️', title: 'Travel Booking', msg: 'To unlock this feature, please complete your profile and verify your account first. Then return here to continue.' },
+        academy: { icon: '🎓', title: 'Welcome to Afrishine Academy', msg: 'To unlock this feature, please complete your profile and subscribe to access more features. Then return here to continue.' },
+        jobs: { icon: '💼', title: 'Welcome to Opportunity Job', msg: 'To unlock this feature, please complete your profile and verify your account first. Then return here to continue.' }
+    };
+    function closeGate() { var o = document.getElementById('afGateModal'); if (o) o.remove(); }
+    function openGate(inner) {
+        closeGate();
+        var o = document.createElement('div');
+        o.id = 'afGateModal'; o.className = 'gate-overlay'; o.setAttribute('role', 'dialog'); o.setAttribute('aria-modal', 'true');
+        o.innerHTML = '<section class="gate-card">' + inner + '<button type="button" class="gate-cancel">Cancel</button></section>';
+        document.body.appendChild(o);
+        var c = o.querySelector('.gate-cancel');
+        c.addEventListener('click', closeGate);
+        o.addEventListener('click', function (e) { if (e.target === o) closeGate(); });
+        c.focus();
+    }
+    window.afGate = function (kind) {
+        var g = GATES[kind]; if (!g) return;
+        openGate('<div class="gate-icon" aria-hidden="true">' + g.icon + '</div><h2>' + g.title + '</h2><p>' + g.msg + '</p>');
+    };
+    window.afLiveRequirements = function () {
+        openGate('<div class="gate-icon" aria-hidden="true">🔴</div><h2>Go Live Requirements</h2><ul class="gate-list"><li>Have at least 100 followers</li><li>Post 3+ original public videos</li><li>Follow Afrishine Hub rules and guidelines</li></ul>');
+    };
+    var toastTimer = null;
+    function hideToast() { var t = document.getElementById('afSmallToast'); if (t) t.style.display = 'none'; clearTimeout(toastTimer); }
+    window.afWalletToast = function () {
+        var t = document.getElementById('afSmallToast');
+        if (!t) { t = document.createElement('div'); t.id = 'afSmallToast'; t.setAttribute('role', 'status'); t.setAttribute('aria-live', 'polite'); document.body.appendChild(t); }
+        t.textContent = 'Please first complete verification on your profile to proceed.';
+        t.style.display = 'block';
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(hideToast, 5000);
+    };
+    var prevCreateAction = window.createAction;
+    window.createAction = function (type) {
+        if (type === 'live') { try { closeCreateMenu(); } catch (_) {} window.afLiveRequirements(); return; }
+        return prevCreateAction ? prevCreateAction(type) : openCreator(type);
+    };
+    var prevShowPage = window.showPage;
+    window.showPage = function (id) { hideToast(); closeGate(); return prevShowPage(id); };
+    /* ---- Cloudflare media cleanup: frees storage when a post is deleted ---- */
+    window.workerDelete = function (keyOrUrl) {
+        var base = 'https://afrishine-media.usherluckyelie.workers.dev';
+        var key = String(keyOrUrl || '');
+        if (key.indexOf(base + '/media/') === 0) key = key.slice((base + '/media/').length);
+        try { key = decodeURIComponent(key); } catch (_) { }
+        var u = (typeof currentFirebaseUser !== 'undefined') ? currentFirebaseUser : null;
+        if (!u || !key) return Promise.reject(new Error('Missing user or file'));
+        return u.getIdToken().then(function (token) {
+            return fetch(base + '/delete', { method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify({ key: key }) });
+        }).then(function (r) {
+            return r.json().catch(function () { return {}; }).then(function (d) { if (!r.ok || !d.success) throw new Error(d.error || 'Delete failed'); return d; });
+        });
+    };
+
+    /* ---- Upload helpers: friendly popups, video conversion, format checks ---- */
+    window.AF_QUOTA_MESSAGE = 'You have already used your credits. Please try uploading again after one week, or verify your account to upload immediately.';
+    window.AF_MEDIA = { maxBytes: 100 * 1024 * 1024, targetBytes: 92 * 1024 * 1024, maxConvertSeconds: 120, maxVideoBps: 16000000, audioBps: 128000, maxSide: 1920, fps: 30 };
+    var MEDIA_WORKER_URL = 'https://afrishine-media.usherluckyelie.workers.dev';
+    var MSG_VIDEO = "This video format can't be processed. Please edit it and export it as MP4 (H.264), then upload it again.";
+    var MSG_PHOTO = "This photo format can't be processed. Please edit it and save it as JPG or PNG, then upload it again.";
+    function plain(text) { return String(text).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+    window.afPopup = function (opts) {
+        window.__afPopupMsg = opts.message;
+        window.__afPopupAt = Date.now();
+        openGate((opts.icon ? '<div class="gate-icon" aria-hidden="true">' + opts.icon + '</div>' : '') + (opts.title ? '<h2>' + plain(opts.title) + '</h2>' : '') + '<p>' + plain(opts.message) + '</p>');
+    };
+    var prevNotice = window.notice;
+    window.notice = function (text) {
+        if (text && window.__afPopupMsg === text && Date.now() - (window.__afPopupAt || 0) < 4000) return;
+        return prevNotice(text);
+    };
+    window.afMediaProblem = function (kind) {
+        var message = kind === 'photo' ? MSG_PHOTO : MSG_VIDEO;
+        window.afPopup({ icon: '🛠️', title: 'Edit needed', message: message });
+        return message;
+    };
+    window.afWorkerFailure = function (data, status) {
+        var code = data && data.code;
+        if (code === 'STORAGE_LIMIT_REACHED') window.afPopup({ icon: '📦', message: window.AF_QUOTA_MESSAGE });
+        else if (code === 'DAILY_LIMIT_REACHED') window.afPopup({ icon: '⏳', message: data.error });
+        else if (code === 'FILE_TYPE_NOT_ALLOWED') window.afPopup({ icon: '🛠️', title: 'Edit needed', message: "This file format can't be processed. Please edit it and export it as JPG, PNG or MP4, then upload it again." });
+        else if (code === 'FILE_TOO_LARGE') window.afPopup({ icon: '🛠️', title: 'Edit needed', message: 'This file is larger than the 100 MB limit. Please trim or compress it, then upload it again.' });
+    };
+    window.afCanUpload = function () {
+        var u = (typeof currentFirebaseUser !== 'undefined') ? currentFirebaseUser : null;
+        if (!u) return Promise.resolve(true);
+        return u.getIdToken().then(function (token) {
+            return fetch(MEDIA_WORKER_URL + '/usage', { headers: { Authorization: 'Bearer ' + token } });
+        }).then(function (r) {
+            if (!r.ok) return true;
+            return r.json().then(function (d) {
+                if (d.canUpload === false) { window.afPopup({ icon: '📦', message: window.AF_QUOTA_MESSAGE }); return false; }
+                return true;
+            });
+        }).catch(function () { return true; });
+    };
+    function inferVideoType(file) {
+        var t = (file.type || '').toLowerCase();
+        if (t.indexOf('video/') === 0) return t;
+        var m = /\.([a-z0-9]+)$/i.exec(file.name || '');
+        var ext = m ? m[1].toLowerCase() : '';
+        return ({ mp4: 'video/mp4', m4v: 'video/mp4', mov: 'video/quicktime', webm: 'video/webm' })[ext] || t;
+    }
+    function hasFourCC(bytes, cc) {
+        var a = cc.charCodeAt(0), b = cc.charCodeAt(1), c = cc.charCodeAt(2), d = cc.charCodeAt(3);
+        for (var i = 0; i < bytes.length - 3; i++) { if (bytes[i] === a && bytes[i + 1] === b && bytes[i + 2] === c && bytes[i + 3] === d) return true; }
+        return false;
+    }
+    /* iPhone HEVC (H.265) videos play on iPhones but not on many other phones, so they are converted to H.264. */
+    function looksLikeHevc(file) {
+        var size = file.size, head = Math.min(size, 2 * 1024 * 1024), tail = Math.min(size, 6 * 1024 * 1024);
+        return Promise.all([file.slice(0, head).arrayBuffer(), file.slice(Math.max(0, size - tail), size).arrayBuffer()]).then(function (parts) {
+            return parts.some(function (buf) { var b = new Uint8Array(buf); return hasFourCC(b, 'hvc1') || hasFourCC(b, 'hev1') || hasFourCC(b, 'dvh1'); });
+        }).catch(function () { return false; });
+    }
+    /* Can this browser open the file at all? */
+    function checkPlayable(file) {
+        return new Promise(function (resolve) {
+            var v = document.createElement('video'), url = URL.createObjectURL(file), done = false;
+            function end(ok) { if (done) return; done = true; clearTimeout(timer); try { v.removeAttribute('src'); v.load(); } catch (_) { } URL.revokeObjectURL(url); resolve(ok); }
+            var timer = setTimeout(function () { end(false); }, 15000);
+            v.preload = 'auto'; v.muted = true;
+            v.onloadeddata = function () { end(!!v.videoWidth); };
+            v.onerror = function () { end(false); };
+            v.src = url;
+        });
+    }
+    function pickRecorderMime() {
+        var list = ['video/mp4;codecs=avc1.640028,mp4a.40.2', 'video/mp4;codecs=avc1.4d0028,mp4a.40.2', 'video/mp4;codecs=avc1,mp4a.40.2', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'];
+        for (var i = 0; i < list.length; i++) { try { if (MediaRecorder.isTypeSupported(list[i])) return list[i]; } catch (_) { } }
+        return '';
+    }
+    function transcodeVideo(file, onStatus) {
+        return new Promise(function (resolve, reject) {
+            var M = window.AF_MEDIA, finished = false, started = false;
+            var url = URL.createObjectURL(file), video = document.createElement('video');
+            var canvas, ctx, recorder, ac, stream, chunks = [], stallTimer = null, loadTimer = null, lastTime = -1, stalls = 0, rafId = 0;
+            video.playsInline = true; video.setAttribute('playsinline', ''); video.preload = 'auto';
+            video.style.cssText = 'position:fixed;left:-9999px;top:0;width:2px;height:2px;opacity:0;pointer-events:none';
+            document.body.appendChild(video);
+            function cleanup() {
+                clearTimeout(loadTimer); clearInterval(stallTimer);
+                if (rafId) cancelAnimationFrame(rafId);
+                try { video.pause(); } catch (_) { }
+                try { if (stream) stream.getTracks().forEach(function (t) { t.stop(); }); } catch (_) { }
+                try { if (ac && ac.state !== 'closed') ac.close(); } catch (_) { }
+                try { video.removeAttribute('src'); video.load(); } catch (_) { }
+                if (video.parentNode) video.parentNode.removeChild(video);
+                URL.revokeObjectURL(url);
+            }
+            function fail(message) {
+                if (finished) return;
+                finished = true;
+                try { if (recorder && recorder.state !== 'inactive') { recorder.onstop = null; recorder.stop(); } } catch (_) { }
+                cleanup();
+                window.afPopup({ icon: '🛠️', title: 'Edit needed', message: message });
+                reject(new Error(message));
+            }
+            if (!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) {
+                finished = true; cleanup();
+                var m = 'Your browser cannot optimize this video. Please trim it or export it under 100 MB (MP4), then upload it again.';
+                window.afPopup({ icon: '🛠️', title: 'Edit needed', message: m });
+                return reject(new Error(m));
+            }
+            function draw() {
+                if (finished || video.ended) return;
+                try { ctx.drawImage(video, 0, 0, canvas.width, canvas.height); } catch (_) { }
+                if (video.requestVideoFrameCallback) video.requestVideoFrameCallback(draw); else rafId = requestAnimationFrame(draw);
+            }
+            function start() {
+                if (started || finished) return;
+                started = true; clearTimeout(loadTimer);
+                if (!video.videoWidth || !video.videoHeight) return fail(MSG_VIDEO);
+                if (video.duration === Infinity) {
+                    /* Some browser-made WebM files report no length: seek to the end to learn it. */
+                    video.ontimeupdate = function () { video.ontimeupdate = null; video.onseeked = function () { video.onseeked = null; begin(video.duration); }; video.currentTime = 0; };
+                    video.currentTime = 1e7;
+                    return;
+                }
+                begin(video.duration);
+            }
+            function begin(d) {
+                var vw = video.videoWidth, vh = video.videoHeight;
+                if (!isFinite(d) || d <= 0 || !vw || !vh) return fail(MSG_VIDEO);
+                if (d > M.maxConvertSeconds) return fail('This video is too long to optimize automatically. Please trim it or export it under 100 MB, then upload it again.');
+                var videoBps = Math.min(M.maxVideoBps, Math.floor((M.targetBytes * 8 * 0.9) / d - M.audioBps));
+                if (videoBps < 1000000) return fail('This video is too long to keep its quality under 100 MB. Please trim it, then upload it again.');
+                var scale = Math.min(1, M.maxSide / Math.max(vw, vh));
+                canvas = document.createElement('canvas');
+                canvas.width = Math.max(2, Math.round(vw * scale / 2) * 2);
+                canvas.height = Math.max(2, Math.round(vh * scale / 2) * 2);
+                ctx = canvas.getContext('2d', { alpha: false });
+                stream = canvas.captureStream(M.fps);
+                try {
+                    var AC = window.AudioContext || window.webkitAudioContext;
+                    ac = new AC();
+                    if (ac.resume) ac.resume();
+                    var source = ac.createMediaElementSource(video), dest = ac.createMediaStreamDestination();
+                    source.connect(dest);
+                    dest.stream.getAudioTracks().forEach(function (t) { stream.addTrack(t); });
+                } catch (_) { /* no audio track available */ }
+                var mime = pickRecorderMime();
+                try {
+                    recorder = new MediaRecorder(stream, mime ? { mimeType: mime, videoBitsPerSecond: videoBps, audioBitsPerSecond: M.audioBps } : { videoBitsPerSecond: videoBps });
+                } catch (_) { return fail(MSG_VIDEO); }
+                var outType = (recorder.mimeType || mime || 'video/webm').split(';')[0];
+                recorder.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
+                recorder.onerror = function () { fail(MSG_VIDEO); };
+                recorder.onstop = function () {
+                    if (finished) return;
+                    var blob = new Blob(chunks, { type: outType });
+                    if (!blob.size) return fail(MSG_VIDEO);
+                    if (blob.size > M.maxBytes) return fail('We could not compress this video below 100 MB without losing quality. Please trim it, then upload it again.');
+                    finished = true; cleanup();
+                    var base = (file.name || 'video').replace(/\.[^.]+$/, '').replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 60) || 'video';
+                    resolve(new File([blob], base + (outType === 'video/mp4' ? '.mp4' : '.webm'), { type: outType, lastModified: Date.now() }));
+                };
+                recorder.start(1000);
+                video.onended = function () { setTimeout(function () { if (recorder.state !== 'inactive') recorder.stop(); }, 300); };
+                video.ontimeupdate = function () { if (onStatus) onStatus('Optimizing video… ' + Math.min(99, Math.round(video.currentTime / d * 100)) + '%'); };
+                stallTimer = setInterval(function () {
+                    if (video.currentTime === lastTime) { stalls++; if (stalls >= 6) fail('Video optimization stopped. Please keep this screen open and try again.'); }
+                    else { stalls = 0; lastTime = video.currentTime; }
+                }, 4000);
+                if (onStatus) onStatus('Optimizing video… 0%');
+                video.play().then(draw).catch(function () { fail('Your browser blocked video optimization. Please tap Post again, or export the video under 100 MB and upload it again.'); });
+            }
+            video.onloadeddata = start;
+            video.onerror = function () { if (!started) fail(MSG_VIDEO); };
+            loadTimer = setTimeout(function () { if (!started) fail(MSG_VIDEO); }, 20000);
+            video.src = url;
+        });
+    }
+    /* Videos up to 100 MB in MP4/WebM/MOV (H.264) upload as they are. Bigger videos, other
+       formats and iPhone HEVC videos are converted to a smaller H.264 video first. */
+    window.afPrepareVideo = function (file, onStatus) {
+        var M = window.AF_MEDIA, type = inferVideoType(file);
+        var allowed = ['video/mp4', 'video/webm', 'video/quicktime'].indexOf(type) !== -1;
+        var big = file.size > M.maxBytes;
+        var check = (!big && allowed && type !== 'video/webm') ? looksLikeHevc(file) : Promise.resolve(false);
+        return check.then(function (hevc) {
+            if (allowed && !big && !hevc) {
+                return checkPlayable(file).then(function (ok) {
+                    if (!ok) { window.afMediaProblem('video'); throw new Error(MSG_VIDEO); }
+                    return type === file.type ? file : new File([file], file.name || 'video', { type: type, lastModified: file.lastModified });
+                });
+            }
+            return window.afCanUpload().then(function (ok) {
+                if (!ok) throw new Error(window.AF_QUOTA_MESSAGE);
+                return transcodeVideo(file, onStatus);
+            });
+        });
+    };
     /* Android / browser Back button moves between pages */
     window.addEventListener('popstate', function () {
+        closeGate(); hideToast();
         var id = location.hash.replace('#', '');
         var target = id && document.getElementById(id);
         window.showPage(target && target.classList.contains('page') ? id : 'home');
@@ -3855,6 +4115,7 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
     /* Escape closes open overlays */
     document.addEventListener('keydown', function (e) {
         if (e.key !== 'Escape') return;
+        closeGate();
         try { closeMenu(); closeCreateMenu(); } catch (_) {}
         var ws = document.getElementById('creatorWorkspace');
         if (ws && ws.classList.contains('open')) closeCreator();
