@@ -389,6 +389,106 @@ button,a,input,select,textarea{touch-action:manipulation}
 .ct-btn small{display:block;color:var(--muted);font-weight:500;font-size:13px;margin-top:2px}
 .ct-btn.wa i{background:#16452d}.ct-btn.mail i{background:#3a2a14}.ct-btn.fb i{background:#1b3a73;font-family:Arial,sans-serif;font-weight:900}.ct-btn.yt i{background:#5a1717}
 a.ct-btn:active{background:#1a2030}
+/* ===== VIDEO LINK POSTS (YouTube / TikTok) ===== */
+.vlink{margin:10px 0 4px;border-radius:14px;overflow:hidden;background:#10141d;border:1px solid #2c3446}
+.vlink-media{position:relative;width:100%;aspect-ratio:16/9;background:#05070c}
+.vlink-tiktok .vlink-media{aspect-ratio:9/16;max-height:78vh;max-height:78dvh}
+.vlink-media.is-error{aspect-ratio:auto;max-height:none}
+.vlink-thumb{position:absolute;inset:0;width:100%;height:100%;padding:0;border:0;display:block;cursor:pointer;background:linear-gradient(160deg,#0f2f78,#0a1740 60%,#0a0f22)}
+.vlink-tiktok .vlink-thumb{background:linear-gradient(160deg,#1a1325,#0a0a12 55%,#1d0f1c)}
+.vlink-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.vlink-thumb::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,7,12,.04) 45%,rgba(5,7,12,.6))}
+.vlink-play{position:absolute;left:50%;top:50%;width:68px;height:68px;margin:-34px 0 0 -34px;border-radius:50%;z-index:1;background:linear-gradient(180deg,#ffc83a,#f5a800);box-shadow:0 8px 28px #000a}
+.vlink-play::before{content:'';position:absolute;left:27px;top:20px;border-style:solid;border-width:14px 0 14px 22px;border-color:transparent transparent transparent #111}
+.vlink-frame{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
+.vlink-info{display:grid;gap:4px;padding:11px 13px 12px}
+.vlink-chip{justify-self:start;font-size:11px;font-weight:800;letter-spacing:.4px;padding:3px 9px;border-radius:999px;background:#3a1010;color:#ff9a9a}
+.vlink-tiktok .vlink-chip{background:#13222b;color:#9fe9ff}
+.vlink-title{font-size:15.5px;line-height:1.35;color:#fff;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.vlink-info small{color:var(--muted);font-size:12.5px}
+.vlink-tools{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 13px;background:#0c1018;font-size:13px;color:var(--muted)}
+.vlink-tools button,.vlink-tools a{color:var(--gold);background:none;border:0;font-weight:700;font-size:13px;padding:4px 0;text-decoration:none}
+.vlink-error{display:grid;justify-items:center;gap:12px;padding:22px 18px;text-align:center;background:#10141d;color:#d9deea;font-size:14.5px;line-height:1.55}
+.vlink-error b{font-size:16px;color:#fff}
+.vlink-error .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.vlink-error a,.vlink-error button{min-height:42px;padding:10px 16px;border-radius:12px;border:0;font-weight:800;font-size:14px;text-decoration:none;display:inline-flex;align-items:center}
+.vlink-error a{background:var(--gold);color:#111}.vlink-error button{background:#252d3e;color:#fff}
+@media(max-width:700px){.vlink-post .vlink{width:100vw;max-width:100vw;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);border-radius:0;border-left:0;border-right:0}}
+.link-editor{text-align:left;max-height:92vh;max-height:92dvh;overflow-y:auto}
+.link-editor h2{margin:0 0 6px;font-size:21px}.link-editor .sub{color:var(--muted);font-size:14px;margin:0 0 12px}
+.link-editor .field,.link-editor textarea{margin-bottom:10px}
+.link-editor textarea{width:100%;min-height:72px;resize:vertical}
+.link-msg{min-height:20px;margin:0 0 10px;font-size:13.5px;color:var(--muted)}.link-msg.err{color:#ff9a9a}
+.link-editor .gold{width:100%;min-height:50px;margin-bottom:10px}.link-editor .gold[disabled]{opacity:.45}
+/* ===== ACADEMY: traffic rules ===== */
+.lp-free{margin-top:16px}
+.lp-free h3{font-size:19px;margin:0 0 4px}
+.lp-feature{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px;border-radius:18px;border:1px solid #2c4a9a;background:linear-gradient(135deg,#123083,#0a1740);color:#fff}
+.lp-feature i{font-style:normal;font-size:34px}
+.lp-feature b{display:block;font-size:16px}.lp-feature small{display:block;color:#c3d0f0;font-size:13px;margin-top:2px}
+.lp-feature em{margin-left:auto;font-style:normal;background:var(--gold);color:#111;font-weight:800;font-size:12px;padding:5px 10px;border-radius:999px}
+.tr-hero{position:relative;overflow:hidden;border-radius:24px;padding:20px 16px 16px;border:1px solid #2c4a9a;background:radial-gradient(circle at 86% 30%,#2a5bd7 0,transparent 55%),linear-gradient(160deg,#0f2f78,#0a1740 60%,#0a0f22)}
+.tr-art{position:absolute;right:10px;top:36px;font-size:74px;line-height:1;filter:drop-shadow(0 10px 22px #000a);pointer-events:none}
+.tr-hero h2{position:relative;margin:16px 0 8px;font-size:34px;line-height:1.05;color:#fff}.tr-hero h2 b{color:var(--gold)}
+.tr-hero .lp-tag{font-size:17px}.tr-hero .lp-text{max-width:80%}
+.tr-hero .lp-cta{position:relative;width:100%}
+.tr-hero .tr-note{position:relative;text-align:center;color:#dbe5ff;font-size:13.5px;margin:8px 0 0}
+.tr-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.tr-card{position:relative;display:flex;flex-direction:column;align-items:center;gap:5px;padding:26px 6px 10px;min-height:206px;border-radius:16px;border:1px solid #2c4a9a;background:linear-gradient(170deg,#123083,#0a1740);color:#fff;text-align:center}
+.tr-num{position:absolute;left:8px;top:8px;width:24px;height:24px;border-radius:50%;background:var(--gold);color:#111;font-weight:900;font-size:13px;display:grid;place-items:center}
+.tr-card i{font-style:normal;font-size:44px;line-height:1.1}
+.tr-card b{font-size:14px;line-height:1.2}.tr-card small{color:#c3d0f0;font-size:11.5px;line-height:1.35;flex:1}
+.tr-cta{width:100%;padding:8px 4px;border-radius:999px;background:var(--gold);color:#111;font-weight:800;font-size:12.5px}
+.tr-count{position:absolute;right:8px;top:8px;min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:#0b1531;border:1px solid #2c4a9a;color:#fff;font-size:11.5px;font-weight:800;line-height:20px;display:none}
+.tr-banner{display:flex;align-items:center;gap:10px;margin-top:12px;padding:10px 12px;border-radius:18px;border:1px solid #6b5a1c;background:linear-gradient(135deg,#1a2038,#0b1020)}
+.tr-banner i{font-style:normal;font-size:32px}.tr-banner div{flex:1;min-width:0;font-size:13px;line-height:1.4}.tr-banner b{color:var(--gold)}
+.tr-banner button{flex-shrink:0;border:0;border-radius:999px;background:var(--gold);color:#111;font-weight:800;font-size:12.5px;padding:10px 12px}
+.tr-file{display:flex;align-items:center;gap:12px;padding:12px;margin-bottom:10px;border-radius:16px;border:1px solid #2c4a9a;background:linear-gradient(170deg,#112456,#0b1531)}
+.tr-file i{font-style:normal;font-size:30px}.tr-file div{flex:1;min-width:0}.tr-file b{display:block;font-size:15px}.tr-file small{display:block;color:#b9c6e6;font-size:12.5px;margin-top:2px}
+.tr-file button{border:0;border-radius:999px;background:var(--gold);color:#111;font-weight:800;padding:9px 14px;flex-shrink:0}
+.af-viewer{position:fixed;inset:0;z-index:100002;display:flex;flex-direction:column;background:#05070c}
+.af-viewer-bar{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#10141d;border-bottom:1px solid #2c3446}
+.af-viewer-bar b{flex:1;min-width:0;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.af-viewer-bar a,.af-viewer-bar button{border:0;border-radius:10px;padding:9px 13px;font-weight:800;font-size:13px;text-decoration:none;background:#252d3e;color:#fff}
+.af-viewer-body{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;background:#000}
+.af-viewer-body img,.af-viewer-body video{max-width:100%;max-height:100%}.af-viewer-body iframe{width:100%;height:100%;border:0;background:#fff}
+/* ===== ADMIN DASHBOARD ===== */
+.adm-tabs{display:flex;gap:8px;overflow-x:auto;margin:12px 0;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+.adm-tabs button{flex-shrink:0;padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:#10141d;color:#d9deea;font-weight:700;font-size:13.5px}
+.adm-tabs button.on{background:var(--gold);color:#111;border-color:var(--gold)}
+.adm-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.adm-stat{padding:14px;border-radius:16px;border:1px solid var(--line);background:#10141d}
+.adm-stat i{font-style:normal;font-size:22px}.adm-stat b{display:block;font-size:26px;margin-top:4px}.adm-stat small{color:var(--muted);font-size:12.5px}
+.adm-h{margin:16px 0 8px;font-size:17px}
+.adm-row{display:flex;gap:10px;align-items:flex-start;padding:11px 12px;margin-bottom:8px;border-radius:14px;border:1px solid var(--line);background:#10141d}
+.adm-row .grow{flex:1;min-width:0;font-size:14px;line-height:1.45;word-break:break-word}.adm-row small{display:block;color:var(--muted);font-size:12.5px}
+.adm-row .acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.adm-btn{padding:7px 11px;border-radius:10px;border:0;background:#252d3e;color:#fff;font-weight:700;font-size:12.5px}
+.adm-btn.gold{background:var(--gold);color:#111}.adm-btn.red{background:#4a1d1d;color:#ffb3b3}
+.adm-tag{display:inline-block;padding:2px 8px;border-radius:999px;background:#202738;color:#cdd5e5;font-size:11.5px;font-weight:700;margin-right:6px}
+.adm-empty{color:var(--muted);padding:14px 4px;font-size:14px}
+.adm-form{display:grid;gap:10px;padding:14px;border-radius:16px;border:1px solid var(--line);background:#10141d;margin-bottom:14px}
+.adm-bar{height:12px;border-radius:6px;background:#202738;overflow:hidden}.adm-bar>span{display:block;height:100%;background:linear-gradient(90deg,#ffc83a,#f5a800)}
+.adm-search{width:100%;margin-bottom:10px}
+/* ===== PROFILE MENU (bottom sheet) ===== */
+.ah-profile-more[open]>.ah-sheet-backdrop{position:fixed;inset:0;z-index:99990;background:rgba(3,6,13,.72);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.ah-profile-more>.ah-profile-menu{position:fixed;left:0;right:0;bottom:0;top:auto;width:auto;max-width:560px;margin:0 auto;max-height:88vh;max-height:88dvh;overflow-y:auto;z-index:99991;padding:8px 14px calc(18px + env(safe-area-inset-bottom));border-radius:24px 24px 0 0;border:1px solid #2f3a52;border-bottom:0;background:#141a27;box-shadow:0 -18px 60px #000c;animation:ahSheet .22s ease-out}
+@keyframes ahSheet{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.ah-sheet-handle{width:42px;height:5px;border-radius:3px;background:#3a4560;margin:4px auto 10px}
+.ah-sheet-head{display:flex;align-items:center;gap:12px;padding:6px 2px 12px;border-bottom:1px solid #263047}
+.ah-sheet-avatar{width:46px;height:46px;border-radius:50%;object-fit:cover;background:#202738;border:2px solid var(--gold)}
+.ah-sheet-head div{flex:1;min-width:0}.ah-sheet-head b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ah-sheet-head small{color:var(--muted);font-size:12.5px}
+.ah-profile-menu .ah-sheet-close{display:grid!important;place-items:center;flex:0 0 36px;width:36px!important;height:36px!important;margin:0!important;padding:0!important;border:0!important;border-radius:50%!important;background:#222b3d!important;color:#fff!important;font-size:16px;text-align:center!important}
+.ah-profile-menu .ah-sheet-head{display:flex!important}
+.ah-profile-menu .ah-sheet-head div{display:block;width:auto}
+.ah-profile-menu .ah-menu-section{margin:14px 4px 6px;font-size:11.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#7e8aa6}
+.ah-profile-menu .ah-menu-item{display:flex;align-items:center;gap:12px;width:100%;padding:10px 8px;margin:0;border:0;border-radius:14px;background:transparent;color:#fff;text-align:left;font-size:15px}
+.ah-profile-menu .ah-menu-item:active,.ah-profile-menu .ah-menu-item:hover{background:#1d2638}
+.ah-profile-menu .ah-menu-item i{font-style:normal;flex-shrink:0;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:#202a3f;font-size:18px}
+.ah-profile-menu .ah-menu-item span{display:block;font-weight:700;line-height:1.25}.ah-profile-menu .ah-menu-item small{display:block;margin-top:2px;color:var(--muted);font-weight:500;font-size:12.5px}
+.ah-profile-menu .ah-menu-item.gold i{background:#3a3016}.ah-profile-menu .ah-menu-item.admin i{background:#16345a}
+.ah-profile-menu .ah-menu-item.danger{color:#ff9a9a}.ah-profile-menu .ah-menu-item.danger i{background:#3b1c20}
+.ah-sheet-foot{margin:12px 0 0;text-align:center;color:#6f7b96;font-size:12px}
 </style>
 </head>
 <body>
@@ -413,7 +513,7 @@ a.ct-btn:active{background:#1a2030}
 <button class="academy-home-card" onclick="showPage('academy')"><div class="academy-home-info"><div class="academy-home-icon">🎓</div><div class="academy-home-text"><strong>LEARN WITH AFRISHINE ACADEMY</strong><small>Learn new skills, explore knowledge and grow with Afrishine Academy.</small></div></div><span class="academy-home-arrow">→</span></button>
 <button class="love-home-card" onclick="showPage('love')"><div class="love-home-info"><div class="love-home-icon">❤️</div><div class="love-home-text"><strong>LOVE CONNECTION</strong><small>Connect, discover and build meaningful relationships.</small></div></div><span class="love-home-arrow">→</span></button></div>
 <h2 class="dashboard-heading">Explore Afrishine Hub</h2>
-<section class="ast-wallet-card" aria-label="Afrishine Token wallet"><div class="ast-coin">AST</div><div class="ast-wallet-info"><div class="ast-wallet-label">AFRISHINE TOKEN</div><h2>My Wallet</h2><p>Your wallet is ready. Your AST balance and transaction history will appear here after your account verification is complete.</p></div><button class="secondary wallet-open" onclick="showPage('wallet')">Open My Wallet →</button></section>
+<section class="ast-wallet-card" aria-label="Afrishine Token wallet"><div class="ast-coin">AST</div><div class="ast-wallet-info"><div class="ast-wallet-label">AFRISHINE TOKEN</div><h2>My Wallet</h2><p>Your AST balance and transaction history will appear here once wallet services launch.</p></div><button class="secondary wallet-open" onclick="showPage('wallet')">Open My Wallet →</button></section>
 <section class="home-video-section" aria-label="Afrishine video feed">
 <div class="home-video-heading"><div><h2>Videos For You ▶</h2><p>Discover short videos from the Afrishine community.</p></div><span class="eyebrow">FOR YOU</span></div>
 <div class="home-video-feed" id="homeVideoFeed"><div class="video-empty"><div class="empty-icon">🎬</div><strong>No videos yet</strong><p>When members publish videos, they will appear here. Videos play silently while you scroll; tap a video to watch it full screen.</p></div></div>
@@ -437,7 +537,7 @@ a.ct-btn:active{background:#1a2030}
 <section class="page" id="travel"><div class="lp"><button class="lp-back" type="button" onclick="showPage('home')">‹ Back</button><section class="lp-hero"><div class="lp-art" aria-hidden="true">✈️</div><span class="lp-pill">✈ Travel Booking</span><h2>Explore the World with <b>Afrishine</b></h2><p class="lp-tag">Book Flights, Hotels &amp; More</p><p class="lp-text">Plan your next journey easily and travel with confidence.</p><button type="button" class="lp-cta" onclick="afGate('travel')">Booking Now →</button></section>
 <section class="lp-sec"><h3><span>★</span> Search Trip</h3><div class="lp-grid c2"><button type="button" class="lp-card big" onclick="afGate('travel')"><i aria-hidden="true">✈️</i>Flight Booking<small>Book the best fares</small></button><button type="button" class="lp-card big" onclick="afGate('travel')"><i aria-hidden="true">🏨</i>Hotel Booking<small>Stay in comfort</small></button><button type="button" class="lp-card big" onclick="afGate('travel')"><i aria-hidden="true">🚗</i>Car Rentals<small>Travel with ease</small></button><button type="button" class="lp-card big" onclick="afGate('travel')"><i aria-hidden="true">🏝️</i>Tour Packages<small>Explore amazing places</small></button></div><div class="lp-trust"><span><i>🛡️</i>Safe &amp; Secure</span><span><i>🎧</i>24/7 Support</span><span><i>🌍</i>Best Prices</span></div></section><div class="lp-bottom"><button type="button" class="lp-cta" onclick="afGate('travel')">Search Trip →</button><p class="lp-note">Be the first to know when this service becomes available in your area.</p></div></div></section>
 <section class="page" id="academy"><div class="lp"><button class="lp-back" type="button" onclick="showPage('home')">‹ Back</button><section class="lp-hero"><div class="lp-art" aria-hidden="true">🎓</div><span class="lp-pill">🎓 Online Learning</span><h2>Welcome to <b>Afrishine Academy</b></h2><p class="lp-tag">Learn. Grow. Succeed.</p><p class="lp-text">Gain in-demand skills and unlock better opportunities in AI, Business, Trading and more.</p><button type="button" class="lp-cta" onclick="afGate('academy')">Start Learning →</button></section>
-<section class="lp-sec"><h3>Our Course Categories</h3><p class="lp-sub">Explore a wide range of courses designed for your success.</p><div class="lp-grid c3"><div class="lp-course"><div class="ico" aria-hidden="true">🤖</div><strong>AI &amp; Innovation</strong><p>Artificial Intelligence, Prompt Engineering &amp; AI Tools.</p><button type="button" onclick="afGate('academy')">Explore Courses →</button></div><div class="lp-course"><div class="ico" aria-hidden="true">📊</div><strong>Trading</strong><p>Forex, Gold (XAUUSD) &amp; Technical Analysis.</p><button type="button" onclick="afGate('academy')">Explore Courses →</button></div><div class="lp-course"><div class="ico" aria-hidden="true">🏙️</div><strong>Business</strong><p>Entrepreneurship, Digital Marketing &amp; Online Business.</p><button type="button" onclick="afGate('academy')">Explore Courses →</button></div><div class="lp-course"><div class="ico" aria-hidden="true">💻</div><strong>Technology</strong><p>Programming, Web Development &amp; Cyber Safety.</p><button type="button" onclick="afGate('academy')">Explore Courses →</button></div><div class="lp-course"><div class="ico" aria-hidden="true">🪙</div><strong>Finance</strong><p>Personal Finance, Investment &amp; Financial Literacy.</p><button type="button" onclick="afGate('academy')">Explore Courses →</button></div><div class="lp-course"><div class="ico" aria-hidden="true">📷</div><strong>Creative Skills</strong><p>Graphic Design, Video Editing &amp; Photography.</p><button type="button" onclick="afGate('academy')">Explore Courses →</button></div></div><div class="lp-trust"><span><i>🏆</i>Expert Instructors</span><span><i>📜</i>Certificate of Completion</span><span><i>🎧</i>24/7 Support</span></div></section><div class="lp-bottom"><button type="button" class="lp-cta" onclick="afGate('academy')">▶ Start Learning</button><p class="lp-note">Build a brighter future with Afrishine Academy</p></div></div></section>
+<section class="lp-sec"><h3>Our Course Categories</h3><p class="lp-sub">Explore a wide range of courses designed for your success.</p><div class="lp-grid c3"><div class="lp-course"><div class="ico" aria-hidden="true">🤖</div><strong>AI &amp; Innovation</strong><p>Artificial Intelligence, Prompt Engineering &amp; AI Tools.</p><button type="button" onclick="afGate('academy')">Explore Courses →</button></div><div class="lp-course"><div class="ico" aria-hidden="true">📊</div><strong>Trading</strong><p>Forex, Gold (XAUUSD) &amp; Technical Analysis.</p><button type="button" onclick="afGate('academy')">Explore Courses →</button></div><div class="lp-course"><div class="ico" aria-hidden="true">🏙️</div><strong>Business</strong><p>Entrepreneurship, Digital Marketing &amp; Online Business.</p><button type="button" onclick="afGate('academy')">Explore Courses →</button></div><div class="lp-course"><div class="ico" aria-hidden="true">💻</div><strong>Technology</strong><p>Programming, Web Development &amp; Cyber Safety.</p><button type="button" onclick="afGate('academy')">Explore Courses →</button></div><div class="lp-course"><div class="ico" aria-hidden="true">🪙</div><strong>Finance</strong><p>Personal Finance, Investment &amp; Financial Literacy.</p><button type="button" onclick="afGate('academy')">Explore Courses →</button></div><div class="lp-course"><div class="ico" aria-hidden="true">📷</div><strong>Creative Skills</strong><p>Graphic Design, Video Editing &amp; Photography.</p><button type="button" onclick="afGate('academy')">Explore Courses →</button></div></div><div class="lp-free"><h3>Free Courses</h3><p class="lp-sub">Start learning today at no cost.</p><button type="button" class="lp-feature" data-open-traffic><i aria-hidden="true">🚦</i><span><b>Amategeko y’umuhanda</b><small>Gasette, ibyapa, amabwiriza n’ibindi</small></span><em>FREE</em></button></div><div class="lp-trust"><span><i>🏆</i>Expert Instructors</span><span><i>📜</i>Certificate of Completion</span><span><i>🎧</i>24/7 Support</span></div></section><div class="lp-bottom"><button type="button" class="lp-cta" onclick="afGate('academy')">▶ Start Learning</button><p class="lp-note">Build a brighter future with Afrishine Academy</p></div></div></section>
 <section class="page" id="jobs"><div class="lp"><button class="lp-back" type="button" onclick="showPage('home')">‹ Back</button><section class="lp-hero"><div class="lp-art" aria-hidden="true">💼</div><span class="lp-pill">💼 Digital Jobs</span><h2>Find Your <b>Dream Job</b></h2><p class="lp-tag">Work. Grow. Succeed.</p><p class="lp-text">Discover verified job opportunities from top employers and companies around the world.</p><button type="button" class="lp-cta" onclick="afGate('jobs')">Explore Now →</button></section>
 <section class="lp-sec"><div class="lp-why"><div><h3><span>★</span> Why Choose Afrishine Jobs?</h3><ul><li>Verified Job Listings</li><li>Remote &amp; Local Opportunities</li><li>Career Growth Support</li><li>Skill Development Resources</li></ul></div><div class="lp-badge" aria-hidden="true">💼<b>JOBS</b></div></div></section>
 <section class="lp-sec"><h3><span>📈</span> Find Job</h3><div class="lp-grid c3"><button type="button" class="lp-card" onclick="afGate('jobs')"><i aria-hidden="true">💻</i>IT &amp; Tech</button><button type="button" class="lp-card" onclick="afGate('jobs')"><i aria-hidden="true">📣</i>Marketing</button><button type="button" class="lp-card" onclick="afGate('jobs')"><i aria-hidden="true">📈</i>Business</button><button type="button" class="lp-card" onclick="afGate('jobs')"><i aria-hidden="true">🩺</i>Health</button><button type="button" class="lp-card" onclick="afGate('jobs')"><i aria-hidden="true">🎓</i>Education</button><button type="button" class="lp-card" onclick="afGate('jobs')"><i aria-hidden="true">⚙️</i>Others</button></div></section><div class="lp-bottom"><button type="button" class="lp-cta" onclick="afGate('jobs')">Find Job →</button><p class="lp-note">Be the first to know when new job opportunities are available.</p></div></div></section>
@@ -486,7 +586,7 @@ a.ct-btn:active{background:#1a2030}
     <label class="market-label" for="marketProductCurrency">Price Currency</label><select class="field" id="marketProductCurrency"><option value="RWF">FRW · Rwandan Franc</option><option value="USD">USD · US Dollar ($)</option></select><label class="market-label" for="marketProductPrice">Product Price</label><input class="field" id="marketProductPrice" type="number" min="1" step="any" inputmode="decimal" placeholder="e.g. 20">
     <label class="market-label" for="marketProductCondition">Condition</label><select class="field" id="marketProductCondition"><option value="New">New</option><option value="Used">Used</option></select>
     <label class="market-label" for="marketProductCategory">Category</label><select class="field" id="marketProductCategory"><option>Home Appliances</option><option>Electronics</option><option>CCTV & Security</option><option>Phones & Accessories</option><option>Fashion & Shoes</option><option>Furniture</option><option>Vehicles</option><option>Beauty & Health</option><option>Construction</option><option>Agriculture</option><option>Sports</option><option>Other</option></select>
-    <label class="market-label" for="marketProductLocation">Location</label><select class="field" id="marketProductLocation"><option value="Rwanda, Kigali"> Rwanda/Kigali</option><option value="Rwamagana">Rwamagana</option> </option><option value=" Gicumbi">Gicumbi </option><option value=", Musanze">Musanze </option><option value=", Huye">Huye </option><option value=", Rubavu">Rubavu </option><option value=" Muhanga">Muhanga </option><option value=" Nyagatare">Nyagatare </option><option value=", Other">Other </option></select>
+    <label class="market-label" for="marketProductLocation">Location</label><select class="field" id="marketProductLocation"><option value="Rwanda, Kigali">Kigali, Rwanda</option><option value="Rwanda, Rwamagana">Rwamagana, Rwanda</option><option value="Rwanda, Gicumbi">Gicumbi, Rwanda</option><option value="Rwanda, Musanze">Musanze, Rwanda</option><option value="Rwanda, Huye">Huye, Rwanda</option><option value="Rwanda, Rubavu">Rubavu, Rwanda</option><option value="Rwanda, Muhanga">Muhanga, Rwanda</option><option value="Rwanda, Nyagatare">Nyagatare, Rwanda</option><option value="Rwanda, Other">Other, Rwanda</option></select>
     <button class="gold market-publish-btn" id="marketPublishButton" onclick="marketPublishProduct()">Done · Publish Product</button>
     <p class="creator-hint" id="marketUploadStatus" aria-live="polite"></p>
   </div>
@@ -523,6 +623,24 @@ a.ct-btn:active{background:#1a2030}
     <button class="creator-apply-btn" type="button" onclick="showCreatorEligibilityMessage()">Apply for Monetization</button>
   </section>
 </section>
+<section class="page" id="trafficRules"><div class="lp">
+<button class="lp-back" type="button" onclick="showPage('academy')">‹ Back</button>
+<section class="tr-hero"><div class="tr-art" aria-hidden="true">📕</div><span class="lp-pill">🎓 Afrishine Academy</span>
+<h2>Amategeko<br><b>y’umuhanda</b></h2><p class="lp-tag">Menya, Umenye, Uyuze Ubumenyi.</p>
+<p class="lp-text">Soma ibitabo byuzuye, menya amategeko, bibwirizwa n’ibipimo by’umuhanda.</p>
+<button type="button" class="lp-cta" id="trStart">♛ Start Learning For Free →</button>
+<p class="tr-note">Ubumenyi bwiza ni intangiriro y’iterambere.</p></section>
+<section class="lp-sec" id="trCats"><h3>Ibitabo n’Ibikoresho</h3><p class="lp-sub">Wige byuzuye ku mategeko y’umuhanda n’uburyo bwo kubyubahiriza.</p><div class="tr-grid" id="trGrid"></div></section>
+<div class="tr-banner"><i aria-hidden="true">🏆</i><div><b>Wige Umwuga,</b> <b style="color:#fff">Wibuke Itegeko,</b> Ubue Imodoka Umutekano<br><em>Buhoro buhoro, wige neza, utezimbere.</em></div><button type="button" id="trStart2">▶ Start Learning</button></div>
+</div></section>
+<section class="page" id="trafficList"><div class="lp">
+<button class="lp-back" type="button" onclick="showPage('trafficRules')">‹ Back</button>
+<section class="lp-sec" style="margin-top:6px"><h3 id="trListTitle">Ibitabo</h3><p class="lp-sub" id="trListSub"></p><div id="trListBody"></div></section>
+</div></section>
+<section class="page" id="admin"><div class="eyebrow">ADMINISTRATION</div><h1>Admin Dashboard</h1><p class="muted">Monitor and manage everything happening on Afrishine Hub.</p>
+<div class="adm-tabs" id="admTabs" role="tablist" aria-label="Admin sections">
+<button type="button" class="on" data-adm-tab="overview">Overview</button><button type="button" data-adm-tab="members">Members</button><button type="button" data-adm-tab="content">Content</button><button type="button" data-adm-tab="reports">Reports</button><button type="button" data-adm-tab="verify">Verification</button><button type="button" data-adm-tab="academy">Academy</button><button type="button" data-adm-tab="storage">Storage</button></div>
+<div id="admBody"></div></section>
 <section class="page" id="contact"><div class="eyebrow">WE ARE HERE TO HELP</div><h1>Contact Us</h1><p class="muted">Get in touch with Afrishine Hub for support, questions and business inquiries.</p>
 <section class="panel"><h2>About Afrishine Hub</h2><p>Afrishine Hub is a Rwandan digital platform where creators share their talent, people buy and sell in the Marketplace, and members access more services such as learning, jobs and travel, all in one place.</p></section>
 <section class="panel"><h2>Get in Touch</h2><div class="ct-grid">
@@ -546,7 +664,7 @@ a.ct-btn:active{background:#1a2030}
   </div>
 </dialog>
 <div class="create-backdrop" id="createBackdrop" onclick="closeCreateMenu()"></div>
-<div class="create-menu" id="createMenu" role="dialog" aria-label="Create menu"><div class="create-menu-head"><h2 id="createMenuTitle">Create on Afrishine Hub</h2><button class="round" onclick="closeCreateMenu()" aria-label="Close create menu">✕</button></div><button class="create-option" onclick="createAction('post')"><span>📝</span> Create Post</button><button class="create-option" onclick="createAction('photo')"><span>🖼️</span> Upload Photo</button><button class="create-option" onclick="createAction('video')"><span>🎬</span> Upload Video</button><button class="create-option" onclick="createAction('live')"><span>🔴</span> Go Live</button></div>
+<div class="create-menu" id="createMenu" role="dialog" aria-label="Create menu"><div class="create-menu-head"><h2 id="createMenuTitle">Create on Afrishine Hub</h2><button class="round" onclick="closeCreateMenu()" aria-label="Close create menu">✕</button></div><button class="create-option" onclick="createAction('post')"><span>📝</span> Create Post</button><button class="create-option" onclick="createAction('photo')"><span>🖼️</span> Upload Photo</button><button class="create-option" onclick="createAction('video')"><span>🎬</span> Upload Video</button><button class="create-option" id="createLinkOption" style="display:none" onclick="createAction('link')"><span>🔗</span> Video Link</button><button class="create-option" onclick="createAction('live')"><span>🔴</span> Go Live</button></div>
 <div class="creator-backdrop" id="creatorBackdrop" onclick="closeCreator()"></div>
 <section class="creator-workspace" id="creatorWorkspace" role="dialog" aria-modal="true"><div class="creator-inner"><div class="creator-header"><h2 id="creatorTitle">Create Post</h2><button class="creator-close" onclick="closeCreator()" aria-label="Close">✕</button></div>
 <div id="postEditor" style="display:none"><textarea id="postText" placeholder="What would you like to share with the Afrishine Hub community?"></textarea><div class="creator-actions"><button class="gold" onclick="previewPost()">Preview Post</button></div><div class="preview-box" id="postPreview"><b>Post Preview</b><div class="preview-text" id="postPreviewText"></div><p class="creator-hint">Preview of your text post.</p><div class="creator-actions"><button class="gold" onclick="publishTextPost()">Publish Post</button><button class="secondary" onclick="editPost()">Edit</button></div></div></div>
@@ -1241,7 +1359,9 @@ function deleteMarketplacePost(id) {
             notice('You can only delete your own post.');
             return;
         }
+        const marketPostData = snap.data();
         yield ref.delete();
+        [].concat(marketPostData.images || [], marketPostData.imageUrls || [], marketPostData.videoUrl ? [marketPostData.videoUrl] : []).forEach(function (mediaUrl) { if (typeof workerDelete === 'function') workerDelete(mediaUrl).catch(function () { }); });
         notice('Marketplace post deleted.');
         loadMarketplacePosts(true);
     }
@@ -1276,10 +1396,10 @@ catch (e) {
 var engagementObserver = ('IntersectionObserver' in window) ? new IntersectionObserver(function (entries) { entries.forEach(function (en) { if (en.isIntersecting) { engagementObserver.unobserve(en.target); loadPostEngagement(en.target); } }); }, { rootMargin: '250px' }) : null;
 function queueEngagement(card) { if (engagementObserver) engagementObserver.observe(card); else loadPostEngagement(card); }
 function renderPostList(elementId, posts, emptyMessage) { const el = document.getElementById(elementId); if (!el)
-    return; posts = posts.filter(p => p.visibility !== 'private' || (currentFirebaseUser && p.uid === currentFirebaseUser.uid)); if (!posts.length) {
+    return; if (el.querySelector('[data-vlink-playing="1"]')) { clearTimeout(el.__afRetry); el.__afRetry = setTimeout(function () { renderPostList(elementId, posts, emptyMessage); }, 10000); return; } posts = posts.filter(p => p.visibility !== 'private' || (currentFirebaseUser && p.uid === currentFirebaseUser.uid)); if (!posts.length) {
     el.innerHTML = '<div class="empty-feed">' + emptyMessage + '</div>';
     return;
-} el.innerHTML = posts.map(p => { const mine = currentFirebaseUser && p.uid === currentFirebaseUser.uid; const mediaUrl = p.mediaUrl || p.videoUrl || p.mediaURL || p.mediaURL || ''; const mediaType = p.mediaType || (p.type === 'video' ? 'video' : (p.type === 'image' ? 'image' : '')); const mediaMarkup = mediaUrl ? (mediaType === 'video' ? '<video class="post-media-video" src="' + safeText(mediaUrl) + '" controls playsinline preload="metadata" style="width:100%;max-height:520px;border-radius:14px;background:#080a10"></video>' : '<img class="post-media-image" src="' + safeText(mediaUrl) + '" alt="Shared media" loading="lazy" style="width:100%;max-height:520px;object-fit:contain;border-radius:14px;background:#080a10">') : ''; return '<article class="post-card" data-engagement="posts" data-post-id="' + safeText(p.id) + '" data-author-uid="' + safeText(p.uid) + '" data-visibility="' + safeText(p.visibility || 'public') + '"><div class="post-meta"><button class="text-link" data-open-profile="' + safeText(p.uid) + '">' + safeText(marketplacePublicName(p.authorName)) + '</button><span>' + safeText(postDate(p.createdAt)) + '</span></div>' + (p.isRepost ? '<p class="creator-hint">🔁 Repost · Originally shared by ' + safeText(p.originalAuthor || 'Afrishine Member') + '</p>' : '') + '<div class="post-body">' + safeText(p.text || '') + '</div>' + mediaMarkup + '<div class="actions post-actions"><button class="secondary" data-like="' + safeText(p.id) + '" data-kind="posts">♡ Like <span data-like-count>0</span></button><button class="secondary" data-focus-comment="' + safeText(p.id) + '">💬 Comment</button><button class="secondary" data-share-post="' + safeText(p.id) + '" data-kind="posts">↗ Share</button><button class="secondary" data-repost="' + safeText(p.id) + '" data-kind="posts">🔁 Repost</button>' + (mine ? '' : '<button class="secondary" data-message-user="' + safeText(p.uid) + '" data-message-name="' + safeText(marketplacePublicName(p.authorName)) + '">✉ Message</button>') + '</div><div class="comment-area"><div data-comments-list></div><div class="comment-compose"><input class="field" data-comment-input placeholder="Write a comment…" maxlength="500"><button class="gold" data-send-comment="' + safeText(p.id) + '" data-kind="posts">Send</button></div></div>' + (mine ? '<button class="post-delete" data-delete-post="' + safeText(p.id) + '">Delete my post</button>' : '') + '</article>'; }).join(''); el.querySelectorAll('[data-engagement]').forEach(queueEngagement); }
+} el.innerHTML = posts.map(p => { const mine = currentFirebaseUser && p.uid === currentFirebaseUser.uid; const mediaUrl = p.mediaUrl || p.videoUrl || p.mediaURL || p.mediaURL || ''; const mediaType = p.mediaType || (p.type === 'video' ? 'video' : (p.type === 'image' ? 'image' : '')); const mediaMarkup = mediaUrl ? (mediaType === 'video' ? '<video class="post-media-video" src="' + safeText(mediaUrl) + '" controls playsinline preload="metadata" style="width:100%;max-height:520px;border-radius:14px;background:#080a10"></video>' : '<img class="post-media-image" src="' + safeText(mediaUrl) + '" alt="Shared media" loading="lazy" style="width:100%;max-height:520px;object-fit:contain;border-radius:14px;background:#080a10">') : ''; return '<article class="post-card' + (p.type === 'link' ? ' vlink-post' : '') + '" data-engagement="posts" data-post-id="' + safeText(p.id) + '" data-author-uid="' + safeText(p.uid) + '" data-visibility="' + safeText(p.visibility || 'public') + '"><div class="post-meta"><button class="text-link" data-open-profile="' + safeText(p.uid) + '">' + safeText(marketplacePublicName(p.authorName)) + '</button><span>' + safeText(postDate(p.createdAt)) + '</span></div>' + (p.isRepost ? '<p class="creator-hint">🔁 Repost · Originally shared by ' + safeText(p.originalAuthor || 'Afrishine Member') + '</p>' : '') + '<div class="post-body">' + safeText(p.text || '') + '</div>' + (p.type === 'link' && window.afLinkCardHtml ? window.afLinkCardHtml(p) : mediaMarkup) + '<div class="actions post-actions"><button class="secondary" data-like="' + safeText(p.id) + '" data-kind="posts">♡ Like <span data-like-count>0</span></button><button class="secondary" data-focus-comment="' + safeText(p.id) + '">💬 Comment</button><button class="secondary" data-share-post="' + safeText(p.id) + '" data-kind="posts">↗ Share</button><button class="secondary" data-repost="' + safeText(p.id) + '" data-kind="posts">🔁 Repost</button>' + (mine ? '' : '<button class="secondary" data-message-user="' + safeText(p.uid) + '" data-message-name="' + safeText(marketplacePublicName(p.authorName)) + '">✉ Message</button>') + '</div><div class="comment-area"><div data-comments-list></div><div class="comment-compose"><input class="field" data-comment-input placeholder="Write a comment…" maxlength="500"><button class="gold" data-send-comment="' + safeText(p.id) + '" data-kind="posts">Send</button></div></div>' + (mine ? '<button class="post-delete" data-delete-post="' + safeText(p.id) + '">Delete my post</button>' : '') + '</article>'; }).join(''); el.querySelectorAll('[data-engagement]').forEach(queueEngagement); }
 function renderPosts(posts) { window.__afLatestPosts = posts; if (typeof window.afRefreshNotifications === 'function') setTimeout(window.afRefreshNotifications, 0); const talentPosts = posts.filter(p => p.source === 'talent'); const communityPosts = posts.filter(p => p.source !== 'talent'); renderPostList('homeFeed', posts, 'No posts yet. Be the first to share something with Afrishine Hub.'); renderPostList('talentFeed', talentPosts, 'No Talent Hub posts yet. Be the first to showcase your talent.'); renderPostList('communityFeed', communityPosts, 'No Community posts yet. Be the first to share with the Community.'); }
 function scrollToSharedPost(kind) { if (!window.ahSharedPostId)
     return; const card = document.querySelector('[data-engagement="' + kind + '"][data-post-id="' + window.ahSharedPostId + '"]'); if (card) {
@@ -1404,7 +1524,7 @@ function repostPost(kind, id) {
             notice('Reposted to Love Connection.');
         }
         else {
-            yield db.collection('posts').add({ uid: currentFirebaseUser.uid, authorName: name, text: p.text || '', type: 'text', source: p.source === 'talent' ? 'talent' : 'hub', isRepost: true, originalPostId: id, originalAuthor: p.authorName || 'Afrishine Member', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+            yield db.collection('posts').add({ uid: currentFirebaseUser.uid, authorName: name, text: p.type === 'link' ? ((p.linkTitle || 'Video') + ' ' + (p.linkUrl || '')).trim() : (p.text || ''), type: 'text', source: p.source === 'talent' ? 'talent' : 'hub', isRepost: true, originalPostId: id, originalAuthor: p.authorName || 'Afrishine Member', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
             notice(p.source === 'talent' ? 'Reposted to Talent Hub and Home.' : 'Reposted to Community and Home.');
         }
     }
@@ -1747,7 +1867,9 @@ function deleteMyLovePost(id) {
             notice('You can only delete your own post.');
             return;
         }
+        const lovePostData = snap.data();
         yield ref.delete();
+        if (lovePostData.imageKey && typeof workerDelete === 'function') workerDelete(lovePostData.imageKey).catch(function () { });
         notice('Love Connection post deleted.');
     }
     catch (e) {
@@ -2237,7 +2359,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         const res = yield fetch(url, { method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': file.type }, body: file });
         const data = yield res.json().catch(() => ({}));
         if (!res.ok || !data.success)
-            throw new Error(data.error || 'Upload failed. Please try again.');
+            { afWorkerFailure(data, res.status); throw new Error(data.error || 'Upload failed. Please try again.'); }
         resolve(data);
     }
     catch (e) {
@@ -2260,7 +2382,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         }
         catch (e) {
             console.warn('Image compression skipped', e);
-            return file;
+        if (!/^image\/(jpeg|png|webp)$/.test(file.type)) {
+            throw new Error(afMediaProblem('photo'));
+        }
+        return file;
         } });
     }
     function checkDailyMedia(type) {
@@ -2279,10 +2404,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             const d = yield r.json();
             const used = Number((_c = (_b = (_a = d.usedBytes) !== null && _a !== void 0 ? _a : d.used) !== null && _b !== void 0 ? _b : d.totalBytes) !== null && _c !== void 0 ? _c : 0);
             const limit = Number((_e = (_d = d.limitBytes) !== null && _d !== void 0 ? _d : d.limit) !== null && _e !== void 0 ? _e : STORAGE_LIMIT_BYTES);
-            if (used >= Math.min(limit, STORAGE_LIMIT_BYTES)) {
-                say('Media uploads are temporarily unavailable. Please try again later.');
-                return false;
-            }
+            if (d.canUpload === false || (d.canUpload === undefined && used >= Math.min(limit, STORAGE_LIMIT_BYTES))) {
+            afPopup({ icon: '📦', message: window.AF_QUOTA_MESSAGE });
+            return false;
+        }
             return true;
         }
         catch (e) {
@@ -2488,7 +2613,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         f.after(hint);
     } }
     function videoDuration(file) {
-        return __awaiter(this, void 0, void 0, function* () { return new Promise((resolve, reject) => { const v = document.createElement('video'); v.preload = 'metadata'; const url = URL.createObjectURL(file); v.onloadedmetadata = () => { const d = v.duration; URL.revokeObjectURL(url); resolve(d); }; v.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Could not read the video duration.')); }; v.src = url; }); });
+        return __awaiter(this, void 0, void 0, function* () { return new Promise((resolve, reject) => { const v = document.createElement('video'); v.preload = 'metadata'; const url = URL.createObjectURL(file); v.onloadedmetadata = () => { const d = v.duration; if (d === Infinity) { v.ontimeupdate = () => { v.ontimeupdate = null; const real = v.duration; URL.revokeObjectURL(url); resolve(isFinite(real) ? real : 0); }; v.currentTime = 1e7; } else { URL.revokeObjectURL(url); resolve(d); } }; v.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Could not read the video duration.')); }; v.src = url; }); });
     }
     function uploadGeneralMedia() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -2503,17 +2628,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                 showPage('profile');
                 return;
             }
-            if (file.size > 100 * 1024 * 1024) {
-                say('This file is larger than the 100 MB limit.');
-                return;
-            }
+            if (type !== 'video' && file.size > 100 * 1024 * 1024) {
+        say('This file is larger than the 100 MB limit.');
+        return;
+    }
             if (!(yield checkDailyMedia(type)))
                 return;
             if (!(yield checkWorkerQuota()))
                 return;
             let duration = 0;
             if (type === 'video') {
-                duration = yield videoDuration(file);
+                try {
+            duration = yield videoDuration(file);
+        }
+        catch (e) {
+            afMediaProblem('video');
+            return;
+        }
                 if (duration > MAX_FREE_VIDEO_SECONDS) {
                     say('Videos longer than 1 minute are not supported yet. Please upload a shorter video.');
                     return;
@@ -2525,7 +2656,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                 button.textContent = 'Uploading…';
             }
             try {
-                const uploadFile = type === 'photo' ? yield compressImage(file) : file;
+                let uploadFile;
+        if (type === 'photo') {
+            uploadFile = yield compressImage(file);
+        }
+        else {
+            uploadFile = yield afPrepareVideo(file, function (text) { if (button) button.textContent = text; });
+            if (button) button.textContent = 'Uploading…';
+        }
                 const up = yield workerUpload(uploadFile);
                 const caption = ($('postText') && $('postText').value.trim()) || '';
                 const title = ($('ahMediaTitle') && $('ahMediaTitle').value.trim()) || '';
@@ -2932,7 +3070,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             else
                 panel.appendChild(group);
             const lists = document.createElement('div');
-            lists.innerHTML = '<div id="ahMyPostsList"></div><div id="ahMyVideosList" class="ah-hidden"></div>';
+            lists.innerHTML = (document.getElementById('ahMyPostsList') ? '' : '<div id="ahMyPostsList"></div>') + (document.getElementById('ahMyVideosList') ? '' : '<div id="ahMyVideosList" class="ah-hidden"></div>');
             group.insertAdjacentElement('afterend', lists);
             $('ahMyPostsOpen').onclick = () => { $('ahMyPostsList').classList.remove('ah-hidden'); $('ahMyVideosList').classList.add('ah-hidden'); loadMyPosts(false); };
             $('ahMyVideosOpen').onclick = () => { $('ahMyVideosList').classList.remove('ah-hidden'); $('ahMyPostsList').classList.add('ah-hidden'); loadMyPosts(true); };
@@ -3379,7 +3517,7 @@ async function marketUpload(file){
  var token=await u.getIdToken();
  var response=await fetch(marketWorker+'/upload?filename='+encodeURIComponent(file.name||'market-media'),{method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':file.type||'application/octet-stream'},body:file});
  var data=await response.json().catch(function(){return {}});
- if(!response.ok||!data.success||!data.url)throw new Error(data.error||'Media upload failed. Please try again.');
+ if(!response.ok||!data.success||!data.url){afWorkerFailure(data,response.status);throw new Error(data.error||'Media upload failed. Please try again.')}
  return data.url;
 }
 async function marketCompress(file){
@@ -3392,12 +3530,12 @@ window.marketPublishProduct=async function(){
  var video=document.getElementById('marketProductVideo').files[0];
  var title=document.getElementById('marketProductTitle').value.trim(),description=document.getElementById('marketProductDescription').value.trim(),price=Number(document.getElementById('marketProductPrice').value),locationText=document.getElementById('marketProductLocation').value;
  if(photos.length<3){mNotice('Please select at least 3 product photos.');return}
- if(video&&(!/^video\//.test(video.type)||video.size>100*1024*1024)){mNotice('Please choose a valid video smaller than 100 MB.');return}
+ if(video&&!/^video\//.test(video.type||'')&&!/\.(mp4|mov|m4v|webm|3gp)$/i.test(video.name||'')){mNotice('Please choose a valid video file.');return}
  if(!title||description.length<8||!price||price<1){mNotice('Please enter a valid title, description and price.');return}
  var btn=document.getElementById('marketPublishButton'),status=document.getElementById('marketUploadStatus');btn.disabled=true;status.textContent='Uploading photos…';
  try{
   var imageUrls=[];for(var i=0;i<photos.length;i++){status.textContent='Uploading photo '+(i+1)+' / '+photos.length;imageUrls.push(await marketUpload(await marketCompress(photos[i])))}
-  var videoUrl='';if(video){status.textContent='Uploading video…';videoUrl=await marketUpload(video)}
+  var videoUrl='';if(video){status.textContent='Uploading video…';videoUrl=await marketUpload(await afPrepareVideo(video,function(t){status.textContent=t}))}
   status.textContent='Saving product…';
   await mDb().collection('marketplacePosts').add({uid:mUser().uid,authorName:mUser().displayName||'Afrishine Seller',authorPhoto:mUser().photoURL||'',type:'sell',product:true,title:title,description:description,text:description,price:(document.getElementById('marketProductCurrency').value==='USD'?'$':'FRW ')+String(price),condition:document.getElementById('marketProductCondition').value,category:document.getElementById('marketProductCategory').value,location:locationText,images:imageUrls,videoUrl:videoUrl,createdAt:firebase.firestore.FieldValue.serverTimestamp(),status:'active'});
   ['marketProductTitle','marketProductDescription','marketProductPrice','marketProductPhotos','marketProductVideo'].forEach(function(id){document.getElementById(id).value=''});
@@ -3459,7 +3597,7 @@ function ensureProfile(){
  var legacy=Array.from(page.children).filter(function(n){return n.classList&&n.classList.contains('panel')});
  var pi=byId('piLoginArea');if(pi&&!isPi()){var p=pi.closest('.panel');if(p)p.style.display='none'}
  var hero=document.createElement('section');hero.className='panel ah-profile-hero';hero.id='ahProfileDashboard';
- hero.innerHTML='<img class="ah-avatar" id="ahDashboardAvatar" alt="Profile photo"><div class="ah-profile-identity"><h2 id="ahDashboardName">Guest</h2><p class="creator-hint" id="ahDashboardBio">Sign in or create an account to manage your profile.</p><div class="ah-profile-stats"><span id="ahPostCount">0<small>posts</small></span><span id="ahFollowerStat">0<small>followers</small></span><span id="ahFollowingStat">0<small>following</small></span></div><div class="ah-profile-actions"><button class="secondary" type="button" onclick="ahProfileEdit()">Edit Profile</button><button class="secondary" type="button" onclick="ahShareProfile()">Share Profile</button></div></div><details class="ah-profile-more" id="ahProfileMore"><summary aria-label="Profile options">⋮</summary><div class="ah-profile-menu"><div class="ah-menu-section">Account</div><button onclick="ahProfileMenuAction(&#39;Settings&#39;)">☷ &nbsp; Settings</button><button onclick="ahProfileMenuAction(&#39;Edit Profile&#39;)">✎ &nbsp; Edit Profile</button><button onclick="ahProfileMenuAction(&#39;Change Profile Photo&#39;)">▧ &nbsp; Change Profile Photo</button><button onclick="ahProfileMenuAction(&#39;Change Password&#39;)">▣ &nbsp; Change Password</button><button onclick="ahProfileMenuAction(&#39;Privacy&#39;)">◇ &nbsp; Privacy</button><button onclick="ahProfileMenuAction(&#39;Notifications&#39;)">♧ &nbsp; Notifications</button><div class="ah-menu-divider"></div><div class="ah-menu-section">Grow Your Profile</div><button class="ah-menu-gold" onclick="ahProfileMenuAction(&#39;Verification&#39;)">✧ &nbsp; Get a Verified Badge</button><button class="ah-menu-gold" onclick="ahProfileMenuAction(&#39;Subscription&#39;)">☆ &nbsp; Subscription</button><button class="ah-menu-gold" onclick="ahProfileMenuAction(&#39;Boost Your Post&#39;)">↗ &nbsp; Boost Your Post</button><button class="ah-menu-gold" onclick="ahProfileMenuAction(&#39;Ads&#39;)">⚑ &nbsp; Ads</button><div class="ah-menu-divider"></div><button onclick="ahProfileMenuAction(&#39;Help&#39;)">? &nbsp; Help</button><button class="ah-menu-logout" onclick="ahProfileMenuAction(&#39;Logout&#39;)">⇥ &nbsp; Logout</button></div></details>';
+ hero.innerHTML='<img class="ah-avatar" id="ahDashboardAvatar" alt="Profile photo"><div class="ah-profile-identity"><h2 id="ahDashboardName">Guest</h2><p class="creator-hint" id="ahDashboardBio">Sign in or create an account to manage your profile.</p><div class="ah-profile-stats"><span id="ahPostCount">0<small>posts</small></span><span id="ahFollowerStat">0<small>followers</small></span><span id="ahFollowingStat">0<small>following</small></span></div><div class="ah-profile-actions"><button class="secondary" type="button" onclick="ahProfileEdit()">Edit Profile</button><button class="secondary" type="button" onclick="ahShareProfile()">Share Profile</button></div></div><details class="ah-profile-more" id="ahProfileMore"><summary aria-label="Profile options">⋮</summary><div class="ah-sheet-backdrop" onclick="document.getElementById(&#39;ahProfileMore&#39;).open=false"></div><div class="ah-profile-menu" role="menu"><div class="ah-sheet-handle"></div> <div class="ah-sheet-head"><img class="ah-sheet-avatar" id="ahSheetAvatar" alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><div><b id="ahSheetName">Afrishine Hub</b><small id="ahSheetSub">Your profile menu</small></div><button type="button" class="ah-sheet-close" aria-label="Close menu" onclick="document.getElementById(&#39;ahProfileMore&#39;).open=false">✕</button></div> <div class="ah-menu-section">Account</div> <button type="button" class="ah-menu-item" role="menuitem" onclick="ahProfileMenuAction(&#39;Edit Profile&#39;)"><i>✏️</i><span>Edit Profile<small>Name, bio and location</small></span></button> <button type="button" class="ah-menu-item" role="menuitem" onclick="ahProfileMenuAction(&#39;Change Profile Photo&#39;)"><i>📷</i><span>Change Profile Photo<small>Update your picture</small></span></button> <button type="button" class="ah-menu-item" role="menuitem" onclick="ahProfileMenuAction(&#39;Share Profile&#39;)"><i>🔗</i><span>Share Profile<small>Copy your profile link</small></span></button> <button type="button" class="ah-menu-item" role="menuitem" onclick="ahProfileMenuAction(&#39;Notifications&#39;)"><i>🔔</i><span>Notifications<small>Messages, follows and new posts</small></span></button> <div class="ah-menu-section">Privacy and security</div> <button type="button" class="ah-menu-item" role="menuitem" onclick="ahProfileMenuAction(&#39;Settings&#39;)"><i>⚙️</i><span>Settings and Privacy<small>Your data and account help</small></span></button> <button type="button" class="ah-menu-item" role="menuitem" onclick="ahProfileMenuAction(&#39;Change Password&#39;)"><i>🔒</i><span>Change Password<small>Get a reset link by email</small></span></button> <div class="ah-menu-section">Grow with Afrishine</div> <button type="button" class="ah-menu-item gold" role="menuitem" onclick="ahProfileMenuAction(&#39;Verification&#39;)"><i>✔️</i><span>Verified Badge<small>Get verified and stand out</small></span></button> <button type="button" class="ah-menu-item gold" role="menuitem" onclick="ahProfileMenuAction(&#39;Subscription&#39;)"><i>👑</i><span>Subscription<small>Unlock premium features</small></span></button> <button type="button" class="ah-menu-item gold" role="menuitem" onclick="ahProfileMenuAction(&#39;Boost Your Post&#39;)"><i>🚀</i><span>Boost Your Post<small>Reach more people</small></span></button> <button type="button" class="ah-menu-item gold" role="menuitem" onclick="ahProfileMenuAction(&#39;Ads&#39;)"><i>📣</i><span>Ads<small>Promote your business</small></span></button> <div class="ah-menu-section">Support</div> <button type="button" class="ah-menu-item" role="menuitem" onclick="ahProfileMenuAction(&#39;Help&#39;)"><i>💬</i><span>Help and Contact<small>We are here to help</small></span></button> <div id="ahMenuAdminWrap" style="display:none"><div class="ah-menu-section">Administration</div><button type="button" class="ah-menu-item admin" id="ahMenuAdmin" role="menuitem" onclick="ahProfileMenuAction(&#39;Admin Dashboard&#39;)"><i>🛡️</i><span>Admin Dashboard<small>Monitor and manage the platform</small></span></button></div> <div class="ah-menu-section"></div> <button type="button" class="ah-menu-item danger" role="menuitem" onclick="ahProfileMenuAction(&#39;Logout&#39;)"><i>⎋</i><span>Log out<small>Sign out on this device</small></span></button> <p class="ah-sheet-foot">Afrishine Hub · Kigali, Rwanda</p></div></details>';
  var back=document.createElement('button');back.type='button';back.className='secondary ah-profile-back';back.id='ahProfileBack';back.textContent='← Back';back.style.display='none';back.onclick=function(){showPage(returnPage||'home')};
  page.insertBefore(back,page.firstChild);page.insertBefore(hero,back.nextSibling);
  var tabs=document.createElement('div');tabs.className='ah-profile-tabs';tabs.id='ahProfileTabs';
@@ -3467,7 +3605,7 @@ function ensureProfile(){
  hero.insertAdjacentElement('afterend',tabs);
  var content=document.createElement('section');content.className='panel ah-profile-content';content.id='ahProfileTabContent';content.innerHTML='<p class="creator-hint">Your content will appear here.</p>';tabs.insertAdjacentElement('afterend',content);
  // Hidden targets keep existing profile loaders and saved-post functionality intact.
- var hidden=document.createElement('div');hidden.style.display='none';hidden.innerHTML='<div id="ahMyVideosList"></div><div id="ahMyPostsList"></div><div id="ahSavedList"></div>';page.appendChild(hidden);
+ var hidden=document.createElement('div');hidden.style.display='none';hidden.innerHTML=['ahMyVideosList','ahMyPostsList','ahSavedList'].filter(function(i){return !document.getElementById(i)}).map(function(i){return '<div id="'+i+'"></div>'}).join('');page.appendChild(hidden);
  // Existing editor remains available from the profile menu, but not mixed into the feed.
  var oldEditor=byId('ahProfileEditor');if(oldEditor){oldEditor.style.display='none';}
  legacy.forEach(function(panel){if(panel!==hero&&panel!==oldEditor){panel.dataset.ahLegacy='1';}});
@@ -3519,8 +3657,10 @@ window.ahProfileMenuAction=function(action){
  if(action==='Verification'){window.afOpenGate('verificationGate');return}if(action==='Subscription'){window.afOpenGate('subscriptionGate');return}if(action==='Boost Your Post'||action==='Ads'){window.afOpenGate('subscriptionGate');return}
  if(action==='Settings'||action==='Privacy'){showPage('settings');return}
  if(action==='Change Password'){var email= currentUser()&&currentUser().email;if(email&&typeof resetEmailPassword==='function'){if(confirm('Send a password reset email?'))resetEmailPassword()}else note('Password settings are available for email accounts.');return}
- if(action==='Notifications'){note('Notification settings are coming soon.');return}
+ if(action==='Notifications'){showPage('inbox');return}
  if(action==='Help'){showPage('contact');return}
+ if(action==='Share Profile'){if(window.ahShareProfile)window.ahShareProfile();return}
+ if(action==='Admin Dashboard'){showPage('admin');return}
 };
 async function renderOwnedPosts(mode){
  var u=currentUser(),d=dbRef(),out=byId('ahProfileTabContent');if(!u||!d||!out)return;
@@ -3870,7 +4010,657 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
         return prevCreateAction ? prevCreateAction(type) : openCreator(type);
     };
     var prevShowPage = window.showPage;
-    window.showPage = function (id) { hideToast(); closeGate(); return prevShowPage(id); };
+    window.showPage = function (id) {
+        hideToast(); closeGate(); closeViewer(); closeLinkEditor();
+        if (id === 'admin' && !window.__afIsAdmin) { notice('This area is for administrators only.'); return prevShowPage('home'); }
+        var result = prevShowPage(id);
+        if (id === 'admin') admRender(ADM.tab);
+        else if (id === 'trafficRules') { paintTrafficGrid(); loadAcademyFiles(false).then(paintTrafficGrid); }
+        else if (id === 'profile') syncAdminMenu();
+        return result;
+    };
+    /* ---- Cloudflare media cleanup: frees storage when a post is deleted ---- */
+    window.workerDelete = function (keyOrUrl) {
+        var base = 'https://afrishine-media.usherluckyelie.workers.dev';
+        var key = String(keyOrUrl || '');
+        if (key.indexOf(base + '/media/') === 0) key = key.slice((base + '/media/').length);
+        try { key = decodeURIComponent(key); } catch (_) { }
+        var u = (typeof currentFirebaseUser !== 'undefined') ? currentFirebaseUser : null;
+        if (!u || !key) return Promise.reject(new Error('Missing user or file'));
+        return u.getIdToken().then(function (token) {
+            return fetch(base + '/delete', { method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify({ key: key }) });
+        }).then(function (r) {
+            return r.json().catch(function () { return {}; }).then(function (d) { if (!r.ok || !d.success) throw new Error(d.error || 'Delete failed'); return d; });
+        });
+    };
+
+    /* ---- Upload helpers: friendly popups, video conversion, format checks ---- */
+    window.AF_QUOTA_MESSAGE = 'You have already used your credits. Please try uploading again after one week, or verify your account to upload immediately.';
+    window.AF_MEDIA = { maxBytes: 100 * 1024 * 1024, targetBytes: 92 * 1024 * 1024, maxConvertSeconds: 120, maxVideoBps: 16000000, audioBps: 128000, maxSide: 1920, fps: 30 };
+    var MEDIA_WORKER_URL = 'https://afrishine-media.usherluckyelie.workers.dev';
+    var MSG_VIDEO = "This video format can't be processed. Please edit it and export it as MP4 (H.264), then upload it again.";
+    var MSG_PHOTO = "This photo format can't be processed. Please edit it and save it as JPG or PNG, then upload it again.";
+    function plain(text) { return String(text).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+    window.afPopup = function (opts) {
+        window.__afPopupMsg = opts.message;
+        window.__afPopupAt = Date.now();
+        openGate((opts.icon ? '<div class="gate-icon" aria-hidden="true">' + opts.icon + '</div>' : '') + (opts.title ? '<h2>' + plain(opts.title) + '</h2>' : '') + '<p>' + plain(opts.message) + '</p>');
+    };
+    var prevNotice = window.notice;
+    window.notice = function (text) {
+        if (text && window.__afPopupMsg === text && Date.now() - (window.__afPopupAt || 0) < 4000) return;
+        return prevNotice(text);
+    };
+    window.afMediaProblem = function (kind) {
+        var message = kind === 'photo' ? MSG_PHOTO : MSG_VIDEO;
+        window.afPopup({ icon: '🛠️', title: 'Edit needed', message: message });
+        return message;
+    };
+    window.afWorkerFailure = function (data, status) {
+        var code = data && data.code;
+        if (code === 'STORAGE_LIMIT_REACHED') window.afPopup({ icon: '📦', message: window.AF_QUOTA_MESSAGE });
+        else if (code === 'DAILY_LIMIT_REACHED') window.afPopup({ icon: '⏳', message: data.error });
+        else if (code === 'FILE_TYPE_NOT_ALLOWED') window.afPopup({ icon: '🛠️', title: 'Edit needed', message: "This file format can't be processed. Please edit it and export it as JPG, PNG or MP4, then upload it again." });
+        else if (code === 'FILE_TOO_LARGE') window.afPopup({ icon: '🛠️', title: 'Edit needed', message: 'This file is larger than the 100 MB limit. Please trim or compress it, then upload it again.' });
+    };
+    window.afCanUpload = function () {
+        var u = (typeof currentFirebaseUser !== 'undefined') ? currentFirebaseUser : null;
+        if (!u) return Promise.resolve(true);
+        return u.getIdToken().then(function (token) {
+            return fetch(MEDIA_WORKER_URL + '/usage', { headers: { Authorization: 'Bearer ' + token } });
+        }).then(function (r) {
+            if (!r.ok) return true;
+            return r.json().then(function (d) {
+                if (d.canUpload === false) { window.afPopup({ icon: '📦', message: window.AF_QUOTA_MESSAGE }); return false; }
+                return true;
+            });
+        }).catch(function () { return true; });
+    };
+    function inferVideoType(file) {
+        var t = (file.type || '').toLowerCase();
+        if (t.indexOf('video/') === 0) return t;
+        var m = /\.([a-z0-9]+)$/i.exec(file.name || '');
+        var ext = m ? m[1].toLowerCase() : '';
+        return ({ mp4: 'video/mp4', m4v: 'video/mp4', mov: 'video/quicktime', webm: 'video/webm' })[ext] || t;
+    }
+    function hasFourCC(bytes, cc) {
+        var a = cc.charCodeAt(0), b = cc.charCodeAt(1), c = cc.charCodeAt(2), d = cc.charCodeAt(3);
+        for (var i = 0; i < bytes.length - 3; i++) { if (bytes[i] === a && bytes[i + 1] === b && bytes[i + 2] === c && bytes[i + 3] === d) return true; }
+        return false;
+    }
+    /* iPhone HEVC (H.265) videos play on iPhones but not on many other phones, so they are converted to H.264. */
+    function looksLikeHevc(file) {
+        var size = file.size, head = Math.min(size, 2 * 1024 * 1024), tail = Math.min(size, 6 * 1024 * 1024);
+        return Promise.all([file.slice(0, head).arrayBuffer(), file.slice(Math.max(0, size - tail), size).arrayBuffer()]).then(function (parts) {
+            return parts.some(function (buf) { var b = new Uint8Array(buf); return hasFourCC(b, 'hvc1') || hasFourCC(b, 'hev1') || hasFourCC(b, 'dvh1'); });
+        }).catch(function () { return false; });
+    }
+    /* Can this browser open the file at all? */
+    function checkPlayable(file) {
+        return new Promise(function (resolve) {
+            var v = document.createElement('video'), url = URL.createObjectURL(file), done = false;
+            function end(ok) { if (done) return; done = true; clearTimeout(timer); try { v.removeAttribute('src'); v.load(); } catch (_) { } URL.revokeObjectURL(url); resolve(ok); }
+            var timer = setTimeout(function () { end(false); }, 15000);
+            v.preload = 'auto'; v.muted = true;
+            v.onloadeddata = function () { end(!!v.videoWidth); };
+            v.onerror = function () { end(false); };
+            v.src = url;
+        });
+    }
+    function pickRecorderMime() {
+        var list = ['video/mp4;codecs=avc1.640028,mp4a.40.2', 'video/mp4;codecs=avc1.4d0028,mp4a.40.2', 'video/mp4;codecs=avc1,mp4a.40.2', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'];
+        for (var i = 0; i < list.length; i++) { try { if (MediaRecorder.isTypeSupported(list[i])) return list[i]; } catch (_) { } }
+        return '';
+    }
+    function transcodeVideo(file, onStatus) {
+        return new Promise(function (resolve, reject) {
+            var M = window.AF_MEDIA, finished = false, started = false;
+            var url = URL.createObjectURL(file), video = document.createElement('video');
+            var canvas, ctx, recorder, ac, stream, chunks = [], stallTimer = null, loadTimer = null, lastTime = -1, stalls = 0, rafId = 0;
+            video.playsInline = true; video.setAttribute('playsinline', ''); video.preload = 'auto';
+            video.style.cssText = 'position:fixed;left:-9999px;top:0;width:2px;height:2px;opacity:0;pointer-events:none';
+            document.body.appendChild(video);
+            function cleanup() {
+                clearTimeout(loadTimer); clearInterval(stallTimer);
+                if (rafId) cancelAnimationFrame(rafId);
+                try { video.pause(); } catch (_) { }
+                try { if (stream) stream.getTracks().forEach(function (t) { t.stop(); }); } catch (_) { }
+                try { if (ac && ac.state !== 'closed') ac.close(); } catch (_) { }
+                try { video.removeAttribute('src'); video.load(); } catch (_) { }
+                if (video.parentNode) video.parentNode.removeChild(video);
+                URL.revokeObjectURL(url);
+            }
+            function fail(message) {
+                if (finished) return;
+                finished = true;
+                try { if (recorder && recorder.state !== 'inactive') { recorder.onstop = null; recorder.stop(); } } catch (_) { }
+                cleanup();
+                window.afPopup({ icon: '🛠️', title: 'Edit needed', message: message });
+                reject(new Error(message));
+            }
+            if (!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) {
+                finished = true; cleanup();
+                var m = 'Your browser cannot optimize this video. Please trim it or export it under 100 MB (MP4), then upload it again.';
+                window.afPopup({ icon: '🛠️', title: 'Edit needed', message: m });
+                return reject(new Error(m));
+            }
+            function draw() {
+                if (finished || video.ended) return;
+                try { ctx.drawImage(video, 0, 0, canvas.width, canvas.height); } catch (_) { }
+                if (video.requestVideoFrameCallback) video.requestVideoFrameCallback(draw); else rafId = requestAnimationFrame(draw);
+            }
+            function start() {
+                if (started || finished) return;
+                started = true; clearTimeout(loadTimer);
+                if (!video.videoWidth || !video.videoHeight) return fail(MSG_VIDEO);
+                if (video.duration === Infinity) {
+                    /* Some browser-made WebM files report no length: seek to the end to learn it. */
+                    video.ontimeupdate = function () { video.ontimeupdate = null; video.onseeked = function () { video.onseeked = null; begin(video.duration); }; video.currentTime = 0; };
+                    video.currentTime = 1e7;
+                    return;
+                }
+                begin(video.duration);
+            }
+            function begin(d) {
+                var vw = video.videoWidth, vh = video.videoHeight;
+                if (!isFinite(d) || d <= 0 || !vw || !vh) return fail(MSG_VIDEO);
+                if (d > M.maxConvertSeconds) return fail('This video is too long to optimize automatically. Please trim it or export it under 100 MB, then upload it again.');
+                var videoBps = Math.min(M.maxVideoBps, Math.floor((M.targetBytes * 8 * 0.9) / d - M.audioBps));
+                if (videoBps < 1000000) return fail('This video is too long to keep its quality under 100 MB. Please trim it, then upload it again.');
+                var scale = Math.min(1, M.maxSide / Math.max(vw, vh));
+                canvas = document.createElement('canvas');
+                canvas.width = Math.max(2, Math.round(vw * scale / 2) * 2);
+                canvas.height = Math.max(2, Math.round(vh * scale / 2) * 2);
+                ctx = canvas.getContext('2d', { alpha: false });
+                stream = canvas.captureStream(M.fps);
+                try {
+                    var AC = window.AudioContext || window.webkitAudioContext;
+                    ac = new AC();
+                    if (ac.resume) ac.resume();
+                    var source = ac.createMediaElementSource(video), dest = ac.createMediaStreamDestination();
+                    source.connect(dest);
+                    dest.stream.getAudioTracks().forEach(function (t) { stream.addTrack(t); });
+                } catch (_) { /* no audio track available */ }
+                var mime = pickRecorderMime();
+                try {
+                    recorder = new MediaRecorder(stream, mime ? { mimeType: mime, videoBitsPerSecond: videoBps, audioBitsPerSecond: M.audioBps } : { videoBitsPerSecond: videoBps });
+                } catch (_) { return fail(MSG_VIDEO); }
+                var outType = (recorder.mimeType || mime || 'video/webm').split(';')[0];
+                recorder.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
+                recorder.onerror = function () { fail(MSG_VIDEO); };
+                recorder.onstop = function () {
+                    if (finished) return;
+                    var blob = new Blob(chunks, { type: outType });
+                    if (!blob.size) return fail(MSG_VIDEO);
+                    if (blob.size > M.maxBytes) return fail('We could not compress this video below 100 MB without losing quality. Please trim it, then upload it again.');
+                    finished = true; cleanup();
+                    var base = (file.name || 'video').replace(/\.[^.]+$/, '').replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 60) || 'video';
+                    resolve(new File([blob], base + (outType === 'video/mp4' ? '.mp4' : '.webm'), { type: outType, lastModified: Date.now() }));
+                };
+                recorder.start(1000);
+                video.onended = function () { setTimeout(function () { if (recorder.state !== 'inactive') recorder.stop(); }, 300); };
+                video.ontimeupdate = function () { if (onStatus) onStatus('Optimizing video… ' + Math.min(99, Math.round(video.currentTime / d * 100)) + '%'); };
+                stallTimer = setInterval(function () {
+                    if (video.currentTime === lastTime) { stalls++; if (stalls >= 6) fail('Video optimization stopped. Please keep this screen open and try again.'); }
+                    else { stalls = 0; lastTime = video.currentTime; }
+                }, 4000);
+                if (onStatus) onStatus('Optimizing video… 0%');
+                video.play().then(draw).catch(function () { fail('Your browser blocked video optimization. Please tap Post again, or export the video under 100 MB and upload it again.'); });
+            }
+            video.onloadeddata = start;
+            video.onerror = function () { if (!started) fail(MSG_VIDEO); };
+            loadTimer = setTimeout(function () { if (!started) fail(MSG_VIDEO); }, 20000);
+            video.src = url;
+        });
+    }
+    /* Videos up to 100 MB in MP4/WebM/MOV (H.264) upload as they are. Bigger videos, other
+       formats and iPhone HEVC videos are converted to a smaller H.264 video first. */
+    window.afPrepareVideo = function (file, onStatus) {
+        var M = window.AF_MEDIA, type = inferVideoType(file);
+        var allowed = ['video/mp4', 'video/webm', 'video/quicktime'].indexOf(type) !== -1;
+        var big = file.size > M.maxBytes;
+        var check = (!big && allowed && type !== 'video/webm') ? looksLikeHevc(file) : Promise.resolve(false);
+        return check.then(function (hevc) {
+            if (allowed && !big && !hevc) {
+                return checkPlayable(file).then(function (ok) {
+                    if (!ok) { window.afMediaProblem('video'); throw new Error(MSG_VIDEO); }
+                    return type === file.type ? file : new File([file], file.name || 'video', { type: type, lastModified: file.lastModified });
+                });
+            }
+            return window.afCanUpload().then(function (ok) {
+                if (!ok) throw new Error(window.AF_QUOTA_MESSAGE);
+                return transcodeVideo(file, onStatus);
+            });
+        });
+    };
+    /* ================= TALENT HUB: YouTube / TikTok video links ================= */
+    function ms2(t) { return t && t.toMillis ? t.toMillis() : 0; }
+    function parseVideoLink(raw) {
+        var url;
+        try { url = new URL(String(raw || '').trim()); } catch (e) { return null; }
+        if (url.protocol !== 'https:' && url.protocol !== 'http:') return null;
+        var host = url.hostname.toLowerCase().replace(/^(www|m)\./, ''), path = url.pathname, id = '', m;
+        if (host === 'youtu.be') id = path.slice(1).split('/')[0];
+        else if (host === 'youtube.com' || host === 'music.youtube.com') {
+            if (path === '/watch') id = url.searchParams.get('v') || '';
+            else if ((m = /^\/(shorts|embed|live|v)\/([A-Za-z0-9_-]{11})/.exec(path))) id = m[2];
+        }
+        if (/^[A-Za-z0-9_-]{11}$/.test(id)) {
+            return { provider: 'youtube', id: id, url: /^\/shorts\//.test(path) ? 'https://www.youtube.com/shorts/' + id : 'https://www.youtube.com/watch?v=' + id };
+        }
+        if (host === 'tiktok.com' || host === 'vm.tiktok.com' || host === 'vt.tiktok.com') {
+            m = /^\/@([A-Za-z0-9._-]+)\/video\/(\d{8,25})/.exec(path);
+            if (m && host === 'tiktok.com') return { provider: 'tiktok', id: m[2], url: 'https://www.tiktok.com/@' + m[1] + '/video/' + m[2] };
+            if (host !== 'tiktok.com' || /^\/t\/[A-Za-z0-9]+/.test(path)) return { provider: 'tiktok', id: '', short: true, url: 'https://' + url.hostname + path };
+        }
+        return null;
+    }
+    window.afParseVideoLink = parseVideoLink;
+    function fetchJson(u, wait) {
+        return new Promise(function (resolve) {
+            var done = false;
+            var t = setTimeout(function () { if (!done) { done = true; resolve(null); } }, wait || 6000);
+            fetch(u, { mode: 'cors' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) { if (!done) { done = true; clearTimeout(t); resolve(j); } }).catch(function () { if (!done) { done = true; clearTimeout(t); resolve(null); } });
+        });
+    }
+    function resolveVideoLink(info) {
+        if (info.provider === 'youtube') {
+            return fetchJson('https://www.youtube.com/oembed?format=json&url=' + encodeURIComponent(info.url), 6000).then(function (j) {
+                return { provider: 'youtube', id: info.id, url: info.url, title: (j && j.title) || '', thumb: 'https://i.ytimg.com/vi/' + info.id + '/hqdefault.jpg' };
+            });
+        }
+        return fetchJson('https://www.tiktok.com/oembed?url=' + encodeURIComponent(info.url), 7000).then(function (j) {
+            var id = info.id || (j && j.embed_product_id) || '';
+            if (!/^\d{8,25}$/.test(id)) return null;
+            var url = info.short ? 'https://www.tiktok.com/@' + ((j && j.author_unique_id) || 'user') + '/video/' + id : info.url;
+            return { provider: 'tiktok', id: id, url: url, title: (j && j.title) || '', thumb: (j && /^https:\/\//.test(j.thumbnail_url || '')) ? j.thumbnail_url : '' };
+        });
+    }
+    function linkCardHtml(p) {
+        var tiktok = p.linkProvider === 'tiktok', provider = tiktok ? 'tiktok' : 'youtube';
+        var title = String(p.linkTitle || (tiktok ? 'TikTok video' : 'YouTube video'));
+        var id = String(p.linkId || ''), url = String(p.linkUrl || '');
+        var thumb = /^https:\/\//.test(p.linkThumb || '') ? p.linkThumb : (!tiktok && /^[A-Za-z0-9_-]{11}$/.test(id) ? 'https://i.ytimg.com/vi/' + id + '/hqdefault.jpg' : '');
+        return '<div class="vlink vlink-' + provider + '" data-vlink data-provider="' + provider + '" data-id="' + plain(id) + '" data-url="' + plain(url) + '">'
+            + '<div class="vlink-media"><button type="button" class="vlink-thumb" data-vlink-play aria-label="Play video: ' + plain(title) + '">'
+            + (thumb ? '<img src="' + plain(thumb) + '" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display=\'none\'">' : '')
+            + '<span class="vlink-play"></span></button></div>'
+            + '<div class="vlink-info"><span class="vlink-chip">' + (tiktok ? 'TikTok' : 'YouTube') + '</span><b class="vlink-title">' + plain(title) + '</b><small>' + (tiktok ? 'tiktok.com' : 'youtube.com') + '</small></div></div>';
+    }
+    window.afLinkCardHtml = linkCardHtml;
+    function safeVideoUrl(u) { return /^https:\/\/(www\.)?(youtube\.com|youtu\.be|tiktok\.com)\//.test(u || '') ? u : ''; }
+    function stopLink(box) {
+        if (!box) return;
+        var media = box.querySelector('.vlink-media');
+        if (media && box.__thumbHtml != null) { media.innerHTML = box.__thumbHtml; media.classList.remove('is-error'); }
+        var tools = box.querySelector('.vlink-tools'); if (tools) tools.remove();
+        box.removeAttribute('data-vlink-playing');
+    }
+    function showLinkError(box, kind) {
+        var media = box.querySelector('.vlink-media'), tiktok = box.dataset.provider === 'tiktok';
+        var name = tiktok ? 'TikTok' : 'YouTube', msg;
+        if (kind === 'unavailable') msg = 'This video is unavailable. It may have been removed or made private by its owner.';
+        else if (kind === 'invalid') msg = 'This video link is not valid.';
+        else msg = "This video can't be played inside Afrishine Hub because its owner has turned off embedding on " + name + '. This is a ' + name + ' rule, not a problem with your phone.';
+        var href = safeVideoUrl(box.dataset.url);
+        media.classList.add('is-error');
+        media.innerHTML = '<div class="vlink-error"><b>Video unavailable here</b><span>' + plain(msg) + '</span><div class="row">' + (href ? '<a href="' + plain(href) + '" target="_blank" rel="noopener">Watch on ' + name + '</a>' : '') + '<button type="button" data-vlink-back>Back</button></div></div>';
+        var tools = box.querySelector('.vlink-tools'); if (tools) tools.remove();
+    }
+    function playLink(box) {
+        var provider = box.dataset.provider, id = box.dataset.id, src = '';
+        Array.prototype.forEach.call(document.querySelectorAll('[data-vlink-playing="1"]'), stopLink);
+        if (provider === 'youtube' && /^[A-Za-z0-9_-]{11}$/.test(id)) src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&playsinline=1&rel=0&modestbranding=1&enablejsapi=1&origin=' + encodeURIComponent(location.origin);
+        else if (provider === 'tiktok' && /^\d{8,25}$/.test(id)) src = 'https://www.tiktok.com/player/v1/' + id + '?autoplay=1&rel=0&controls=1&description=0&music_info=0';
+        var media = box.querySelector('.vlink-media');
+        if (box.__thumbHtml == null) box.__thumbHtml = media.innerHTML;
+        if (!src) { box.setAttribute('data-vlink-playing', '1'); return showLinkError(box, 'invalid'); }
+        box.setAttribute('data-vlink-playing', '1');
+        media.innerHTML = '<iframe class="vlink-frame" src="' + src + '" title="Video player" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
+        var frame = media.querySelector('iframe');
+        if (provider === 'youtube') frame.addEventListener('load', function () { try { frame.contentWindow.postMessage(JSON.stringify({ event: 'listening', id: 1, channel: 'widget' }), '*'); } catch (_) { } });
+        var href = safeVideoUrl(box.dataset.url), tools = document.createElement('div');
+        tools.className = 'vlink-tools';
+        tools.innerHTML = '<button type="button" data-vlink-back>Close player</button>' + (provider === 'tiktok' && href ? '<a href="' + plain(href) + '" target="_blank" rel="noopener">Not playing? Open on TikTok</a>' : '');
+        box.appendChild(tools);
+    }
+    document.addEventListener('click', function (e) {
+        var play = e.target.closest ? e.target.closest('[data-vlink-play]') : null;
+        if (play) { e.preventDefault(); playLink(play.closest('[data-vlink]')); return; }
+        var back = e.target.closest ? e.target.closest('[data-vlink-back]') : null;
+        if (back) { e.preventDefault(); stopLink(back.closest('[data-vlink]')); }
+    });
+    window.addEventListener('message', function (e) {
+        var data = e.data;
+        if (typeof data === 'string') { try { data = JSON.parse(data); } catch (_) { return; } }
+        if (!data || typeof data !== 'object') return;
+        var frames = document.querySelectorAll('.vlink-frame'), frame = null;
+        for (var i = 0; i < frames.length; i++) { if (frames[i].contentWindow === e.source) frame = frames[i]; }
+        if (!frame) return;
+        var box = frame.closest('[data-vlink]');
+        if (data.event === 'onError') showLinkError(box, Number(data.info) === 100 ? 'unavailable' : 'embed');
+        else if (data['x-tiktok-player'] && data.type === 'onError') showLinkError(box, 'embed');
+    });
+    var linkState = null;
+    function closeLinkEditor() { var o = document.getElementById('afLinkSheet'); if (o) o.remove(); linkState = null; }
+    function openLinkEditor() {
+        if (typeof currentFirebaseUser === 'undefined' || !currentFirebaseUser) { notice('Create an account or sign in to share a video link.'); showPage('profile'); return; }
+        closeGate(); closeLinkEditor();
+        var o = document.createElement('div');
+        o.id = 'afLinkSheet'; o.className = 'gate-overlay'; o.setAttribute('role', 'dialog'); o.setAttribute('aria-modal', 'true');
+        o.innerHTML = '<section class="gate-card link-editor"><h2>Share a video link</h2><p class="sub">Paste a YouTube or TikTok link. Members watch it inside Afrishine Hub.</p>'
+            + '<input class="field" id="afLinkUrl" type="url" inputmode="url" autocomplete="off" placeholder="https://youtube.com/watch?v=…">'
+            + '<div id="afLinkPreview"></div><p class="link-msg" id="afLinkMsg" role="status"></p>'
+            + '<input class="field" id="afLinkTitle" maxlength="200" placeholder="Title (optional)" style="display:none">'
+            + '<textarea class="field" id="afLinkCaption" maxlength="500" placeholder="Say something about this video (optional)"></textarea>'
+            + '<button type="button" class="gold" id="afLinkPost" disabled>Post Video</button><button type="button" class="gate-cancel" id="afLinkCancel">Cancel</button></section>';
+        document.body.appendChild(o);
+        var input = o.querySelector('#afLinkUrl'), msg = o.querySelector('#afLinkMsg'), prev = o.querySelector('#afLinkPreview'), btn = o.querySelector('#afLinkPost'), titleEl = o.querySelector('#afLinkTitle'), timer = null, seq = 0;
+        function say2(text, bad) { msg.textContent = text || ''; msg.className = 'link-msg' + (bad ? ' err' : ''); }
+        function check() {
+            var mine = ++seq, raw = input.value.trim();
+            linkState = null; btn.disabled = true; prev.innerHTML = ''; titleEl.style.display = 'none';
+            if (!raw) return say2('');
+            var info = parseVideoLink(raw);
+            if (!info) return say2('Paste a valid YouTube or TikTok video link.', true);
+            say2('Checking link…');
+            resolveVideoLink(info).then(function (r) {
+                if (mine !== seq) return;
+                if (!r) return say2('Please paste the full TikTok link that looks like tiktok.com/@name/video/123…', true);
+                linkState = r;
+                titleEl.style.display = ''; titleEl.value = r.title ? r.title.slice(0, 200) : '';
+                prev.innerHTML = linkCardHtml({ linkProvider: r.provider, linkId: r.id, linkUrl: r.url, linkTitle: r.title, linkThumb: r.thumb });
+                say2('Ready to post.'); btn.disabled = false;
+            });
+        }
+        input.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(check, 450); });
+        input.addEventListener('paste', function () { setTimeout(check, 60); });
+        o.querySelector('#afLinkCancel').addEventListener('click', closeLinkEditor);
+        o.addEventListener('click', function (e) { if (e.target === o) closeLinkEditor(); });
+        btn.addEventListener('click', function () {
+            if (!linkState || !db || !currentFirebaseUser) return;
+            var r = linkState, title = (titleEl.value || '').trim().slice(0, 200) || (r.provider === 'tiktok' ? 'TikTok video' : 'YouTube video');
+            btn.disabled = true; btn.textContent = 'Posting…';
+            db.collection('posts').add({
+                uid: currentFirebaseUser.uid, authorName: currentFirebaseUser.displayName || 'Afrishine Member',
+                text: (o.querySelector('#afLinkCaption').value || '').trim().slice(0, 500), type: 'link', source: 'talent',
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                linkProvider: r.provider, linkUrl: r.url, linkId: r.id, linkTitle: title, linkThumb: r.thumb || ''
+            }).then(function () { closeLinkEditor(); notice('Your video link has been shared.'); }).catch(function (e) { btn.disabled = false; btn.textContent = 'Post Video'; say2(firebaseErrorMessage(e), true); });
+        });
+        input.focus();
+    }
+    window.afOpenLinkEditor = openLinkEditor;
+
+    /* ================= ACADEMY: traffic rules ================= */
+    var TR_CATS = [
+        { id: 'gazette', n: 1, icon: '📰', title: 'Gasette y’Igihugu', sub: 'Soma amategeko ashya ajya hanze.', cta: '📖 Soma →' },
+        { id: 'signs', n: 2, icon: '🛑', title: 'Ibyapa', sub: 'Menya ibisobanuro by’ibyapa by’umuhanda.', cta: '▶ Reba →' },
+        { id: 'new_rules', n: 3, icon: '📄', title: 'Amabwiriza Mashya', sub: 'Menya amabwiriza ashya y’umuhanda.', cta: '📖 Soma →' },
+        { id: 'vehicle_transfer', n: 4, icon: '🚗', title: 'Mutation z’ibinyabiziga', sub: 'Menya uko wahinduza amakuru y’imodoka.', cta: '📖 Soma →' },
+        { id: 'rules_in_force', n: 5, icon: '📋', title: 'Ibyubahirizwa', sub: 'Menya amategeko agenga abagenzuzi.', cta: '☑ Quiz →' },
+        { id: 'faq', n: 6, icon: '❓', title: 'Ibibazo & Impaka', sub: 'Tegura ibibazo, usubize ukore ubugenzuzi.', cta: '▶ Reba →' }
+    ];
+    window.AF_TR_CATS = TR_CATS;
+    var TR_LOCKED = 'Get a subscription to unlock premium features, then tap Start Now.';
+    var academy = { files: [], at: 0, loading: null };
+    function toast(text, wait) {
+        var t = document.getElementById('afSmallToast');
+        if (!t) { t = document.createElement('div'); t.id = 'afSmallToast'; t.setAttribute('role', 'status'); t.setAttribute('aria-live', 'polite'); document.body.appendChild(t); }
+        t.textContent = text; t.style.display = 'block';
+        clearTimeout(toastTimer); toastTimer = setTimeout(hideToast, wait || 5000);
+    }
+    window.afToast = toast;
+    function loadAcademyFiles(force) {
+        if (!db) return Promise.resolve(academy.files);
+        if (!force && academy.at && Date.now() - academy.at < 5 * 60 * 1000) return Promise.resolve(academy.files);
+        if (academy.loading) return academy.loading;
+        academy.loading = db.collection('academyFiles').limit(300).get().then(function (snap) {
+            academy.files = snap.docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); });
+            academy.at = Date.now(); return academy.files;
+        }).catch(function (e) { console.warn('Academy files:', e); return academy.files; }).then(function (f) { academy.loading = null; return f; });
+        return academy.loading;
+    }
+    window.afAcademyReload = function () { academy.at = 0; return loadAcademyFiles(true); };
+    function filesOf(cat) { return academy.files.filter(function (f) { return f.category === cat; }).sort(function (a, b) { return ms2(b.createdAt) - ms2(a.createdAt); }); }
+    function paintTrafficGrid() {
+        var grid = document.getElementById('trGrid'); if (!grid) return;
+        if (!grid.children.length) {
+            grid.innerHTML = TR_CATS.map(function (c) {
+                return '<button type="button" class="tr-card" data-tr-cat="' + c.id + '"><span class="tr-num">' + c.n + '</span><span class="tr-count" data-tr-count="' + c.id + '"></span><i aria-hidden="true">' + c.icon + '</i><b>' + plain(c.title) + '</b><small>' + plain(c.sub) + '</small><span class="tr-cta">' + c.cta + '</span></button>';
+            }).join('');
+        }
+        TR_CATS.forEach(function (c) { var n = filesOf(c.id).length, b = grid.querySelector('[data-tr-count="' + c.id + '"]'); if (b) { b.textContent = n; b.style.display = n ? 'block' : 'none'; } });
+    }
+    function fileIcon(t) { return t === 'pdf' ? '📄' : t === 'video' ? '🎬' : '🖼️'; }
+    function openTrafficCategory(id) {
+        var cat = TR_CATS.filter(function (c) { return c.id === id; })[0]; if (!cat) return;
+        loadAcademyFiles(false).then(function () {
+            var list = filesOf(id);
+            if (!list.length) { toast(TR_LOCKED); return; }
+            document.getElementById('trListTitle').textContent = cat.title;
+            document.getElementById('trListSub').textContent = cat.sub;
+            document.getElementById('trListBody').innerHTML = list.map(function (f) {
+                var d = ms2(f.createdAt) ? new Date(ms2(f.createdAt)).toLocaleDateString() : '';
+                return '<div class="tr-file"><i aria-hidden="true">' + fileIcon(f.fileType) + '</i><div><b>' + plain(f.title) + '</b><small>' + plain(snip2(f.description, 90)) + (d ? ' · ' + plain(d) : '') + '</small></div><button type="button" data-tr-file="' + plain(f.id) + '">' + (f.fileType === 'video' ? 'Reba' : 'Soma') + '</button></div>';
+            }).join('');
+            showPage('trafficList');
+        });
+    }
+    function snip2(t, n) { t = String(t || '').replace(/\s+/g, ' ').trim(); return t.length > n ? t.slice(0, n) + '…' : t; }
+    function closeViewer() { var v = document.getElementById('afViewer'); if (v) v.remove(); }
+    function openAcademyFile(f) {
+        var base = 'https://afrishine-media.usherluckyelie.workers.dev/media/';
+        if (!f || String(f.fileUrl || '').indexOf(base) !== 0) { toast('This file could not be opened.'); return; }
+        closeViewer();
+        var url = f.fileUrl, body;
+        if (f.fileType === 'image') body = '<img src="' + plain(url) + '" alt="' + plain(f.title) + '">';
+        else if (f.fileType === 'video') body = '<video src="' + plain(url) + '" controls playsinline autoplay></video>';
+        else body = '<iframe src="https://docs.google.com/viewer?embedded=true&url=' + encodeURIComponent(url) + '" title="' + plain(f.title) + '"></iframe>';
+        var v = document.createElement('div');
+        v.id = 'afViewer'; v.className = 'af-viewer'; v.setAttribute('role', 'dialog'); v.setAttribute('aria-modal', 'true');
+        v.innerHTML = '<div class="af-viewer-bar"><b>' + plain(f.title) + '</b>' + (f.fileType === 'pdf' ? '<a href="' + plain(url) + '" target="_blank" rel="noopener">Open</a>' : '') + '<button type="button" id="afViewerClose">Close</button></div><div class="af-viewer-body">' + body + '</div>';
+        document.body.appendChild(v);
+        v.querySelector('#afViewerClose').addEventListener('click', closeViewer);
+    }
+    document.addEventListener('click', function (e) {
+        var c = e.target.closest ? e.target.closest('[data-tr-cat]') : null;
+        if (c) { openTrafficCategory(c.getAttribute('data-tr-cat')); return; }
+        var f = e.target.closest ? e.target.closest('[data-tr-file]') : null;
+        if (f) { var id = f.getAttribute('data-tr-file'); openAcademyFile(academy.files.filter(function (x) { return x.id === id; })[0]); return; }
+        if (e.target.closest && (e.target.closest('#trStart') || e.target.closest('#trStart2'))) {
+            loadAcademyFiles(false).then(function () {
+                if (!academy.files.length) { toast(TR_LOCKED); return; }
+                var g = document.getElementById('trCats'); if (g && g.scrollIntoView) g.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        }
+        if (e.target.closest && e.target.closest('[data-open-traffic]')) { showPage('trafficRules'); }
+    });
+
+    /* ================= ADMIN DASHBOARD ================= */
+    var ADM = { tab: 'overview' };
+    window.__afIsAdmin = false;
+    function syncAdminMenu() { var w = document.getElementById('ahMenuAdminWrap'); if (w) w.style.display = window.__afIsAdmin ? '' : 'none'; }
+    function checkAdmin() {
+        var u = (typeof currentFirebaseUser !== 'undefined') ? currentFirebaseUser : null;
+        if (!u || !db) { window.__afIsAdmin = false; syncAdminMenu(); return; }
+        db.collection('admins').doc(u.uid).get().then(function (s) { window.__afIsAdmin = !!s.exists; syncAdminMenu(); }).catch(function () { window.__afIsAdmin = false; syncAdminMenu(); });
+    }
+    if (typeof auth !== 'undefined' && auth && auth.onAuthStateChanged) auth.onAuthStateChanged(function () { checkAdmin(); });
+    function body() { return document.getElementById('admBody'); }
+    function busy(t) { body().innerHTML = '<p class="adm-empty">' + plain(t || 'Loading…') + '</p>'; }
+    function fdate(t) { var m = ms2(t); return m ? new Date(m).toLocaleString() : ''; }
+    function docsOf(snap) { return snap.docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); }); }
+    function byNew(a) { return a.sort(function (x, y) { return ms2(y.createdAt) - ms2(x.createdAt); }); }
+    function countOf(q) {
+        var p = q.count ? q.count().get().then(function (s) { return s.data().count; }) : Promise.reject(new Error('no count'));
+        return p.catch(function () { return q.limit(1000).get().then(function (s) { return s.size >= 1000 ? '1000+' : s.size; }); });
+    }
+    function fail(e) { body().innerHTML = '<p class="adm-empty">' + plain(firebaseErrorMessage(e)) + '</p>'; }
+    function admOverview() {
+        busy();
+        var Q = function (c, w) { var q = db.collection(c); return w ? q.where(w[0], '==', w[1]) : q; };
+        var items = [['Members', Q('publicProfiles'), '👥'], ['Posts', Q('posts'), '📝'], ['Love posts', Q('love_posts'), '💞'], ['Marketplace listings', Q('marketplacePosts'), '🛍️'],
+            ['Pending verifications', Q('verificationRequests', ['status', 'pending']), '✅'], ['New Love reports', Q('love_reports', ['status', 'new']), '🚩'], ['New Marketplace reports', Q('marketplaceReports', ['status', 'new']), '🚩'],
+            ['Verification “notify me”', Q('verificationInterest'), '🔔'], ['Academy files', Q('academyFiles'), '🎓']];
+        Promise.all(items.map(function (it) { return countOf(it[1]).catch(function () { return '—'; }); })).then(function (vals) {
+            var grid = '<div class="adm-grid">' + items.map(function (it, i) { return '<div class="adm-stat"><i>' + it[2] + '</i><b>' + plain(vals[i]) + '</b><small>' + plain(it[0]) + '</small></div>'; }).join('') + '</div>';
+            return db.collection('posts').orderBy('createdAt', 'desc').limit(8).get().then(function (s) {
+                var rows = docsOf(s).map(function (p) { return '<div class="adm-row"><div class="grow"><span class="adm-tag">' + plain(p.type || 'text') + '</span><b>' + plain(p.authorName || 'Member') + '</b><small>' + plain(snip2(p.linkTitle || p.title || p.text || '(media post)', 110)) + ' · ' + plain(fdate(p.createdAt)) + '</small></div></div>'; }).join('');
+                body().innerHTML = grid + '<h3 class="adm-h">Latest activity</h3>' + (rows || '<p class="adm-empty">No posts yet.</p>') + '<button type="button" class="adm-btn" data-adm-act="refresh">Refresh</button>';
+            });
+        }).catch(fail);
+    }
+    function admMembers() {
+        busy();
+        db.collection('publicProfiles').orderBy('updatedAt', 'desc').limit(80).get().then(function (s) {
+            var rows = docsOf(s);
+            body().innerHTML = '<input class="field adm-search" id="admSearch" placeholder="Search members…" autocomplete="off"><div id="admMemberList">' + (rows.map(function (m) {
+                return '<div class="adm-row" data-name="' + plain(String(m.username || '').toLowerCase()) + '"><div class="grow"><b>' + plain(m.username || 'Member') + '</b>' + (m.verified ? ' <span class="adm-tag">✔ Verified</span>' : '') + '<small>' + plain(snip2(m.bio || m.location || '', 70)) + '</small><small>' + plain(m.id) + '</small></div><div class="acts"><button type="button" class="adm-btn ' + (m.verified ? 'red' : 'gold') + '" data-adm-act="verify" data-id="' + plain(m.id) + '" data-on="' + (m.verified ? '0' : '1') + '">' + (m.verified ? 'Remove badge' : 'Verify') + '</button></div></div>';
+            }).join('') || '<p class="adm-empty">No members found.</p>') + '</div>';
+        }).catch(fail);
+    }
+    function contentRows(col, rows) {
+        return rows.map(function (p) {
+            var main = p.title || p.linkTitle || p.text || p.description || '(media)';
+            return '<div class="adm-row"><div class="grow"><span class="adm-tag">' + plain(p.type || col) + '</span><b>' + plain(p.authorName || 'Member') + '</b><small>' + plain(snip2(main, 120)) + ' · ' + plain(fdate(p.createdAt)) + '</small></div><div class="acts"><button type="button" class="adm-btn red" data-adm-act="del" data-col="' + col + '" data-id="' + plain(p.id) + '">Delete</button></div></div>';
+        }).join('') || '<p class="adm-empty">Nothing here yet.</p>';
+    }
+    function admContent() {
+        busy();
+        var get = function (c, n) { return db.collection(c).orderBy('createdAt', 'desc').limit(n).get().then(docsOf).catch(function () { return []; }); };
+        Promise.all([get('posts', 25), get('love_posts', 20), get('marketplacePosts', 20)]).then(function (r) {
+            body().innerHTML = '<h3 class="adm-h">Posts (Home and Talent Hub)</h3>' + contentRows('posts', r[0]) + '<h3 class="adm-h">Love Connection</h3>' + contentRows('love_posts', r[1]) + '<h3 class="adm-h">Marketplace</h3>' + contentRows('marketplacePosts', r[2]);
+        });
+    }
+    function admReports() {
+        busy();
+        var get = function (c, kind) { return db.collection(c).limit(60).get().then(function (s) { return docsOf(s).map(function (x) { x.kind = kind; return x; }); }).catch(function () { return []; }); };
+        Promise.all([get('love_reports', 'love'), get('marketplaceReports', 'market')]).then(function (r) {
+            var rows = byNew(r[0].concat(r[1]));
+            body().innerHTML = rows.map(function (x) {
+                var col = x.kind === 'love' ? 'love_posts' : 'marketplacePosts';
+                return '<div class="adm-row"><div class="grow"><span class="adm-tag">' + (x.kind === 'love' ? 'Love' : 'Marketplace') + '</span><span class="adm-tag">' + plain(x.status || 'new') + '</span><b>' + plain(snip2(x.reason, 160)) + '</b><small>Post: ' + plain(x.postId) + '</small><small>Reported member: ' + plain(x.reportedUid) + ' · ' + plain(fdate(x.createdAt)) + '</small></div><div class="acts"><button type="button" class="adm-btn red" data-adm-act="del" data-col="' + col + '" data-id="' + plain(x.postId) + '" data-report="' + plain(x.id) + '" data-rcol="' + (x.kind === 'love' ? 'love_reports' : 'marketplaceReports') + '">Delete post</button><button type="button" class="adm-btn" data-adm-act="report" data-s="reviewed" data-id="' + plain(x.id) + '" data-rcol="' + (x.kind === 'love' ? 'love_reports' : 'marketplaceReports') + '">Reviewed</button><button type="button" class="adm-btn" data-adm-act="report" data-s="dismissed" data-id="' + plain(x.id) + '" data-rcol="' + (x.kind === 'love' ? 'love_reports' : 'marketplaceReports') + '">Dismiss</button></div></div>';
+            }).join('') || '<p class="adm-empty">No reports. Everything looks calm.</p>';
+        });
+    }
+    function admVerify() {
+        busy();
+        Promise.all([db.collection('verificationRequests').where('status', '==', 'pending').limit(50).get().then(docsOf).catch(function () { return []; }), db.collection('verificationInterest').limit(50).get().then(docsOf).catch(function () { return []; })]).then(function (r) {
+            var req = byNew(r[0]);
+            body().innerHTML = '<h3 class="adm-h">Pending verification requests</h3>' + (req.map(function (x) {
+                return '<div class="adm-row"><div class="grow"><b>' + plain(x.displayName || 'Member') + '</b> <span class="adm-tag">' + plain(x.profession) + '</span><small>' + plain(snip2(x.details, 300)) + '</small><small>' + plain(x.uid) + ' · ' + plain(fdate(x.createdAt)) + '</small></div><div class="acts"><button type="button" class="adm-btn gold" data-adm-act="approve" data-id="' + plain(x.id) + '" data-uid="' + plain(x.uid) + '">Approve</button><button type="button" class="adm-btn red" data-adm-act="reject" data-id="' + plain(x.id) + '">Reject</button></div></div>';
+            }).join('') || '<p class="adm-empty">No pending requests.</p>') + '<h3 class="adm-h">“Notify me” list (' + r[1].length + ')</h3>' + (r[1].map(function (x) { return '<div class="adm-row"><div class="grow">' + plain(x.email || '(no email)') + '<small>' + plain(x.uid) + '</small></div></div>'; }).join('') || '<p class="adm-empty">Nobody yet.</p>');
+        });
+    }
+    function admAcademy() {
+        busy();
+        loadAcademyFiles(true).then(function () {
+            var opts = TR_CATS.map(function (c) { return '<option value="' + c.id + '">' + c.n + '. ' + plain(c.title) + '</option>'; }).join('');
+            var lists = TR_CATS.map(function (c) {
+                var fs = filesOf(c.id);
+                return '<h3 class="adm-h">' + c.n + '. ' + plain(c.title) + ' (' + fs.length + ')</h3>' + (fs.map(function (f) {
+                    return '<div class="adm-row"><div class="grow"><span class="adm-tag">' + plain(f.fileType) + '</span><b>' + plain(f.title) + '</b><small>' + plain(snip2(f.description, 100)) + '</small></div><div class="acts"><button type="button" class="adm-btn" data-adm-act="renamefile" data-id="' + plain(f.id) + '">Rename</button><button type="button" class="adm-btn red" data-adm-act="delfile" data-id="' + plain(f.id) + '">Delete</button></div></div>';
+                }).join('') || '<p class="adm-empty">No files yet. Members will see the “subscription” message here.</p>');
+            }).join('');
+            body().innerHTML = '<div class="adm-form"><b>Upload a file to Amategeko y’umuhanda</b><select class="field" id="admAcCat">' + opts + '</select><input class="field" id="admAcTitle" maxlength="150" placeholder="Title (e.g. Official Gazette – 2026)"><textarea class="field" id="admAcDesc" maxlength="300" placeholder="Short description (optional)" style="min-height:64px"></textarea><input class="field" id="admAcFile" type="file" accept="application/pdf,image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime"><button type="button" class="adm-btn gold" id="admAcGo" data-adm-act="upfile" style="padding:12px">Upload file</button><small id="admAcMsg" class="adm-empty" style="padding:0"></small></div>' + lists;
+        });
+    }
+    function admStorage() {
+        busy();
+        var u = currentFirebaseUser; if (!u) return;
+        u.getIdToken().then(function (t) { return fetch('https://afrishine-media.usherluckyelie.workers.dev/usage', { headers: { Authorization: 'Bearer ' + t } }); }).then(function (r) { return r.json(); }).then(function (d) {
+            var gb = function (n) { return (Number(n || 0) / 1e9).toFixed(2) + ' GB'; }, pct = Math.min(100, Math.round((d.monthlyUsedBytes || d.usedBytes || 0) / (d.limitBytes || 1) * 100));
+            body().innerHTML = '<div class="adm-stat"><small>New uploads this month</small><b>' + gb(d.monthlyUsedBytes || d.usedBytes) + ' / ' + gb(d.limitBytes) + '</b><div class="adm-bar"><span style="width:' + pct + '%"></span></div><small style="margin-top:8px">' + pct + '% used · uploads ' + (d.canUpload === false ? 'are paused' : 'are open') + (d.resetsAt ? ' · resets ' + plain(new Date(d.resetsAt).toLocaleDateString()) : '') + '</small></div><div class="adm-grid" style="margin-top:10px"><div class="adm-stat"><i>🗄️</i><b>' + gb(d.totalStoredBytes) + '</b><small>Total stored in Cloudflare</small></div><div class="adm-stat"><i>📁</i><b>' + plain(d.objectCount == null ? '—' : d.objectCount) + '</b><small>Files stored</small></div></div><p class="adm-empty">Cloudflare’s free R2 allowance is 10 GB of stored data. Files from earlier months stay stored and still count toward it.</p>';
+        }).catch(function () { body().innerHTML = '<p class="adm-empty">Storage numbers are not available right now.</p>'; });
+    }
+    var ADM_TABS = { overview: admOverview, members: admMembers, content: admContent, reports: admReports, verify: admVerify, academy: admAcademy, storage: admStorage };
+    function admRender(tab) {
+        ADM.tab = ADM_TABS[tab] ? tab : 'overview';
+        Array.prototype.forEach.call(document.querySelectorAll('#admTabs [data-adm-tab]'), function (b) { b.classList.toggle('on', b.getAttribute('data-adm-tab') === ADM.tab); });
+        if (!db) { busy('Service temporarily unavailable.'); return; }
+        ADM_TABS[ADM.tab]();
+    }
+    window.afAdminRender = admRender;
+    function admDelete(col, id, reportId, rcol) {
+        if (!confirm('Delete this item permanently?')) return;
+        var ref = db.collection(col).doc(id);
+        ref.get().then(function (snap) {
+            var d = snap.exists ? snap.data() : {};
+            return ref.delete().then(function () {
+                [].concat(d.mediaKey ? [d.mediaKey] : [], d.imageKey ? [d.imageKey] : [], d.images || [], d.imageUrls || [], d.videoUrl ? [d.videoUrl] : []).forEach(function (u) { if (window.workerDelete) window.workerDelete(u).catch(function () { }); });
+                if (reportId && rcol) return db.collection(rcol).doc(reportId).update({ status: 'reviewed', reviewedAt: firebase.firestore.FieldValue.serverTimestamp(), reviewedBy: currentFirebaseUser.uid }).catch(function () { });
+            });
+        }).then(function () { notice('Deleted.'); admRender(ADM.tab); }).catch(function (e) { notice(firebaseErrorMessage(e)); });
+    }
+    function admUploadFile() {
+        var cat = document.getElementById('admAcCat').value, title = document.getElementById('admAcTitle').value.trim(), desc = document.getElementById('admAcDesc').value.trim();
+        var file = document.getElementById('admAcFile').files[0], msg = document.getElementById('admAcMsg'), btn = document.getElementById('admAcGo');
+        if (title.length < 3) { msg.textContent = 'Please write a title (at least 3 characters).'; return; }
+        if (!file) { msg.textContent = 'Please choose a file.'; return; }
+        var kind = file.type === 'application/pdf' ? 'pdf' : /^image\//.test(file.type) ? 'image' : /^video\//.test(file.type) ? 'video' : '';
+        if (!kind) { msg.textContent = 'Use a PDF, an image or a video file.'; return; }
+        btn.disabled = true; msg.textContent = 'Uploading…';
+        var prep = kind === 'video' ? window.afPrepareVideo(file, function (t) { msg.textContent = t; }) : Promise.resolve(file);
+        prep.then(function (f) {
+            msg.textContent = 'Uploading…';
+            return currentFirebaseUser.getIdToken().then(function (t) {
+                return fetch('https://afrishine-media.usherluckyelie.workers.dev/upload?filename=' + encodeURIComponent(f.name || 'file'), { method: 'POST', headers: { Authorization: 'Bearer ' + t, 'Content-Type': f.type }, body: f });
+            }).then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { if (!r.ok || !d.success) { window.afWorkerFailure(d, r.status); throw new Error(d.error || 'Upload failed. Please try again.'); } return d; }); });
+        }).then(function (up) {
+            return db.collection('academyFiles').add({ category: cat, title: title, description: desc, fileUrl: up.url, fileKey: up.key, fileType: kind, createdAt: firebase.firestore.FieldValue.serverTimestamp(), createdBy: currentFirebaseUser.uid });
+        }).then(function () { notice('File added to the course.'); academy.at = 0; admAcademy(); }).catch(function (e) { btn.disabled = false; msg.textContent = firebaseErrorMessage(e); });
+    }
+    document.addEventListener('click', function (e) {
+        var tab = e.target.closest ? e.target.closest('[data-adm-tab]') : null;
+        if (tab) { admRender(tab.getAttribute('data-adm-tab')); return; }
+        var b = e.target.closest ? e.target.closest('[data-adm-act]') : null;
+        if (!b || !window.__afIsAdmin) return;
+        var act = b.getAttribute('data-adm-act'), id = b.getAttribute('data-id'), ts = firebase.firestore.FieldValue.serverTimestamp();
+        if (act === 'refresh') admRender(ADM.tab);
+        else if (act === 'verify') db.collection('publicProfiles').doc(id).update({ verified: b.getAttribute('data-on') === '1' }).then(function () { notice('Updated.'); admMembers(); }).catch(function (er) { notice(firebaseErrorMessage(er)); });
+        else if (act === 'del') admDelete(b.getAttribute('data-col'), id, b.getAttribute('data-report'), b.getAttribute('data-rcol'));
+        else if (act === 'report') db.collection(b.getAttribute('data-rcol')).doc(id).update({ status: b.getAttribute('data-s'), reviewedAt: ts, reviewedBy: currentFirebaseUser.uid }).then(function () { admReports(); }).catch(function (er) { notice(firebaseErrorMessage(er)); });
+        else if (act === 'approve') {
+            var uid = b.getAttribute('data-uid');
+            db.collection('publicProfiles').doc(uid).update({ verified: true }).then(function () { return db.collection('verificationRequests').doc(id).update({ status: 'approved', reviewedAt: ts, reviewedBy: currentFirebaseUser.uid }); }).then(function () { notice('Member verified.'); admVerify(); }).catch(function (er) { notice(firebaseErrorMessage(er)); });
+        }
+        else if (act === 'reject') db.collection('verificationRequests').doc(id).update({ status: 'rejected', reviewedAt: ts, reviewedBy: currentFirebaseUser.uid }).then(function () { admVerify(); }).catch(function (er) { notice(firebaseErrorMessage(er)); });
+        else if (act === 'upfile') admUploadFile();
+        else if (act === 'renamefile') { var f = academy.files.filter(function (x) { return x.id === id; })[0], nt = f && prompt('New title', f.title); if (nt && nt.trim().length >= 3) db.collection('academyFiles').doc(id).update({ title: nt.trim().slice(0, 150), updatedAt: ts }).then(function () { academy.at = 0; admAcademy(); }).catch(function (er) { notice(firebaseErrorMessage(er)); }); }
+        else if (act === 'delfile') {
+            var file = academy.files.filter(function (x) { return x.id === id; })[0];
+            if (file && confirm('Delete this file from the course?')) db.collection('academyFiles').doc(id).delete().then(function () { if (file.fileKey && window.workerDelete) window.workerDelete(file.fileKey).catch(function () { }); academy.at = 0; admAcademy(); }).catch(function (er) { notice(firebaseErrorMessage(er)); });
+        }
+    });
+    document.addEventListener('input', function (e) {
+        if (e.target && e.target.id === 'admSearch') {
+            var q = e.target.value.trim().toLowerCase();
+            Array.prototype.forEach.call(document.querySelectorAll('#admMemberList [data-name]'), function (r) { r.style.display = r.getAttribute('data-name').indexOf(q) !== -1 ? '' : 'none'; });
+        }
+    });
+    /* profile menu sheet header */
+    document.addEventListener('toggle', function (e) {
+        if (!e.target || e.target.id !== 'ahProfileMore' || !e.target.open) return;
+        var n = document.getElementById('ahDashboardName'), a = document.getElementById('ahDashboardAvatar'), u = (typeof currentFirebaseUser !== 'undefined') ? currentFirebaseUser : null;
+        var name = (n && n.textContent.trim()) || (u && u.displayName) || 'Afrishine Hub';
+        document.getElementById('ahSheetName').textContent = name;
+        document.getElementById('ahSheetSub').textContent = u ? (u.email || 'Signed in') : 'You are not signed in';
+        var img = document.getElementById('ahSheetAvatar'); if (img && a && a.src) img.src = a.src;
+        syncAdminMenu();
+    }, true);
+
+    var prevCreateAction2 = window.createAction;
+    window.createAction = function (type) {
+        if (type === 'link') { try { closeCreateMenu(); } catch (_) { } openLinkEditor(); return; }
+        return prevCreateAction2(type);
+    };
+    var prevOpenCreateMenu = window.openCreateMenu;
+    window.openCreateMenu = function (source) {
+        var r = prevOpenCreateMenu.apply(this, arguments);
+        var b = document.getElementById('createLinkOption'); if (b) b.style.display = (source === 'talent') ? '' : 'none';
+        return r;
+    };
     /* Android / browser Back button moves between pages */
     window.addEventListener('popstate', function () {
         closeGate(); hideToast();
@@ -3881,7 +4671,7 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
     /* Escape closes open overlays */
     document.addEventListener('keydown', function (e) {
         if (e.key !== 'Escape') return;
-        closeGate();
+        closeGate(); closeLinkEditor(); closeViewer();
         try { closeMenu(); closeCreateMenu(); } catch (_) {}
         var ws = document.getElementById('creatorWorkspace');
         if (ws && ws.classList.contains('open')) closeCreator();
