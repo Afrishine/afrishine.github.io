@@ -1,8 +1,13 @@
+
 {
   "rewrites": [
     {
       "source": "/__/auth/:path*",
       "destination": "https://afrishine-hub.firebaseapp.com/__/auth/:path*"
+    },
+    {
+      "source": "/share/:kind/:id",
+      "destination": "/api/share?kind=:kind&id=:id"
     }
   ]
 }
