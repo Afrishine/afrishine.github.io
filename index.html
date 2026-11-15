@@ -1486,7 +1486,7 @@ function addPostComment(kind, id, card) {
     } });
 }
 function sharePost(kind, id) {
-    return __awaiter(this, void 0, void 0, function* () { const page = kind === 'love_posts' ? 'love' : 'home'; const url = location.origin + location.pathname + '?post=' + encodeURIComponent(id) + '&kind=' + encodeURIComponent(kind) + '#' + page; const card = document.querySelector('[data-engagement=\"' + kind + '\"][data-post-id=\"' + id + '\"]'); const postBody = card ? card.querySelector('.post-body') : null; const body = postBody ? postBody.textContent : 'Afrishine Hub post'; const shareData = { title: 'Afrishine Hub', text: body.slice(0, 220), url }; try {
+    return __awaiter(this, void 0, void 0, function* () { const page = kind === 'love_posts' ? 'love' : 'home'; const url = 'https://afrishinegithubio.vercel.app/share/' + encodeURIComponent(kind) + '/' + encodeURIComponent(id); const card = document.querySelector('[data-engagement=\"' + kind + '\"][data-post-id=\"' + id + '\"]'); const postBody = card ? card.querySelector('.post-body') : null; const body = postBody ? postBody.textContent : 'Afrishine Hub post'; const shareData = { title: 'Afrishine Hub', text: body.slice(0, 220), url }; try {
         if (navigator.share) {
             yield navigator.share(shareData);
         }
