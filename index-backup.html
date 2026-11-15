@@ -2336,7 +2336,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 (function () {
     'use strict';
     const MEDIA_WORKER = 'https://afrishine-media.usherluckyelie.workers.dev';
-    const MAX_DAILY_PHOTO = 1, MAX_DAILY_VIDEO = 1, MAX_FREE_VIDEO_SECONDS = 60, STORAGE_LIMIT_BYTES = 9500000000;
+    const MAX_DAILY_PHOTO = 1, MAX_DAILY_VIDEO = 999, MAX_FREE_VIDEO_SECONDS = 300, STORAGE_LIMIT_BYTES = 9500000000;
     const $ = id => document.getElementById(id);
     const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const signed = () => !!(window.currentFirebaseUser || currentFirebaseUser);
@@ -4036,7 +4036,7 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
 
     /* ---- Upload helpers: friendly popups, video conversion, format checks ---- */
     window.AF_QUOTA_MESSAGE = 'You have already used your credits. Please try uploading again after one week, or verify your account to upload immediately.';
-    window.AF_MEDIA = { maxBytes: 100 * 1024 * 1024, targetBytes: 92 * 1024 * 1024, maxConvertSeconds: 120, maxVideoBps: 16000000, audioBps: 128000, maxSide: 1920, fps: 30 };
+    window.AF_MEDIA = { maxBytes: 100 * 1024 * 1024, targetBytes: 92 * 1024 * 1024, maxConvertSeconds: 300, maxVideoBps: 16000000, audioBps: 128000, maxSide: 1920, fps: 30 };
     var MEDIA_WORKER_URL = 'https://afrishine-media.usherluckyelie.workers.dev';
     var MSG_VIDEO = "This video format can't be processed. Please edit it and export it as MP4 (H.264), then upload it again.";
     var MSG_PHOTO = "This photo format can't be processed. Please edit it and save it as JPG or PNG, then upload it again.";
