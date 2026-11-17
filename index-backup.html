@@ -18,8 +18,11 @@
 <meta property="og:title" content="Afrishine Hub">
 <meta property="og:description" content="Your Hub, Your Solutions. Discover talent, connect, learn, shop and explore opportunities.">
 <meta property="og:url" content="https://afrishinegithubio.vercel.app/">
+<meta property="og:image" content="https://afrishinegithubio.vercel.app/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:site_name" content="Afrishine Hub">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 <meta property="og:type" content="website">
 <title>Afrishine Hub — Your Hub, Your Solutions</title>
 <script>
@@ -513,7 +516,7 @@ a.ct-btn:active{background:#1a2030}
 <button class="academy-home-card" onclick="showPage('academy')"><div class="academy-home-info"><div class="academy-home-icon">🎓</div><div class="academy-home-text"><strong>LEARN WITH AFRISHINE ACADEMY</strong><small>Learn new skills, explore knowledge and grow with Afrishine Academy.</small></div></div><span class="academy-home-arrow">→</span></button>
 <button class="love-home-card" onclick="showPage('love')"><div class="love-home-info"><div class="love-home-icon">❤️</div><div class="love-home-text"><strong>LOVE CONNECTION</strong><small>Connect, discover and build meaningful relationships.</small></div></div><span class="love-home-arrow">→</span></button></div>
 <h2 class="dashboard-heading">Explore Afrishine Hub</h2>
-<section class="ast-wallet-card" aria-label="Afrishine Token wallet"><div class="ast-coin">AST</div><div class="ast-wallet-info"><div class="ast-wallet-label">AFRISHINE TOKEN</div><h2>My Wallet</h2><p>Your AST balance and transaction history will appear here once wallet services launch.</p></div><button class="secondary wallet-open" onclick="showPage('wallet')">Open My Wallet →</button></section>
+<section class="ast-wallet-card" aria-label="Afrishine Token wallet"><div class="ast-coin">AST</div><div class="ast-wallet-info"><div class="ast-wallet-label">AFRISHINE TOKEN</div><h2>My Wallet</h2><p>Your wallet is ready. Your AST balance and transaction history will appear here after your account verification is complete.</p></div><button class="secondary wallet-open" onclick="showPage('wallet')">Open My Wallet →</button></section>
 <section class="home-video-section" aria-label="Afrishine video feed">
 <div class="home-video-heading"><div><h2>Videos For You ▶</h2><p>Discover short videos from the Afrishine community.</p></div><span class="eyebrow">FOR YOU</span></div>
 <div class="home-video-feed" id="homeVideoFeed"><div class="video-empty"><div class="empty-icon">🎬</div><strong>No videos yet</strong><p>When members publish videos, they will appear here. Videos play silently while you scroll; tap a video to watch it full screen.</p></div></div>
@@ -586,7 +589,7 @@ a.ct-btn:active{background:#1a2030}
     <label class="market-label" for="marketProductCurrency">Price Currency</label><select class="field" id="marketProductCurrency"><option value="RWF">FRW · Rwandan Franc</option><option value="USD">USD · US Dollar ($)</option></select><label class="market-label" for="marketProductPrice">Product Price</label><input class="field" id="marketProductPrice" type="number" min="1" step="any" inputmode="decimal" placeholder="e.g. 20">
     <label class="market-label" for="marketProductCondition">Condition</label><select class="field" id="marketProductCondition"><option value="New">New</option><option value="Used">Used</option></select>
     <label class="market-label" for="marketProductCategory">Category</label><select class="field" id="marketProductCategory"><option>Home Appliances</option><option>Electronics</option><option>CCTV & Security</option><option>Phones & Accessories</option><option>Fashion & Shoes</option><option>Furniture</option><option>Vehicles</option><option>Beauty & Health</option><option>Construction</option><option>Agriculture</option><option>Sports</option><option>Other</option></select>
-    <label class="market-label" for="marketProductLocation">Location</label><select class="field" id="marketProductLocation"><option value="Rwanda, Kigali">Kigali, Rwanda</option><option value="Rwanda, Rwamagana">Rwamagana, Rwanda</option><option value="Rwanda, Gicumbi">Gicumbi, Rwanda</option><option value="Rwanda, Musanze">Musanze, Rwanda</option><option value="Rwanda, Huye">Huye, Rwanda</option><option value="Rwanda, Rubavu">Rubavu, Rwanda</option><option value="Rwanda, Muhanga">Muhanga, Rwanda</option><option value="Rwanda, Nyagatare">Nyagatare, Rwanda</option><option value="Rwanda, Other">Other, Rwanda</option></select>
+    <label class="market-label" for="marketProductLocation">Location</label><select class="field" id="marketProductLocation"><option value="Rwanda, Kigali">Kigali</option><option value=" Rwamagana">Rwamagana</option><option value=" Gicumbi">Gicumbi</option><option value=" Musanze">Musanze</option><option value=" Huye">Huye</option><option value=" Rubavu">Rubavu</option><option value=" Muhanga">Muhanga</option><option value=" Nyagatare">Nyagatare</option><option value=" Other">Other</option></select>
     <button class="gold market-publish-btn" id="marketPublishButton" onclick="marketPublishProduct()">Done · Publish Product</button>
     <p class="creator-hint" id="marketUploadStatus" aria-live="polite"></p>
   </div>
@@ -1486,7 +1489,7 @@ function addPostComment(kind, id, card) {
     } });
 }
 function sharePost(kind, id) {
-    return __awaiter(this, void 0, void 0, function* () { const page = kind === 'love_posts' ? 'love' : 'home'; const url = location.origin + location.pathname + '?post=' + encodeURIComponent(id) + '&kind=' + encodeURIComponent(kind) + '#' + page; const card = document.querySelector('[data-engagement=\"' + kind + '\"][data-post-id=\"' + id + '\"]'); const postBody = card ? card.querySelector('.post-body') : null; const body = postBody ? postBody.textContent : 'Afrishine Hub post'; const shareData = { title: 'Afrishine Hub', text: body.slice(0, 220), url }; try {
+    return __awaiter(this, void 0, void 0, function* () { const page = kind === 'love_posts' ? 'love' : 'home'; const url = 'https://afrishinegithubio.vercel.app/share/' + encodeURIComponent(kind) + '/' + encodeURIComponent(id); const card = document.querySelector('[data-engagement=\"' + kind + '\"][data-post-id=\"' + id + '\"]'); const postBody = card ? card.querySelector('.post-body') : null; const body = postBody ? postBody.textContent : 'Afrishine Hub post'; const shareData = { title: 'Afrishine Hub', text: body.slice(0, 220), url }; try {
         if (navigator.share) {
             yield navigator.share(shareData);
         }
@@ -2336,7 +2339,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 (function () {
     'use strict';
     const MEDIA_WORKER = 'https://afrishine-media.usherluckyelie.workers.dev';
-    const MAX_DAILY_PHOTO = 1, MAX_DAILY_VIDEO = 999, MAX_FREE_VIDEO_SECONDS = 300, STORAGE_LIMIT_BYTES = 9500000000;
+    const MAX_DAILY_PHOTO = 999, MAX_DAILY_VIDEO = 999, MAX_FREE_VIDEO_SECONDS = 300, STORAGE_LIMIT_BYTES = 9500000000;
     const $ = id => document.getElementById(id);
     const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const signed = () => !!(window.currentFirebaseUser || currentFirebaseUser);
@@ -4689,6 +4692,7 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
 <link rel="stylesheet" href="creator-dashboard.css">
 <script src="creator-dashboard.js"></script>
 <script src="upload-rules.js"></script>
+<script src="push.js"></script>
 
 </body>
 </html>
