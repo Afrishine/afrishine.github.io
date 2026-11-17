@@ -18,6 +18,11 @@
     "shopping",
     "education"
   ],
+  "shortcuts": [
+    { "name": "Talent Hub", "url": "/#talent" },
+    { "name": "Marketplace", "url": "/#shop" },
+    { "name": "Inbox", "url": "/#inbox" }
+  ],
   "icons": [
     {
       "src": "/icon-192.png",
