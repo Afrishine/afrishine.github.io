@@ -4692,23 +4692,11 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
 <link rel="stylesheet" href="creator-dashboard.css">
 <script src="creator-dashboard.js"></script>
 <script src="upload-rules.js"></script>
-<!-- AFRISHINE HUB SERVICE WORKER -->
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function () {
-    navigator.serviceWorker.register('/sw.js')
-      .then(function (registration) {
-        console.log('sw.js registered:', registration.scope);
-      })
-      .catch(function (error) {
-        console.error('sw.js registration failed:', error);
-      });
-  });
-}
-</script>
-
 <!-- AFRISHINE HUB PUSH NOTIFICATIONS -->
 <script src="/push.js" defer></script>
+
+</body>
+</html>
 
 </body>
 </html>
