@@ -37,18 +37,40 @@
     ].join('\n');
     document.head.appendChild(st);
 
-    /* ---------- storage ---------- */
-    function storage() {
-      if (typeof firebase === 'undefined' || typeof firebase.storage !== 'function') { msg('Firebase Storage ntirashyirwamo mu rupapuro (firebase-storage-compat.js).'); return null; }
-      return firebase.storage();
+    /* ---------- storage: Cloudflare Worker (R2) ---------- */
+    var WORKER = 'https://afrishine-media.usherluckyelie.workers.dev';
+    function appCheckHeader() {
+      try {
+        if (typeof firebase !== 'undefined' && typeof firebase.appCheck === 'function') {
+          return firebase.appCheck().getToken().then(function (t) { return { 'X-Firebase-AppCheck': t.token }; }).catch(function () { return {}; });
+        }
+      } catch (_) { }
+      return Promise.resolve({});
     }
     function upload(blob, ext, type) {
-      var s = storage(), u = me();
-      if (!s || !u) return Promise.reject(new Error('no-storage'));
-      var ref = s.ref('chatMedia/' + cur + '/' + u.uid + '_' + Date.now() + '.' + ext);
-      return ref.put(blob, { contentType: type }).then(function () { return ref.getDownloadURL(); });
+      var u = me();
+      if (!u) return Promise.reject(new Error('no-user'));
+      var base = String(type || '').split(';')[0] || 'application/octet-stream';
+      return Promise.all([u.getIdToken(), appCheckHeader()]).then(function (r) {
+        var headers = Object.assign({ Authorization: 'Bearer ' + r[0], 'Content-Type': base }, r[1]);
+        return fetch(WORKER + '/upload?filename=' + encodeURIComponent('chat.' + ext), { method: 'POST', headers: headers, body: blob });
+      }).then(function (res) {
+        return res.json().catch(function () { return {}; }).then(function (j) {
+          if (!res.ok || !j.success || !j.url) { var e = new Error(j.code || 'upload'); e.userMsg = j.message || ''; throw e; }
+          return { url: j.url, key: j.key };
+        });
+      });
     }
-    function sendMedia(kind, url) {
+    function removeMedia(docs) {
+      var u = me();
+      if (!u) return Promise.resolve();
+      return u.getIdToken().then(function (tok) {
+        return Promise.all(docs.map(function (x) { return x.data(); }).filter(function (v) { return v.senderUid === u.uid && v.mediaKey; }).map(function (v) {
+          return fetch(WORKER + '/delete', { method: 'POST', headers: { Authorization: 'Bearer ' + tok, 'Content-Type': 'application/json' }, body: JSON.stringify({ key: v.mediaKey }) }).catch(function () { });
+        }));
+      }).catch(function () { });
+    }
+    function sendMedia(kind, up) {
       var d = dbx(), u = me(), id = cur;
       var text = kind === 'image' ? '📷 Photo' : '🎤 Voice message';
       return d.collection('conversations').doc(id).collection('messages').add({
@@ -56,7 +78,8 @@
         senderName: u.displayName || (u.email || '').split('@')[0] || 'Member',
         text: text,
         mediaType: kind,
-        mediaURL: url,
+        mediaURL: up.url,
+        mediaKey: up.key,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       }).then(function () {
         return d.collection('conversations').doc(id).update({ lastMessage: text, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
@@ -93,7 +116,7 @@
         busy = true; setInfo('Irimo koherezwa…');
         compress(f).then(function (b) { return upload(b, 'jpg', 'image/jpeg'); })
           .then(function (url) { return sendMedia('image', url); })
-          .catch(function (e) { console.warn(e); msg('Ifoto ntiyoherejwe. Ongera ugerageze.'); })
+          .catch(function (e) { console.warn(e); msg((e && e.userMsg) || 'Ifoto ntiyoherejwe. Ongera ugerageze.'); })
           .then(function () { busy = false; setInfo(''); });
       };
       inp.click();
@@ -131,7 +154,7 @@
           var ext = type.indexOf('mp4') >= 0 ? 'm4a' : (type.indexOf('ogg') >= 0 ? 'ogg' : 'webm');
           busy = true; setInfo('Irimo koherezwa…');
           upload(blob, ext, type).then(function (url) { return sendMedia('audio', url); })
-            .catch(function (e) { console.warn(e); msg('Ijwi ntiryoherejwe. Ongera ugerageze.'); })
+            .catch(function (e) { console.warn(e); msg((e && e.userMsg) || 'Ijwi ntiryoherejwe. Ongera ugerageze.'); })
             .then(function () { busy = false; setInfo(''); });
         };
         rec.start(); setRecUI(true); setInfo('● 0:00');
@@ -153,9 +176,11 @@
       (function wipe() {
         return msgs.limit(400).get().then(function (snap) {
           if (snap.empty) return;
-          var b = d.batch();
-          snap.docs.forEach(function (x) { b.delete(x.ref); });
-          return b.commit().then(wipe);
+          return removeMedia(snap.docs).then(function () {
+            var b = d.batch();
+            snap.docs.forEach(function (x) { b.delete(x.ref); });
+            return b.commit().then(wipe);
+          });
         });
       })().then(function () { return d.collection('conversations').doc(id).delete(); })
         .then(function () { cur = ''; if (typeof window.loadInbox === 'function') window.loadInbox(); })
