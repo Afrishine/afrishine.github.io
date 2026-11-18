@@ -114,8 +114,16 @@ function handlePush(d) {
   ]).then(function (result) {
     var windows = result[0], me = result[1];
     var visible = windows.filter(function (w) { return w.visibilityState === 'visible'; });
-var own = !!(me && d.authorUid && me === d.authorUid);
-if (own) return;
+    var own = !!(me && d.authorUid && me === d.authorUid);
+
+    // Your own action: never show it to you, but Chrome requires every push to show something,
+    // so a silent notification is shown and closed at once when the app is not open.
+    if (own) {
+      if (visible.length) return;
+      return self.registration.showNotification('Afrishine Hub', { tag: 'af-own', silent: true })
+        .then(function () { return self.registration.getNotifications({ tag: 'af-own' }); })
+        .then(function (list) { list.forEach(function (n) { n.close(); }); });
+    }
 
     // The app is open: no system notification is needed.
     if (visible.length) {
