@@ -124,14 +124,9 @@
       '.ah-sec{margin:16px 2px 8px;color:#ffb91f;font-size:12.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase}',
       '.ah-empty{padding:26px 14px;text-align:center;color:#aab4d4;font-size:14.5px;line-height:1.6}',
       '.ah-empty button{margin-top:12px}',
-      '.ah-foot{display:flex;align-items:center;gap:12px;margin-top:6px;padding:12px 14px;border:1px solid #6b5a1c;border-radius:18px;background:linear-gradient(120deg,#2a2412,#1b1d2e)}',
-      '.ah-foot-ic{font-size:26px}',
-      '.ah-foot div{flex:1;min-width:0}',
-      '.ah-foot b{display:block;color:#fff;font-size:15px}',
-      '.ah-foot small{display:block;color:#cbbf94;font-size:12.5px;margin-top:2px}',
       '#ahInboxUI[data-tab="messages"] #ahPaneNot{display:none}',
       '#ahInboxUI[data-tab="notifications"] #ahPaneMsg,#ahInboxUI[data-tab="notifications"] .ah-search{display:none}',
-      '#ahInboxUI.in-chat .ah-head,#ahInboxUI.in-chat .ah-tabs,#ahInboxUI.in-chat .ah-search,#ahInboxUI.in-chat .ah-foot{display:none}',
+      '#ahInboxUI.in-chat .ah-head,#ahInboxUI.in-chat .ah-tabs,#ahInboxUI.in-chat .ah-search{display:none}',
       '.ah-chat-head{display:flex;align-items:center;gap:12px;padding:4px 0 12px;margin-bottom:8px;border-bottom:1px solid #2c3659}',
       '.ah-back{width:40px;height:40px;flex-shrink:0;border-radius:50%;border:1px solid #2c3659;background:#12172b;color:#fff;font-size:26px;line-height:1}',
       '.ah-chat-who{flex:1;min-width:0;text-align:left;cursor:pointer}',
@@ -151,7 +146,7 @@
       '<div class="ah-head"><span class="ah-head-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5.5" width="18" height="13" rx="3" fill="#fff"/><path d="M4.5 8l7.5 5.5L19.5 8" stroke="#5b2de0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><div class="ah-title">Inbox</div><p class="ah-sub">Your messages and notifications, kept separate</p></div></div>' +
       '<div class="ah-tabs" role="tablist"><button type="button" role="tab" data-ah-tab="messages" aria-selected="true">✉ Messages <span class="ah-tabcount" id="ahTabMsg"></span></button><button type="button" role="tab" data-ah-tab="notifications" aria-selected="false">🔔 Notifications <span class="ah-tabcount" id="ahTabNot"></span></button></div>' +
       '<div class="ah-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="ahInboxSearch" type="search" placeholder="Search person or message…" autocomplete="off" aria-label="Search messages"></div>' +
-      '<section id="ahPaneMsg"><div id="ahMsgSlot"></div><div class="ah-foot" id="ahMsgFoot"><span class="ah-foot-ic" aria-hidden="true">✉</span><div><b id="ahFootTotal">0 conversations</b><small id="ahFootUnread">All caught up</small></div></div></section>' +
+      '<section id="ahPaneMsg"><div id="ahMsgSlot"></div></section>' +
       '<section id="ahPaneNot"><div id="ahNotSlot"></div></section>';
     page.insertBefore(ui, page.firstChild);
 
@@ -173,7 +168,7 @@
     }
     window.afInboxTab = setTab;
     function setCount(id, n) { var el = $(id); if (!el) return; el.textContent = n > 99 ? '99+' : String(n); el.style.display = n > 0 ? 'inline-block' : 'none'; }
-    function setMsgCount() { var n = Object.keys(unread).length; setCount('ahTabMsg', n); updateFooter(); }
+    function setMsgCount() { var n = Object.keys(unread).length; setCount('ahTabMsg', n); }
     function updateNotifCount() { setCount('ahTabNot', document.querySelectorAll('#afNotificationsList .af-notification-row.new').length); }
 
     /* ---------- Messages tab ---------- */
@@ -186,12 +181,6 @@
         '<div class="ah-bottom"><div class="ah-snip">' + esc(c.last || 'Start a conversation') + '</div>' + (n ? '<span class="ah-count">' + (n > 9 ? '9+' : n) + '</span>' : '') + '</div>' +
         '</div></div>';
     }
-    function updateFooter() {
-      var total = convs.length, n = Object.keys(unread).length;
-      var a = $('ahFootTotal'), b = $('ahFootUnread');
-      if (a) a.textContent = total + (total === 1 ? ' conversation' : ' conversations');
-      if (b) b.textContent = n ? (n + ' with new messages') : 'All caught up';
-    }
     function drawMessages() {
       var list = $('inboxList');
       if (!list || activeChat) return;
@@ -200,7 +189,6 @@
       var html = rows.map(rowHtml).join('');
       if (!rows.length) html = '<div class="ah-empty">' + (q ? 'No conversation matches “' + esc(q) + '”.' : 'No messages yet.<br>Open a member’s profile and tap Send Message, or search for a person above.') + '</div>';
       list.innerHTML = html + '<div id="ahPeople"></div>';
-      updateFooter();
       if (q.length >= 2) searchPeople(q);
     }
     function renderMessages() {
