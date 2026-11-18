@@ -114,7 +114,8 @@ function handlePush(d) {
   ]).then(function (result) {
     var windows = result[0], me = result[1];
     var visible = windows.filter(function (w) { return w.visibilityState === 'visible'; });
-    var own = !!(me && d.authorUid && me === d.authorUid);
+var own = !!(me && d.authorUid && me === d.authorUid);
+if (own) return;
 
     // The app is open: no system notification is needed.
     if (visible.length) {
