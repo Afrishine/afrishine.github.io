@@ -129,7 +129,7 @@ function handlePush(d) {
       body: d.body || 'There is something new on Afrishine Hub.',
       icon: d.icon || NOTIFY_ICON,
       badge: d.badge || NOTIFY_ICON,
-      tag: 'af-video-' + (d.postId || 'new'),
+      tag: d.tag || ('af-video-' + (d.postId || 'new')),
       data: { url: d.url || '/' }
     });
   });
