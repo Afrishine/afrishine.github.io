@@ -18,12 +18,13 @@
     /* ---------- styles ---------- */
     var st = document.createElement('style');
     st.textContent = [
-      '.ah-bar{display:flex;align-items:center;gap:10px;margin:8px 0}',
-      '.ah-bar button{height:44px;min-width:44px;padding:0 14px;border-radius:22px;border:1px solid #2c3659;background:#12172b;color:#fff;font-size:15px;font-weight:700}',
-      '.ah-bar button:disabled{opacity:.5}',
-      '.ah-bar .ah-rec{background:#e5242f;border-color:#e5242f}',
-      '.ah-bar .ah-ok{background:#1f9d55;border-color:#1f9d55}',
-      '.ah-bar .ah-info{flex:1;color:#ffb91f;font-size:14px;font-weight:700}',
+      '.ah-cbtn{width:42px;height:42px;flex-shrink:0;border-radius:50%;border:0;display:grid;place-items:center;background:#12172b;color:#fff;border:1px solid #2c3659;padding:0}',
+      '.ah-cbtn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}',
+      '.ah-cbtn.mic{background:#1f9d55;border-color:#1f9d55}',
+      '.ah-recbar{display:none;align-items:center;gap:10px;margin:8px 0}',
+      '.ah-recbar button{height:44px;padding:0 16px;border-radius:22px;border:0;color:#fff;font-size:15px;font-weight:700}',
+      '.ah-recbar .x{background:#e5242f}.ah-recbar .ok{background:#1f9d55}',
+      '.ah-recbar .ah-info{flex:1;color:#ffb91f;font-size:15px;font-weight:700}',
       '.ah-del{width:40px;height:40px;flex-shrink:0;border-radius:50%;border:1px solid #2c3659;background:#12172b;font-size:18px;line-height:1;color:#fff}',
       '.ah-media img{display:block;max-width:100%;max-height:300px;border-radius:12px;margin-top:6px;cursor:pointer}',
       '.ah-media audio{display:block;width:100%;min-width:200px;max-width:260px;margin-top:6px}'
@@ -93,11 +94,20 @@
     }
 
     /* ---------- voice ---------- */
-    function setInfo(t) { var el = $('ahBarInfo'); if (el) el.textContent = t; }
+    function composerRow() {
+      var inp = document.querySelector('#inboxList .conversation-view textarea, #inboxList .conversation-view input[type="text"], #inboxList .conversation-view input:not([type])');
+      return inp ? { inp: inp, row: inp.parentElement } : null;
+    }
+    function setInfo(t) {
+      var el = $('ahBarInfo'), bar = $('ahRecBar'); if (!el || !bar) return;
+      el.textContent = t || '';
+      bar.style.display = (t || rec) ? 'flex' : 'none';
+    }
     function setRecUI(on) {
-      var b = $('ahMicBtn'), c = $('ahMicCancel'), s = $('ahMicSend'), p = $('ahPhotoBtn');
-      if (b) b.style.display = on ? 'none' : ''; if (p) p.style.display = on ? 'none' : '';
-      if (c) c.style.display = on ? '' : 'none'; if (s) s.style.display = on ? '' : 'none';
+      var c = composerRow(), x = $('ahMicCancel'), o = $('ahMicSend');
+      if (c) c.row.style.display = on ? 'none' : '';
+      if (x) x.style.display = on ? '' : 'none';
+      if (o) o.style.display = on ? '' : 'none';
     }
     function stopTracks() { if (stream) { stream.getTracks().forEach(function (t) { t.stop(); }); stream = null; } clearInterval(timer); }
     function startRec() {
@@ -158,15 +168,25 @@
         del.addEventListener('click', function (e) { e.stopPropagation(); deleteChat(); });
         head.appendChild(del);
       }
-      if (!view.querySelector('.ah-bar')) {
-        var bar = document.createElement('div');
-        bar.className = 'ah-bar';
-        bar.innerHTML = '<button type="button" id="ahPhotoBtn">📷 Ifoto</button><button type="button" id="ahMicBtn">🎤 Ijwi</button>' +
-          '<button type="button" id="ahMicCancel" class="ah-rec" style="display:none">✕</button><button type="button" id="ahMicSend" class="ah-ok" style="display:none">Ohereza</button><span class="ah-info" id="ahBarInfo"></span>';
-        var ml = $('messageList');
-        if (ml && ml.parentNode) ml.parentNode.insertBefore(bar, ml.nextSibling); else view.appendChild(bar);
-        $('ahPhotoBtn').addEventListener('click', pickPhoto);
-        $('ahMicBtn').addEventListener('click', startRec);
+      var c = composerRow();
+      if (c && !c.row.querySelector('.ah-cbtn')) {
+        var row = c.row;
+        row.style.display = 'flex'; row.style.alignItems = 'center'; row.style.gap = '8px';
+        var plus = document.createElement('button');
+        plus.type = 'button'; plus.id = 'ahPhotoBtn'; plus.className = 'ah-cbtn'; plus.setAttribute('aria-label', 'Ohereza ifoto');
+        plus.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>';
+        var mic = document.createElement('button');
+        mic.type = 'button'; mic.id = 'ahMicBtn'; mic.className = 'ah-cbtn mic'; mic.setAttribute('aria-label', 'Fata ijwi');
+        mic.innerHTML = '<svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
+        row.insertBefore(plus, c.inp);
+        if (c.inp.nextSibling) row.insertBefore(mic, c.inp.nextSibling); else row.appendChild(mic);
+        c.inp.style.flex = '1'; c.inp.style.minWidth = '0';
+        plus.addEventListener('click', pickPhoto);
+        mic.addEventListener('click', startRec);
+        var rb = document.createElement('div');
+        rb.id = 'ahRecBar'; rb.className = 'ah-recbar';
+        rb.innerHTML = '<button type="button" class="x" id="ahMicCancel" style="display:none">✕</button><span class="ah-info" id="ahBarInfo"></span><button type="button" class="ok" id="ahMicSend" style="display:none">Ohereza</button>';
+        row.parentNode.insertBefore(rb, row);
         $('ahMicCancel').addEventListener('click', function () { stopRec(true); });
         $('ahMicSend').addEventListener('click', function () { stopRec(false); });
       }
