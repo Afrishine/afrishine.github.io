@@ -15,8 +15,19 @@
     function me() { return (typeof currentFirebaseUser !== 'undefined') ? currentFirebaseUser : null; }
 
     var style = document.createElement('style');
-    style.textContent = '.af-verified{display:inline-grid;place-items:center;width:17px;height:17px;margin-left:5px;border-radius:50%;background:#ffb91f;color:#171107;font-size:11px;font-weight:900;line-height:1;font-style:normal;vertical-align:middle;flex-shrink:0}';
+    style.textContent = '.af-verified{display:inline-block;width:17px;height:17px;margin-left:5px;vertical-align:-3px;flex-shrink:0;line-height:0}.af-verified svg{display:block;width:100%;height:100%}h2 .af-verified{width:22px;height:22px;vertical-align:-4px}';
     document.head.appendChild(style);
+
+    // Professional "seal" badge (wavy edge + white check), drawn once as SVG. Change BADGE_COLOR to restyle it.
+    var BADGE_COLOR = '#1d9bf0';
+    var SEAL = (function () {
+      var pts = [];
+      for (var i = 0; i < 96; i++) {
+        var a = i * Math.PI * 2 / 96, r = 9.4 + 1.3 * Math.cos(8 * a);
+        pts.push((12 + r * Math.cos(a)).toFixed(2) + ' ' + (12 + r * Math.sin(a)).toFixed(2));
+      }
+      return '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M' + pts.join(' L') + ' Z" fill="' + BADGE_COLOR + '"/><path d="M7.4 12.3l3.1 3.1 6-6.6" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    })();
 
     function isVerified(uid) {
       if (!uid) return false;
@@ -31,7 +42,7 @@
       s.setAttribute('role', 'img');
       s.setAttribute('aria-label', 'Verified account');
       s.title = 'Verified';
-      s.textContent = '✓';
+      s.innerHTML = SEAL;
       return s;
     }
 
