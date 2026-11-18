@@ -33,6 +33,13 @@
       });
     }
 
+    /* Same as call(), for visitors who are not signed in (public "new video" alerts only). */
+    function callPublic(path, body) {
+      return fetch(WORKER + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).then(function (r) {
+        return r.json().catch(function () { return {}; }).then(function (d) { if (!r.ok || !d.success) throw new Error(d.error || 'Request failed.'); return d; });
+      });
+    }
+
     /* Remember who is signed in, so your own video does not alert you. */
     function rememberUid() {
       var u = user();
@@ -54,12 +61,16 @@
     function enable() {
       if (VAPID_KEY.indexOf('PASTE') === 0) { say('Notifications are not set up yet.'); return Promise.resolve(false); }
       if (!supported()) { say('This browser cannot receive notifications. On iPhone, add the app to your Home Screen first.'); return Promise.resolve(false); }
-      if (!user()) { say('Please sign in first to turn on notifications.'); if (typeof showPage === 'function') showPage('profile'); return Promise.resolve(false); }
       return Notification.requestPermission().then(function (p) {
         if (p !== 'granted') { say('Notifications are blocked. Allow them in your browser settings to continue.'); return false; }
         return getToken().then(function (token) {
           if (!token) throw new Error('No notification token.');
-          return call('/push/subscribe', { token: token }).then(function () { store(FLAG, '1'); store(TOKEN, token); store(UIDK, user().uid); say('Notifications are on.'); return true; });
+          var signedIn = !!user();
+          return (signedIn ? call('/push/subscribe', { token: token }) : callPublic('/push/subscribe-public', { token: token })).then(function () {
+            store(FLAG, '1'); store(TOKEN, token); store(UIDK, signedIn ? user().uid : null);
+            say(signedIn ? 'Notifications are on.' : 'Notifications are on. Sign in to also get messages, likes, comments and followers.');
+            return true;
+          });
         });
       }).catch(function (e) { console.warn('Notifications:', e); say(e.message || 'Could not turn on notifications.'); return false; });
     }
@@ -67,7 +78,7 @@
     function disable() {
       var token = read(TOKEN);
       store(FLAG, null); store(TOKEN, null); store(UIDK, null);
-      var done = token && user() ? call('/push/unsubscribe', { token: token }).catch(function () { }) : Promise.resolve();
+      var done = token ? (user() ? call('/push/unsubscribe', { token: token }) : callPublic('/push/unsubscribe-public', { token: token })).catch(function () { }) : Promise.resolve();
       return done.then(function () {
         return loadSdk().then(function () { return firebase.messaging().deleteToken(); }).catch(function () { });
       }).then(function () { say('Notifications are off.'); return true; });
@@ -76,9 +87,14 @@
     /* If notifications are on, keep this phone subscribed (tokens can change). */
     function resync() {
       rememberUid();
-      if (read(FLAG) !== '1' || !user() || !supported() || Notification.permission !== 'granted') return;
+      if (read(FLAG) !== '1' || !supported() || Notification.permission !== 'granted') return;
       getToken().then(function (token) {
-        if (token && (token !== read(TOKEN) || user().uid !== read(UIDK))) return call('/push/subscribe', { token: token }).then(function () { store(TOKEN, token); store(UIDK, user().uid); });
+        if (!token) return;
+        if (user()) {
+          if (token !== read(TOKEN) || user().uid !== read(UIDK)) return call('/push/subscribe', { token: token }).then(function () { store(TOKEN, token); store(UIDK, user().uid); });
+        } else if (token !== read(TOKEN)) {
+          return callPublic('/push/subscribe-public', { token: token }).then(function () { store(TOKEN, token); });
+        }
       }).catch(function () { });
     }
 
@@ -96,7 +112,7 @@
       }
       var on = read(FLAG) === '1' && supported() && Notification.permission === 'granted';
       box.innerHTML = '<b>🔔 Notifications</b><p class="creator-hint" style="margin:6px 0 10px">' +
-        (on ? 'You will be told about new videos, messages, followers, comments and likes, even when the app is closed.' : 'Get a notification on your phone about new videos, messages, followers, comments and likes, even when the app is closed.') +
+        (on ? (user() ? 'You will be told about new videos, messages, followers, comments and likes, even when the app is closed.' : 'You will be told about new videos, even when the app is closed. Sign in to also get messages, followers, comments and likes.') : 'Get a notification on your phone about new videos, messages, followers, comments and likes, even when the app is closed.') +
         '</p><button type="button" class="' + (on ? 'secondary' : 'gold') + '" id="afPushBtn">' + (on ? 'Turn off notifications' : 'Turn on notifications') + '</button>';
       document.getElementById('afPushBtn').onclick = function () {
         var btn = this; btn.disabled = true;
@@ -162,6 +178,24 @@
     }
 
     if (typeof auth !== 'undefined' && auth && auth.onAuthStateChanged) auth.onAuthStateChanged(function () { resync(); paint(); });
+    /* Friendly one-tap reminder for visitors who have not decided yet (works signed in or not). */
+    var DISMISS = 'af_push_prompt_at';
+    function showPrompt() {
+      if (document.getElementById('afPushPrompt')) return;
+      if (VAPID_KEY.indexOf('PASTE') === 0 || !supported() || read(FLAG) === '1' || Notification.permission !== 'default') return;
+      var at = Number(read(DISMISS) || 0);
+      if (at && Date.now() - at < 7 * 24 * 3600 * 1000) return;
+      var bar = document.createElement('div');
+      bar.id = 'afPushPrompt'; bar.setAttribute('role', 'region'); bar.setAttribute('aria-label', 'Notifications');
+      bar.style.cssText = 'position:fixed;left:12px;right:12px;bottom:calc(92px + env(safe-area-inset-bottom));max-width:520px;margin:0 auto;z-index:9998;padding:14px;border:1px solid #8b713d;border-radius:16px;background:#171d29;color:#fff;box-shadow:0 12px 40px #000a';
+      bar.innerHTML = '<b>🔔 Stay in the loop</b><p class="creator-hint" style="margin:6px 0 12px">Get notified about new videos, even when the app is closed. Sign in to also get messages, likes, comments and followers.</p><div style="display:flex;gap:8px"><button type="button" class="gold" id="afPushYes">Turn on</button><button type="button" class="secondary" id="afPushNo">Not now</button></div>';
+      document.body.appendChild(bar);
+      document.getElementById('afPushYes').onclick = function () { bar.remove(); enable().then(paint, paint); };
+      document.getElementById('afPushNo').onclick = function () { store(DISMISS, String(Date.now())); bar.remove(); };
+    }
+    if (document.readyState === 'complete') setTimeout(showPrompt, 8000);
+    else window.addEventListener('load', function () { setTimeout(showPrompt, 8000); });
+
     paint();
     window.addEventListener('load', function () { setTimeout(paint, 1200); });
     document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('[data-page="inbox"]')) setTimeout(paint, 150); });
