@@ -1,6 +1,6 @@
 /* Afrishine Hub: new Inbox (Messages + Notifications in separate tabs).
    Load AFTER verified-badge.js:  <script src="/inbox-ui.js"></script>
-   - Messages tab: only conversations (avatar, name + verified badge, last message, time, unread count).
+   - Messages tab: only conversations (avatar, full name + verified badge, last message, time, unread count).
      Tap a row to chat, tap the avatar to open that member's profile.
    - Notifications tab: market, followers, likes, comments... (reuses the existing notification list). */
 (function () {
@@ -35,6 +35,10 @@
       var p = profiles[uid];
       return (p && p.d && p.d.verified === true) ? '<span class="ah-vb" role="img" aria-label="Verified account" title="Verified">' + SEAL + '</span>' : '';
     }
+    /* name + verified badge: the name shortens with "…" only if really too long, the badge always stays visible */
+    function nameHtml(name, uid) {
+      return '<span class="ah-nm"><span class="ah-name">' + esc(name) + '</span>' + vbadge(uid) + '</span>';
+    }
 
     /* ---------- member profiles (name, photo, verified) ---------- */
     function getProfile(uid) {
@@ -54,13 +58,13 @@
     }
     function nameOf(c) { var p = (profiles[c.other] && profiles[c.other].d) || {}; return niceName(p.username) || niceName(c.fallbackName) || 'Afrishine Member'; }
 
+    /* short, WhatsApp-style time: 2:59 PM / Yesterday / 12 Nov */
     function fmtTime(t) {
       if (!t) return '';
       var d = new Date(t), now = new Date(), start = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-      var hm = d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-      if (t >= start) return 'Today • ' + hm;
-      if (t >= start - 86400000) return 'Yesterday • ' + hm;
-      return d.toLocaleDateString([], { day: 'numeric', month: 'short' }) + ' • ' + hm;
+      if (t >= start) return d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+      if (t >= start - 86400000) return 'Yesterday';
+      return d.toLocaleDateString([], { day: 'numeric', month: 'short' });
     }
 
     /* ---------- per-device "seen" memory (no extra fields are written to Firestore) ---------- */
@@ -93,26 +97,29 @@
       '.ah-search svg{width:20px;height:20px;flex-shrink:0;stroke:#9aa5d6;fill:none;stroke-width:2;stroke-linecap:round}',
       '.ah-search input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:#fff;font-size:15px}',
       '.ah-search input::placeholder{color:#8b96c8}',
-      '.ah-row,#afNotificationsList .af-notification-row[data-ah-dec="1"]{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 10px;padding:12px;border:1px solid #2c3659;border-radius:18px;background:linear-gradient(135deg,#171d36,#10152b);color:#fff;text-align:left;cursor:pointer}',
+      '.ah-row,#afNotificationsList .af-notification-row[data-ah-dec="1"]{display:flex;align-items:center;gap:13px;width:100%;margin:0 0 10px;padding:12px 14px 12px 12px;border:1px solid #2c3659;border-radius:18px;background:linear-gradient(135deg,#171d36,#10152b);color:#fff;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}',
       '.ah-row:active{background:#1c2342}',
       '.ah-row.unread,#afNotificationsList .af-notification-row.new[data-ah-dec="1"]{border-color:#6a4be0;box-shadow:0 0 0 1px #6a4be055}',
-      '.ah-av{position:relative;width:54px;height:54px;flex-shrink:0;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:linear-gradient(145deg,#5b2de0,#2a3a8f);border:2px solid #394066;color:#fff;font-size:21px;font-weight:800;cursor:pointer}',
+      '.ah-av{position:relative;width:56px;height:56px;flex-shrink:0;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:linear-gradient(145deg,#5b2de0,#2a3a8f);border:2px solid #394066;color:#fff;font-size:22px;font-weight:800;cursor:pointer}',
       '.ah-av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}',
       '.ah-av.sm{width:44px;height:44px;font-size:18px}',
       '.ah-main{flex:1;min-width:0}',
       '.ah-top{display:flex;align-items:center;gap:8px;min-width:0}',
+      '.ah-nm{display:flex;align-items:center;flex:1;min-width:0}',
       '.ah-name{font-size:16.5px;font-weight:800;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}',
       '.ah-pill{flex-shrink:0;padding:3px 9px;border-radius:999px;background:#3b2a8f;color:#d6cfff;font-size:11.5px;font-weight:750}',
       '.ah-pill.n{background:#12408f;color:#8fc0ff}',
+      '.ah-bottom{display:flex;align-items:center;gap:10px;margin-top:4px;min-width:0}',
       '.ah-snip{margin-top:4px;color:#aab4d4;font-size:14px;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+      '.ah-bottom .ah-snip{flex:1;min-width:0;margin-top:0}',
       '#afNotificationsList .ah-snip{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}',
-      '.ah-row.unread .ah-snip{color:#fff}',
+      '.ah-row.unread .ah-snip{color:#fff;font-weight:600}',
       '.ah-ntime{display:block;margin-top:3px;color:#8b96c8;font-size:12px}',
-      '.ah-side{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:6px;max-width:112px;text-align:right}',
-      '.ah-time{color:#9aa5d6;font-size:12px;line-height:1.3}',
-      '.ah-count{min-width:24px;height:24px;padding:0 6px;border-radius:12px;background:#e5242f;color:#fff;font-size:13px;font-weight:800;line-height:24px;text-align:center}',
+      '.ah-time{flex-shrink:0;color:#9aa5d6;font-size:12.5px;line-height:1.3;white-space:nowrap}',
+      '.ah-row.unread .ah-time{color:#ffb91f;font-weight:700}',
+      '.ah-count{flex-shrink:0;min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:#e5242f;color:#fff;font-size:12.5px;font-weight:800;line-height:22px;text-align:center}',
       '.ah-chev{flex-shrink:0;color:#c9d0f5;font-size:24px;line-height:1}',
-      '.ah-vb{display:inline-block;width:16px;height:16px;margin-left:5px;vertical-align:-3px;line-height:0}',
+      '.ah-vb{flex-shrink:0;display:inline-block;width:16px;height:16px;margin-left:5px;vertical-align:-3px;line-height:0}',
       '.ah-vb svg{display:block;width:100%;height:100%}',
       '.ah-sec{margin:16px 2px 8px;color:#ffb91f;font-size:12.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase}',
       '.ah-empty{padding:26px 14px;text-align:center;color:#aab4d4;font-size:14.5px;line-height:1.6}',
@@ -122,14 +129,13 @@
       '.ah-foot div{flex:1;min-width:0}',
       '.ah-foot b{display:block;color:#fff;font-size:15px}',
       '.ah-foot small{display:block;color:#cbbf94;font-size:12.5px;margin-top:2px}',
-      '.ah-foot button{flex-shrink:0;padding:10px 14px;border:0;border-radius:20px;background:linear-gradient(120deg,#5b2de0,#8a3ff2);color:#fff;font-weight:800;font-size:13.5px}',
       '#ahInboxUI[data-tab="messages"] #ahPaneNot{display:none}',
       '#ahInboxUI[data-tab="notifications"] #ahPaneMsg,#ahInboxUI[data-tab="notifications"] .ah-search{display:none}',
       '#ahInboxUI.in-chat .ah-head,#ahInboxUI.in-chat .ah-tabs,#ahInboxUI.in-chat .ah-search,#ahInboxUI.in-chat .ah-foot{display:none}',
       '.ah-chat-head{display:flex;align-items:center;gap:12px;padding:4px 0 12px;margin-bottom:8px;border-bottom:1px solid #2c3659}',
       '.ah-back{width:40px;height:40px;flex-shrink:0;border-radius:50%;border:1px solid #2c3659;background:#12172b;color:#fff;font-size:26px;line-height:1}',
       '.ah-chat-who{flex:1;min-width:0;text-align:left;cursor:pointer}',
-      '.ah-chat-who b{display:block;font-size:17px;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+      '.ah-chat-who .ah-nm b,.ah-chat-who .ah-nm .ah-name{font-size:17px}',
       '.ah-chat-who small{display:block;margin-top:2px;color:#aab4e8;font-size:12.5px}',
       '#ahInboxUI .message-list{max-height:calc(100vh - 300px);max-height:calc(100dvh - 300px);min-height:180px}',
       '#ahInboxUI .message-bubble{border-radius:16px}',
@@ -145,7 +151,7 @@
       '<div class="ah-head"><span class="ah-head-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5.5" width="18" height="13" rx="3" fill="#fff"/><path d="M4.5 8l7.5 5.5L19.5 8" stroke="#5b2de0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><div class="ah-title">Inbox</div><p class="ah-sub">Your messages and notifications, kept separate</p></div></div>' +
       '<div class="ah-tabs" role="tablist"><button type="button" role="tab" data-ah-tab="messages" aria-selected="true">✉ Messages <span class="ah-tabcount" id="ahTabMsg"></span></button><button type="button" role="tab" data-ah-tab="notifications" aria-selected="false">🔔 Notifications <span class="ah-tabcount" id="ahTabNot"></span></button></div>' +
       '<div class="ah-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="ahInboxSearch" type="search" placeholder="Search person or message…" autocomplete="off" aria-label="Search messages"></div>' +
-      '<section id="ahPaneMsg"><div id="ahMsgSlot"></div><div class="ah-foot" id="ahMsgFoot"><span class="ah-foot-ic" aria-hidden="true">✉</span><div><b id="ahFootTotal">0 conversations</b><small id="ahFootUnread">All caught up</small></div><button type="button" id="ahMarkAll">✓ Mark All as Read</button></div></section>' +
+      '<section id="ahPaneMsg"><div id="ahMsgSlot"></div><div class="ah-foot" id="ahMsgFoot"><span class="ah-foot-ic" aria-hidden="true">✉</span><div><b id="ahFootTotal">0 conversations</b><small id="ahFootUnread">All caught up</small></div></div></section>' +
       '<section id="ahPaneNot"><div id="ahNotSlot"></div></section>';
     page.insertBefore(ui, page.firstChild);
 
@@ -175,8 +181,10 @@
       var p = (profiles[c.other] && profiles[c.other].d) || {}, name = nameOf(c), n = unread[c.id] || 0;
       return '<div class="ah-row' + (n ? ' unread' : '') + '" role="button" tabindex="0" data-conv="' + esc(c.id) + '">' +
         avatarHtml(c.other, p, name) +
-        '<div class="ah-main"><div class="ah-top"><b class="ah-name">' + esc(name) + vbadge(c.other) + '</b><span class="ah-pill">Message</span></div><div class="ah-snip">' + esc(c.last || 'Start a conversation') + '</div></div>' +
-        '<div class="ah-side"><span class="ah-time">' + esc(fmtTime(c.t)) + '</span>' + (n ? '<span class="ah-count">' + (n > 9 ? '9+' : n) + '</span>' : '') + '</div><span class="ah-chev" aria-hidden="true">›</span></div>';
+        '<div class="ah-main">' +
+        '<div class="ah-top">' + nameHtml(name, c.other) + '<span class="ah-time">' + esc(fmtTime(c.t)) + '</span></div>' +
+        '<div class="ah-bottom"><div class="ah-snip">' + esc(c.last || 'Start a conversation') + '</div>' + (n ? '<span class="ah-count">' + (n > 9 ? '9+' : n) + '</span>' : '') + '</div>' +
+        '</div></div>';
     }
     function updateFooter() {
       var total = convs.length, n = Object.keys(unread).length;
@@ -255,14 +263,6 @@
         setMsgCount();
       }).catch(function () { });
     }
-    function markAllRead() {
-      var m = seenMap();
-      convs.forEach(function (c) { m[c.id] = Math.max(m[c.id] || 0, c.t); });
-      saveSeen(m);
-      unread = {};
-      setMsgCount();
-      drawMessages();
-    }
 
     /* search people to start a new chat (replaces the old "Find a Member" box) */
     function searchPeople(q) {
@@ -277,7 +277,7 @@
         var hits = peopleCache.list.filter(function (p) { return p.id !== u.uid && !have[p.id] && String(p.username || '').toLowerCase().indexOf(q) >= 0; }).slice(0, 8);
         box.innerHTML = hits.length ? '<div class="ah-sec">People</div>' + hits.map(function (p) {
           var nm = niceName(p.username) || 'Afrishine Member';
-          return '<div class="ah-row" role="button" tabindex="0" data-ah-start="' + esc(p.id) + '" data-name="' + esc(nm) + '">' + avatarHtml(p.id, p, nm) + '<div class="ah-main"><div class="ah-top"><b class="ah-name">' + esc(nm) + vbadge(p.id) + '</b><span class="ah-pill">Start chat</span></div><div class="ah-snip">' + esc(p.location || p.bio || 'Afrishine Hub member') + '</div></div><span class="ah-chev" aria-hidden="true">›</span></div>';
+          return '<div class="ah-row" role="button" tabindex="0" data-ah-start="' + esc(p.id) + '" data-name="' + esc(nm) + '">' + avatarHtml(p.id, p, nm) + '<div class="ah-main"><div class="ah-top">' + nameHtml(nm, p.id) + '<span class="ah-pill">Start chat</span></div><div class="ah-snip">' + esc(p.location || p.bio || 'Afrishine Hub member') + '</div></div><span class="ah-chev" aria-hidden="true">›</span></div>';
         }).join('') : '';
       }
       if (Date.now() - peopleCache.at < 5 * 60 * 1000) { show(); return; }
@@ -304,7 +304,7 @@
           var head = document.createElement('div');
           head.className = 'ah-chat-head';
           head.innerHTML = '<button type="button" class="ah-back" id="ahChatBack" aria-label="Back to messages">‹</button>' + avatarHtml(other, p, nm, 'sm') +
-            '<div class="ah-chat-who" data-ah-profile="' + esc(other) + '" role="button" tabindex="0"><b>' + esc(nm) + vbadge(other) + '</b><small>View profile</small></div>';
+            '<div class="ah-chat-who" data-ah-profile="' + esc(other) + '" role="button" tabindex="0">' + nameHtml(nm, other) + '<small>View profile</small></div>';
           var first = view.firstElementChild, h2 = view.querySelector('h2');
           if (first && first.tagName === 'BUTTON') first.remove();
           if (h2) h2.remove();
@@ -374,7 +374,7 @@
           var titleTxt = t ? t.textContent : '', bodyTxt = bd ? bd.textContent : '', timeTxt = tm ? tm.textContent : '';
           var nm = niceName(p.username);
           row.innerHTML = avatarHtml(actor, p, nm || 'M') +
-            '<div class="ah-main"><div class="ah-top"><b class="ah-name">' + esc(nm || titleTxt) + (nm ? vbadge(actor) : '') + '</b><span class="ah-pill n">' + esc(pillFor(type)) + '</span></div><div class="ah-snip">' + esc(bodyTxt) + '</div><small class="ah-ntime">' + esc(timeTxt) + '</small></div><span class="ah-chev" aria-hidden="true">›</span>';
+            '<div class="ah-main"><div class="ah-top">' + nameHtml(nm || titleTxt, nm ? actor : '') + '<span class="ah-pill n">' + esc(pillFor(type)) + '</span></div><div class="ah-snip">' + esc(bodyTxt) + '</div><small class="ah-ntime">' + esc(timeTxt) + '</small></div><span class="ah-chev" aria-hidden="true">›</span>';
           var av = row.querySelector('[data-ah-profile]');
           if (av) av.addEventListener('click', function (e) { e.stopPropagation(); e.preventDefault(); openProfile(actor); });
         });
@@ -394,7 +394,6 @@
       if (prof) { e.preventDefault(); e.stopPropagation(); openProfile(prof.getAttribute('data-ah-profile')); return; }
       var tb = t.closest('[data-ah-tab]');
       if (tb) { setTab(tb.getAttribute('data-ah-tab')); return; }
-      if (t.closest('#ahMarkAll')) { markAllRead(); return; }
       if (t.closest('#ahChatBack')) { window.loadInbox(); return; }
       if (t.closest('[data-ah-signin]')) { if (typeof window.showPage === 'function') window.showPage('profile'); return; }
       var st = t.closest('[data-ah-start]');
