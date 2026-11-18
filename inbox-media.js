@@ -18,6 +18,12 @@
     /* ---------- styles ---------- */
     var st = document.createElement('style');
     st.textContent = [
+      '#ahInboxUI.in-chat{position:fixed;left:0;right:0;top:0;height:100vh;height:100dvh;z-index:9999;display:flex;flex-direction:column;max-width:none;margin:0;padding:0;background:#0a0b14}',
+      '#ahInboxUI.in-chat #ahPaneMsg,#ahInboxUI.in-chat #ahMsgSlot,#ahInboxUI.in-chat #inboxList{flex:1;min-height:0;display:flex;flex-direction:column}',
+      '#ahInboxUI.in-chat .conversation-view{flex:1;min-height:0;display:flex;flex-direction:column;width:100%;max-width:640px;margin:0 auto;padding:0 12px;box-sizing:border-box}',
+      '#ahInboxUI.in-chat .ah-chat-head{flex-shrink:0;padding-top:calc(8px + env(safe-area-inset-top,0px))}',
+      '#ahInboxUI.in-chat .message-list{flex:1;max-height:none!important;min-height:0!important;overflow-y:auto;overscroll-behavior:contain}',
+      '.ah-composer{flex-shrink:0;margin:0!important;padding:8px 0 calc(8px + env(safe-area-inset-bottom,0px));border-top:1px solid #2c3659;background:#0a0b14}',
       '.ah-cbtn{width:42px;height:42px;flex-shrink:0;border-radius:50%;border:0;display:grid;place-items:center;background:#12172b;color:#fff;border:1px solid #2c3659;padding:0}',
       '.ah-cbtn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}',
       '.ah-cbtn.mic{background:#1f9d55;border-color:#1f9d55}',
@@ -190,6 +196,9 @@
         $('ahMicCancel').addEventListener('click', function () { stopRec(true); });
         $('ahMicSend').addEventListener('click', function () { stopRec(false); });
       }
+      var cc = composerRow();
+      if (cc) { var el = cc.row; while (el.parentElement && el.parentElement !== view) el = el.parentElement; el.classList.add('ah-composer'); }
+      fit();
       decorate();
       var ml2 = $('messageList');
       if (ml2 && !ml2.__ahObs && 'MutationObserver' in window) {
@@ -232,6 +241,21 @@
         });
       }).catch(function () { });
     }
+
+    /* chat fills the screen: header on top, composer pinned at the bottom, moves up with the keyboard */
+    var uiEl = $('ahInboxUI');
+    function fit() {
+      if (!uiEl) return;
+      var v = window.visualViewport;
+      if (!uiEl.classList.contains('in-chat')) { uiEl.style.height = ''; uiEl.style.top = ''; document.documentElement.style.overflow = ''; return; }
+      document.documentElement.style.overflow = 'hidden';
+      uiEl.style.height = (v ? v.height : window.innerHeight) + 'px';
+      uiEl.style.top = (v ? v.offsetTop : 0) + 'px';
+      var ml = $('messageList'); if (ml) ml.scrollTop = ml.scrollHeight;
+    }
+    if (window.visualViewport) { window.visualViewport.addEventListener('resize', fit); window.visualViewport.addEventListener('scroll', fit); }
+    window.addEventListener('resize', fit);
+    if (uiEl && 'MutationObserver' in window) new MutationObserver(fit).observe(uiEl, { attributes: true, attributeFilter: ['class'] });
 
     /* wrap openConversation (on top of inbox-ui.js) */
     var prev = window.openConversation;
