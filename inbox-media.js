@@ -1,0 +1,226 @@
+/* Afrishine Hub: Inbox add-on (Photo + Voice + Delete chat).
+   Load AFTER inbox-ui.js:  <script src="/inbox-media.js"></script>
+   Needs: firebase storage script  <script src="https://www.gstatic.com/firebasejs/<version>/firebase-storage-compat.js"></script> */
+(function () {
+  'use strict';
+  try {
+    var page = document.getElementById('inbox');
+    if (!page || window.__ahMediaLoaded) return;
+    window.__ahMediaLoaded = true;
+
+    var $ = function (id) { return document.getElementById(id); };
+    function dbx() { return (typeof db !== 'undefined') ? db : null; }
+    function me() { return (typeof currentFirebaseUser !== 'undefined') ? currentFirebaseUser : null; }
+    function msg(t) { alert(t); }
+
+    var cur = '', rec = null, chunks = [], stream = null, timer = null, secs = 0, cancelled = false, busy = false;
+
+    /* ---------- styles ---------- */
+    var st = document.createElement('style');
+    st.textContent = [
+      '.ah-bar{display:flex;align-items:center;gap:10px;margin:8px 0}',
+      '.ah-bar button{height:44px;min-width:44px;padding:0 14px;border-radius:22px;border:1px solid #2c3659;background:#12172b;color:#fff;font-size:15px;font-weight:700}',
+      '.ah-bar button:disabled{opacity:.5}',
+      '.ah-bar .ah-rec{background:#e5242f;border-color:#e5242f}',
+      '.ah-bar .ah-ok{background:#1f9d55;border-color:#1f9d55}',
+      '.ah-bar .ah-info{flex:1;color:#ffb91f;font-size:14px;font-weight:700}',
+      '.ah-del{width:40px;height:40px;flex-shrink:0;border-radius:50%;border:1px solid #2c3659;background:#12172b;font-size:18px;line-height:1;color:#fff}',
+      '.ah-media img{display:block;max-width:100%;max-height:300px;border-radius:12px;margin-top:6px;cursor:pointer}',
+      '.ah-media audio{display:block;width:100%;min-width:200px;max-width:260px;margin-top:6px}'
+    ].join('\n');
+    document.head.appendChild(st);
+
+    /* ---------- storage ---------- */
+    function storage() {
+      if (typeof firebase === 'undefined' || typeof firebase.storage !== 'function') { msg('Firebase Storage ntirashyirwamo mu rupapuro (firebase-storage-compat.js).'); return null; }
+      return firebase.storage();
+    }
+    function upload(blob, ext, type) {
+      var s = storage(), u = me();
+      if (!s || !u) return Promise.reject(new Error('no-storage'));
+      var ref = s.ref('chatMedia/' + cur + '/' + u.uid + '_' + Date.now() + '.' + ext);
+      return ref.put(blob, { contentType: type }).then(function () { return ref.getDownloadURL(); });
+    }
+    function sendMedia(kind, url) {
+      var d = dbx(), u = me(), id = cur;
+      var text = kind === 'image' ? '📷 Photo' : '🎤 Voice message';
+      return d.collection('conversations').doc(id).collection('messages').add({
+        senderUid: u.uid,
+        senderName: u.displayName || (u.email || '').split('@')[0] || 'Member',
+        text: text,
+        mediaType: kind,
+        mediaURL: url,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(function () {
+        return d.collection('conversations').doc(id).update({ lastMessage: text, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+      }).then(function () { reopen(); });
+    }
+    function reopen() {
+      var nm = document.querySelector('#ahInboxUI .ah-chat-who .ah-name');
+      if (typeof window.openConversation === 'function') window.openConversation(cur, nm ? nm.textContent : 'Conversation');
+    }
+
+    /* ---------- photo ---------- */
+    function compress(file) {
+      return new Promise(function (res, rej) {
+        var img = new Image(), url = URL.createObjectURL(file);
+        img.onload = function () {
+          var max = 1280, r = Math.min(1, max / Math.max(img.width, img.height));
+          var c = document.createElement('canvas');
+          c.width = Math.round(img.width * r); c.height = Math.round(img.height * r);
+          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+          URL.revokeObjectURL(url);
+          c.toBlob(function (b) { b ? res(b) : rej(new Error('compress')); }, 'image/jpeg', 0.8);
+        };
+        img.onerror = function () { rej(new Error('image')); };
+        img.src = url;
+      });
+    }
+    function pickPhoto() {
+      if (busy) return;
+      var inp = document.createElement('input');
+      inp.type = 'file'; inp.accept = 'image/*';
+      inp.onchange = function () {
+        var f = inp.files && inp.files[0];
+        if (!f) return;
+        busy = true; setInfo('Irimo koherezwa…');
+        compress(f).then(function (b) { return upload(b, 'jpg', 'image/jpeg'); })
+          .then(function (url) { return sendMedia('image', url); })
+          .catch(function (e) { console.warn(e); msg('Ifoto ntiyoherejwe. Ongera ugerageze.'); })
+          .then(function () { busy = false; setInfo(''); });
+      };
+      inp.click();
+    }
+
+    /* ---------- voice ---------- */
+    function setInfo(t) { var el = $('ahBarInfo'); if (el) el.textContent = t; }
+    function setRecUI(on) {
+      var b = $('ahMicBtn'), c = $('ahMicCancel'), s = $('ahMicSend'), p = $('ahPhotoBtn');
+      if (b) b.style.display = on ? 'none' : ''; if (p) p.style.display = on ? 'none' : '';
+      if (c) c.style.display = on ? '' : 'none'; if (s) s.style.display = on ? '' : 'none';
+    }
+    function stopTracks() { if (stream) { stream.getTracks().forEach(function (t) { t.stop(); }); stream = null; } clearInterval(timer); }
+    function startRec() {
+      if (busy || rec) return;
+      if (!navigator.mediaDevices || !window.MediaRecorder) { msg('Telefone yawe ntishyigikira gufata ijwi hano.'); return; }
+      navigator.mediaDevices.getUserMedia({ audio: true }).then(function (s) {
+        stream = s; chunks = []; cancelled = false; secs = 0;
+        rec = new MediaRecorder(s);
+        var type = rec.mimeType || 'audio/webm';
+        rec.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
+        rec.onstop = function () {
+          var blob = new Blob(chunks, { type: type }), was = cancelled;
+          stopTracks(); rec = null; setRecUI(false); setInfo('');
+          if (was || blob.size < 800) return;
+          var ext = type.indexOf('mp4') >= 0 ? 'm4a' : (type.indexOf('ogg') >= 0 ? 'ogg' : 'webm');
+          busy = true; setInfo('Irimo koherezwa…');
+          upload(blob, ext, type).then(function (url) { return sendMedia('audio', url); })
+            .catch(function (e) { console.warn(e); msg('Ijwi ntiryoherejwe. Ongera ugerageze.'); })
+            .then(function () { busy = false; setInfo(''); });
+        };
+        rec.start(); setRecUI(true); setInfo('● 0:00');
+        timer = setInterval(function () {
+          secs++; setInfo('● ' + Math.floor(secs / 60) + ':' + ('0' + (secs % 60)).slice(-2));
+          if (secs >= 120 && rec && rec.state === 'recording') rec.stop();
+        }, 1000);
+      }).catch(function () { msg('Emerera microphone kugira ngo ufate ijwi.'); });
+    }
+    function stopRec(cancel) { cancelled = !!cancel; if (rec && rec.state === 'recording') rec.stop(); }
+
+    /* ---------- delete chat ---------- */
+    function deleteChat() {
+      var d = dbx(), id = cur;
+      if (!d || !id || busy) return;
+      if (!confirm('Gusiba iyi chat burundu? Ubutumwa bwose buzasibwa kandi ntibizagaruka.')) return;
+      busy = true;
+      var msgs = d.collection('conversations').doc(id).collection('messages');
+      (function wipe() {
+        return msgs.limit(400).get().then(function (snap) {
+          if (snap.empty) return;
+          var b = d.batch();
+          snap.docs.forEach(function (x) { b.delete(x.ref); });
+          return b.commit().then(wipe);
+        });
+      })().then(function () { return d.collection('conversations').doc(id).delete(); })
+        .then(function () { cur = ''; if (typeof window.loadInbox === 'function') window.loadInbox(); })
+        .catch(function (e) { console.warn(e); msg('Chat ntisibwe. Ongera ugerageze.'); })
+        .then(function () { busy = false; });
+    }
+
+    /* ---------- install into the chat screen ---------- */
+    function install() {
+      var list = $('inboxList'), view = list && list.querySelector('.conversation-view');
+      if (!view) return;
+      var head = view.querySelector('.ah-chat-head');
+      if (head && !head.querySelector('.ah-del')) {
+        var del = document.createElement('button');
+        del.type = 'button'; del.className = 'ah-del'; del.setAttribute('aria-label', 'Siba chat'); del.textContent = '🗑';
+        del.addEventListener('click', function (e) { e.stopPropagation(); deleteChat(); });
+        head.appendChild(del);
+      }
+      if (!view.querySelector('.ah-bar')) {
+        var bar = document.createElement('div');
+        bar.className = 'ah-bar';
+        bar.innerHTML = '<button type="button" id="ahPhotoBtn">📷 Ifoto</button><button type="button" id="ahMicBtn">🎤 Ijwi</button>' +
+          '<button type="button" id="ahMicCancel" class="ah-rec" style="display:none">✕</button><button type="button" id="ahMicSend" class="ah-ok" style="display:none">Ohereza</button><span class="ah-info" id="ahBarInfo"></span>';
+        var ml = $('messageList');
+        if (ml && ml.parentNode) ml.parentNode.insertBefore(bar, ml.nextSibling); else view.appendChild(bar);
+        $('ahPhotoBtn').addEventListener('click', pickPhoto);
+        $('ahMicBtn').addEventListener('click', startRec);
+        $('ahMicCancel').addEventListener('click', function () { stopRec(true); });
+        $('ahMicSend').addEventListener('click', function () { stopRec(false); });
+      }
+      decorate();
+      var ml2 = $('messageList');
+      if (ml2 && !ml2.__ahObs && 'MutationObserver' in window) {
+        ml2.__ahObs = true;
+        new MutationObserver(function () { clearTimeout(ml2.__t); ml2.__t = setTimeout(decorate, 150); }).observe(ml2, { childList: true });
+      }
+    }
+
+    /* show photos / audio inside the existing bubbles (matched from the newest message backwards) */
+    function decorate() {
+      var d = dbx(), ml = $('messageList'), id = cur;
+      if (!d || !ml || !id) return;
+      var bubbles = Array.prototype.slice.call(ml.querySelectorAll('.message-bubble'));
+      if (!bubbles.length) return;
+      d.collection('conversations').doc(id).collection('messages').orderBy('createdAt', 'desc').limit(bubbles.length).get().then(function (snap) {
+        if (id !== cur) return;
+        var docs = snap.docs.map(function (x) { return x.data(); }).reverse();
+        var off = bubbles.length - docs.length;
+        docs.forEach(function (m, i) {
+          var b = bubbles[off + i];
+          if (!b || !m.mediaURL || !/^https:\/\//.test(m.mediaURL) || b.querySelector('.ah-media')) return;
+          Array.prototype.slice.call(b.childNodes).forEach(function (n) {
+            var t = (n.textContent || '').trim();
+            if (t && t === m.text && !(n.tagName === 'B')) b.removeChild(n);
+          });
+          var box = document.createElement('div');
+          box.className = 'ah-media';
+          if (m.mediaType === 'image') {
+            var im = document.createElement('img');
+            im.src = m.mediaURL; im.alt = 'Photo'; im.loading = 'lazy';
+            im.onclick = function () { window.open(m.mediaURL, '_blank'); };
+            box.appendChild(im);
+          } else {
+            var au = document.createElement('audio');
+            au.controls = true; au.preload = 'none'; au.src = m.mediaURL;
+            box.appendChild(au);
+          }
+          var bold = b.querySelector('b');
+          if (bold && bold.nextSibling) b.insertBefore(box, bold.nextSibling); else b.appendChild(box);
+        });
+      }).catch(function () { });
+    }
+
+    /* wrap openConversation (on top of inbox-ui.js) */
+    var prev = window.openConversation;
+    if (typeof prev === 'function') {
+      window.openConversation = function (id) {
+        if (rec) stopRec(true);
+        cur = id;
+        return Promise.resolve(prev.apply(this, arguments)).then(function (r) { install(); return r; });
+      };
+    }
+  } catch (err) { console.warn('Inbox media not started:', err); }
+})();
