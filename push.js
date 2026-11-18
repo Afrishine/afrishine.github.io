@@ -5,7 +5,7 @@
   try {
     /* Paste your Web Push key pair (public key) here: Firebase Console > Project settings >
        Cloud Messaging > Web Push certificates > Generate key pair. */
-    var VAPID_KEY = 'PASTE_YOUR_VAPID_PUBLIC_KEY_HERE';
+    var VAPID_KEY = 'BH_im7l3r2WzPxqhr75P8KDTjMToLTFwRlnSPcoOmYS40vK1Pt2NK3VO5zAlfcaBGZXMl1ygV2b6PH2xyzX-zFo';
     var WORKER = 'https://afrishine-media.usherluckyelie.workers.dev';
     var SDK = 'https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js';
     var FLAG = 'af_push_on', TOKEN = 'af_push_token', UIDK = 'af_push_uid';
