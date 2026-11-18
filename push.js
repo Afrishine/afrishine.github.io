@@ -5,10 +5,10 @@
   try {
     /* Paste your Web Push key pair (public key) here: Firebase Console > Project settings >
        Cloud Messaging > Web Push certificates > Generate key pair. */
-    var VAPID_KEY = 'BH_im7l3r2WzPxqhr75P8KDTjMToLTFwRlnSPcoOmYS40vK1Pt2NK3VO5zAlfcaBGZXMl1ygV2b6PH2xyzX-zFo';
+    var VAPID_KEY = 'PASTE_YOUR_VAPID_PUBLIC_KEY_HERE';
     var WORKER = 'https://afrishine-media.usherluckyelie.workers.dev';
     var SDK = 'https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js';
-    var FLAG = 'af_push_on', TOKEN = 'af_push_token';
+    var FLAG = 'af_push_on', TOKEN = 'af_push_token', UIDK = 'af_push_uid';
 
     function user() { return (typeof currentFirebaseUser !== 'undefined') ? currentFirebaseUser : null; }
     function say(t) { if (typeof notice === 'function') notice(t); }
@@ -59,18 +59,18 @@
         if (p !== 'granted') { say('Notifications are blocked. Allow them in your browser settings to continue.'); return false; }
         return getToken().then(function (token) {
           if (!token) throw new Error('No notification token.');
-          return call('/push/subscribe', { token: token }).then(function () { store(FLAG, '1'); store(TOKEN, token); say('Video notifications are on.'); return true; });
+          return call('/push/subscribe', { token: token }).then(function () { store(FLAG, '1'); store(TOKEN, token); store(UIDK, user().uid); say('Notifications are on.'); return true; });
         });
       }).catch(function (e) { console.warn('Notifications:', e); say(e.message || 'Could not turn on notifications.'); return false; });
     }
 
     function disable() {
       var token = read(TOKEN);
-      store(FLAG, null); store(TOKEN, null);
+      store(FLAG, null); store(TOKEN, null); store(UIDK, null);
       var done = token && user() ? call('/push/unsubscribe', { token: token }).catch(function () { }) : Promise.resolve();
       return done.then(function () {
         return loadSdk().then(function () { return firebase.messaging().deleteToken(); }).catch(function () { });
-      }).then(function () { say('Video notifications are off.'); return true; });
+      }).then(function () { say('Notifications are off.'); return true; });
     }
 
     /* If notifications are on, keep this phone subscribed (tokens can change). */
@@ -78,7 +78,7 @@
       rememberUid();
       if (read(FLAG) !== '1' || !user() || !supported() || Notification.permission !== 'granted') return;
       getToken().then(function (token) {
-        if (token && token !== read(TOKEN)) return call('/push/subscribe', { token: token }).then(function () { store(TOKEN, token); });
+        if (token && (token !== read(TOKEN) || user().uid !== read(UIDK))) return call('/push/subscribe', { token: token }).then(function () { store(TOKEN, token); store(UIDK, user().uid); });
       }).catch(function () { });
     }
 
@@ -95,8 +95,8 @@
         if (h && h.nextSibling) panel.insertBefore(box, h.nextSibling); else panel.appendChild(box);
       }
       var on = read(FLAG) === '1' && supported() && Notification.permission === 'granted';
-      box.innerHTML = '<b>🔔 Video notifications</b><p class="creator-hint" style="margin:6px 0 10px">' +
-        (on ? 'You will be told when a member publishes a new video, even when the app is closed.' : 'Get a notification on your phone when a member publishes a new video, even when the app is closed.') +
+      box.innerHTML = '<b>🔔 Notifications</b><p class="creator-hint" style="margin:6px 0 10px">' +
+        (on ? 'You will be told about new videos, messages, followers, comments and likes, even when the app is closed.' : 'Get a notification on your phone about new videos, messages, followers, comments and likes, even when the app is closed.') +
         '</p><button type="button" class="' + (on ? 'secondary' : 'gold') + '" id="afPushBtn">' + (on ? 'Turn off notifications' : 'Turn on notifications') + '</button>';
       document.getElementById('afPushBtn').onclick = function () {
         var btn = this; btn.disabled = true;
@@ -104,18 +104,52 @@
       };
     }
 
-    /* Tell the Worker about a new video right after it is published. */
-    function announce(id) { call('/push/notify', { postId: id }).catch(function () { }); }
-    if (window.firebase && firebase.firestore && firebase.firestore.CollectionReference) {
-      var proto = firebase.firestore.CollectionReference.prototype, origAdd = proto.add;
-      proto.add = function (data) {
-        var p = origAdd.apply(this, arguments);
-        try {
-          if (this.path === 'posts' && data && (data.type === 'video' || data.type === 'link') && data.visibility !== 'private') {
-            p.then(function (ref) { if (ref && ref.id) announce(ref.id); }, function () { });
-          }
-        } catch (_) { }
-        return p;
+    /* Tell the Worker when something happens that another member should hear about.
+       The Worker re-checks everything itself, so nothing here can be faked. */
+    function send(path, body) { call(path, body).catch(function () { }); }
+    function announce(id) { send('/push/notify', { postId: id }); }
+    if (window.firebase && firebase.firestore) {
+      var CR = firebase.firestore.CollectionReference && firebase.firestore.CollectionReference.prototype;
+      var DR = firebase.firestore.DocumentReference && firebase.firestore.DocumentReference.prototype;
+      if (CR) {
+        var origAdd = CR.add;
+        CR.add = function (data) {
+          var p = origAdd.apply(this, arguments), path = String(this.path || ''), m;
+          try {
+            if (path === 'posts' && data && (data.type === 'video' || data.type === 'link') && data.visibility !== 'private') {
+              p.then(function (ref) { if (ref && ref.id) announce(ref.id); }, function () { });
+            } else if ((m = /^(posts|love_posts|marketplacePosts)\/([^/]+)\/comments$/.exec(path))) {
+              p.then(function (ref) { if (ref && ref.id) send('/push/event', { type: 'comment', kind: m[1], postId: m[2], commentId: ref.id }); }, function () { });
+            } else if ((m = /^conversations\/([^/]+)\/messages$/.exec(path))) {
+              p.then(function (ref) { if (ref && ref.id) send('/push/event', { type: 'message', conversationId: m[1], messageId: ref.id }); }, function () { });
+            }
+          } catch (_) { }
+          return p;
+        };
+      }
+      if (DR) {
+        var origSet = DR.set;
+        DR.set = function () {
+          var p = origSet.apply(this, arguments), path = String(this.path || ''), m;
+          try {
+            if ((m = /^follows\/([^/]+)$/.exec(path))) {
+              p.then(function () { send('/push/event', { type: 'follow', followId: m[1] }); }, function () { });
+            } else if ((m = /^(posts|love_posts)\/([^/]+)\/likes\/[^/]+$/.exec(path))) {
+              p.then(function () { send('/push/event', { type: 'like', kind: m[1], postId: m[2] }); }, function () { });
+            }
+          } catch (_) { }
+          return p;
+        };
+      }
+    }
+
+    /* Signing out: this phone stops receiving THIS member's personal alerts. */
+    if (typeof auth !== 'undefined' && auth && typeof auth.signOut === 'function') {
+      var origSignOut = auth.signOut;
+      auth.signOut = function () {
+        var args = arguments, ctx = this, token = read(TOKEN);
+        var release = token && user() ? call('/push/release', { token: token }).catch(function () { }) : Promise.resolve();
+        return release.then(function () { store(UIDK, null); return origSignOut.apply(ctx, args); });
       };
     }
 
