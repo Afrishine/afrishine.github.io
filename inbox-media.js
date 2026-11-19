@@ -382,7 +382,7 @@
       var shb = $('ahSelShare'); if (shb) shb.disabled = !n;
     }
     function exitSel() {
-      page.classList.remove('ah-sel');
+      if (page.classList.contains('ah-sel')) page.classList.remove('ah-sel');
       realBubbles().forEach(function (b) { b.classList.remove('ah-selected'); });
       updateSelCount();
     }
@@ -606,7 +606,7 @@
     function fit() {
       if (!ui) return;
       var v = window.visualViewport, ml = $('messageList');
-      if (!ui.classList.contains('in-chat')) { ui.style.height = ''; ui.style.top = ''; document.documentElement.style.overflow = ''; exitSel(); unlisten(); return; }
+      if (!ui.classList.contains('in-chat')) { ui.style.height = ''; ui.style.top = ''; exitSel(); unlisten(); return; }
       var stick = nearBottom(ml);
       ui.style.height = (v ? v.height : window.innerHeight) + 'px';
       ui.style.top = (v ? v.offsetTop : 0) + 'px';
@@ -616,10 +616,9 @@
     window.addEventListener('resize', fit);
     if (ui && 'MutationObserver' in window) new MutationObserver(fit).observe(ui, { attributes: true, attributeFilter: ['class'] });
 
+    var lastActive = page.classList.contains('active');
     function onPageVisibility() {
       var active = page.classList.contains('active');
-      document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
       if (!active) {
         if (rec) stopRec(true);
         exitSel(); unlisten();
@@ -629,7 +628,12 @@
         listen(); fit(); decorate();
       }
     }
-    if ('MutationObserver' in window) new MutationObserver(onPageVisibility).observe(page, { attributes: true, attributeFilter: ['class'] });
+    if ('MutationObserver' in window) new MutationObserver(function () {
+      var a = page.classList.contains('active');
+      if (a === lastActive) return;
+      lastActive = a;
+      onPageVisibility();
+    }).observe(page, { attributes: true, attributeFilter: ['class'] });
     window.addEventListener('pageshow', onPageVisibility);
     window.addEventListener('hashchange', onPageVisibility);
     window.addEventListener('popstate', onPageVisibility);
