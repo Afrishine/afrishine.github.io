@@ -752,20 +752,41 @@ function isGoogleMarketplaceUser(user) { if (!user || !user.providerData)
     return false; return user.providerData.some(function (info) { return info.providerId === 'google.com'; }); }
 function isPiBrowser() { var ua = (navigator && navigator.userAgent) || ''; return !!(window.Pi) || /PiBrowser/i.test(ua); }
 function canViewMarketplace() { return isPiBrowser() || isGoogleMarketplaceUser(currentFirebaseUser); }
-function showPage(id) { if (id === 'shop' && !canViewMarketplace()) {
-    openMarketplaceLogin();
-    return;
-} const page = document.getElementById(id); if (!page)
-    return; document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === id)); document.querySelectorAll('[data-page]').forEach(a => a.classList.toggle('active', a.dataset.page === id)); if ((location.hash || '#home') !== '#' + id) {
-    if (window.history && history.pushState) {
-        history.pushState(null, '', '#' + id);
+function getAfrishineRoutePage() {
+    const path = (location.pathname || '/').replace(/\/+$/, '') || '/';
+    if (path === '/marketplace') return 'shop';
+    if (path === '/academy') return 'academy';
+    if (path === '/talent') return 'talent';
+    return '';
+}
+function getAfrishinePageUrl(id) {
+    const routes = { shop: '/marketplace', academy: '/academy', talent: '/talent', home: '/' };
+    const base = routes[id] || '/';
+    return base + (location.search || '') + (routes[id] ? '' : (id === 'home' ? '' : '#' + encodeURIComponent(id)));
+}
+function showPage(id) {
+    if (id === 'shop' && !canViewMarketplace()) {
+        openMarketplaceLogin();
+        return;
     }
-    else {
-        location.hash = id;
+    const page = document.getElementById(id);
+    if (!page) return;
+    document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === id));
+    document.querySelectorAll('[data-page]').forEach(a => a.classList.toggle('active', a.dataset.page === id));
+    const nextUrl = getAfrishinePageUrl(id);
+    const currentUrl = location.pathname + (location.search || '') + (location.hash || '');
+    if (currentUrl !== nextUrl && window.history && history.pushState) {
+        history.pushState(null, '', nextUrl);
+    } else if (currentUrl !== nextUrl && !window.history) {
+        location.href = nextUrl;
     }
-} closeMenu(); closeCreateMenu(); closeCreator(); if (id === 'love')
-    refreshLoveAccess(); if (id === 'inbox')
-    loadInbox(); window.scrollTo(0, 0); }
+    closeMenu();
+    closeCreateMenu();
+    closeCreator();
+    if (id === 'love') refreshLoveAccess();
+    if (id === 'inbox') loadInbox();
+    window.scrollTo(0, 0);
+}
 document.querySelectorAll('[data-page]').forEach(el => el.addEventListener('click', e => { e.preventDefault(); showPage(el.dataset.page); }));
 const headerSearchInput = document.getElementById('headerSearch');
 function runHeaderSearch(e) { e.preventDefault(); const q = headerSearchInput.value.trim().toLowerCase(); if (!q) {
@@ -957,8 +978,10 @@ function stopCamera() { if (cameraStream) {
     b.textContent = 'Start Camera Preview'; }
 function notice(message) { const el = document.getElementById('notice'); el.textContent = message; el.style.display = 'block'; clearTimeout(window.ahNoticeTimer); window.ahNoticeTimer = setTimeout(() => el.style.display = 'none', 4000); }
 function confirmLoveAge() { document.getElementById('loveAgeGate').style.display = 'none'; document.getElementById('loveContent').style.display = 'block'; }
-const firstPage = location.hash.replace('#', '');
-if (firstPage && document.getElementById(firstPage))
+const firstPageHash = decodeURIComponent(location.hash.replace('#', ''));
+const firstPageRoute = getAfrishineRoutePage();
+const firstPage = (firstPageHash && document.getElementById(firstPageHash)) ? firstPageHash : (firstPageRoute || 'home');
+if (document.getElementById(firstPage))
     showPage(firstPage);
 const sharedPostId = new URLSearchParams(location.search).get('post');
 if (sharedPostId) {
@@ -3560,6 +3583,12 @@ var originalShowPage=window.showPage;
 if(typeof originalShowPage==='function'){
  window.showPage=function(id){originalShowPage(id);if(id==='shop'){document.body.classList.add('marketplace-active');marketShowPanel('home');marketLoadProducts()}else document.body.classList.remove('marketplace-active')};
 }
+if(document.getElementById('shop') && document.getElementById('shop').classList.contains('active')){
+ document.body.classList.add('marketplace-active');
+ marketShowPanel('home');
+ marketLoadProducts();
+ if(typeof loadMarketplacePosts==='function') loadMarketplacePosts();
+}
 })();
 </script>
 
@@ -4667,12 +4696,18 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
     };
     /* Android / browser Back button moves between pages */
     window.addEventListener('popstate', function () {
-        closeGate(); hideToast();
-        var id = location.hash.replace('#', '');
-        var target = id && document.getElementById(id);
-        window.showPage(target && target.classList.contains('page') ? id : 'home');
+        closeGate();
+        hideToast();
+        var hashId = decodeURIComponent(location.hash.replace('#', ''));
+        var routeId = getAfrishineRoutePage();
+        var id = (hashId && document.getElementById(hashId)) ? hashId : (routeId || 'home');
+        var target = document.getElementById(id);
+        if (target && target.classList.contains('page')) {
+            window.showPage(id);
+            if (id === 'shop' && typeof loadMarketplacePosts === 'function') loadMarketplacePosts();
+        }
     });
-    /* Escape closes open overlays */
+        /* Escape closes open overlays */
     document.addEventListener('keydown', function (e) {
         if (e.key !== 'Escape') return;
         closeGate(); closeLinkEditor(); closeViewer();
@@ -4690,11 +4725,27 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
     }
 })();
 </script>
-<link rel="stylesheet" href="creator-dashboard.css">
-<script src="creator-dashboard.js"></script>
-<script src="upload-rules.js"></script>
+<script>
+/* Direct visits to /marketplace, /academy and /talent: run the route again once every override
+   (public Marketplace browsing, Marketplace panels) has loaded, so the page opens instead of the login popup. */
+(function () {
+  try {
+    var route = typeof getAfrishineRoutePage === 'function' ? getAfrishineRoutePage() : '';
+    if (!route) return;
+    var hashId = decodeURIComponent((location.hash || '').replace('#', ''));
+    if (hashId && document.getElementById(hashId)) return;
+    var modal = document.getElementById('marketLoginModal');
+    if (modal) modal.classList.remove('open');
+    try { pendingMarketplaceLogin = false; } catch (_) { }
+    window.showPage(route);
+  } catch (e) { console.warn('Route start failed:', e); }
+})();
+</script>
+<link rel="stylesheet" href="/creator-dashboard.css">
+<script src="/creator-dashboard.js"></script>
+<script src="/upload-rules.js"></script>
 <!-- AFRISHINE HUB PUSH NOTIFICATIONS -->
-<script src="push.js"></script>
+<script src="/push.js"></script>
 <script src="/verfied-badge.js"></script>
 <script src="/inbox-ui.js"></script>
 <script src="/inbox-media.js"></script>
