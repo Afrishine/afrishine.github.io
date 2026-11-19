@@ -55,6 +55,25 @@
       '.ah-selbar .dl{background:#e5242f;border-color:#e5242f}',
       '.ah-selbar .dl:disabled{opacity:.4}',
       '.message-bubble.ah-selected{outline:2px solid #1f9d55;outline-offset:2px;background-image:linear-gradient(rgba(31,157,85,.22),rgba(31,157,85,.22))}',
+      '.ah-selbar .sh{font-size:18px;padding:0 14px}',
+      '.ah-selbar .sh:disabled{opacity:.4}',
+      '.ah-share{position:absolute;left:0;right:0;top:0;bottom:0;z-index:11;display:flex;flex-direction:column;background:#0a0b14}',
+      '.ah-share-top{display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top,0px)) 12px 8px}',
+      '.ah-share-top button{width:42px;height:42px;border-radius:50%;border:1px solid #2c3659;background:#12172b;color:#fff;font-size:18px}',
+      '.ah-share-top b{flex:1;color:#fff;font-size:18px}',
+      '.ah-share-q{margin:0 12px 8px;height:46px;padding:0 16px;border-radius:23px;border:1px solid #2c3659;background:#12172b;color:#fff;font-size:15px;outline:0}',
+      '.ah-share-list{flex:1;min-height:0;overflow-y:auto;padding:0 12px}',
+      '.ah-sh-row{display:flex;align-items:center;gap:12px;padding:10px 4px;border-bottom:1px solid #1c2342;cursor:pointer}',
+      '.ah-sh-av{position:relative;width:46px;height:46px;flex-shrink:0;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:linear-gradient(145deg,#5b2de0,#2a3a8f);color:#fff;font-weight:800;font-size:18px}',
+      '.ah-sh-av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}',
+      '.ah-sh-nm{flex:1;min-width:0;color:#fff;font-size:16px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+      '.ah-sh-ck{width:26px;height:26px;flex-shrink:0;border-radius:50%;border:2px solid #4a5588;display:grid;place-items:center;color:#fff;font-size:15px}',
+      '.ah-sh-row.on .ah-sh-ck{background:#1f9d55;border-color:#1f9d55}',
+      '.ah-share-empty{padding:24px 8px;text-align:center;color:#aab4d4;font-size:14.5px;line-height:1.6}',
+      '.ah-share-bar{padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid #2c3659;background:#0a0b14}',
+      '.ah-share-bar button{width:100%;height:48px;border-radius:24px;border:0;background:#1f9d55;color:#fff;font-size:16px;font-weight:800}',
+      '.ah-share-bar button:disabled{opacity:.4}',
+      '.ah-toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:10050;max-width:86%;padding:10px 18px;border-radius:22px;background:#222a4a;border:1px solid #5b3fd0;color:#fff;font-size:14px;font-weight:700;text-align:center}',
       '.ah-prev{position:absolute;left:0;right:0;top:0;bottom:0;z-index:10;display:flex;flex-direction:column;background:#000}',
       '.ah-prev-top{padding:calc(10px + env(safe-area-inset-top,0px)) 12px 10px}',
       '.ah-prev-top button{width:42px;height:42px;border-radius:50%;border:0;background:#222;color:#fff;font-size:20px}',
@@ -122,9 +141,9 @@
       var d = dbx(), u = me();
       if (!d || !u) return Promise.reject({ userMsg: 'Please sign in first.' });
       var ref = d.collection('conversations').doc(it.conv);
-      var marker = '[[' + (it.kind === 'image' ? 'img' : 'aud') + ':' + it.up.url + '|' + (it.up.key || '') + ']]';
-      var text = (it.caption ? it.caption + '\n' : '') + marker;
-      var last = it.caption || (it.kind === 'image' ? '📷 Photo' : '🎤 Voice message');
+      var marker = it.up ? '[[' + (it.kind === 'image' ? 'img' : 'aud') + ':' + it.up.url + '|' + (it.up.key || '') + ']]' : '';
+      var text = marker ? ((it.caption ? it.caption + '\n' : '') + marker) : it.caption;
+      var last = it.caption || (it.kind === 'image' ? '📷 Photo' : (it.kind === 'audio' ? '🎤 Voice message' : ''));
       var ts = firebase.firestore.FieldValue.serverTimestamp();
       var step = it.saved ? Promise.resolve() : ref.collection('messages').add({
         senderUid: u.uid,
@@ -279,6 +298,39 @@
         .then(function () { deleting = false; });
     }
 
+    /* show photos / voice right away and never show the raw link text */
+    function insertMedia(b, m) {
+      if (b.querySelector('.ah-media')) return;
+      var box = document.createElement('div');
+      box.className = 'ah-media';
+      if (m.kind === 'image') {
+        var im = document.createElement('img');
+        im.src = m.url; im.alt = 'Photo'; im.loading = 'lazy';
+        im.onclick = function () { window.open(m.url, '_blank'); };
+        box.appendChild(im);
+      } else {
+        var au = document.createElement('audio');
+        au.controls = true; au.preload = 'none'; au.src = m.url;
+        box.appendChild(au);
+      }
+      var bold = b.querySelector('b');
+      if (bold && bold.nextSibling) b.insertBefore(box, bold.nextSibling); else b.insertBefore(box, b.firstChild);
+    }
+    function stripMarkers(b) {
+      if (b.querySelector('.ah-media')) return;
+      var walker = document.createTreeWalker(b, NodeFilter.SHOW_TEXT, null), n, found = null, nodes = [];
+      while ((n = walker.nextNode())) nodes.push(n);
+      nodes.forEach(function (t) {
+        var m = MEDIA_RE.exec(t.nodeValue);
+        if (m) { found = { kind: m[1] === 'img' ? 'image' : 'audio', url: m[2] }; t.nodeValue = t.nodeValue.replace(new RegExp(MEDIA_RE.source, 'g'), '').trim(); }
+      });
+      if (found) insertMedia(b, found);
+    }
+    function sanitizeAll() {
+      var ml = $('messageList'); if (!ml) return;
+      Array.prototype.forEach.call(ml.querySelectorAll('.message-bubble:not(.ah-pending)'), stripMarkers);
+    }
+
     /* ---------- read receipts: ✓ sent, ✓✓ read ---------- */
     function unlisten() { if (unsub) { try { unsub(); } catch (_) { } unsub = null; } otherRead = 0; myRead = 0; }
     function listen() {
@@ -323,6 +375,7 @@
       var n = selected().length, c = $('ahSelCount'), dl = $('ahSelDel');
       if (c) c.textContent = n ? n + ' selected' : 'Select messages';
       if (dl) dl.disabled = !n;
+      var shb = $('ahSelShare'); if (shb) shb.disabled = !n;
     }
     function exitSel() {
       page.classList.remove('ah-sel');
@@ -388,6 +441,82 @@
       ml.addEventListener('contextmenu', function (e) { if (e.target.closest && e.target.closest('.message-bubble')) e.preventDefault(); });
     }
 
+    /* ---------- share (forward) selected messages to other chats ---------- */
+    function toast(t) {
+      var el = $('ahToast');
+      if (!el) { el = document.createElement('div'); el.id = 'ahToast'; el.className = 'ah-toast'; document.body.appendChild(el); }
+      el.textContent = t; el.style.display = 'block';
+      clearTimeout(el.__t); el.__t = setTimeout(function () { el.style.display = 'none'; }, 3200);
+    }
+    function shortName(raw) { raw = String(raw || '').trim(); if (raw.indexOf('@') > 0) raw = raw.split('@')[0]; return raw.slice(0, 40) || 'Afrishine Member'; }
+    function sendOne(convId, p) {
+      var step = p.m ? fetch(p.m.url).then(function (r) { if (!r.ok) throw { userMsg: 'Could not read the original file.' }; return r.blob(); }).then(function (blob) {
+        var type = blob.type || (p.m.kind === 'image' ? 'image/jpeg' : 'audio/webm');
+        var ext = type.indexOf('png') >= 0 ? 'png' : type.indexOf('webp') >= 0 ? 'webp' : type.indexOf('gif') >= 0 ? 'gif' : type.indexOf('mp4') >= 0 ? 'm4a' : type.indexOf('ogg') >= 0 ? 'ogg' : type.indexOf('mpeg') >= 0 ? 'mp3' : (p.m.kind === 'image' ? 'jpg' : 'webm');
+        return upload(blob, ext, type);
+      }) : Promise.resolve(null);
+      return step.then(function (up) { return saveMessage({ conv: convId, kind: p.m ? p.m.kind : 'text', up: up, caption: p.caption, saved: false }); });
+    }
+    function shareTo(targets, payloads) {
+      toast('Sharing…');
+      var chain = Promise.resolve(), ok = 0, bad = 0, lastErr = '';
+      targets.forEach(function (conv) {
+        payloads.forEach(function (p) {
+          chain = chain.then(function () { return sendOne(conv, p).then(function () { ok++; }, function (e) { bad++; lastErr = reason(e); console.warn('Share failed:', e); }); });
+        });
+      });
+      return chain.then(function () { toast(bad ? ('Shared ' + ok + ', failed ' + bad + (lastErr ? ' · ' + lastErr : '')) : 'Shared ✓'); });
+    }
+    function openShare() {
+      var sel = selected(), d = dbx(), u = me();
+      if (!sel.length || !d || !u || $('ahShare')) return;
+      var box = document.createElement('div');
+      box.id = 'ahShare'; box.className = 'ah-share';
+      box.innerHTML = '<div class="ah-share-top"><button type="button" id="ahShX" aria-label="Close">✕</button><b>Share to…</b></div><input class="ah-share-q" id="ahShQ" type="search" placeholder="Search chats…" autocomplete="off"><div class="ah-share-list" id="ahShList"><div class="ah-share-empty">Loading…</div></div><div class="ah-share-bar"><button type="button" id="ahShGo" disabled>Send</button></div>';
+      ui.appendChild(box);
+      var items = [], chosen = {}, list = $('ahShList'), go = $('ahShGo');
+      function close() { box.remove(); }
+      function paint() {
+        var q = ($('ahShQ').value || '').trim().toLowerCase();
+        var rows = items.filter(function (x) { return !q || x.name.toLowerCase().indexOf(q) >= 0; });
+        list.innerHTML = rows.length ? rows.map(function (x) {
+          var av = /^https:\/\//.test(x.photo) ? '<img src="' + esc(x.photo) + '" alt="" referrerpolicy="no-referrer" onerror="this.style.display=\'none\'">' : '';
+          return '<div class="ah-sh-row' + (chosen[x.id] ? ' on' : '') + '" data-id="' + esc(x.id) + '"><span class="ah-sh-av"><span>' + esc(x.name.slice(0, 1).toUpperCase()) + '</span>' + av + '</span><span class="ah-sh-nm">' + esc(x.name) + '</span><span class="ah-sh-ck">' + (chosen[x.id] ? '✓' : '') + '</span></div>';
+        }).join('') : '<div class="ah-share-empty">' + (items.length ? 'No chat matches your search.' : 'You have no chats yet. Start a chat with a member first, then share here.') + '</div>';
+        var n = Object.keys(chosen).length;
+        go.disabled = !n; go.textContent = n ? 'Send to ' + n + ' chat' + (n > 1 ? 's' : '') : 'Send';
+      }
+      list.addEventListener('click', function (e) {
+        var r = e.target.closest && e.target.closest('.ah-sh-row'); if (!r) return;
+        var id = r.getAttribute('data-id'); if (chosen[id]) delete chosen[id]; else chosen[id] = 1;
+        paint();
+      });
+      $('ahShQ').addEventListener('input', paint);
+      $('ahShX').addEventListener('click', close);
+      go.addEventListener('click', function () {
+        var targets = Object.keys(chosen); if (!targets.length) return;
+        go.disabled = true; go.textContent = 'Preparing…';
+        var msgs = d.collection('conversations').doc(cur).collection('messages');
+        Promise.all(sel.map(function (b) { return msgs.doc(b.getAttribute('data-mid')).get(); })).then(function (snaps) {
+          var payloads = snaps.filter(function (x) { return x.exists; }).map(function (x) {
+            var v = x.data(), m = parseMedia(v);
+            return { m: m, caption: String(v.text || '').replace(new RegExp(MEDIA_RE.source, 'g'), '').trim() };
+          }).filter(function (p) { return p.m || p.caption; });
+          if (!payloads.length) throw { userMsg: 'Nothing to share.' };
+          close(); exitSel();
+          return shareTo(targets, payloads);
+        }).catch(function (e) { close(); alert('Could not share. ' + reason(e)); });
+      });
+      d.collection('conversations').where('participants', 'array-contains', u.uid).limit(40).get().then(function (snap) {
+        var convs = snap.docs.map(function (x) { var v = x.data(); return { id: x.id, other: (v.participants || []).filter(function (p) { return p !== u.uid; })[0] || '', fallback: (v.participantNames || {})[(v.participants || []).filter(function (p) { return p !== u.uid; })[0]] || '', t: ms(v.updatedAt) }; }).sort(function (a, b) { return b.t - a.t; });
+        return Promise.all(convs.map(function (c) {
+          return d.collection('publicProfiles').doc(c.other).get().then(function (s) { return s.exists ? s.data() : {}; }).catch(function () { return {}; }).then(function (p) {
+            return { id: c.id, name: shortName(p.username || c.fallback), photo: p.photoURL || '' };
+          });
+        }));
+      }).then(function (res) { items = res; paint(); }).catch(function (e) { list.innerHTML = '<div class="ah-share-empty">' + esc(reason(e)) + '</div>'; });
+    }
+
     /* ---------- install into the chat screen ---------- */
     function install() {
       var list = $('inboxList'), view = list && list.querySelector('.conversation-view');
@@ -402,11 +531,12 @@
       if (head && !head.querySelector('.ah-selbar')) {
         var sb = document.createElement('div');
         sb.className = 'ah-selbar';
-        sb.innerHTML = '<button type="button" class="x" aria-label="Cancel selection">✕</button><span class="cnt" id="ahSelCount">Select messages</span><button type="button" class="all">All</button><button type="button" class="dl" id="ahSelDel" disabled>🗑 Delete</button>';
+        sb.innerHTML = '<button type="button" class="x" aria-label="Cancel selection">✕</button><span class="cnt" id="ahSelCount">Select messages</span><button type="button" class="all">All</button><button type="button" class="sh" id="ahSelShare" aria-label="Share" disabled>↗</button><button type="button" class="dl" id="ahSelDel" disabled>🗑 Delete</button>';
         head.appendChild(sb);
         sb.querySelector('.x').addEventListener('click', exitSel);
         sb.querySelector('.all').addEventListener('click', selectAll);
         sb.querySelector('.dl').addEventListener('click', deleteSelected);
+        sb.querySelector('.sh').addEventListener('click', openShare);
       }
       var c = composerRow();
       if (c && !c.row.querySelector('.ah-cbtn')) {
@@ -433,12 +563,13 @@
       var cc = composerRow();
       if (cc) { var el = cc.row; while (el.parentElement && el.parentElement !== view) el = el.parentElement; el.classList.add('ah-composer'); }
       fit();
+      sanitizeAll();
       decorate();
       var ml2 = $('messageList');
       if (ml2) wireSelection(ml2);
       if (ml2 && !ml2.__ahObs && 'MutationObserver' in window) {
         ml2.__ahObs = true;
-        new MutationObserver(function () { clearTimeout(ml2.__t); ml2.__t = setTimeout(decorate, 150); }).observe(ml2, { childList: true });
+        new MutationObserver(function () { sanitizeAll(); clearTimeout(ml2.__t); ml2.__t = setTimeout(decorate, 150); }).observe(ml2, { childList: true });
       }
     }
 
@@ -459,23 +590,7 @@
           b.setAttribute('data-sender', v.senderUid || '');
           if (v.senderUid === u.uid) addTick(b, t); else if (t > myRead) needRead = true;
           var m = parseMedia(v);
-          if (!m || b.querySelector('.ah-media')) return;
-          var walker = document.createTreeWalker(b, NodeFilter.SHOW_TEXT, null), n;
-          while ((n = walker.nextNode())) { if (MEDIA_RE.test(n.nodeValue)) n.nodeValue = n.nodeValue.replace(new RegExp(MEDIA_RE.source, 'g'), '').trim(); }
-          var box = document.createElement('div');
-          box.className = 'ah-media';
-          if (m.kind === 'image') {
-            var im = document.createElement('img');
-            im.src = m.url; im.alt = 'Photo'; im.loading = 'lazy';
-            im.onclick = function () { window.open(m.url, '_blank'); };
-            box.appendChild(im);
-          } else {
-            var au = document.createElement('audio');
-            au.controls = true; au.preload = 'none'; au.src = m.url;
-            box.appendChild(au);
-          }
-          var bold = b.querySelector('b');
-          if (bold && bold.nextSibling) b.insertBefore(box, bold.nextSibling); else b.insertBefore(box, b.firstChild);
+          if (m) insertMedia(b, m);
         });
         paintTicks();
         if (needRead) markRead();
