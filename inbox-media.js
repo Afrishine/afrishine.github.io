@@ -20,10 +20,12 @@
     function ms(t) { return t && t.toMillis ? t.toMillis() : 0; }
     var pend = {}; /* messages still sending / failed, per conversation */
     var ui = $('ahInboxUI');
+    function nearBottom(el) { return !el || (el.scrollHeight - el.scrollTop - el.clientHeight) < 140; }
 
     /* ---------- styles ---------- */
     var st = document.createElement('style');
     st.textContent = [
+      'html:has(#inbox.active #ahInboxUI.in-chat){overflow:hidden!important}',
       '#ahInboxUI.in-chat{position:fixed;left:0;right:0;top:0;height:100vh;height:100dvh;z-index:9999;display:flex;flex-direction:column;max-width:none;margin:0;padding:0;background:#0a0b14}',
       '#ahInboxUI.in-chat #ahPaneMsg,#ahInboxUI.in-chat #ahMsgSlot,#ahInboxUI.in-chat #inboxList{flex:1;min-height:0;display:flex;flex-direction:column}',
       '#ahInboxUI.in-chat .conversation-view{flex:1;min-height:0;display:flex;flex-direction:column;width:100%;max-width:640px;margin:0 auto;padding:0 12px;box-sizing:border-box}',
@@ -38,7 +40,7 @@
       '.ah-recbar .x{background:#e5242f}.ah-recbar .ok{background:#1f9d55}',
       '.ah-recbar .ah-info{flex:1;color:#ffb91f;font-size:15px;font-weight:700}',
       '.ah-del{width:40px;height:40px;flex-shrink:0;border-radius:50%;border:1px solid #2c3659;background:#12172b;font-size:18px;line-height:1;color:#fff}',
-      '.ah-media img{display:block;max-width:100%;max-height:300px;border-radius:12px;margin:6px 0;cursor:pointer}',
+      '.ah-media img{content-visibility:auto;display:block;max-width:100%;max-height:300px;border-radius:12px;margin:6px 0;cursor:pointer}',
       '.ah-media audio{display:block;width:100%;min-width:200px;max-width:260px;margin:6px 0}',
       '.ah-pending .ah-media img{opacity:.6}',
       '.ah-pstat{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px;font-size:12.5px;color:#aab4e8}',
@@ -181,9 +183,11 @@
     function paintPending() {
       var ml = $('messageList');
       if (!ml || !cur) return;
+      var stick = nearBottom(ml);
       (pend[cur] || []).forEach(function (it) {
         var el = ml.querySelector('[data-pid="' + it.id + '"]');
-        if (!el) { el = document.createElement('div'); el.className = 'message-bubble mine ah-pending'; el.setAttribute('data-pid', it.id); ml.appendChild(el); }
+        if (!el) {
+          stick = true; el = document.createElement('div'); el.className = 'message-bubble mine ah-pending'; el.setAttribute('data-pid', it.id); ml.appendChild(el); }
         el.classList.toggle('failed', it.state === 'failed');
         var media = it.kind === 'image' ? '<img src="' + it.preview + '" alt="Photo">' : '<audio controls preload="metadata" src="' + it.preview + '"></audio>';
         var stat = it.state === 'failed'
@@ -194,7 +198,7 @@
           b.addEventListener('click', function () { b.getAttribute('data-act') === 'retry' ? processItem(it) : dropItem(it); });
         });
       });
-      ml.scrollTop = ml.scrollHeight;
+      if (stick) ml.scrollTop = ml.scrollHeight;
     }
 
     /* ---------- photo: pick, preview with caption, send ---------- */
@@ -305,7 +309,7 @@
       box.className = 'ah-media';
       if (m.kind === 'image') {
         var im = document.createElement('img');
-        im.src = m.url; im.alt = 'Photo'; im.loading = 'lazy';
+        im.src = m.url; im.alt = 'Photo'; im.loading = 'lazy'; im.decoding = 'async';
         im.onclick = function () { window.open(m.url, '_blank'); };
         box.appendChild(im);
       } else {
@@ -564,6 +568,7 @@
       if (cc) { var el = cc.row; while (el.parentElement && el.parentElement !== view) el = el.parentElement; el.classList.add('ah-composer'); }
       fit();
       sanitizeAll();
+      var mlFirst = $('messageList'); if (mlFirst) mlFirst.scrollTop = mlFirst.scrollHeight;
       decorate();
       var ml2 = $('messageList');
       if (ml2) wireSelection(ml2);
@@ -600,16 +605,34 @@
     /* chat fills the screen: header on top, composer pinned at the bottom, moves up with the keyboard */
     function fit() {
       if (!ui) return;
-      var v = window.visualViewport;
+      var v = window.visualViewport, ml = $('messageList');
       if (!ui.classList.contains('in-chat')) { ui.style.height = ''; ui.style.top = ''; document.documentElement.style.overflow = ''; exitSel(); unlisten(); return; }
-      document.documentElement.style.overflow = 'hidden';
+      var stick = nearBottom(ml);
       ui.style.height = (v ? v.height : window.innerHeight) + 'px';
       ui.style.top = (v ? v.offsetTop : 0) + 'px';
-      var ml = $('messageList'); if (ml) ml.scrollTop = ml.scrollHeight;
+      if (ml && stick) ml.scrollTop = ml.scrollHeight;
     }
     if (window.visualViewport) { window.visualViewport.addEventListener('resize', fit); window.visualViewport.addEventListener('scroll', fit); }
     window.addEventListener('resize', fit);
     if (ui && 'MutationObserver' in window) new MutationObserver(fit).observe(ui, { attributes: true, attributeFilter: ['class'] });
+
+    function onPageVisibility() {
+      var active = page.classList.contains('active');
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+      if (!active) {
+        if (rec) stopRec(true);
+        exitSel(); unlisten();
+        var pv = $('ahPrev'); if (pv) pv.remove();
+        var sh = $('ahShare'); if (sh) sh.remove();
+      } else if (ui.classList.contains('in-chat') && cur) {
+        listen(); fit(); decorate();
+      }
+    }
+    if ('MutationObserver' in window) new MutationObserver(onPageVisibility).observe(page, { attributes: true, attributeFilter: ['class'] });
+    window.addEventListener('pageshow', onPageVisibility);
+    window.addEventListener('hashchange', onPageVisibility);
+    window.addEventListener('popstate', onPageVisibility);
 
     /* wrap openConversation (on top of inbox-ui.js) */
     var prev = window.openConversation;
