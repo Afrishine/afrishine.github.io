@@ -16,6 +16,8 @@
     var MEDIA_RE = /\[\[(img|aud):(https:\/\/[^|\]\s]+)\|([^\]]*)\]\]/;
 
     var cur = '', rec = null, chunks = [], stream = null, timer = null, secs = 0, cancelled = false;
+    var unsub = null, otherRead = 0, myRead = 0, lastMark = 0, swallow = false;
+    function ms(t) { return t && t.toMillis ? t.toMillis() : 0; }
     var pend = {}; /* messages still sending / failed, per conversation */
     var ui = $('ahInboxUI');
 
@@ -42,6 +44,17 @@
       '.ah-pstat{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px;font-size:12.5px;color:#aab4e8}',
       '.ah-pending.failed .ah-pstat{color:#ff8a8a}',
       '.ah-pstat button{height:30px;padding:0 12px;border-radius:15px;border:1px solid #5b3fd0;background:#2a2150;color:#fff;font-size:12.5px;font-weight:700}',
+      '.ah-tick{margin-left:6px;font-size:12px;font-weight:700;letter-spacing:-2px;color:#9aa5d6;white-space:nowrap}',
+      '.ah-tick.read{color:#4fc3f7}',
+      '#inbox.ah-sel #ahInboxUI .ah-chat-head>*:not(.ah-selbar){display:none!important}',
+      '#inbox.ah-sel .ah-composer{display:none!important}',
+      '.ah-selbar{display:none;align-items:center;gap:10px;width:100%}',
+      '#inbox.ah-sel .ah-selbar{display:flex!important}',
+      '.ah-selbar .cnt{flex:1;color:#fff;font-weight:800;font-size:16px}',
+      '.ah-selbar button{height:40px;min-width:40px;padding:0 14px;border-radius:20px;border:1px solid #2c3659;background:#12172b;color:#fff;font-size:14px;font-weight:700}',
+      '.ah-selbar .dl{background:#e5242f;border-color:#e5242f}',
+      '.ah-selbar .dl:disabled{opacity:.4}',
+      '.message-bubble.ah-selected{outline:2px solid #1f9d55;outline-offset:2px;background-image:linear-gradient(rgba(31,157,85,.22),rgba(31,157,85,.22))}',
       '.ah-prev{position:absolute;left:0;right:0;top:0;bottom:0;z-index:10;display:flex;flex-direction:column;background:#000}',
       '.ah-prev-top{padding:calc(10px + env(safe-area-inset-top,0px)) 12px 10px}',
       '.ah-prev-top button{width:42px;height:42px;border-radius:50%;border:0;background:#222;color:#fff;font-size:20px}',
@@ -266,6 +279,115 @@
         .then(function () { deleting = false; });
     }
 
+    /* ---------- read receipts: ✓ sent, ✓✓ read ---------- */
+    function unlisten() { if (unsub) { try { unsub(); } catch (_) { } unsub = null; } otherRead = 0; myRead = 0; }
+    function listen() {
+      unlisten();
+      var d = dbx(), u = me(), id = cur;
+      if (!d || !u || !id) return;
+      unsub = d.collection('conversations').doc(id).onSnapshot(function (snap) {
+        if (id !== cur || !snap.exists) return;
+        var v = snap.data() || {}, other = (v.participants || []).filter(function (p) { return p !== u.uid; })[0] || '', r = v.readAt || {};
+        otherRead = ms(r[other]); myRead = ms(r[u.uid]);
+        paintTicks();
+      }, function () { });
+    }
+    function paintTicks() {
+      Array.prototype.forEach.call(document.querySelectorAll('#messageList .ah-tick'), function (el) {
+        var t = Number(el.getAttribute('data-ts')) || 0, read = t > 0 && otherRead >= t;
+        el.textContent = read ? '✓✓' : '✓';
+        el.classList.toggle('read', read);
+        el.setAttribute('aria-label', read ? 'Read' : 'Sent');
+      });
+    }
+    function addTick(b, t) {
+      var tk = b.querySelector('.ah-tick');
+      if (!tk) { tk = document.createElement('span'); tk.className = 'ah-tick'; (b.querySelector('small') || b).appendChild(tk); }
+      tk.setAttribute('data-ts', String(t || 0));
+    }
+    function markRead() {
+      var d = dbx(), u = me();
+      if (!d || !u || !cur || document.hidden) return;
+      var now = Date.now();
+      if (now - lastMark < 4000) return;
+      lastMark = now;
+      var patch = {}; patch['readAt.' + u.uid] = firebase.firestore.FieldValue.serverTimestamp();
+      d.collection('conversations').doc(cur).update(patch).catch(function (e) { console.warn('Read receipt not saved:', e); });
+    }
+    document.addEventListener('visibilitychange', function () { if (!document.hidden && ui && ui.classList.contains('in-chat')) decorate(); });
+
+    /* ---------- select messages to delete (one, several or all) ---------- */
+    function selected() { var ml = $('messageList'); return ml ? Array.prototype.slice.call(ml.querySelectorAll('.message-bubble.ah-selected')) : []; }
+    function realBubbles() { var ml = $('messageList'); return ml ? Array.prototype.slice.call(ml.querySelectorAll('.message-bubble:not(.ah-pending)')) : []; }
+    function updateSelCount() {
+      var n = selected().length, c = $('ahSelCount'), dl = $('ahSelDel');
+      if (c) c.textContent = n ? n + ' selected' : 'Select messages';
+      if (dl) dl.disabled = !n;
+    }
+    function exitSel() {
+      page.classList.remove('ah-sel');
+      realBubbles().forEach(function (b) { b.classList.remove('ah-selected'); });
+      updateSelCount();
+    }
+    function toggleBubble(b) { if (!b || !b.getAttribute('data-mid')) return; b.classList.toggle('ah-selected'); updateSelCount(); }
+    function enterSel(first) { page.classList.add('ah-sel'); if (first) toggleBubble(first); updateSelCount(); }
+    function selectAll() {
+      var all = realBubbles().filter(function (b) { return b.getAttribute('data-mid'); });
+      var every = all.length && all.every(function (b) { return b.classList.contains('ah-selected'); });
+      all.forEach(function (b) { b.classList.toggle('ah-selected', !every); });
+      updateSelCount();
+    }
+    function deleteSelected() {
+      var sel = selected(), d = dbx(), id = cur;
+      if (!sel.length || !d || !id || deleting) return;
+      if (sel.length === realBubbles().length) { exitSel(); deleteChat(); return; }
+      if (!confirm('Delete ' + sel.length + ' selected message' + (sel.length > 1 ? 's' : '') + '? They will be removed for both people and cannot be restored.')) return;
+      deleting = true;
+      var conv = d.collection('conversations').doc(id), msgs = conv.collection('messages');
+      Promise.all(sel.map(function (b) { return msgs.doc(b.getAttribute('data-mid')).get(); })).then(function (snaps) {
+        snaps = snaps.filter(function (x) { return x.exists; });
+        return removeMedia(snaps).then(function () {
+          var batch = d.batch();
+          snaps.forEach(function (x) { batch.delete(x.ref); });
+          return batch.commit();
+        });
+      }).then(function () { return msgs.orderBy('createdAt', 'desc').limit(1).get(); }).then(function (last) {
+        if (last.empty) return conv.delete().then(function () { exitSel(); cur = ''; if (typeof window.loadInbox === 'function') window.loadInbox(); });
+        var v = last.docs[0].data(), m = parseMedia(v);
+        var txt = m ? (String(v.text || '').replace(new RegExp(MEDIA_RE.source, 'g'), '').trim() || (m.kind === 'image' ? '📷 Photo' : '🎤 Voice message')) : String(v.text || '');
+        return conv.update({ lastMessage: txt.slice(0, 200) }).catch(function () { }).then(function () { exitSel(); reopen(); });
+      }).catch(function (e) { console.warn(e); alert('The messages could not be deleted. ' + reason(e)); })
+        .then(function () { deleting = false; });
+    }
+    function wireSelection(ml) {
+      if (ml.__ahSel) return;
+      ml.__ahSel = true;
+      var timer2 = null;
+      function clear() { clearTimeout(timer2); timer2 = null; }
+      ml.addEventListener('click', function (e) {
+        if (swallow) { swallow = false; e.preventDefault(); e.stopPropagation(); return; }
+        if (!page.classList.contains('ah-sel')) return;
+        var b = e.target.closest && e.target.closest('.message-bubble');
+        if (!b) return;
+        e.preventDefault(); e.stopPropagation();
+        toggleBubble(b);
+      }, true);
+      ml.addEventListener('touchstart', function (e) {
+        var b = e.target.closest && e.target.closest('.message-bubble:not(.ah-pending)');
+        if (!b || page.classList.contains('ah-sel')) return;
+        clear();
+        timer2 = setTimeout(function () {
+          timer2 = null;
+          if (!b.getAttribute('data-mid')) return;
+          swallow = true; setTimeout(function () { swallow = false; }, 700);
+          if (navigator.vibrate) { try { navigator.vibrate(15); } catch (_) { } }
+          enterSel(b);
+        }, 500);
+      }, { passive: true });
+      ['touchmove', 'touchend', 'touchcancel'].forEach(function (n) { ml.addEventListener(n, clear, { passive: true }); });
+      ml.addEventListener('contextmenu', function (e) { if (e.target.closest && e.target.closest('.message-bubble')) e.preventDefault(); });
+    }
+
     /* ---------- install into the chat screen ---------- */
     function install() {
       var list = $('inboxList'), view = list && list.querySelector('.conversation-view');
@@ -273,9 +395,18 @@
       var head = view.querySelector('.ah-chat-head');
       if (head && !head.querySelector('.ah-del')) {
         var del = document.createElement('button');
-        del.type = 'button'; del.className = 'ah-del'; del.setAttribute('aria-label', 'Delete chat'); del.textContent = '🗑';
-        del.addEventListener('click', function (e) { e.stopPropagation(); deleteChat(); });
+        del.type = 'button'; del.className = 'ah-del'; del.setAttribute('aria-label', 'Select messages to delete'); del.textContent = '🗑';
+        del.addEventListener('click', function (e) { e.stopPropagation(); enterSel(null); });
         head.appendChild(del);
+      }
+      if (head && !head.querySelector('.ah-selbar')) {
+        var sb = document.createElement('div');
+        sb.className = 'ah-selbar';
+        sb.innerHTML = '<button type="button" class="x" aria-label="Cancel selection">✕</button><span class="cnt" id="ahSelCount">Select messages</span><button type="button" class="all">All</button><button type="button" class="dl" id="ahSelDel" disabled>🗑 Delete</button>';
+        head.appendChild(sb);
+        sb.querySelector('.x').addEventListener('click', exitSel);
+        sb.querySelector('.all').addEventListener('click', selectAll);
+        sb.querySelector('.dl').addEventListener('click', deleteSelected);
       }
       var c = composerRow();
       if (c && !c.row.querySelector('.ah-cbtn')) {
@@ -304,26 +435,31 @@
       fit();
       decorate();
       var ml2 = $('messageList');
+      if (ml2) wireSelection(ml2);
       if (ml2 && !ml2.__ahObs && 'MutationObserver' in window) {
         ml2.__ahObs = true;
         new MutationObserver(function () { clearTimeout(ml2.__t); ml2.__t = setTimeout(decorate, 150); }).observe(ml2, { childList: true });
       }
     }
 
-    /* photos / voice inside the existing bubbles (matched from the newest message backwards) */
+    /* tick marks, message ids and photos / voice inside the existing bubbles (matched from the newest message backwards) */
     function decorate() {
-      var d = dbx(), ml = $('messageList'), id = cur;
-      if (!d || !ml || !id) return;
+      var d = dbx(), ml = $('messageList'), id = cur, u = me();
+      if (!d || !ml || !id || !u) return;
       paintPending();
       var bubbles = Array.prototype.slice.call(ml.querySelectorAll('.message-bubble:not(.ah-pending)'));
       if (!bubbles.length) return;
       d.collection('conversations').doc(id).collection('messages').orderBy('createdAt', 'desc').limit(bubbles.length).get().then(function (snap) {
         if (id !== cur) return;
-        var docs = snap.docs.map(function (x) { return x.data(); }).reverse();
-        var off = bubbles.length - docs.length;
-        docs.forEach(function (v, i) {
-          var b = bubbles[off + i], m = parseMedia(v);
-          if (!b || !m || b.querySelector('.ah-media')) return;
+        var docs = snap.docs.slice().reverse(), off = bubbles.length - docs.length, needRead = false;
+        docs.forEach(function (x, i) {
+          var v = x.data(), b = bubbles[off + i], t = ms(v.createdAt);
+          if (!b) return;
+          b.setAttribute('data-mid', x.id);
+          b.setAttribute('data-sender', v.senderUid || '');
+          if (v.senderUid === u.uid) addTick(b, t); else if (t > myRead) needRead = true;
+          var m = parseMedia(v);
+          if (!m || b.querySelector('.ah-media')) return;
           var walker = document.createTreeWalker(b, NodeFilter.SHOW_TEXT, null), n;
           while ((n = walker.nextNode())) { if (MEDIA_RE.test(n.nodeValue)) n.nodeValue = n.nodeValue.replace(new RegExp(MEDIA_RE.source, 'g'), '').trim(); }
           var box = document.createElement('div');
@@ -341,6 +477,8 @@
           var bold = b.querySelector('b');
           if (bold && bold.nextSibling) b.insertBefore(box, bold.nextSibling); else b.insertBefore(box, b.firstChild);
         });
+        paintTicks();
+        if (needRead) markRead();
       }).catch(function () { });
     }
 
@@ -348,7 +486,7 @@
     function fit() {
       if (!ui) return;
       var v = window.visualViewport;
-      if (!ui.classList.contains('in-chat')) { ui.style.height = ''; ui.style.top = ''; document.documentElement.style.overflow = ''; return; }
+      if (!ui.classList.contains('in-chat')) { ui.style.height = ''; ui.style.top = ''; document.documentElement.style.overflow = ''; exitSel(); unlisten(); return; }
       document.documentElement.style.overflow = 'hidden';
       ui.style.height = (v ? v.height : window.innerHeight) + 'px';
       ui.style.top = (v ? v.offsetTop : 0) + 'px';
@@ -363,8 +501,9 @@
     if (typeof prev === 'function') {
       window.openConversation = function (id) {
         if (rec) stopRec(true);
+        exitSel(); unlisten();
         cur = id;
-        return Promise.resolve(prev.apply(this, arguments)).then(function (r) { install(); return r; });
+        return Promise.resolve(prev.apply(this, arguments)).then(function (r) { install(); listen(); return r; });
       };
     }
   } catch (err) { console.warn('Inbox media not started:', err); }
