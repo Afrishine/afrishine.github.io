@@ -39,7 +39,8 @@
       return uniq(s.docs.map(function (x) { return x.data()[other]; }));
     });
   }
-  function toPC(x) { x = x || {}; return { name: x.name || x.username || 'Afrishine Member', user: x.username || '', photo: x.photoURL || '' }; }
+  function toPC(x) { x = x || {}; return { name: x.name || x.username || 'Afrishine Member', user: x.username || '', photo: x.photoURL || '', ver: x.verified === true }; }
+  var BADGE = '<svg class="ahs-vb" viewBox="0 0 24 24" aria-label="Verified"><path fill="currentColor" d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4" fill="none" stroke="#1a1300" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   function profiles(ids) {
     var need = ids.filter(function (id) { return !S.pc[id]; }), p = Promise.resolve();
@@ -132,13 +133,15 @@
   }
 
   // ===== SUGGESTED (own profile): people who follow you first, then other members =====
-  function suggest(meUid) {
-    var first = Object.keys(S.mine.fers).filter(function (id) { return !S.mine.fing[id] && id !== meUid; });
+  function suggest(meUid, target) {
+    var ok = function (id) { return id !== meUid && id !== target && !S.mine.fing[id]; };
+    var rel1 = (target === meUid ? [] : uniq((S.lists.followers || []).concat(S.lists.following || []))).filter(ok);
+    var first = uniq(rel1.concat(Object.keys(S.mine.fers).filter(ok)));
     return getDB().collection('publicProfiles').limit(40).get().then(function (s) {
       var more = [];
       s.docs.forEach(function (doc) {
         S.pc[doc.id] = toPC(doc.data());
-        if (doc.id !== meUid && !S.mine.fing[doc.id] && first.indexOf(doc.id) < 0) more.push(doc.id);
+        if (ok(doc.id) && first.indexOf(doc.id) < 0) more.push(doc.id);
       });
       return first.concat(more);
     }).catch(function () { return first; });
@@ -160,13 +163,16 @@
     '.ahs-av{position:relative;width:52px;height:52px;margin-right:12px;border-radius:50%;overflow:hidden;background:#303747;color:#ffbf36;font-weight:800;font-size:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0}',
     '.ahs-av img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}',
     '.ahs-info{flex:1;min-width:0}',
-    '.ahs-info b{display:block;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
-    '.ahs-info span{display:block;margin-top:2px;color:#8d97ad;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+    '.ahs-info b{display:flex;align-items:center;font-size:15px}',
+    '.ahs-nm{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+    '.ahs-info b .ahs-vb{flex-shrink:0;margin-top:0;vertical-align:baseline}',
+    '.ahs-info > span{display:block;margin-top:2px;color:#8d97ad;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
     '.ahs-btn{min-width:96px;margin-left:10px;padding:9px 14px;border:0;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer}',
     '.ahs-btn.gold{background:var(--gold,#ffb91f);color:#1a1300}',
     '.ahs-btn.grey{background:#262e3f;color:#fff}',
     '.ahs-btn:disabled{opacity:.6}',
     '.ahs-x{width:34px;height:34px;margin-left:4px;border:0;background:none;color:#8d97ad;font-size:24px;cursor:pointer}',
+    '.ahs-vb{display:inline-block;width:16px;height:16px;margin-left:5px;vertical-align:-3px;color:var(--gold,#ffb91f)}',
     '.ahs-msg{padding:40px 16px;text-align:center;color:#8d97ad;font-size:14px}'
   ].join('');
 
@@ -194,8 +200,7 @@
 
   function tabs() {
     var me = getUser(), own = me && S.uid === me.uid, t = [['following', 'Following'], ['followers', 'Followers']];
-    if (own) t.push(['suggested', 'Suggested']);
-    if (!own && S.tab === 'suggested') S.tab = 'following';
+    t.push(['suggested', 'Suggested']);
     $('ahsTabs').innerHTML = t.map(function (x) {
       return '<button type="button" data-t="' + x[0] + '"' + (S.tab === x[0] ? ' class="on"' : '') + '>' + x[1] +
         (x[0] === 'suggested' ? '' : ' ' + fmt((S.lists[x[0]] || []).length)) + '</button>';
@@ -208,7 +213,7 @@
     else sub = p.user ? '@' + p.user : '';
     return '<div class="ahs-row" data-act="open" data-uid="' + esc(id) + '">' +
       '<div class="ahs-av">' + esc((p.name.charAt(0) || '?').toUpperCase()) + (p.photo ? '<img src="' + esc(p.photo) + '" alt="">' : '') + '</div>' +
-      '<div class="ahs-info"><b>' + esc(p.name) + '</b><span>' + esc(sub) + '</span></div>' +
+      '<div class="ahs-info"><b><span class="ahs-nm">' + esc(p.name) + '</span>' + (p.ver ? BADGE : '') + '</b><span>' + esc(sub) + '</span></div>' +
       (id === me.uid ? '' : '<button type="button" class="ahs-btn ' + b[1] + '" data-act="follow" data-uid="' + esc(id) + '">' + b[0] + '</button>') +
       (S.tab === 'suggested' ? '<button type="button" class="ahs-x" data-act="hide" data-uid="' + esc(id) + '" aria-label="Hide">&times;</button>' : '') +
       '</div>';
@@ -222,7 +227,7 @@
     profiles(ids.concat([S.uid])).then(function () {
       if (v !== S.v || tab !== S.tab) return;
       var me = S.pc[S.uid];
-      $('ahsTitle').textContent = me.user || me.name;
+      $('ahsTitle').innerHTML = esc(me.user || me.name) + (me.ver ? BADGE : '');
       L.innerHTML = ids.map(row).join('');
     });
   }
@@ -244,7 +249,7 @@
       if (v !== S.v) return null;
       S.lists = { followers: r[0], following: r[1] };
       S.mine = { fers: setOf(r[2]), fing: setOf(r[3]) };
-      return own ? suggest(me.uid) : [];
+      return suggest(me.uid, uid);
     }).then(function (sug) {
       if (sug === null || v !== S.v) return;
       S.lists.suggested = sug;
@@ -279,6 +284,10 @@
       a[0].setAttribute('data-ah-social', a[1]); a[0].setAttribute('data-ah-uid', S.member);
     });
     refresh();
+    var h = el.querySelector('h2'), id = S.member;
+    if (h) profiles([id]).then(function () {
+      if (S.pc[id] && S.pc[id].ver && id === S.member && !h.querySelector('.ahs-vb')) h.insertAdjacentHTML('beforeend', BADGE);
+    });
   }
 
   function install() {
