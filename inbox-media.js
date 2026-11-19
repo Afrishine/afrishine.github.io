@@ -143,7 +143,7 @@
       var ref = d.collection('conversations').doc(it.conv);
       var marker = it.up ? '[[' + (it.kind === 'image' ? 'img' : 'aud') + ':' + it.up.url + '|' + (it.up.key || '') + ']]' : '';
       var text = marker ? ((it.caption ? it.caption + '\n' : '') + marker) : it.caption;
-      var last = it.caption || (it.kind === 'image' ? '📷 Photo' : (it.kind === 'audio' ? '🎤 Voice message' : ''));
+      var last = (it.caption || (it.kind === 'image' ? '📷 Photo' : (it.kind === 'audio' ? '🎤 Voice message' : ''))).slice(0, 120);
       var ts = firebase.firestore.FieldValue.serverTimestamp();
       var step = it.saved ? Promise.resolve() : ref.collection('messages').add({
         senderUid: u.uid,
@@ -408,7 +408,7 @@
         if (last.empty) return conv.delete().then(function () { exitSel(); cur = ''; if (typeof window.loadInbox === 'function') window.loadInbox(); });
         var v = last.docs[0].data(), m = parseMedia(v);
         var txt = m ? (String(v.text || '').replace(new RegExp(MEDIA_RE.source, 'g'), '').trim() || (m.kind === 'image' ? '📷 Photo' : '🎤 Voice message')) : String(v.text || '');
-        return conv.update({ lastMessage: txt.slice(0, 200) }).catch(function () { }).then(function () { exitSel(); reopen(); });
+        return conv.update({ lastMessage: txt.slice(0, 120) }).catch(function () { }).then(function () { exitSel(); reopen(); });
       }).catch(function (e) { console.warn(e); alert('The messages could not be deleted. ' + reason(e)); })
         .then(function () { deleting = false; });
     }
