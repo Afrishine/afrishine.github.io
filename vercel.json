@@ -1,38 +1,17 @@
-
 {
-  "redirects": [
+  "rewrites": [
     {
       "source": "/marketplace",
-      "destination": "https://afrishine-marketplace.vercel.app",
-      "permanent": false
-    },
-    {
-      "source": "/marketplace/:path*",
-      "destination": "https://afrishine-marketplace.vercel.app/:path*",
-      "permanent": false
+      "destination": "/"
     },
     {
       "source": "/academy",
-      "destination": "https://afrishine-academy.vercel.app",
-      "permanent": false
-    },
-    {
-      "source": "/academy/:path*",
-      "destination": "https://afrishine-academy.vercel.app/:path*",
-      "permanent": false
+      "destination": "/"
     },
     {
       "source": "/talent",
-      "destination": "https://talent-hub.vercel.app",
-      "permanent": false
+      "destination": "/"
     },
-    {
-      "source": "/talent/:path*",
-      "destination": "https://talent-hub.vercel.app/:path*",
-      "permanent": false
-    }
-  ],
-  "rewrites": [
     {
       "source": "/__/auth/:path*",
       "destination": "https://afrishine-hub.firebaseapp.com/__/auth/:path*"
