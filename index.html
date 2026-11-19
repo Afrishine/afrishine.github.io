@@ -1134,7 +1134,18 @@ if (auth) {
             document.getElementById('emailAccountStatus').textContent = 'Signed in as ' + (user.displayName || user.email || 'Afrishine member');
             try {
                 if (db) {
-                    yield db.collection('publicProfiles').doc(user.uid).set({ username: (user.displayName || '').trim() || 'Afrishine Member', updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
+                    const pubSnap = yield db.collection('publicProfiles').doc(user.uid).get();
+                    const pubData = pubSnap.exists ? pubSnap.data() : null;
+                    if (!pubData || !pubData.username) {
+                        yield db.collection('publicProfiles').doc(user.uid).set({ username: (user.displayName || '').trim() || 'Afrishine Member', updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
+                    }
+                    else {
+                        /* The saved public profile wins: bring the sign-in profile (name + photo) in line with it. */
+                        const heal = {};
+                        if (pubData.username !== user.displayName) heal.displayName = pubData.username;
+                        if (pubData.photoURL && pubData.photoURL !== user.photoURL && pubData.photoURL.length <= 2000) heal.photoURL = pubData.photoURL;
+                        if (Object.keys(heal).length) { try { yield user.updateProfile(heal); } catch (_) { } }
+                    }
                     const snap = yield db.collection('users').doc(user.uid).get();
                     if (snap.exists && snap.data().username)
                         document.getElementById('loveUsername').value = snap.data().username;
@@ -1591,7 +1602,13 @@ function startConversation(uid, name) {
         return;
     } try {
         const id = conversationId(currentFirebaseUser.uid, uid), ref = db.collection('conversations').doc(id);
-        yield ref.set({ participants: [currentFirebaseUser.uid, uid], participantNames: { [currentFirebaseUser.uid]: currentFirebaseUser.displayName || 'Member', [uid]: name || 'Afrishine Member' }, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
+        /* Create the conversation only when it does not exist yet. Re-writing an existing one (merge) was refused by
+           the security rules whenever the other member had started the chat (participants in a different order). */
+        let exists = false;
+        try { exists = (yield ref.get()).exists; } catch (_) { exists = false; }
+        if (!exists) {
+            yield ref.set({ participants: [currentFirebaseUser.uid, uid], participantNames: { [currentFirebaseUser.uid]: currentFirebaseUser.displayName || 'Member', [uid]: name || 'Afrishine Member' }, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        }
         activeConversationId = id;
         activeConversationName = name || 'Afrishine Member';
         showPage('inbox');
@@ -2502,6 +2519,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                 const bio = $('ahProfileBio').value.trim(), location = $('ahProfileLocation').value.trim();
                 yield dbx.collection('publicProfiles').doc(u.uid).set({ username, bio, location, photoURL, updatedAt: serverTime() }, { merge: true });
                 yield dbx.collection('users').doc(u.uid).set({ username, updatedAt: serverTime() }, { merge: true });
+                try {
+                    const authPatch = { displayName: username };
+                    if (photoURL && photoURL !== u.photoURL && photoURL.length <= 2000) authPatch.photoURL = photoURL;
+                    yield u.updateProfile(authPatch);
+                } catch (_) { }
+                if (typeof window.afProfileSyncRefresh === 'function') window.afProfileSyncRefresh(u.uid);
                 $('ahProfileMsg').textContent = 'Profile saved successfully.';
                 yield loadMyProfile();
             }
@@ -4749,6 +4772,7 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
 <script src="/verfied-badge.js"></script>
 <script src="/inbox-ui.js"></script>
 <script src="/inbox-media.js"></script>
+<script src="/profile-sync.js"></script>
 
 </body>
 </html>
