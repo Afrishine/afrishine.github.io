@@ -1,5 +1,5 @@
-/* AFRISHINE HUB - Talent Hub + Community feed look (Instagram / Facebook style)
-   ONLY restyles #talentFeed and #communityFeed. Every button keeps its existing
+/* AFRISHINE HUB - Home posts + Talent Hub + Community feed look (Instagram / TikTok style)
+   ONLY restyles #homeFeed, #talentFeed and #communityFeed ("Videos For You" is not touched). Every button keeps its existing
    function (like, comment, repost, share, save, follow, delete, menu).
    No ?. / ?? / flex-gap, so it works on Android 8+.
    Load AFTER all other scripts: <script src="afrishine-feed.js"></script> */
@@ -7,7 +7,8 @@
   'use strict';
   if (w.AHFeed) return;
 
-  var FEEDS = ['#talentFeed', '#communityFeed'];
+  var FEEDS = ['#homeFeed', '#talentFeed', '#communityFeed'];
+  var SH = {};   // share counts per post id
   var PH = {};   // cached profile photos
 
   // ---------- icons (SVG used as masks, so they take the text colour) ----------
@@ -37,7 +38,7 @@
   C.push('.ah-feed-panel>h2,.ah-feed-panel>p,.ah-feed-panel>.actions{padding-left:4px;padding-right:4px}');
 
   // card
-  add('.post-card', 'position:relative;display:flex;flex-direction:column;padding:0;margin:0 0 16px;border:1px solid #232a38;border-radius:16px;background:#11151d;overflow:hidden');
+  add('.post-card', 'position:relative;display:flex;flex-direction:column;box-sizing:border-box;width:100vw;max-width:100vw;margin:0 0 14px calc(50% - 50vw);padding:0;border:0;border-top:1px solid #232a38;border-bottom:1px solid #232a38;border-radius:0;background:#11151d');
   add('.post-card > *', 'order:3;min-width:0');
   add('.post-card > .post-meta', 'order:1;display:flex;align-items:center;justify-content:flex-start;margin:0;padding:12px 104px 10px 12px;font-size:13px');
   add('.post-card > .creator-hint', 'order:2;margin:0;padding:0 12px 10px');
@@ -57,7 +58,17 @@
   add('.post-meta > span.ah-date', 'display:none');
 
   // media edge to edge
-  add('.post-media-video, .post-media-image', 'display:block;width:100%!important;max-height:80vh!important;border-radius:0!important;background:#000!important;object-fit:contain');
+  add('.post-media-video, .post-media-image', 'display:block;width:100%!important;height:auto;max-height:85vh!important;border-radius:0!important;background:#000!important;object-fit:cover!important');
+
+  // YouTube / TikTok link posts: full width, shorts + TikTok stay vertical (9:16)
+  add('.post-card .vlink', 'width:100%;max-width:100%;margin:0;border:0;border-radius:0');
+  add('.vlink-youtube[data-url*="/shorts/"] .vlink-media, .vlink-tiktok .vlink-media', 'aspect-ratio:9/16;max-height:82vh');
+  add('.vlink-media.is-error', 'aspect-ratio:auto;max-height:none');
+  add('.vlink-info', 'padding:10px 12px');
+  C.push('@supports not (aspect-ratio:1/1){' +
+    R('.vlink-media') + '{height:0;padding-top:56.25%}' +
+    R('.vlink-youtube[data-url*="/shorts/"] .vlink-media, .vlink-tiktok .vlink-media') + '{padding-top:150%}' +
+    R('.vlink-media.is-error') + '{height:auto;padding-top:0}}');
 
   // action bar = icons
   add('.post-actions > button', 'font-size:0;line-height:0;display:inline-flex;align-items:center;min-height:44px;margin:0 2px 0 0;padding:0 10px;background:none;border:0;border-radius:10px;box-shadow:none;color:#e9edf5;-webkit-tap-highlight-color:transparent');
@@ -75,7 +86,13 @@
   add('.post-actions > [data-save-post][data-ahs="1"]', 'color:#ffb91f');
   add('.post-actions > [data-save-post][data-ahs="1"]::before', mask(svg(SAVE, true)));
   add('.post-actions > [data-message-user]', 'display:none');
-  add('.post-actions > .ah-post-menu', 'margin-left:6px');
+  add('.post-actions > .ah-post-menu', 'position:absolute;top:6px;right:6px;margin:0;z-index:6');
+  add('.ah-post-menu > summary', 'list-style:none;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;font-size:24px;line-height:1;color:#fff;cursor:pointer');
+  add('.ah-post-menu > summary::-webkit-details-marker', 'display:none');
+  add('.ah-post-menu-items', 'position:absolute;top:44px;right:0;min-width:180px;padding:6px;background:#1d2434;border:1px solid #394355;border-radius:12px;box-shadow:0 14px 34px rgba(0,0,0,.6)');
+  add('.ah-post-menu-items button', 'display:block;width:100%;margin:0;padding:12px;background:none;border:0;border-radius:8px;text-align:left;font-size:15px;color:#fff');
+  add('.ah-post-menu-items button[data-ah-menu-action="delete"]', 'color:#ff6b6b');
+  add('.post-card.ah-hasmenu > .post-delete', 'display:none');
 
   // follow = small button in the header
   add('.post-actions > [data-follow-author]', 'position:absolute;top:14px;right:12px;min-height:0;margin:0;padding:7px 14px;font-size:13px;font-weight:700;line-height:1;color:#fff;border:1px solid rgba(255,255,255,.55);border-radius:9px');
@@ -151,11 +168,52 @@
       var c = card.querySelectorAll('[data-comments-list] .comment-line').length;
       cm.setAttribute('data-ahc', c > 0 ? (c >= 10 ? '10+' : String(c)) : '');
     }
+    var pid = card.getAttribute('data-post-id');
+    var rp = card.querySelector('[data-repost]');
+    if (rp) { var rn = RM[pid] || 0; rp.setAttribute('data-ahc', rn > 0 ? String(rn) : ''); }
+    var sh = card.querySelector('[data-share-post]');
+    if (sh && pid) {
+      var sc = SH[pid];
+      sh.setAttribute('data-ahc', sc > 0 ? String(sc) : '');
+      if (sc === undefined) loadShares(pid);
+    }
+    card.classList.toggle('ah-hasmenu', !!card.querySelector('.ah-post-menu'));
     var sv = card.querySelector('[data-save-post]');
     if (sv) sv.setAttribute('data-ahs', /saved|\u2713/i.test(sv.textContent || '') ? '1' : '0');
   }
 
+  // reposts are posts with originalPostId (already loaded by the app)
+  var RM = {};
+  function repostMap() {
+    var a = w.__afLatestPosts || [], m = {};
+    for (var i = 0; i < a.length; i++) if (a[i] && a[i].isRepost && a[i].originalPostId) m[a[i].originalPostId] = (m[a[i].originalPostId] || 0) + 1;
+    return m;
+  }
+  // share counts: posts/{id}/shares/{uid}  (needs the Firestore rule from the notes)
+  function paintShares(id) {
+    Array.prototype.forEach.call(d.querySelectorAll('.post-card[data-post-id="' + id + '"] [data-share-post]'), function (b) {
+      b.setAttribute('data-ahc', SH[id] > 0 ? String(SH[id]) : '');
+    });
+  }
+  function loadShares(id) {
+    var dbx = getDB();
+    if (!dbx || SH[id] !== undefined) return;
+    SH[id] = -1;
+    dbx.collection('posts').doc(id).collection('shares').get().then(function (s) { SH[id] = s.size; paintShares(id); }).catch(function () { SH[id] = -2; });
+  }
+  function trackShare(id) {
+    var dbx = getDB(), u = null;
+    try { u = (typeof currentFirebaseUser !== 'undefined' && currentFirebaseUser) || null; } catch (e) {}
+    if (!dbx || !u || !id) return;
+    var ref = dbx.collection('posts').doc(id).collection('shares').doc(u.uid);
+    ref.get().then(function (s) {
+      if (s.exists) return;
+      return ref.set({ uid: u.uid, createdAt: new Date() }).then(function () { SH[id] = (SH[id] > 0 ? SH[id] : 0) + 1; paintShares(id); });
+    }).catch(function () {});
+  }
+
   function scan(feed) {
+    RM = repostMap();
     Array.prototype.forEach.call(feed.querySelectorAll('.post-card'), function (card) { decorate(card); sync(card); });
   }
 
@@ -183,6 +241,8 @@
       if (card) card.classList.toggle('ah-cm-open');
       return;
     }
+    var shr = t.closest('[data-share-post]');
+    if (shr && inFeed(shr) && shr.getAttribute('data-kind') === 'posts') trackShare(shr.getAttribute('data-share-post'));
     var body = t.closest('.post-body');
     if (body && inFeed(body) && !t.closest('a,button')) body.classList.toggle('ah-open');
   }, true);
