@@ -1,5 +1,5 @@
 /* AFRISHINE HUB: Admin Dashboard add-on for the AST wallet (Admin Treasury edition).
-   Adds four tabs to the Admin Dashboard (AST Treasury, Top-ups, Prices, Gifts) and an AST Treasury card to Overview.
+   Adds five tabs to the Admin Dashboard (AST Treasury, Top-ups, Prices, Gifts, P2P disputes) and an AST Treasury card to Overview.
    Load it LAST in index.html:  <script src="/admin-wallet.js"></script>
    Every number and every rule is enforced by the Worker; this file only shows and edits them.
    Total Supply is fixed at 30,000,000 AST (1 AST = 100 units). Nothing here can create AST. */
@@ -9,7 +9,8 @@
   window.__afAdminWalletLoaded = true;
 
   var WORKER = 'https://afrishine-media.usherluckyelie.workers.dev';
-  var TABS = [['wtreasury', '🏦 AST Treasury'], ['wtopups', '💳 Top-ups'], ['wprices', '🏷️ Prices'], ['wgifts', '🎁 Gifts']];
+  var TABS = [['wtreasury', '🏦 AST Treasury'], ['wtopups', '💳 Top-ups'], ['wprices', '🏷️ Prices'], ['wgifts', '🎁 Gifts'], ['wp2p', '⚖️ P2P']];
+  var p2pStatus = 'open';
   var topStatus = 'pending';
   var current = '';                 /* the wallet tab being shown (stops late answers from painting the wrong tab) */
   var lastTreasury = null;          /* Treasury balance in units, only used for a friendly pre-check */
@@ -364,8 +365,61 @@
       .catch(function (e) { btn.disabled = false; say((e && e.message) || 'Could not save.'); });
   }
 
+  /* ---------- tab 5: P2P disputes (escrow) ---------- */
+  function p2pCard(o) {
+    var open = o.status === 'disputed';
+    return '<div class="adm-row" data-aw-p2p="' + esc(o.id) + '" style="display:block"><div><b>' + whole(o.units) + ' AST</b> · ' + esc(o.fiat) + ' ' + esc(o.currency) + ' <span class="adm-tag">' + esc(o.status) + '</span></div>' +
+      '<small>Buyer: <b>' + esc(o.buyerName) + '</b> · ' + esc(o.buyer) + '</small><small>Seller: <b>' + esc(o.sellerName) + '</b> · ' + esc(o.seller) + '</small>' +
+      '<small>' + esc(o.methodName) + ' · ' + esc(o.payName) + ' · ' + esc(o.payAccount) + '</small><small>Order: ' + esc(o.id) + ' · ' + esc(when(o.createdAt)) + '</small>' +
+      '<small style="color:#ffb91f">Dispute by the ' + esc(o.disputeBy) + ': ' + esc(o.disputeReason) + '</small>' +
+      (o.resolution ? '<small>Decision: ' + esc(o.resolution) + '</small>' : '') +
+      (o.proofUrl ? '<a href="' + esc(o.proofUrl) + '" target="_blank" rel="noopener"><img src="' + esc(o.proofUrl) + '" alt="Payment screenshot" loading="lazy" style="width:100%;max-height:240px;object-fit:contain;border-radius:10px;margin:8px 0;background:#05070c"></a>' : '') +
+      '<div data-aw-chat></div><div class="acts" style="justify-content:flex-start"><button type="button" class="adm-btn" data-aw="p2pchat">💬 Chat & evidence</button></div>' +
+      (open ? '<input class="field" data-aw-note type="text" maxlength="300" placeholder="Note for both members (your decision)"><div class="acts" style="justify-content:flex-start"><button type="button" class="adm-btn gold" data-aw="p2prelease">🔓 Release to buyer</button><button type="button" class="adm-btn red" data-aw="p2prefund">↩ Return to seller</button></div>' : '') + '</div>';
+  }
+  function renderP2P() {
+    current = 'wp2p';
+    busy();
+    api('GET', '/wallet/admin/p2p/disputes?status=' + p2pStatus).then(function (j) {
+      if (current !== 'wp2p') return;
+      var tabs = [['open', 'Open (' + j.open + ')'], ['resolved', 'Resolved']].map(function (x) {
+        return '<button type="button" class="adm-btn ' + (p2pStatus === x[0] ? 'gold' : '') + '" data-aw="p2pstatus" data-v="' + x[0] + '">' + x[1] + '</button>';
+      }).join(' ');
+      var html = '<p class="adm-empty" style="padding:0 0 10px">The AST of every P2P order is locked in escrow. For a dispute, read the chat and the screenshots, then decide who receives the AST. A decision cannot be undone.</p><div class="adm-tabs" style="margin-top:0">' + tabs + '</div>';
+      body().innerHTML = html + (j.items.length ? j.items.map(p2pCard).join('') : '<p class="adm-empty">No ' + esc(p2pStatus) + ' disputes.</p>');
+    }).catch(function (e) { if (current === 'wp2p') fail(e); });
+  }
+  function p2pChat(btn) {
+    var card = btn.closest('[data-aw-p2p]'); if (!card) return;
+    var id = card.getAttribute('data-aw-p2p'), box = card.querySelector('[data-aw-chat]');
+    box.innerHTML = '<small>Loading chat…</small>';
+    api('GET', '/wallet/p2p/order?id=' + encodeURIComponent(id)).then(function (j) {
+      box.innerHTML = '<div style="max-height:240px;overflow-y:auto;margin:6px 0">' + (j.messages.length ? j.messages.map(function (m) {
+        var who = m.from === 'system' ? 'System' : (m.from === 'buyer' ? 'Buyer' : (m.from === 'seller' ? 'Seller' : 'Support'));
+        return '<div style="margin:5px 0"><small><b>' + who + '</b> · ' + esc(when(m.at)) + '</small><br>' + (m.kind === 'image' ? '<a href="' + esc(m.body) + '" target="_blank" rel="noopener"><img src="' + esc(m.body) + '" alt="Photo" loading="lazy" style="max-width:100%;max-height:180px;border-radius:8px"></a>' : esc(m.body)) + '</div>';
+      }).join('') : '<small>No messages.</small>') + '</div>' +
+        (p2pStatus === 'open' ? '<div style="display:flex;gap:8px"><input class="field" data-aw-say type="text" maxlength="500" placeholder="Message both members (as Support)" style="flex:1"><button type="button" class="adm-btn" data-aw="p2psay">Send</button></div>' : '');
+    }).catch(function (e) { box.innerHTML = '<small>' + esc((e && e.message) || 'Could not load the chat.') + '</small>'; });
+  }
+  function p2pSay(btn) {
+    var card = btn.closest('[data-aw-p2p]'); if (!card) return;
+    var inp = card.querySelector('[data-aw-say]'), t = inp ? inp.value.trim() : ''; if (!t) return;
+    btn.disabled = true;
+    api('POST', '/wallet/p2p/message', { id: card.getAttribute('data-aw-p2p'), text: t }).then(function () { var c = card.querySelector('[data-aw="p2pchat"]'); if (c) p2pChat(c); })
+      .catch(function (e) { btn.disabled = false; say((e && e.message) || 'Could not send.'); });
+  }
+  function p2pDecide(btn, decision) {
+    var card = btn.closest('[data-aw-p2p]'); if (!card) return;
+    var n = card.querySelector('[data-aw-note]'), note = n ? n.value.trim() : '';
+    if (!confirm(decision === 'release' ? 'Release the escrowed AST to the BUYER? This cannot be undone.' : 'Return the escrowed AST to the SELLER? This cannot be undone.')) return;
+    Array.prototype.forEach.call(card.querySelectorAll('button'), function (b) { b.disabled = true; });
+    api('POST', '/wallet/admin/p2p/resolve', { id: card.getAttribute('data-aw-p2p'), decision: decision, note: note }).then(function () {
+      say(decision === 'release' ? 'AST released to the buyer.' : 'AST returned to the seller.'); renderP2P();
+    }).catch(function (e) { say((e && e.message) || 'Could not save.'); renderP2P(); });
+  }
+
   /* ---------- wiring ---------- */
-  var RENDER = { wtreasury: renderTreasury, wtopups: renderTopups, wprices: renderPrices, wgifts: renderGifts };
+  var RENDER = { wtreasury: renderTreasury, wtopups: renderTopups, wprices: renderPrices, wgifts: renderGifts, wp2p: renderP2P };
   function mark(tab) {
     Array.prototype.forEach.call(document.querySelectorAll('#admTabs [data-adm-tab]'), function (b) { b.classList.toggle('on', b.getAttribute('data-adm-tab') === tab); });
   }
@@ -400,6 +454,11 @@
     else if (a === 'tsend') sendAst(b);
     else if (a === 'tfilter') loadHistory(true);
     else if (a === 'tmore') loadHistory(false);
+    else if (a === 'p2pstatus') { p2pStatus = b.getAttribute('data-v'); renderP2P(); }
+    else if (a === 'p2pchat') p2pChat(b);
+    else if (a === 'p2psay') p2pSay(b);
+    else if (a === 'p2prelease') p2pDecide(b, 'release');
+    else if (a === 'p2prefund') p2pDecide(b, 'refund');
   });
   /* typing a different member invalidates the member that was found */
   document.addEventListener('input', function (e) {
@@ -434,7 +493,8 @@
       var s = o.supply;
       holder.innerHTML = supplyHtml({ total: s.total, treasury: s.treasury, circulation: s.circulation, ok: s.ok },
         '<div class="adm-grid"><div class="adm-stat"><i>👥</i><b>' + s.holders + '</b><small>Members Holding AST</small></div>' +
-        '<div class="adm-stat"><i>⏳</i><b>' + o.topups.pending + '</b><small>Pending Top-ups</small></div></div>');
+        '<div class="adm-stat"><i>⏳</i><b>' + o.topups.pending + '</b><small>Pending Top-ups</small></div></div>' +
+        '<div class="adm-grid"><div class="adm-stat"><i>⚖️</i><b>' + (o.p2p ? o.p2p.disputes : 0) + '</b><small>Open P2P disputes</small></div><div class="adm-stat"><i>🤝</i><b>' + ast(o.p2p ? o.p2p.escrow : 0) + '</b><small>AST in P2P escrow</small></div></div>');
     }).catch(function () { holder.innerHTML = ''; }).then(function () { injecting = false; });
   }
   function start() {
