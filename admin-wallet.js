@@ -1,12 +1,27 @@
-/* AFRISHINE HUB: Admin Dashboard add-on for the AST wallet.
-   Adds three tabs to the Admin Dashboard (Top-ups, Prices, Gifts) and an AST Total Supply card to Overview.
+/* AFRISHINE HUB: Admin Dashboard add-on for the AST wallet (Admin Treasury edition).
+   Adds four tabs to the Admin Dashboard (AST Treasury, Top-ups, Prices, Gifts) and an AST Treasury card to Overview.
    Load it LAST in index.html:  <script src="/admin-wallet.js"></script>
-   Every number and every rule is enforced by the Worker; this file only shows and edits them. */
+   Every number and every rule is enforced by the Worker; this file only shows and edits them.
+   Total Supply is fixed at 30,000,000 AST (1 AST = 100 units). Nothing here can create AST. */
 (function () {
   'use strict';
+  if (window.__afAdminWalletLoaded) return;          /* never register the listeners twice */
+  window.__afAdminWalletLoaded = true;
+
   var WORKER = 'https://afrishine-media.usherluckyelie.workers.dev';
-  var TABS = [['wtopups', '💳 Top-ups'], ['wprices', '🏷️ Prices'], ['wgifts', '🎁 Gifts']];
+  var TABS = [['wtreasury', '🏦 AST Treasury'], ['wtopups', '💳 Top-ups'], ['wprices', '🏷️ Prices'], ['wgifts', '🎁 Gifts']];
   var topStatus = 'pending';
+  var current = '';                 /* the wallet tab being shown (stops late answers from painting the wrong tab) */
+  var lastTreasury = null;          /* Treasury balance in units, only used for a friendly pre-check */
+  var tre = { member: null, idem: '', sig: '', before: 0, seq: 0, sending: false };
+  var TYPE_LABEL = {
+    treasury_allocation: 'Admin allocation',
+    treasury_topup: 'Top-up approved',
+    treasury_bonus: 'Rank bonus',
+    service_income: 'Service payment returned',
+    treasury_refund: 'Refund',
+    treasury_genesis: 'Initial supply'
+  };
 
   function $(id) { return document.getElementById(id); }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -19,6 +34,26 @@
   }
   function whole(units) { return ast(units).replace(/\.00$/, ''); }
   function when(ms) { return ms ? new Date(ms).toLocaleString() : ''; }
+  /* "25" or "25.5" -> 2500 / 2550 units; 0 when the text is not a valid positive amount (max 2 decimals) */
+  function parseUnits(text) {
+    var s = String(text == null ? '' : text).trim();
+    if (!/^\d{1,9}(\.\d{1,2})?$/.test(s)) return 0;
+    var p = s.split('.');
+    var u = Number(p[0]) * 100 + (p[1] ? Number((p[1] + '0').slice(0, 2)) : 0);
+    return isFinite(u) && u > 0 ? u : 0;
+  }
+  function newIdem() {
+    var a = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', s = '', i, r;
+    try {
+      if (window.crypto && window.crypto.getRandomValues) {
+        r = new Uint8Array(24); window.crypto.getRandomValues(r);
+        for (i = 0; i < 24; i++) s += a.charAt(r[i] % 62);
+        return s;
+      }
+    } catch (e) { }
+    for (i = 0; i < 24; i++) s += a.charAt(Math.floor(Math.random() * 62));
+    return s;
+  }
 
   function appCheck() {
     try {
@@ -41,32 +76,174 @@
         if (!res.ok || j.success === false) throw { message: j.message || j.error || 'Something went wrong. Please try again.', code: j.code };
         return j;
       });
+    }, function (e) {
+      if (e && e.message && !e.code && /fetch|network/i.test(String(e.message))) throw { message: 'No connection. Please check your internet and try again.' };
+      throw e;
     });
   }
   function body() { return $('admBody'); }
-  function busy(t) { body().innerHTML = '<p class="adm-empty">' + esc(t || 'Loading…') + '</p>'; }
-  function fail(e) { body().innerHTML = '<p class="adm-empty">' + esc((e && e.message) || 'Could not load. Please try again.') + '</p>'; }
+  function busy(t) { var b = body(); if (b) b.innerHTML = '<p class="adm-empty">' + esc(t || 'Loading…') + '</p>'; }
+  function fail(e) { var b = body(); if (b) b.innerHTML = '<p class="adm-empty">' + esc((e && e.message) || 'Could not load. Please try again.') + '</p>'; }
 
-  /* ---------- supply card (used on Overview and on the Top-ups tab) ---------- */
-  function supplyHtml(s) {
-    var pct = s.total ? Math.min(100, Math.max(0, (s.circulation / s.total) * 100)) : 0;
-    return '<div class="adm-stat" style="margin-bottom:10px"><small>🪙 AST Total Supply (fixed)</small><b>' + whole(s.total) + ' AST</b>' +
+  /* ---------- supply / treasury card (Overview + Top-ups tab) ---------- */
+  function pctOf(s) { return s.total ? Math.min(100, Math.max(0, (s.circulation / s.total) * 100)) : 0; }
+  function supplyHtml(s, extra) {
+    var pct = pctOf(s);
+    return '<div class="adm-stat" style="margin-bottom:10px"><small>🪙 Fixed Total Supply</small><b>' + whole(s.total) + ' AST</b>' +
       '<div class="adm-bar" style="margin-top:8px"><span style="width:' + pct.toFixed(2) + '%"></span></div>' +
-      '<small style="margin-top:8px">' + pct.toFixed(3) + '% issued to members</small></div>' +
-      '<div class="adm-grid"><div class="adm-stat"><i>👛</i><b>' + ast(s.circulation) + '</b><small>AST in members’ wallets</small></div>' +
-      '<div class="adm-stat"><i>🏦</i><b>' + ast(s.remaining) + '</b><small>AST still available</small></div></div>';
+      '<small style="margin-top:8px">' + pct.toFixed(3) + '% distributed to members</small></div>' +
+      '<div class="adm-grid"><div class="adm-stat"><i>🏦</i><b>' + ast(s.treasury) + '</b><small>Admin Treasury Balance</small></div>' +
+      '<div class="adm-stat"><i>👛</i><b>' + ast(s.circulation) + '</b><small>Circulation (members’ wallets)</small></div></div>' +
+      (extra || '') +
+      (s.ok === false ? '<p class="adm-empty" style="color:#ff6b6b">⚠️ The ledger does not add up to the fixed Total Supply. Please check the Worker.</p>' : '');
+  }
+
+  /* ---------- tab 0: AST Treasury ---------- */
+  function statsHtml(o) {
+    var s = o.supply, pct = pctOf({ total: s.total, circulation: s.circulation });
+    return '<div class="adm-stat" style="margin-bottom:10px"><small>🪙 Total Supply (fixed)</small><b>' + whole(s.total) + ' AST</b>' +
+      '<div class="adm-bar" style="margin-top:8px"><span style="width:' + pct.toFixed(2) + '%"></span></div>' +
+      '<small style="margin-top:8px">' + pct.toFixed(3) + '% of Total Supply is with members</small></div>' +
+      '<div class="adm-grid">' +
+      '<div class="adm-stat"><i>🏦</i><b>' + ast(s.treasury) + '</b><small>Admin Treasury Balance</small></div>' +
+      '<div class="adm-stat"><i>👛</i><b>' + ast(s.circulation) + '</b><small>Circulation</small></div>' +
+      '<div class="adm-stat"><i>👥</i><b>' + s.holders + '</b><small>Members Holding AST</small></div>' +
+      '<div class="adm-stat"><i>📤</i><b>' + ast(s.distributed) + '</b><small>Total Distributed</small></div>' +
+      '<div class="adm-stat"><i>🧾</i><b>' + s.allocations + '</b><small>Total Allocations</small></div>' +
+      '<div class="adm-stat"><i>⏳</i><b>' + o.topups.pending + '</b><small>Top-ups waiting</small></div></div>' +
+      (s.ok === false ? '<p class="adm-empty" style="color:#ff6b6b">⚠️ The ledger does not add up to 30,000,000 AST. Please check the Worker.</p>' : '');
+  }
+  function loadStats() {
+    var box = $('awTStats'); if (box) box.innerHTML = '<p class="adm-empty">Loading…</p>';
+    return api('GET', '/wallet/admin/overview').then(function (o) {
+      lastTreasury = o.supply.treasury;
+      var b = $('awTStats'); if (b && current === 'wtreasury') b.innerHTML = statsHtml(o);
+    }).catch(function (e) {
+      var b = $('awTStats'); if (b && current === 'wtreasury') b.innerHTML = '<p class="adm-empty">' + esc((e && e.message) || 'Could not load the Treasury numbers.') + '</p>';
+    });
+  }
+  function renderTreasury() {
+    current = 'wtreasury'; tre.member = null; tre.idem = ''; tre.sig = ''; tre.before = 0; tre.sending = false;
+    var opts = [['', 'All types'], ['allocation', 'Admin allocations'], ['topup', 'Top-ups approved'], ['bonus', 'Rank bonuses'], ['service', 'Service payments'], ['refund', 'Refunds'], ['genesis', 'Initial supply']]
+      .map(function (o) { return '<option value="' + o[0] + '">' + o[1] + '</option>'; }).join('');
+    body().innerHTML =
+      '<div id="awTStats"><p class="adm-empty">Loading…</p></div>' +
+      '<div class="adm-form"><b>Send AST to a member</b>' +
+      '<small class="adm-empty" style="padding:0">AST are taken from the Admin Treasury. No new AST is ever created.</small>' +
+      '<label class="creator-hint">Member User ID or email</label>' +
+      '<div style="display:flex;gap:8px"><input class="field" id="awQ" data-aw-q type="text" maxlength="254" autocomplete="off" placeholder="User ID or email" style="flex:1">' +
+      '<button type="button" class="adm-btn" data-aw="tfind">Find</button></div>' +
+      '<div id="awMember"></div>' +
+      '<label class="creator-hint">Amount (AST)</label><input class="field" id="awAmt" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 25 or 25.50">' +
+      '<label class="creator-hint">Reason (optional)</label><input class="field" id="awReason" type="text" maxlength="200" placeholder="Why are you sending this AST?">' +
+      '<button type="button" class="adm-btn gold" id="awSend" data-aw="tsend" style="padding:12px" disabled>Send AST</button>' +
+      '<p class="adm-empty" id="awMsg" style="padding:6px 0 0"></p></div>' +
+      '<h3 class="adm-h">Treasury Transactions History</h3>' +
+      '<div style="display:flex;gap:8px;margin-bottom:8px"><select class="field" id="awTType" data-aw-filter style="flex:1">' + opts + '</select></div>' +
+      '<div style="display:flex;gap:8px"><input class="field" id="awTQ" type="text" maxlength="100" placeholder="Search: User ID, name, email, reason or transaction ID" style="flex:1">' +
+      '<button type="button" class="adm-btn" data-aw="tfilter">Search</button></div>' +
+      '<div id="awTHist"></div><div id="awTMore" style="margin-top:8px"></div>';
+    loadStats();
+    loadHistory(true);
+  }
+  function memberHtml(m) {
+    var img = m.photoURL && /^https:\/\//.test(m.photoURL)
+      ? '<img src="' + esc(m.photoURL) + '" alt="" loading="lazy" style="width:44px;height:44px;border-radius:50%;object-fit:cover;background:#05070c">'
+      : '<span style="width:44px;height:44px;border-radius:50%;background:#1a2030;display:inline-block"></span>';
+    return '<div class="adm-row" style="display:flex;gap:10px;align-items:center">' + img +
+      '<div class="grow"><b>' + esc(m.username || 'Member') + '</b>' + (m.verified ? ' <span class="adm-tag">Verified</span>' : '') +
+      '<small>Wallet: ' + ast(m.balance || 0) + ' AST</small><small style="word-break:break-all">ID: ' + esc(m.uid) + '</small></div></div>';
+  }
+  function setMsg(text, bad) { var m = $('awMsg'); if (m) { m.textContent = text || ''; m.style.color = bad ? '#ff6b6b' : ''; } }
+  function findMember(btn) {
+    var q = ($('awQ').value || '').trim(), box = $('awMember'), send = $('awSend');
+    if (!q) { say('Enter the member’s User ID or email.'); return; }
+    tre.member = null; tre.idem = ''; tre.sig = ''; if (send) send.disabled = true; setMsg('');
+    box.innerHTML = '<p class="adm-empty">Searching…</p>';
+    btn.disabled = true;
+    api('GET', '/wallet/admin/member?q=' + encodeURIComponent(q)).then(function (r) {
+      if (current !== 'wtreasury' || ($('awQ').value || '').trim() !== q) return;
+      tre.member = r.member; box.innerHTML = memberHtml(r.member); if (send) send.disabled = false;
+    }).catch(function (e) {
+      if (current !== 'wtreasury') return;
+      box.innerHTML = '<p class="adm-empty" style="color:#ff6b6b">' + esc((e && e.message) || 'Member not found.') + '</p>';
+    }).then(function () { btn.disabled = false; });
+  }
+  function sendAst(btn) {
+    if (tre.sending) return;
+    var m = tre.member;
+    if (!m) { say('Find the member first.'); return; }
+    var amountText = ($('awAmt').value || '').trim(), units = parseUnits(amountText);
+    var reason = ($('awReason').value || '').replace(/\s+/g, ' ').trim().slice(0, 200);
+    if (!units) { say('Enter a positive amount with at most 2 decimals, for example 25 or 25.50.'); return; }
+    if (lastTreasury !== null && units > lastTreasury) { say('The Admin Treasury has only ' + ast(lastTreasury) + ' AST. Nothing was sent.'); return; }
+    if (!confirm('Send ' + ast(units) + ' AST from the Admin Treasury to ' + (m.username || 'this member') + '?')) return;
+    /* the same idempotency key is reused for a retry of the same request, so a lost answer can never pay twice */
+    var sig = m.uid + '|' + units + '|' + reason;
+    if (sig !== tre.sig || !tre.idem) { tre.sig = sig; tre.idem = newIdem(); }
+    tre.sending = true; btn.disabled = true; setMsg('Sending…');
+    api('POST', '/wallet/admin/allocate', { toUid: m.uid, amount: amountText, reason: reason, idem: tre.idem }).then(function (r) {
+      var who = m.username || 'the member';
+      tre.member = null; tre.idem = ''; tre.sig = '';
+      if (current === 'wtreasury') {
+        $('awQ').value = ''; $('awAmt').value = ''; $('awReason').value = ''; $('awMember').innerHTML = '';
+        setMsg(r.duplicate ? 'This request was already completed. Nothing was sent twice.' : '✔ ' + ast(units) + ' AST sent to ' + who + '.');
+        loadStats(); loadHistory(true);
+      }
+      say(r.duplicate ? 'Already completed. Nothing was sent twice.' : ast(units) + ' AST sent to ' + who + '.');
+    }).catch(function (e) {
+      if (current === 'wtreasury') setMsg((e && e.message) || 'Could not send. Please try again.', true);
+      say((e && e.message) || 'Could not send. Please try again.');
+    }).then(function () {
+      tre.sending = false;
+      var s = $('awSend'); if (s) s.disabled = !tre.member;
+    });
+  }
+  function historyRow(x) {
+    var out = x.units < 0, label = TYPE_LABEL[x.type] || x.type;
+    var who = x.uid ? '<small>Member: <b>' + esc(x.name || 'Member') + '</b> · ' + esc(x.uid) + '</small>' : '';
+    var by = x.byName ? '<small>Admin: ' + esc(x.byName) + '</small>' : '';
+    var why = x.reason ? '<small>Reason: ' + esc(x.reason) + '</small>' : '';
+    return '<div class="adm-row" style="display:block"><div><b>' + (out ? '−' : '+') + ast(Math.abs(x.units)) + ' AST</b> <span class="adm-tag">' + esc(label) + '</span></div>' +
+      '<small>' + esc(when(x.at)) + '</small>' + who + by + why + '<small style="word-break:break-all">ID: ' + esc(x.id) + '</small></div>';
+  }
+  function loadHistory(reset) {
+    var list = $('awTHist'), more = $('awTMore'); if (!list) return;
+    if (reset) { tre.before = 0; list.innerHTML = '<p class="adm-empty">Loading…</p>'; }
+    if (more) more.innerHTML = '';
+    var seq = ++tre.seq;
+    var type = $('awTType') ? $('awTType').value : '', q = $('awTQ') ? $('awTQ').value.trim() : '';
+    var path = '/wallet/admin/treasury/history?limit=30' + (type ? '&type=' + encodeURIComponent(type) : '') + (q ? '&q=' + encodeURIComponent(q) : '') + (!reset && tre.before ? '&before=' + tre.before : '');
+    api('GET', path).then(function (r) {
+      if (seq !== tre.seq || current !== 'wtreasury') return;
+      var items = r.items || [], l = $('awTHist'), mo = $('awTMore'); if (!l) return;
+      if (reset) l.innerHTML = '';
+      if (!items.length && reset) { l.innerHTML = '<p class="adm-empty">No Treasury transactions found.</p>'; return; }
+      l.insertAdjacentHTML('beforeend', items.map(historyRow).join(''));
+      if (items.length) tre.before = items[items.length - 1].at;
+      if (r.more && mo) mo.innerHTML = '<button type="button" class="adm-btn" data-aw="tmore" style="width:100%">Load more</button>';
+    }).catch(function (e) {
+      if (seq !== tre.seq || current !== 'wtreasury') return;
+      var l = $('awTHist');
+      if (l && reset) l.innerHTML = '<p class="adm-empty">' + esc((e && e.message) || 'Could not load the history.') + '</p>';
+      else say((e && e.message) || 'Could not load more.');
+      var mo = $('awTMore'); if (mo && !reset) mo.innerHTML = '<button type="button" class="adm-btn" data-aw="tmore" style="width:100%">Try again</button>';
+    });
   }
 
   /* ---------- tab 1: top-ups ---------- */
   function renderTopups() {
+    current = 'wtopups';
     busy();
     Promise.all([api('GET', '/wallet/admin/topups?status=' + topStatus), api('GET', '/wallet/config').catch(function () { return null; })]).then(function (r) {
+      if (current !== 'wtopups') return;
       var j = r[0], cfg = r[1] && r[1].config, rows = j.items || [];
+      lastTreasury = j.treasury;
       var tabs = [['pending', 'Pending (' + j.pending + ')'], ['approved', 'Approved'], ['rejected', 'Rejected']].map(function (x) {
         return '<button type="button" class="adm-btn ' + (topStatus === x[0] ? 'gold' : '') + '" data-aw="status" data-v="' + x[0] + '">' + x[1] + '</button>';
       }).join(' ');
-      var html = supplyHtml({ total: j.totalSupply, circulation: j.circulation, remaining: j.remaining }) +
-        '<p class="adm-empty" style="padding:0 0 10px">AST is added to a member only after you press <b>Approve</b>. Nothing is credited automatically.</p>' +
+      var html = supplyHtml({ total: j.totalSupply, treasury: j.treasury, circulation: j.circulation, ok: j.supplyOk }) +
+        '<p class="adm-empty" style="padding:0 0 10px">When you press <b>Approve</b>, the AST is moved from the Admin Treasury to the member. Nothing is credited automatically, and a request can be approved only once.</p>' +
         '<div class="adm-tabs" style="margin-top:0">' + tabs + '</div>';
       if (!rows.length) { body().innerHTML = html + '<p class="adm-empty">No ' + esc(topStatus) + ' top-up requests.</p>'; return; }
       body().innerHTML = html + rows.map(function (q) {
@@ -82,41 +259,44 @@
           '<small style="word-break:break-all">Hash: ' + esc(q.tx_hash) + '</small><small>' + esc(when(q.created_at)) + '</small>' +
           '<a href="' + esc(q.screenshot_url) + '" target="_blank" rel="noopener"><img src="' + esc(q.screenshot_url) + '" alt="Payment screenshot" loading="lazy" style="width:100%;max-height:260px;object-fit:contain;border-radius:10px;margin:8px 0;background:#05070c"></a>' + actions + '</div>';
       }).join('');
-    }).catch(fail);
+    }).catch(function (e) { if (current === 'wtopups') fail(e); });
   }
   function decide(btn, decision) {
     var card = btn.closest('[data-aw-req]'); if (!card) return;
     var id = card.getAttribute('data-aw-req'), a = card.querySelector('[data-aw-ast]'), n = card.querySelector('[data-aw-note]');
-    var amount = a ? a.value.trim() : '';
+    var amount = a ? a.value.trim() : '', units = parseUnits(amount);
     if (decision === 'approve') {
-      if (!/^\d{1,9}(\.\d{1,2})?$/.test(amount) || !(Number(amount) > 0)) { say('Enter the AST amount to add, for example 25 or 25.50.'); return; }
-      if (!confirm('Approve this top-up and add ' + amount + ' AST to this member’s wallet?')) return;
+      if (!units) { say('Enter the AST amount to add, for example 25 or 25.50.'); return; }
+      if (lastTreasury !== null && units > lastTreasury) { say('The Admin Treasury has only ' + ast(lastTreasury) + ' AST, not enough for ' + ast(units) + ' AST. Nothing was changed.'); return; }
+      if (!confirm('Approve this top-up and move ' + ast(units) + ' AST from the Admin Treasury to this member’s wallet?')) return;
     } else if (!confirm('Reject this top-up request?')) return;
     Array.prototype.forEach.call(card.querySelectorAll('button'), function (b) { b.disabled = true; });
     api('POST', '/wallet/admin/decide', { id: id, decision: decision, astAmount: amount, note: n ? n.value.trim() : '' }).then(function () {
-      say(decision === 'approve' ? 'Approved. AST added to the member.' : 'Request rejected.'); renderTopups();
+      say(decision === 'approve' ? 'Approved. AST moved from the Treasury to the member.' : 'Request rejected.'); renderTopups();
     }).catch(function (e) { say((e && e.message) || 'Could not save.'); renderTopups(); });
   }
 
   /* ---------- tab 2: service prices ---------- */
   function pkgRows(kind, list) {
-    return list.map(function (p, i) {
+    return list.map(function (p) {
       return '<div class="adm-row" style="display:block" data-aw-pkg="' + kind + '" data-id="' + esc(p.id) + '"><b>' + esc(p.id) + '</b>' +
         '<input class="field" data-f="name" maxlength="30" value="' + esc(p.name) + '" placeholder="Name">' +
         '<div style="display:flex;gap:8px"><input class="field" data-f="ast" type="text" inputmode="decimal" value="' + esc(p.ast) + '" placeholder="AST"><input class="field" data-f="days" type="text" inputmode="numeric" value="' + esc(p.days) + '" placeholder="Days"></div></div>';
     }).join('');
   }
   function renderPrices() {
+    current = 'wprices';
     busy();
     api('GET', '/wallet/config').then(function (j) {
+      if (current !== 'wprices') return;
       var p = j.config.prices;
-      body().innerHTML = '<p class="adm-empty" style="padding:0 0 10px">Prices are in AST (1 AST = 1 USDT). Changes apply to new purchases right away.</p>' +
+      body().innerHTML = '<p class="adm-empty" style="padding:0 0 10px">Prices are in AST (1 AST = 1 USDT). AST paid for a service returns to the Admin Treasury. Changes apply to new purchases right away.</p>' +
         '<div class="adm-form"><b>✔️ Verification Badge</b><input class="field" id="awVer" type="text" inputmode="decimal" value="' + esc(p.verification) + '" placeholder="Price in AST"></div>' +
         '<div class="adm-form"><b>👑 Premium (subscription)</b><div style="display:flex;gap:8px"><input class="field" id="awPremAst" type="text" inputmode="decimal" value="' + esc(p.premium.ast) + '" placeholder="AST"><input class="field" id="awPremDays" type="text" inputmode="numeric" value="' + esc(p.premium.days) + '" placeholder="Days"></div></div>' +
         '<div class="adm-form"><b>📣 Ads packages</b><div id="awAds">' + pkgRows('ads', p.ads) + '</div></div>' +
         '<div class="adm-form"><b>🚀 Boost packages</b><div id="awBoost">' + pkgRows('boost', p.boost) + '</div></div>' +
         '<button type="button" class="adm-btn gold" style="padding:13px;width:100%" data-aw="saveprices">Save prices</button><p class="adm-empty" id="awPriceMsg"></p>';
-    }).catch(fail);
+    }).catch(function (e) { if (current === 'wprices') fail(e); });
   }
   function readPkgs(boxId) {
     var out = [];
@@ -140,8 +320,10 @@
 
   /* ---------- tab 3: gift management ---------- */
   function renderGifts() {
+    current = 'wgifts';
     busy();
     Promise.all([api('GET', '/wallet/admin/overview'), api('GET', '/wallet/config')]).then(function (r) {
+      if (current !== 'wgifts') return;
       var o = r[0], g = r[1].config.gift, ranks = r[1].config.ranks, G = o.gifts;
       var stats = '<div class="adm-grid"><div class="adm-stat"><i>🎁</i><b>' + G.count + '</b><small>Gifts sent (all time)</small></div><div class="adm-stat"><i>🪙</i><b>' + ast(G.units) + '</b><small>AST gifted (all time)</small></div>' +
         '<div class="adm-stat"><i>🕒</i><b>' + G.last24hCount + '</b><small>Gifts in the last 24 hours</small></div><div class="adm-stat"><i>📈</i><b>' + ast(G.last24hUnits) + '</b><small>AST gifted in 24 hours</small></div></div>';
@@ -150,7 +332,7 @@
         '<label style="display:flex;gap:9px;align-items:center;font-size:14px"><input type="checkbox" id="awGVer"' + (g.verifiedOnly ? ' checked' : '') + '> Only verified members can receive gifts</label>' +
         '<small class="adm-empty" style="padding:0">Each member can send at most ' + G.hourlyMax + ' gifts per hour (set in the Worker).</small>' +
         '<button type="button" class="adm-btn gold" data-aw="savegift" style="padding:12px">Save limits</button></div>';
-      var rankForm = '<div class="adm-form"><b>Gifter ranks (points)</b><small class="adm-empty" style="padding:0">A member’s rank rises with the total AST they have gifted. The first rank must start at 0. A bonus is new AST given once when a member reaches the rank (it never goes past the Total Supply).</small><div id="awRanks">' +
+      var rankForm = '<div class="adm-form"><b>Gifter ranks (points)</b><small class="adm-empty" style="padding:0">A member’s rank rises with the total AST they have gifted. The first rank must start at 0. A bonus is paid once, from the Admin Treasury, when a member reaches the rank. If the Treasury cannot cover it, the bonus is not paid. No new AST is ever created.</small><div id="awRanks">' +
         ranks.map(function (x) {
           return '<div class="adm-row" style="display:block" data-aw-rank><input class="field" data-f="name" maxlength="20" value="' + esc(x.name) + '" placeholder="Rank name"><div style="display:flex;gap:8px"><input class="field" data-f="min" type="text" inputmode="decimal" value="' + esc(x.min) + '" placeholder="AST gifted"><input class="field" data-f="bonus" type="text" inputmode="decimal" value="' + esc(x.bonus) + '" placeholder="Bonus AST"></div></div>';
         }).join('') + '</div><button type="button" class="adm-btn gold" data-aw="saveranks" style="padding:12px">Save ranks</button></div>';
@@ -161,7 +343,7 @@
         return '<div class="adm-row"><div class="grow"><b>' + esc(x.from) + '</b> → <b>' + esc(x.to) + '</b> <span class="adm-tag">' + (x.kind === 'talent' ? 'Talent' : 'Gift') + '</span><small>' + ast(x.units) + ' AST · ' + esc(when(x.at)) + '</small></div></div>';
       }).join('') || '<p class="adm-empty">No gifts yet.</p>');
       body().innerHTML = stats + limits + rankForm + top + recent;
-    }).catch(fail);
+    }).catch(function (e) { if (current === 'wgifts') fail(e); });
   }
   function saveGift(btn) {
     var min = $('awGMin').value.trim(), max = $('awGMax').value.trim();
@@ -175,7 +357,7 @@
     Array.prototype.forEach.call($('awRanks').querySelectorAll('[data-aw-rank]'), function (row) {
       list.push({ name: row.querySelector('[data-f=name]').value.trim(), min: row.querySelector('[data-f=min]').value.trim(), bonus: row.querySelector('[data-f=bonus]').value.trim() || '0' });
     });
-    if (!list.length || list[0].min !== '0' && Number(list[0].min) !== 0) { say('The first rank must start at 0 AST.'); return; }
+    if (!list.length || (list[0].min !== '0' && Number(list[0].min) !== 0)) { say('The first rank must start at 0 AST.'); return; }
     for (var i = 0; i < list.length; i++) { if (!list[i].name || isNaN(Number(list[i].min)) || isNaN(Number(list[i].bonus))) { say('Check every rank: it needs a name and numbers.'); return; } }
     btn.disabled = true;
     api('POST', '/wallet/admin/config', { ranks: list }).then(function () { say('Ranks saved.'); renderGifts(); })
@@ -183,7 +365,7 @@
   }
 
   /* ---------- wiring ---------- */
-  var RENDER = { wtopups: renderTopups, wprices: renderPrices, wgifts: renderGifts };
+  var RENDER = { wtreasury: renderTreasury, wtopups: renderTopups, wprices: renderPrices, wgifts: renderGifts };
   function mark(tab) {
     Array.prototype.forEach.call(document.querySelectorAll('#admTabs [data-adm-tab]'), function (b) { b.classList.toggle('on', b.getAttribute('data-adm-tab') === tab); });
   }
@@ -199,7 +381,7 @@
     var t = e.target.closest ? e.target.closest('[data-adm-tab]') : null;
     if (!t) return;
     var tab = t.getAttribute('data-adm-tab');
-    if (!RENDER[tab]) return;
+    if (!RENDER[tab]) { current = ''; return; }      /* a built-in tab: leave it to the dashboard */
     e.stopImmediatePropagation();
     if (!window.__afIsAdmin) { say('This area is for administrators only.'); return; }
     mark(tab); RENDER[tab]();
@@ -214,9 +396,31 @@
     else if (a === 'saveprices') savePrices(b);
     else if (a === 'savegift') saveGift(b);
     else if (a === 'saveranks') saveRanks(b);
+    else if (a === 'tfind') findMember(b);
+    else if (a === 'tsend') sendAst(b);
+    else if (a === 'tfilter') loadHistory(true);
+    else if (a === 'tmore') loadHistory(false);
+  });
+  /* typing a different member invalidates the member that was found */
+  document.addEventListener('input', function (e) {
+    var t = e.target;
+    if (!t || !t.hasAttribute || !t.hasAttribute('data-aw-q')) return;
+    tre.member = null; tre.idem = ''; tre.sig = '';
+    var box = $('awMember'), send = $('awSend');
+    if (box) box.innerHTML = '';
+    if (send) send.disabled = true;
+  });
+  document.addEventListener('keydown', function (e) {
+    var t = e.target;
+    if (!t || e.key !== 'Enter' || !t.id) return;
+    if (t.id === 'awQ') { e.preventDefault(); var f = document.querySelector('[data-aw="tfind"]'); if (f && !f.disabled) findMember(f); }
+    else if (t.id === 'awTQ') { e.preventDefault(); loadHistory(true); }
+  });
+  document.addEventListener('change', function (e) {
+    if (e.target && e.target.hasAttribute && e.target.hasAttribute('data-aw-filter')) loadHistory(true);
   });
 
-  /* Total Supply card on the Overview tab */
+  /* AST Treasury card on the Overview tab (added once per Overview render) */
   var injecting = false;
   function addSupplyToOverview() {
     var bd = body(); if (!bd || injecting || $('admAstSupply')) return;
@@ -224,10 +428,13 @@
     if (!on || !bd.querySelector('.adm-grid') || !window.__afIsAdmin) return;
     injecting = true;
     var holder = document.createElement('div'); holder.id = 'admAstSupply';
-    holder.innerHTML = '<p class="adm-empty" style="padding:0 0 8px">Loading AST supply…</p>';
+    holder.innerHTML = '<p class="adm-empty" style="padding:0 0 8px">Loading AST Treasury…</p>';
     bd.insertBefore(holder, bd.firstChild);
     api('GET', '/wallet/admin/overview').then(function (o) {
-      holder.innerHTML = supplyHtml(o.supply) + '<div class="adm-grid"><div class="adm-stat"><i>⏳</i><b>' + o.topups.pending + '</b><small>Top-ups waiting for you</small></div><div class="adm-stat"><i>👥</i><b>' + o.supply.holders + '</b><small>Members holding AST</small></div></div>';
+      var s = o.supply;
+      holder.innerHTML = supplyHtml({ total: s.total, treasury: s.treasury, circulation: s.circulation, ok: s.ok },
+        '<div class="adm-grid"><div class="adm-stat"><i>👥</i><b>' + s.holders + '</b><small>Members Holding AST</small></div>' +
+        '<div class="adm-stat"><i>⏳</i><b>' + o.topups.pending + '</b><small>Pending Top-ups</small></div></div>');
     }).catch(function () { holder.innerHTML = ''; }).then(function () { injecting = false; });
   }
   function start() {
