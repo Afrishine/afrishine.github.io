@@ -255,3 +255,176 @@
   w.AHFeed = { refresh: function () { FEEDS.forEach(function (s) { var f = d.querySelector(s); if (f) scan(f); }); } };
   if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', install); else install();
 })(window, document);
+
+/* ======================================================================
+   PAGINATION: "Load more" for Home, Talent Hub and Community
+   The app keeps listening live to the newest posts (as before). Older posts are
+   fetched page by page, only when the member asks. Nothing in index.html changes.
+   ====================================================================== */
+(function (w, d) {
+  'use strict';
+  if (w.AHPaging) return;
+
+  var PAGE = 20;        // posts fetched per page
+  var MAX_PAGES = 3;    // pages fetched for one tap (Talent Hub / Community can be sparse)
+  var MIN_NEW = 6;      // stop early once this many new posts of that section arrived
+  var FEEDS = {
+    homeFeed: function () { return true; },
+    talentFeed: function (p) { return p.source === 'talent'; },
+    communityFeed: function (p) { return p.source !== 'talent'; }
+  };
+
+  var head = [], keep = {}, headMax = 0, more = false, busy = false, probed = false, sharedTried = false;
+  var buttons = {}, inner = null;
+
+  function getDB() { try { if (typeof db !== 'undefined' && db) return db; } catch (e) {} return null; }
+  function ms(p) { return p && p.createdAt && p.createdAt.toMillis ? p.createdAt.toMillis() : 0; }
+
+  function merged() {
+    var seen = {}, out = [];
+    head.concat(Object.keys(keep).map(function (k) { return keep[k]; })).forEach(function (p) {
+      if (!seen[p.id]) { seen[p.id] = 1; out.push(p); }
+    });
+    out.sort(function (a, b) { return (ms(b) || 9e15) - (ms(a) || 9e15); });
+    return out;
+  }
+  function oldestTs() {
+    var best = null;
+    merged().forEach(function (p) { if (ms(p) && (!best || ms(p) < ms(best))) best = p; });
+    return best ? best.createdAt : null;
+  }
+
+  // New live snapshot: posts that slid out of the live window are kept; deleted ones are dropped.
+  function onHead(posts) {
+    var ids = {}, tail = 0;
+    posts.forEach(function (p) { ids[p.id] = 1; var m = ms(p); if (m && (!tail || m < tail)) tail = m; });
+    headMax = Math.max(headMax, posts.length);
+    var full = posts.length > 0 && posts.length >= headMax;
+    head.forEach(function (p) { if (!ids[p.id] && full && ms(p) && ms(p) <= tail) keep[p.id] = p; });
+    head = posts;
+    posts.forEach(function (p) { delete keep[p.id]; });
+  }
+
+  function redraw() { inner(merged()); paintButtons(); }
+
+  function paintButtons() {
+    Object.keys(buttons).forEach(function (id) {
+      var b = buttons[id];
+      b.style.display = more ? 'block' : 'none';
+      b.disabled = busy;
+      b.textContent = busy ? 'Loading…' : 'Load more posts';
+    });
+  }
+
+  // One cheap read (1 document) to learn whether older posts exist at all.
+  function probe() {
+    if (probed) return;
+    var ts = oldestTs(), dbx = getDB();
+    if (!ts || !dbx) return;
+    probed = true;
+    dbx.collection('posts').orderBy('createdAt', 'desc').startAfter(ts).limit(1).get()
+      .then(function (s) { more = !s.empty; paintButtons(); })
+      .catch(function () { more = true; paintButtons(); });
+  }
+
+  function loadMore(feedId) {
+    var dbx = getDB(), match = FEEDS[feedId] || FEEDS.homeFeed;
+    if (busy || !more || !dbx) return;
+    busy = true; paintButtons();
+    var added = 0, pages = 0;
+    function finish(err) {
+      busy = false;
+      if (err && typeof w.notice === 'function') w.notice('Could not load more posts. Check your connection and try again.');
+      redraw();
+    }
+    function step() {
+      var ts = oldestTs();
+      if (!ts) return finish();
+      dbx.collection('posts').orderBy('createdAt', 'desc').startAfter(ts).limit(PAGE).get().then(function (s) {
+        s.docs.forEach(function (doc) {
+          var p = Object.assign({ id: doc.id }, doc.data());
+          if (keep[p.id]) return;
+          var inHead = head.some(function (h) { return h.id === p.id; });
+          if (inHead) return;
+          keep[p.id] = p;
+          if (match(p) && p.visibility !== 'private') added++;
+        });
+        pages++;
+        if (s.docs.length < PAGE) more = false;
+        if (more && added < MIN_NEW && pages < MAX_PAGES) return step();
+        finish();
+      }).catch(function () { finish(true); });
+    }
+    step();
+  }
+
+  // A shared link (?post=ID) to a post older than the live window.
+  function fetchShared(list) {
+    var id = w.ahSharedPostId, dbx = getDB();
+    if (!id || sharedTried || !dbx) return;
+    try { if (new URLSearchParams(location.search).get('kind') === 'love_posts') return; } catch (e) {}
+    if (list.some(function (p) { return p.id === id; })) return;
+    sharedTried = true;
+    dbx.collection('posts').doc(id).get().then(function (s) {
+      if (!s.exists) return;
+      keep[id] = Object.assign({ id: id }, s.data());
+      redraw();
+      if (typeof w.scrollToSharedPost === 'function') w.scrollToSharedPost('posts');
+    }).catch(function () {});
+  }
+
+  // A deleted post must also leave the "older posts" we are holding.
+  function afterDelete(id) {
+    var dbx = getDB();
+    if (!dbx || !id) return;
+    dbx.collection('posts').doc(id).get().then(function (s) {
+      if (!s.exists && keep[id]) { delete keep[id]; redraw(); }
+    }).catch(function () {});
+  }
+  function wrapDelete(name) {
+    var o = w[name];
+    if (typeof o !== 'function' || o.__ahp) return;
+    var n = function (id) {
+      var r = o.apply(this, arguments);
+      if (r && r.then) r.then(function () { afterDelete(id); });
+      return r;
+    };
+    n.__ahp = 1; w[name] = n;
+  }
+
+  function makeButtons() {
+    Object.keys(FEEDS).forEach(function (id) {
+      var f = d.getElementById(id);
+      if (!f || buttons[id] || !f.parentNode) return;
+      var b = d.createElement('button');
+      b.type = 'button'; b.className = 'secondary'; b.setAttribute('data-ah-more', id);
+      b.style.cssText = 'display:none;width:100%;margin:6px 0 14px';
+      b.textContent = 'Load more posts';
+      f.parentNode.insertBefore(b, f.nextSibling);
+      buttons[id] = b;
+    });
+  }
+
+  function install() {
+    if (typeof w.renderPosts !== 'function') return;
+    inner = w.renderPosts;
+    makeButtons();
+    w.renderPosts = function (posts) {
+      onHead(posts || []);
+      var list = merged();
+      inner(list);
+      probe();
+      paintButtons();
+      fetchShared(list);
+    };
+    wrapDelete('deleteMyPost');
+    wrapDelete('ahDeleteOwnPost');
+    d.addEventListener('click', function (e) {
+      var b = e.target && e.target.closest ? e.target.closest('[data-ah-more]') : null;
+      if (b) loadMore(b.getAttribute('data-ah-more'));
+    });
+  }
+
+  w.AHPaging = { loadMore: loadMore, merged: merged };
+  install();
+})(window, document);
