@@ -390,6 +390,7 @@
       html += '<div class="afw-card"><div class="afw-h2 gold">\ud83c\udf81 Send AST Gift</div><p class="afw-sub">Find a member by email or username and send AST.</p>' +
         '<div class="afw-row"><input class="afw-input" id="afwQuick" type="text" placeholder="Email or username" autocomplete="off" autocapitalize="off" style="flex:1;min-width:0;margin-right:8px"><button class="afw-ghost" data-act="quicksearch">\ud83d\udd0d Search</button></div>' +
         '<p class="afw-sub" style="margin:8px 0 0;font-size:12.5px">' + (cfg && cfg.gift.verifiedOnly ? 'Only verified members can receive AST gifts.' : 'Gifts are sent instantly and cannot be reversed.') + '</p></div>';
+      html += '<div class="afw-card" style="border-color:#1f9d55"><div class="afw-row"><span style="font-size:30px;margin-right:10px">\ud83e\udd1d</span><div style="flex:1;min-width:0"><div class="afw-h2 gold" style="margin:0">P2P Trading</div><p class="afw-sub" style="margin:0">Buy and sell AST with other members (RWF or USDT)</p></div></div><button class="afw-green afw-block" data-act="p2p" style="margin-top:8px">Open P2P Trading \u203a</button></div>';
       html += historyCard();
       html += statCards();
       void mNames;
@@ -419,7 +420,11 @@
         service_ads: ['\ud83d\udce2', 'svc', 'Used for Ads', 'Promoted your content'],
         service_boost: ['\ud83d\ude80', 'svc', 'Boost Service', 'Boosted your content'],
         refund: ['\u21a9', 'in', 'Refund', 'Returned to your wallet'],
-        bonus: ['\ud83c\udfc6', 'in', 'Rank Reward', 'Gift level reward']
+        bonus: ['\ud83c\udfc6', 'in', 'Rank Reward', 'Gift level reward'],
+        admin_allocation: ['\ud83c\udfe6', 'in', 'AST from Afrishine Hub', 'Added by the administrator'],
+        p2p_lock: ['\ud83e\udd1d', 'out', 'P2P Sell (escrow)', 'AST held in escrow'],
+        p2p_buy: ['\ud83e\udd1d', 'in', 'P2P Purchase', 'AST bought from a member'],
+        p2p_unlock: ['\u21a9', 'in', 'P2P Returned', 'Escrow returned to your wallet']
       };
       return map[ty] || ['\u2022', 'svc', ty, ''];
     }
@@ -962,6 +967,7 @@
         case 'svcback': if (S.flow) { S.flow.step = 'form'; paintService(); } break;
         case 'svcpay': svcPay(); break;
         case 'closeflow': closeFlow(); break;
+        case 'p2p': if (window.AfrishineP2P) window.AfrishineP2P.open(); else toast('P2P Trading is not installed yet.'); break;
       }
     }
     function openSupport() {
