@@ -7,7 +7,7 @@
 
   // ===== SETTINGS (edit here only) =====
   var CFG = {
-    likeCollections: ['posts', 'love_posts', 'marketplacePosts'],
+    likeCollections: ['posts'],
     ownerField: 'uid',            // field holding the owner's uid in those collections
     max: 100,                     // members shown per tab
     onOpenProfile: function (uid) { close(); if (typeof w.openMemberProfile === 'function') w.openMemberProfile(uid); }
