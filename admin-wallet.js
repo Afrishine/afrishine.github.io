@@ -21,6 +21,7 @@
     treasury_bonus: 'Rank bonus',
     service_income: 'Service payment returned',
     treasury_refund: 'Refund',
+    treasury_fee: 'P2P fee',
     treasury_genesis: 'Initial supply'
   };
 
@@ -125,7 +126,7 @@
   }
   function renderTreasury() {
     current = 'wtreasury'; tre.member = null; tre.idem = ''; tre.sig = ''; tre.before = 0; tre.sending = false;
-    var opts = [['', 'All types'], ['allocation', 'Admin allocations'], ['topup', 'Top-ups approved'], ['bonus', 'Rank bonuses'], ['service', 'Service payments'], ['refund', 'Refunds'], ['genesis', 'Initial supply']]
+    var opts = [['', 'All types'], ['allocation', 'Admin allocations'], ['topup', 'Top-ups approved'], ['bonus', 'Rank bonuses'], ['service', 'Service payments'], ['refund', 'Refunds'], ['genesis', 'Initial supply'], ['fee', 'P2P fees']]
       .map(function (o) { return '<option value="' + o[0] + '">' + o[1] + '</option>'; }).join('');
     body().innerHTML =
       '<div id="awTStats"><p class="adm-empty">Loading…</p></div>' +
@@ -377,15 +378,81 @@
       '<div data-aw-chat></div><div class="acts" style="justify-content:flex-start"><button type="button" class="adm-btn" data-aw="p2pchat">💬 Chat & evidence</button></div>' +
       (open ? '<input class="field" data-aw-note type="text" maxlength="300" placeholder="Note for both members (your decision)"><div class="acts" style="justify-content:flex-start"><button type="button" class="adm-btn gold" data-aw="p2prelease">🔓 Release to buyer</button><button type="button" class="adm-btn red" data-aw="p2prefund">↩ Return to seller</button></div>' : '') + '</div>';
   }
+  var p2pSection = 'disputes', kycStatus = 'pending';
+  function p2pNav() {
+    return '<div class="adm-tabs" style="margin-top:0">' + [['disputes', '⚖️ Disputes'], ['kyc', '🪪 KYC'], ['settings', '⚙️ Fees & rules']].map(function (x) {
+      return '<button type="button" class="adm-btn ' + (p2pSection === x[0] ? 'gold' : '') + '" data-aw="p2pnav" data-v="' + x[0] + '">' + x[1] + '</button>';
+    }).join(' ') + '</div>';
+  }
   function renderP2P() {
     current = 'wp2p';
+    if (p2pSection === 'kyc') return renderP2PKyc();
+    if (p2pSection === 'settings') return renderP2PSettings();
+    renderP2PDisputes();
+  }
+  function renderP2PKyc() {
+    busy();
+    api('GET', '/wallet/admin/p2p/kyc?status=' + kycStatus).then(function (j) {
+      if (current !== 'wp2p' || p2pSection !== 'kyc') return;
+      var tabs = [['pending', 'Pending (' + j.pending + ')'], ['approved', 'Approved'], ['rejected', 'Rejected']].map(function (x) {
+        return '<button type="button" class="adm-btn ' + (kycStatus === x[0] ? 'gold' : '') + '" data-aw="p2pkycst" data-v="' + x[0] + '">' + x[1] + '</button>';
+      }).join(' ');
+      var html = p2pNav() + '<p class="adm-empty" style="padding:0 0 10px">Check that the face on the selfie matches the document, the name matches, and the document is real and not expired. Rejected members can send new photos.</p><div class="adm-tabs" style="margin-top:0">' + tabs + '</div>';
+      if (!j.items.length) { body().innerHTML = html + '<p class="adm-empty">No ' + esc(kycStatus) + ' requests.</p>'; return; }
+      body().innerHTML = html + j.items.map(function (k) {
+        return '<div class="adm-row" data-aw-kyc="' + esc(k.uid) + '" style="display:block"><div><b>' + esc(k.fullName) + '</b> <span class="adm-tag">' + esc(k.status) + '</span></div>' +
+          '<small>Profile: ' + esc(k.name) + ' · ' + esc(k.uid) + '</small><small>' + esc(k.docType.replace('_', ' ')) + ' · ' + esc(when(k.at)) + '</small>' +
+          '<div style="display:flex;gap:8px;margin:8px 0"><a href="' + esc(k.front) + '" target="_blank" rel="noopener" style="flex:1"><img src="' + esc(k.front) + '" alt="Document" loading="lazy" style="width:100%;max-height:200px;object-fit:contain;border-radius:10px;background:#05070c"></a>' +
+          '<a href="' + esc(k.selfie) + '" target="_blank" rel="noopener" style="flex:1"><img src="' + esc(k.selfie) + '" alt="Selfie" loading="lazy" style="width:100%;max-height:200px;object-fit:contain;border-radius:10px;background:#05070c"></a></div>' +
+          (k.status === 'pending' ? '<input class="field" data-aw-note type="text" maxlength="200" placeholder="Reason (required when rejecting)"><div class="acts" style="justify-content:flex-start"><button type="button" class="adm-btn gold" data-aw="p2pkycok">✔ Approve</button><button type="button" class="adm-btn red" data-aw="p2pkycno">✖ Reject</button></div>' : (k.note ? '<small>' + esc(k.note) + '</small>' : '')) + '</div>';
+      }).join('');
+    }).catch(function (e) { if (current === 'wp2p') fail(e); });
+  }
+  function p2pKycDecide(btn, decision) {
+    var card = btn.closest('[data-aw-kyc]'); if (!card) return;
+    var n = card.querySelector('[data-aw-note]'), note = n ? n.value.trim() : '';
+    if (decision === 'reject' && note.length < 3) { say('Write the reason so the member can fix it.'); return; }
+    if (!confirm(decision === 'approve' ? 'Approve this identity?' : 'Reject this identity check?')) return;
+    Array.prototype.forEach.call(card.querySelectorAll('button'), function (b) { b.disabled = true; });
+    api('POST', '/wallet/admin/p2p/kyc/decide', { uid: card.getAttribute('data-aw-kyc'), decision: decision, note: note }).then(function () { say(decision === 'approve' ? 'Identity approved.' : 'Identity rejected.'); renderP2PKyc(); })
+      .catch(function (e) { say((e && e.message) || 'Could not save.'); renderP2PKyc(); });
+  }
+  function renderP2PSettings() {
+    busy();
+    api('GET', '/wallet/admin/p2p/settings').then(function (c) {
+      if (current !== 'wp2p' || p2pSection !== 'settings') return;
+      body().innerHTML = p2pNav() + '<div class="adm-form"><b>P2P fee</b><small class="adm-empty" style="padding:0">The seller pays this fee ON TOP of the order, so the buyer always receives the full amount. The fee goes to the Admin Treasury (the 30,000,000 AST supply never changes). Example: 1000 AST at 0.15% = 1.5 AST.</small>' +
+        '<label class="creator-hint">Fee (% of the AST amount, 0 to 5)</label><input class="field" id="awPFee" type="text" inputmode="decimal" value="' + esc(String(c.feeBps / 100)) + '">' +
+        '<label class="creator-hint">Minimum fee per order (AST)</label><input class="field" id="awPMin" type="text" inputmode="decimal" value="' + esc((c.minFeeUnits / 100).toFixed(2)) + '">' +
+        '<small class="adm-empty" id="awPEx" style="padding:0"></small></div>' +
+        '<div class="adm-form"><b>Identity verification (KYC)</b><label class="creator-hint">Who must be verified before trading</label><select class="field" id="awPKyc"><option value="off"' + (c.kyc === 'off' ? ' selected' : '') + '>Nobody (optional)</option><option value="sellers"' + (c.kyc === 'sellers' ? ' selected' : '') + '>Sellers only</option><option value="all"' + (c.kyc === 'all' ? ' selected' : '') + '>Buyers and sellers</option></select></div>' +
+        '<button type="button" class="adm-btn gold" style="padding:13px;width:100%" data-aw="p2psavesettings">Save</button>';
+      p2pExample();
+    }).catch(function (e) { if (current === 'wp2p') fail(e); });
+  }
+  function p2pExample() {
+    var f = $('awPFee'), m = $('awPMin'), ex = $('awPEx'); if (!f || !m || !ex) return;
+    var bps = Math.round(Number(f.value) * 100) || 0, min = Math.round(Number(m.value) * 100) || 0;
+    var rows = [10, 100, 1000, 10000].map(function (a) { var fee = bps > 0 ? Math.max(min, Math.ceil(a * 100 * bps / 10000)) : 0; return a + ' AST → ' + ast(fee) + ' AST'; });
+    ex.textContent = 'Fee examples: ' + rows.join(' · ');
+  }
+  function p2pSaveSettings(btn) {
+    var pct = $('awPFee').value.trim(), min = $('awPMin').value.trim();
+    if (!/^\d{1,2}(\.\d{1,2})?$/.test(pct) || Number(pct) > 5) { say('The fee must be between 0 and 5 percent.'); return; }
+    if (!/^\d{1,3}(\.\d{1,2})?$/.test(min)) { say('Enter the minimum fee, for example 0.01.'); return; }
+    btn.disabled = true;
+    api('POST', '/wallet/admin/p2p/settings', { feePercent: pct, minFee: min, kyc: $('awPKyc').value }).then(function () { say('P2P settings saved.'); renderP2PSettings(); })
+      .catch(function (e) { btn.disabled = false; say((e && e.message) || 'Could not save.'); });
+  }
+  document.addEventListener('input', function (e) { if (e.target && (e.target.id === 'awPFee' || e.target.id === 'awPMin')) p2pExample(); });
+  function renderP2PDisputes() {
     busy();
     api('GET', '/wallet/admin/p2p/disputes?status=' + p2pStatus).then(function (j) {
       if (current !== 'wp2p') return;
       var tabs = [['open', 'Open (' + j.open + ')'], ['resolved', 'Resolved']].map(function (x) {
         return '<button type="button" class="adm-btn ' + (p2pStatus === x[0] ? 'gold' : '') + '" data-aw="p2pstatus" data-v="' + x[0] + '">' + x[1] + '</button>';
       }).join(' ');
-      var html = '<p class="adm-empty" style="padding:0 0 10px">The AST of every P2P order is locked in escrow. For a dispute, read the chat and the screenshots, then decide who receives the AST. A decision cannot be undone.</p><div class="adm-tabs" style="margin-top:0">' + tabs + '</div>';
+      var html = p2pNav() + '<p class="adm-empty" style="padding:0 0 10px">The AST of every P2P order is locked in escrow. For a dispute, read the chat and the screenshots, then decide who receives the AST. A decision cannot be undone.</p><div class="adm-tabs" style="margin-top:0">' + tabs + '</div>';
       body().innerHTML = html + (j.items.length ? j.items.map(p2pCard).join('') : '<p class="adm-empty">No ' + esc(p2pStatus) + ' disputes.</p>');
     }).catch(function (e) { if (current === 'wp2p') fail(e); });
   }
@@ -455,6 +522,11 @@
     else if (a === 'tfilter') loadHistory(true);
     else if (a === 'tmore') loadHistory(false);
     else if (a === 'p2pstatus') { p2pStatus = b.getAttribute('data-v'); renderP2P(); }
+    else if (a === 'p2pnav') { p2pSection = b.getAttribute('data-v'); renderP2P(); }
+    else if (a === 'p2pkycst') { kycStatus = b.getAttribute('data-v'); renderP2PKyc(); }
+    else if (a === 'p2pkycok') p2pKycDecide(b, 'approve');
+    else if (a === 'p2pkycno') p2pKycDecide(b, 'reject');
+    else if (a === 'p2psavesettings') p2pSaveSettings(b);
     else if (a === 'p2pchat') p2pChat(b);
     else if (a === 'p2psay') p2pSay(b);
     else if (a === 'p2prelease') p2pDecide(b, 'release');
@@ -494,7 +566,8 @@
       holder.innerHTML = supplyHtml({ total: s.total, treasury: s.treasury, circulation: s.circulation, ok: s.ok },
         '<div class="adm-grid"><div class="adm-stat"><i>👥</i><b>' + s.holders + '</b><small>Members Holding AST</small></div>' +
         '<div class="adm-stat"><i>⏳</i><b>' + o.topups.pending + '</b><small>Pending Top-ups</small></div></div>' +
-        '<div class="adm-grid"><div class="adm-stat"><i>⚖️</i><b>' + (o.p2p ? o.p2p.disputes : 0) + '</b><small>Open P2P disputes</small></div><div class="adm-stat"><i>🤝</i><b>' + ast(o.p2p ? o.p2p.escrow : 0) + '</b><small>AST in P2P escrow</small></div></div>');
+        '<div class="adm-grid"><div class="adm-stat"><i>⚖️</i><b>' + (o.p2p ? o.p2p.disputes : 0) + '</b><small>Open P2P disputes</small></div><div class="adm-stat"><i>🤝</i><b>' + ast(o.p2p ? o.p2p.escrow : 0) + '</b><small>AST in P2P escrow</small></div></div>' +
+        '<div class="adm-grid"><div class="adm-stat"><i>💰</i><b>' + ast(o.p2p ? o.p2p.fees : 0) + '</b><small>P2P fees earned (AST)</small></div><div class="adm-stat"><i>🪪</i><b>' + (o.p2p ? o.p2p.kycPending : 0) + '</b><small>KYC waiting</small></div></div>');
     }).catch(function () { holder.innerHTML = ''; }).then(function () { injecting = false; });
   }
   function start() {
