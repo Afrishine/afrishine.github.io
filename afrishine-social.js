@@ -320,3 +320,188 @@
   w.AHSocial = { open: open, close: close, refresh: refresh, config: CFG };
   if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', install); else install();
 })(window, document);
+
+/* ======================================================================
+   VIDEO VIEWER TABS: For You | Following | Friends  (full-screen "Videos For You")
+   * The tabs sit at the top of the full-screen player and stay there while you scroll.
+   * For You = every video (as before). Following = people you follow. Friends = you follow each other.
+   * The Home grid keeps its look (2 per row) but shows at most HOME_MAX videos, so the page continues
+     down to "Latest Community Posts". Tap any video and keep scrolling to see ALL of them.
+   * Inside the player only the video you opened and the ones just ahead of you download; the rest wait.
+   Nothing else in index.html or the app is changed.
+   ====================================================================== */
+(function (w, d) {
+  'use strict';
+  if (w.AHVideoTabs) return;
+
+  var HOME_MAX = 10;        // videos shown in the Home grid
+  var TTL = 60000;          // follow lists are read again after 60 seconds
+
+  var viewer = d.getElementById('videoViewer'), feed = d.getElementById('videoViewerFeed'), home = d.getElementById('homeVideoFeed');
+  var tab = 'foryou', seq = 0, wasOpen = false, urlUid = {}, orderUid = [];
+  var fc = { at: 0, uid: '', fing: {}, fers: {} };
+  var lazy = null;
+
+  function $(id) { return d.getElementById(id); }
+  function getDB() { try { if (typeof db !== 'undefined' && db) return db; } catch (e) {} return null; }
+  function getUser() {
+    try {
+      if (typeof currentFirebaseUser !== 'undefined' && currentFirebaseUser) return currentFirebaseUser;
+      if (typeof currentUser === 'function') return currentUser();
+    } catch (e) {}
+    return null;
+  }
+  function setOf(a) { var o = {}; a.forEach(function (x) { o[x] = 1; }); return o; }
+  function rel(field, uid) {
+    var other = field === 'followerUid' ? 'followingUid' : 'followerUid';
+    return getDB().collection('follows').where(field, '==', uid).get().then(function (s) {
+      return s.docs.map(function (x) { return x.data()[other]; }).filter(function (x, i, a) { return x && a.indexOf(x) === i; });
+    });
+  }
+
+  // ---------- 1. Home grid: at most HOME_MAX videos (the player still holds all of them) ----------
+  function capHome() {
+    if (!home) return;
+    var cards = home.querySelectorAll('.home-video-card');
+    for (var i = cards.length - 1; i >= HOME_MAX; i--) {
+      var v = cards[i].querySelector('video');
+      if (v) { try { v.removeAttribute('src'); v.load(); } catch (e) {} }   // never start downloading it
+      cards[i].parentNode.removeChild(cards[i]);
+    }
+  }
+
+  // ---------- 2. Player: load only what is needed ----------
+  function lighten() {
+    if (!feed) return;
+    Array.prototype.forEach.call(feed.querySelectorAll('.video-viewer-item'), function (sec) {
+      var v = sec.querySelector('video');
+      if (!v || sec.getAttribute('data-ahv') === '1') return;
+      sec.setAttribute('data-ahv', '1');
+      if (v.getAttribute('preload') === 'auto') return;            // the video that was tapped keeps loading
+      v.preload = 'none'; v.setAttribute('preload', 'none');
+      if (lazy) lazy.observe(sec);
+    });
+  }
+  if ('IntersectionObserver' in w && feed) {
+    lazy = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var v = e.target.querySelector('video');
+        if (v && v.getAttribute('preload') === 'none') { v.preload = 'metadata'; v.setAttribute('preload', 'metadata'); }
+        lazy.unobserve(e.target);
+      });
+    }, { root: feed, rootMargin: '100% 0px 100% 0px', threshold: 0 });
+  }
+
+  // ---------- 3. Tabs ----------
+  var CSS = '#ahsVT{position:fixed;top:12px;top:calc(12px + env(safe-area-inset-top,0px));left:0;right:0;height:43px;z-index:4;display:flex;align-items:center;justify-content:center;pointer-events:none}' +
+    '#ahsVT button{pointer-events:auto;position:relative;margin:0 2px;padding:8px 7px;border:0;background:none;color:rgba(255,255,255,.72);font-size:15px;font-weight:700;text-shadow:0 1px 6px rgba(0,0,0,.85);-webkit-tap-highlight-color:transparent;cursor:pointer}' +
+    '#ahsVT button.on{color:#fff}#ahsVT button.on::after{content:"";position:absolute;left:7px;right:7px;bottom:1px;height:3px;border-radius:2px;background:#ffb91f}' +
+    '#ahsVEmpty{display:none;position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);z-index:4;padding:0 30px;text-align:center;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.8)}' +
+    '#ahsVEmpty p{margin:0 0 16px;font-size:15px;line-height:1.55}#ahsVEmpty button{padding:11px 20px;border:1px solid rgba(255,255,255,.5);border-radius:22px;background:rgba(16,19,27,.8);color:#fff;font-weight:700;font-size:14px}';
+
+  function build() {
+    if (!viewer || $('ahsVT')) return;
+    var st = d.createElement('style'); st.id = 'ahsVStyle'; st.textContent = CSS; d.head.appendChild(st);
+    var bar = d.createElement('div'); bar.id = 'ahsVT';
+    bar.innerHTML = '<button type="button" data-vt="foryou" class="on">For You</button><button type="button" data-vt="following">Following</button><button type="button" data-vt="friends">Friends</button>';
+    viewer.appendChild(bar);
+    var em = d.createElement('div'); em.id = 'ahsVEmpty';
+    em.innerHTML = '<p id="ahsVMsg"></p><button type="button" data-vt="foryou" id="ahsVBack">Back to For You</button>';
+    viewer.appendChild(em);
+    viewer.addEventListener('click', function (e) {
+      var b = e.target && e.target.closest ? e.target.closest('[data-vt]') : null;
+      if (b) setTab(b.getAttribute('data-vt'));
+    });
+  }
+  function paintTabs() {
+    Array.prototype.forEach.call(d.querySelectorAll('#ahsVT button'), function (b) { b.className = b.getAttribute('data-vt') === tab ? 'on' : ''; });
+  }
+  function message(text, back) {
+    var em = $('ahsVEmpty'); if (!em) return;
+    if (!text) { em.style.display = 'none'; return; }
+    $('ahsVMsg').textContent = text; $('ahsVBack').style.display = back === false ? 'none' : '';
+    em.style.display = 'block';
+  }
+
+  // Which member posted this video? (by its URL, with the list order as a back-up)
+  function indexOwners() {
+    urlUid = {}; orderUid = [];
+    (w.__afLatestPosts || []).forEach(function (p) {
+      if (!p || String(p.type || '').toLowerCase() !== 'video') return;
+      var raw = p.videoUrl || p.mediaUrl || p.mediaURL || p.fileUrl || '', href = '';
+      try { var u = new URL(raw, location.href); if (u.protocol === 'https:' || u.protocol === 'http:') href = u.href; } catch (e) {}
+      if (!href) return;
+      urlUid[href] = p.uid; orderUid.push(p.uid);
+    });
+  }
+  function ownerOf(sec) {
+    var v = sec.querySelector('video'), src = v ? v.src : '';
+    if (src && urlUid[src]) return urlUid[src];
+    return orderUid[Number(sec.getAttribute('data-viewer-index'))] || '';
+  }
+
+  function show(allowed, emptyText) {
+    var shown = 0;
+    Array.prototype.forEach.call(feed.querySelectorAll('.video-viewer-item'), function (sec) {
+      var ok = !allowed || !!allowed[ownerOf(sec)];
+      sec.style.display = ok ? '' : 'none';
+      if (ok) shown++;
+    });
+    feed.scrollTop = 0;
+    message(allowed && !shown ? emptyText : '');
+  }
+
+  function loadFollows(uid) {
+    if (fc.uid === uid && Date.now() - fc.at < TTL) return Promise.resolve();
+    if (!getDB()) return Promise.reject(new Error('offline'));
+    return Promise.all([rel('followerUid', uid), rel('followingUid', uid)]).then(function (r) {
+      fc = { at: Date.now(), uid: uid, fing: setOf(r[0]), fers: setOf(r[1]) };
+    });
+  }
+
+  function setTab(t) {
+    if (!feed) return;
+    tab = t; paintTabs();
+    var mine = ++seq;
+    if (t === 'foryou') { show(null); return; }
+    var me = getUser();
+    if (!me) { show({}, 'Sign in to see videos from people you follow.'); return; }
+    message('Loading…', false);
+    loadFollows(me.uid).then(function () {
+      if (mine !== seq) return;
+      var allowed = {};
+      Object.keys(fc.fing).forEach(function (id) {
+        if (id !== me.uid && (t === 'following' || fc.fers[id])) allowed[id] = 1;
+      });
+      show(allowed, t === 'following'
+        ? 'No videos from the people you follow yet. Follow more creators and their videos will appear here.'
+        : 'No videos from friends yet. Friends are people you follow who also follow you back.');
+    }).catch(function () {
+      if (mine === seq) { show({}, 'Could not load. Check your connection and try again.'); }
+    });
+  }
+
+  function onOpen() {
+    indexOwners();
+    tab = 'foryou'; seq++; paintTabs(); message('');
+    lighten();
+  }
+
+  function install() {
+    if (!viewer || !feed) return;
+    build(); capHome();
+    if (home && w.MutationObserver) new MutationObserver(capHome).observe(home, { childList: true });
+    if (w.MutationObserver) {
+      new MutationObserver(function () {
+        var open = viewer.classList.contains('open');
+        if (open && !wasOpen) onOpen();
+        wasOpen = open;
+      }).observe(viewer, { attributes: true, attributeFilter: ['class'] });
+      new MutationObserver(lighten).observe(feed, { childList: true });
+    }
+  }
+
+  w.AHVideoTabs = { setTab: setTab, homeMax: HOME_MAX };
+  install();
+})(window, document);
