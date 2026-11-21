@@ -27,6 +27,11 @@
 <meta property="og:type" content="website">
 <title>Afrishine Hub — Your Hub, Your Solutions</title>
 <script>
+if ((window.location.hostname || '').toLowerCase() === 'afrishine-talent.vercel.app') {
+  document.title = 'Afrishine Talent Hub';
+}
+</script>
+<script>
 (function(){if(!Promise.allSettled){Promise.allSettled=function(items){return Promise.all(Array.prototype.map.call(items,function(item){return Promise.resolve(item).then(function(value){return {status:'fulfilled',value:value};},function(reason){return {status:'rejected',reason:reason};});}));};}})();
 if(!window.CSS){window.CSS={};}if(!window.CSS.escape){window.CSS.escape=function(value){return String(value).replace(/[^a-zA-Z0-9_-]/g,function(ch){return '\\'+ch;});};}
 </script>
@@ -494,6 +499,34 @@ a.ct-btn:active{background:#1a2030}
 .ah-profile-menu .ah-menu-item.danger{color:#ff9a9a}.ah-profile-menu .ah-menu-item.danger i{background:#3b1c20}
 .ah-sheet-foot{margin:12px 0 0;text-align:center;color:#6f7b96;font-size:12px}
 </style>
+
+<script>
+(function () {
+  var host = (window.location.hostname || "").toLowerCase();
+  if (host === "afrishine-talent.vercel.app") {
+    document.documentElement.classList.add("ah-talent-standalone");
+  }
+})();
+</script>
+<style>
+html.ah-talent-standalone body .app > header,
+html.ah-talent-standalone body .menu-backdrop,
+html.ah-talent-standalone body .menu-drawer,
+html.ah-talent-standalone body .bottom-nav {
+  display: none !important;
+}
+html.ah-talent-standalone body .app .page:not(#talent) {
+  display: none !important;
+}
+html.ah-talent-standalone body .app #talent {
+  display: block !important;
+}
+html.ah-talent-standalone body .app {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+</style>
+
 </head>
 <body>
 <noscript><p style="padding:24px;text-align:center;background:#080a10;color:#fff">Afrishine Hub needs JavaScript. Please enable JavaScript in your browser and reload this page.</p></noscript>
@@ -510,8 +543,8 @@ a.ct-btn:active{background:#1a2030}
 <section class="featured-shop" aria-label="Featured Marketplace products">
  <div class="featured-shop-heading"><span class="featured-shop-kicker">DISCOVER · SHOP · ENJOY</span><button class="go-shop-btn" type="button" onclick="enterMarketplace()">Go To Shop <span aria-hidden="true">›</span></button></div>
  <div class="featured-shop-grid">
-  <article class="featured-shop-card"><div class="featured-product-media"><img src="https://images.unsplash.com/photo-1613704193420-a53cab02d194?auto=format&fit=crop&w=900&q=85" alt="Premium gold stainless-steel luxury wristwatch with metal bracelet" loading="eager" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><span class="featured-product-fallback" aria-hidden="true">⌚</span></div><h3>Golden Luxury Watch</h3><p>Gold Stainless-Steel Metal Bracelet Watch</p><strong>8,000 Frw</strong><button type="button" onclick="enterMarketplace()">Shop Now</button></article>
-  <article class="featured-shop-card"><div class="featured-product-media"><img src="https://images.unsplash.com/photo-1608256246200-53e635b5b65f?auto=format&fit=crop&w=900&q=85" alt="Premium men's Timberland-style boots" loading="eager" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><span class="featured-product-fallback" aria-hidden="true">🥾</span></div><h3>Men's Timberland Boots</h3><p>Premium Men's Outdoor Boots</p><strong>40,000 Frw</strong><button type="button" onclick="enterMarketplace()">Shop Now</button></article>
+  <article class="featured-shop-card"><div class="featured-product-media"><img src="https://images.unsplash.com/photo-1613704193420-a53cab02d194?auto=format&fit=crop&w=500&q=80" alt="Premium gold stainless-steel luxury wristwatch with metal bracelet" loading="eager" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><span class="featured-product-fallback" aria-hidden="true">⌚</span></div><h3>Golden Luxury Watch</h3><p>Gold Stainless-Steel Metal Bracelet Watch</p><strong>8,000 Frw</strong><button type="button" onclick="enterMarketplace()">Shop Now</button></article>
+  <article class="featured-shop-card"><div class="featured-product-media"><img src="https://images.unsplash.com/photo-1608256246200-53e635b5b65f?auto=format&fit=crop&w=500&q=80" alt="Premium men's Timberland-style boots" loading="eager" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><span class="featured-product-fallback" aria-hidden="true">🥾</span></div><h3>Men's Timberland Boots</h3><p>Premium Men's Outdoor Boots</p><strong>40,000 Frw</strong><button type="button" onclick="enterMarketplace()">Shop Now</button></article>
  </div>
 </section>
 <button class="academy-home-card" onclick="showPage('academy')"><div class="academy-home-info"><div class="academy-home-icon">🎓</div><div class="academy-home-text"><strong>LEARN WITH AFRISHINE ACADEMY</strong><small>Learn new skills, explore knowledge and grow with Afrishine Academy.</small></div></div><span class="academy-home-arrow">→</span></button>
@@ -686,7 +719,7 @@ a.ct-btn:active{background:#1a2030}
  <div class="video-viewer-feed" id="videoViewerFeed"></div>
 </div>
 <div class="market-modal" id="marketLoginModal" role="dialog" aria-modal="true" aria-label="Marketplace sign in"><div class="market-modal-card"><div style="font-size:34px">🔐</div><h2>Sign in to continue</h2><p class="muted" style="margin:8px auto">Sign in with Google to sell products and contact sellers. You can browse products without signing in.</p><button class="gold" onclick="marketplaceGoogleLogin()">Continue with Google</button><button class="secondary" style="width:100%;margin-top:9px" onclick="closeMarketplaceLogin()">Cancel</button><p class="creator-hint" id="marketLoginMessage"></p></div></div><div id="notice" class="notice" role="status" aria-live="polite"></div>
-<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script>if(/PiBrowser/i.test(navigator.userAgent)){document.write('<script src="https://sdk.minepi.com/pi-sdk.js"><\/script>');}</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -752,7 +785,9 @@ function isGoogleMarketplaceUser(user) { if (!user || !user.providerData)
     return false; return user.providerData.some(function (info) { return info.providerId === 'google.com'; }); }
 function isPiBrowser() { var ua = (navigator && navigator.userAgent) || ''; return !!(window.Pi) || /PiBrowser/i.test(ua); }
 function canViewMarketplace() { return isPiBrowser() || isGoogleMarketplaceUser(currentFirebaseUser); }
+var isTalentStandalone = (location.hostname || '').toLowerCase() === 'afrishine-talent.vercel.app';
 function getAfrishineRoutePage() {
+    if (isTalentStandalone) return 'talent';
     const path = (location.pathname || '/').replace(/\/+$/, '') || '/';
     if (path === '/marketplace') return 'shop';
     if (path === '/academy') return 'academy';
@@ -760,11 +795,13 @@ function getAfrishineRoutePage() {
     return '';
 }
 function getAfrishinePageUrl(id) {
+    if (isTalentStandalone) return '/' + (location.search || '');
     const routes = { shop: '/marketplace', academy: '/academy', talent: '/talent', home: '/' };
     const base = routes[id] || '/';
     return base + (location.search || '') + (routes[id] ? '' : (id === 'home' ? '' : '#' + encodeURIComponent(id)));
 }
 function showPage(id) {
+    if (isTalentStandalone) id = 'talent';
     if (id === 'shop' && !canViewMarketplace()) {
         openMarketplaceLogin();
         return;
@@ -1437,7 +1474,7 @@ function renderPostList(elementId, posts, emptyMessage) { const el = document.ge
     return; if (el.querySelector('[data-vlink-playing="1"]')) { clearTimeout(el.__afRetry); el.__afRetry = setTimeout(function () { renderPostList(elementId, posts, emptyMessage); }, 10000); return; } posts = posts.filter(p => p.visibility !== 'private' || (currentFirebaseUser && p.uid === currentFirebaseUser.uid)); if (!posts.length) {
     el.innerHTML = '<div class="empty-feed">' + emptyMessage + '</div>';
     return;
-} el.innerHTML = posts.map(p => { const mine = currentFirebaseUser && p.uid === currentFirebaseUser.uid; const mediaUrl = p.mediaUrl || p.videoUrl || p.mediaURL || p.mediaURL || ''; const mediaType = p.mediaType || (p.type === 'video' ? 'video' : (p.type === 'image' ? 'image' : '')); const mediaMarkup = mediaUrl ? (mediaType === 'video' ? '<video class="post-media-video" src="' + safeText(mediaUrl) + '" controls playsinline preload="metadata" style="width:100%;max-height:520px;border-radius:14px;background:#080a10"></video>' : '<img class="post-media-image" src="' + safeText(mediaUrl) + '" alt="Shared media" loading="lazy" style="width:100%;max-height:520px;object-fit:contain;border-radius:14px;background:#080a10">') : ''; return '<article class="post-card' + (p.type === 'link' ? ' vlink-post' : '') + '" data-engagement="posts" data-post-id="' + safeText(p.id) + '" data-author-uid="' + safeText(p.uid) + '" data-visibility="' + safeText(p.visibility || 'public') + '"><div class="post-meta"><button class="text-link" data-open-profile="' + safeText(p.uid) + '">' + safeText(marketplacePublicName(p.authorName)) + '</button><span>' + safeText(postDate(p.createdAt)) + '</span></div>' + (p.isRepost ? '<p class="creator-hint">🔁 Repost · Originally shared by ' + safeText(p.originalAuthor || 'Afrishine Member') + '</p>' : '') + '<div class="post-body">' + safeText(p.text || '') + '</div>' + (p.type === 'link' && window.afLinkCardHtml ? window.afLinkCardHtml(p) : mediaMarkup) + '<div class="actions post-actions"><button class="secondary" data-like="' + safeText(p.id) + '" data-kind="posts">♡ Like <span data-like-count>0</span></button><button class="secondary" data-focus-comment="' + safeText(p.id) + '">💬 Comment</button><button class="secondary" data-share-post="' + safeText(p.id) + '" data-kind="posts">↗ Share</button><button class="secondary" data-repost="' + safeText(p.id) + '" data-kind="posts">🔁 Repost</button>' + (mine ? '' : '<button class="secondary" data-message-user="' + safeText(p.uid) + '" data-message-name="' + safeText(marketplacePublicName(p.authorName)) + '">✉ Message</button>') + '</div><div class="comment-area"><div data-comments-list></div><div class="comment-compose"><input class="field" data-comment-input placeholder="Write a comment…" maxlength="500"><button class="gold" data-send-comment="' + safeText(p.id) + '" data-kind="posts">Send</button></div></div>' + (mine ? '<button class="post-delete" data-delete-post="' + safeText(p.id) + '">Delete my post</button>' : '') + '</article>'; }).join(''); el.querySelectorAll('[data-engagement]').forEach(queueEngagement); }
+} el.innerHTML = posts.map(p => { const mine = currentFirebaseUser && p.uid === currentFirebaseUser.uid; const mediaUrl = p.mediaUrl || p.videoUrl || p.mediaURL || p.mediaURL || ''; const mediaType = p.mediaType || (p.type === 'video' ? 'video' : (p.type === 'image' ? 'image' : '')); const mediaMarkup = mediaUrl ? (mediaType === 'video' ? '<video class="post-media-video" src="' + safeText(mediaUrl) + '" controls playsinline preload="none" style="width:100%;max-height:520px;border-radius:14px;background:#080a10"></video>' : '<img class="post-media-image" src="' + safeText(mediaUrl) + '" alt="Shared media" loading="lazy" style="width:100%;max-height:520px;object-fit:contain;border-radius:14px;background:#080a10">') : ''; return '<article class="post-card' + (p.type === 'link' ? ' vlink-post' : '') + '" data-engagement="posts" data-post-id="' + safeText(p.id) + '" data-author-uid="' + safeText(p.uid) + '" data-visibility="' + safeText(p.visibility || 'public') + '"><div class="post-meta"><button class="text-link" data-open-profile="' + safeText(p.uid) + '">' + safeText(marketplacePublicName(p.authorName)) + '</button><span>' + safeText(postDate(p.createdAt)) + '</span></div>' + (p.isRepost ? '<p class="creator-hint">🔁 Repost · Originally shared by ' + safeText(p.originalAuthor || 'Afrishine Member') + '</p>' : '') + '<div class="post-body">' + safeText(p.text || '') + '</div>' + (p.type === 'link' && window.afLinkCardHtml ? window.afLinkCardHtml(p) : mediaMarkup) + '<div class="actions post-actions"><button class="secondary" data-like="' + safeText(p.id) + '" data-kind="posts">♡ Like <span data-like-count>0</span></button><button class="secondary" data-focus-comment="' + safeText(p.id) + '">💬 Comment</button><button class="secondary" data-share-post="' + safeText(p.id) + '" data-kind="posts">↗ Share</button><button class="secondary" data-repost="' + safeText(p.id) + '" data-kind="posts">🔁 Repost</button>' + (mine ? '' : '<button class="secondary" data-message-user="' + safeText(p.uid) + '" data-message-name="' + safeText(marketplacePublicName(p.authorName)) + '">✉ Message</button>') + '</div><div class="comment-area"><div data-comments-list></div><div class="comment-compose"><input class="field" data-comment-input placeholder="Write a comment…" maxlength="500"><button class="gold" data-send-comment="' + safeText(p.id) + '" data-kind="posts">Send</button></div></div>' + (mine ? '<button class="post-delete" data-delete-post="' + safeText(p.id) + '">Delete my post</button>' : '') + '</article>'; }).join(''); el.querySelectorAll('[data-engagement]').forEach(queueEngagement); }
 function renderPosts(posts) { window.__afLatestPosts = posts; if (typeof window.afRefreshNotifications === 'function') setTimeout(window.afRefreshNotifications, 0); const talentPosts = posts.filter(p => p.source === 'talent'); const communityPosts = posts.filter(p => p.source !== 'talent'); renderPostList('homeFeed', posts, 'No posts yet. Be the first to share something with Afrishine Hub.'); renderPostList('talentFeed', talentPosts, 'No Talent Hub posts yet. Be the first to showcase your talent.'); renderPostList('communityFeed', communityPosts, 'No Community posts yet. Be the first to share with the Community.'); }
 function scrollToSharedPost(kind) { if (!window.ahSharedPostId)
     return; const card = document.querySelector('[data-engagement="' + kind + '"][data-post-id="' + window.ahSharedPostId + '"]'); if (card) {
@@ -1449,7 +1486,7 @@ function scrollToSharedPost(kind) { if (!window.ahSharedPostId)
 function loadPostEngagement(card) {
     return __awaiter(this, void 0, void 0, function* () { if (!db)
         return; const kind = card.dataset.engagement, id = card.dataset.postId; try {
-        const ref = db.collection(kind).doc(id), likes = yield ref.collection('likes').get();
+        const ref = db.collection(kind).doc(id); let likes; try { const c = yield ref.collection('likes').count().get(); likes = { size: c.data().count }; } catch (_) { likes = yield ref.collection('likes').get(); }
         const count = card.querySelector('[data-like-count]');
         if (count)
             count.textContent = String(likes.size);
@@ -1714,7 +1751,7 @@ document.addEventListener('click', e => { const b = e.target.closest('[data-dele
     deleteMyPost(b.getAttribute('data-delete-post')); });
 var generalFeedReceived = false;
 if (db) {
-    db.collection('posts').orderBy('createdAt', 'desc').limit(50).onSnapshot(snap => { generalFeedReceived = true; const posts = snap.docs.map(d => (Object.assign({ id: d.id }, d.data()))); renderPosts(posts); scrollToSharedPost('posts'); }, e => { console.error('Firestore feed error:', e); const msg = e.code === 'failed-precondition' ? 'Posts could not be loaded right now. Please try again shortly.' : firebaseErrorMessage(e); ['homeFeed', 'communityFeed', 'talentFeed'].forEach(id => { const el = document.getElementById(id); if (el)
+    db.collection('posts').orderBy('createdAt', 'desc').limit(20).onSnapshot(snap => { generalFeedReceived = true; const posts = snap.docs.map(d => (Object.assign({ id: d.id }, d.data()))); renderPosts(posts); scrollToSharedPost('posts'); }, e => { console.error('Firestore feed error:', e); const msg = e.code === 'failed-precondition' ? 'Posts could not be loaded right now. Please try again shortly.' : firebaseErrorMessage(e); ['homeFeed', 'communityFeed', 'talentFeed'].forEach(id => { const el = document.getElementById(id); if (el)
         el.innerHTML = '<p>' + safeText(msg) + '</p><button class="secondary" onclick="retryGeneralFeed()">Retry loading posts</button>'; }); });
     setTimeout(function () { if (!generalFeedReceived) {
         ['homeFeed', 'communityFeed', 'talentFeed'].forEach(id => { var el = document.getElementById(id); if (el && el.textContent.toLowerCase().indexOf('loading') !== -1)
@@ -1728,7 +1765,7 @@ else {
 function retryGeneralFeed() {
     return __awaiter(this, void 0, void 0, function* () { var ids = ['homeFeed', 'communityFeed', 'talentFeed']; ids.forEach(function (id) { var el = document.getElementById(id); if (el)
         el.textContent = 'Loading posts…'; }); try {
-        var snap = yield db.collection('posts').orderBy('createdAt', 'desc').limit(50).get();
+        var snap = yield db.collection('posts').orderBy('createdAt', 'desc').limit(20).get();
         generalFeedReceived = true;
         renderPosts(snap.docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); }));
     }
@@ -2154,8 +2191,7 @@ function closeCreatorEligibilityMessage() {
     }
     function renderHomeVideos(posts) {
         videoItems = (posts || []).filter(function (p) {
-            return String(p.type || '').toLowerCase() === 'video' && getVideoUrl(p);
-        }).map(function (p) {
+            return String(p.type || '').toLowerCase() === 'video' && getVideoUrl(p); }).slice(0, 6).map(function (p) {
             return {
                 id: p.id, url: getVideoUrl(p), caption: makeCaption(p),
                 author: esc(p.authorName || 'Afrishine Member')
@@ -2168,7 +2204,7 @@ function closeCreatorEligibilityMessage() {
         feed.innerHTML = videoItems.map(function (v, i) {
             return '<article class="home-video-card" role="button" tabindex="0" aria-label="Watch video ' +
                 (i + 1) + '" data-video-index="' + i + '"><video src="' + esc(v.url) +
-                '" muted playsinline webkit-playsinline loop preload="metadata"></video><span class="video-play-indicator">▶</span><div class="home-video-overlay"><div><strong>' +
+                '" muted playsinline webkit-playsinline loop preload="none"></video><span class="video-play-indicator">▶</span><div class="home-video-overlay"><div><strong>' +
                 v.caption + '</strong><small>by ' + v.author +
                 '</small></div><span>↗</span></div></article>';
         }).join('');
@@ -2203,8 +2239,7 @@ function closeCreatorEligibilityMessage() {
                 /* Feed cards are silent previews only; sound is played in the viewer. */
                 if (entry.isIntersecting && entry.intersectionRatio >= .65 &&
                     !viewer.classList.contains('open') && !document.hidden) {
-                    v.muted = true;
-                    var p = v.play();
+                    v.muted = true; feedVideos.forEach(function (o) { if (o !== v) pauseAndMute(o, false); }); var p = v.play();
                     if (p && p.catch) p.catch(function () {});
                 } else {
                     pauseAndMute(v, false);
@@ -2234,7 +2269,7 @@ function closeCreatorEligibilityMessage() {
             return '<section class="video-viewer-item" data-viewer-index="' + i +
                 '"><video src="' + esc(v.url) +
                 '" muted playsinline webkit-playsinline loop preload="' +
-                (i === activeViewerIndex ? 'auto' : 'metadata') +
+                (i === activeViewerIndex ? 'auto' : 'none') +
                 '"></video><div class="video-viewer-caption">' + v.caption +
                 '<small>by ' + v.author +
                 '</small></div><div class="video-viewer-actions"><button type="button" data-toggle-sound="' +
@@ -2434,7 +2469,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     }
     function checkDailyMedia(type) {
         return __awaiter(this, void 0, void 0, function* () { const u = user(), dbx = firestore(); if (!u || !dbx)
-            return true; const snap = yield dbx.collection('posts').where('uid', '==', u.uid).limit(150).get(); const start = todayStart().getTime(); const count = snap.docs.reduce((n, d) => { const p = d.data(), ts = p.createdAt && p.createdAt.toDate ? p.createdAt.toDate().getTime() : 0; return n + (p.type === type && ts >= start ? 1 : 0); }, 0); if (count >= (type === 'video' ? MAX_DAILY_VIDEO : MAX_DAILY_PHOTO)) {
+            return true; if (MAX_DAILY_VIDEO >= 999 && MAX_DAILY_PHOTO >= 999) return true; const snap = yield dbx.collection('posts').where('uid', '==', u.uid).limit(150).get(); const start = todayStart().getTime(); const count = snap.docs.reduce((n, d) => { const p = d.data(), ts = p.createdAt && p.createdAt.toDate ? p.createdAt.toDate().getTime() : 0; return n + (p.type === type && ts >= start ? 1 : 0); }, 0); if (count >= (type === 'video' ? MAX_DAILY_VIDEO : MAX_DAILY_PHOTO)) {
             say(type === 'video' ? 'You have already published a video today. Please try again tomorrow.' : 'You have already published a photo today. Please try again tomorrow.');
             return false;
         } return true; });
@@ -2449,8 +2484,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             const used = Number((_c = (_b = (_a = d.usedBytes) !== null && _a !== void 0 ? _a : d.used) !== null && _b !== void 0 ? _b : d.totalBytes) !== null && _c !== void 0 ? _c : 0);
             const limit = Number((_e = (_d = d.limitBytes) !== null && _d !== void 0 ? _d : d.limit) !== null && _e !== void 0 ? _e : STORAGE_LIMIT_BYTES);
             if (d.canUpload === false || (d.canUpload === undefined && used >= Math.min(limit, STORAGE_LIMIT_BYTES))) {
-            afPopup({ icon: '📦', message: window.AF_QUOTA_MESSAGE });
-            return false;
+            afPopup({ icon: '📦', message: d.message || window.AF_QUOTA_MESSAGE }); return false;
         }
             return true;
         }
@@ -2696,7 +2730,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             return;
         }
                 if (duration > MAX_FREE_VIDEO_SECONDS) {
-                    say('Videos longer than 1 minute are not supported yet. Please upload a shorter video.');
+                    say('Videos longer than 5 minutes are not supported. Please upload a shorter video.');
                     return;
                 }
             }
@@ -3034,7 +3068,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     };
     // Add title display and an edit-title action to existing own posts.
     const oldRenderPostList = window.renderPostList || renderPostList;
-    window.renderPostList = function (id, posts, empty) { oldRenderPostList(id, posts, empty); const root = $(id); if (!root)
+    window.renderPostList = function (id, posts, empty) { var __r = $(id); var __sig = (user() ? user().uid : '') + '|' + posts.map(function (x) { return [x.id, x.authorName || '', x.visibility || '', x.title || '', x.text || '', x.mediaUrl || ''].join('~'); }).join('|'); if (__r && __r.__afSig === __sig && __r.children.length) return; oldRenderPostList(id, posts, empty); if (__r && !__r.querySelector('[data-vlink-playing="1"]')) __r.__afSig = __sig; const root = $(id); if (!root)
         return; root.querySelectorAll('[data-engagement="posts"]').forEach(card => { const p = posts.find(x => x.id === card.dataset.postId); if (!p)
         return; const title = p.title || ''; if (title) {
         const t = document.createElement('h3');
@@ -3424,10 +3458,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                     const loveAllowed = !!(currentLoveProfile && currentLoveProfile.loveEligible === true);
                     if (!searchCache || Date.now() - searchCacheAt > 60000 || searchCacheLove !== loveAllowed) {
                         searchCache = yield Promise.allSettled([
-                            db.collection('publicProfiles').limit(300).get(),
-                            db.collection('posts').limit(400).get(),
-                            loveAllowed ? db.collection('love_posts').limit(200).get() : Promise.resolve({ docs: [] }),
-                            db.collection('marketplacePosts').limit(200).get()
+                            db.collection('publicProfiles').limit(150).get(),
+                            db.collection('posts').limit(200).get(),
+                            loveAllowed ? db.collection('love_posts').limit(100).get() : Promise.resolve({ docs: [] }),
+                            db.collection('marketplacePosts').limit(100).get()
                         ]);
                         searchCacheAt = Date.now();
                         searchCacheLove = loveAllowed;
@@ -3533,7 +3567,7 @@ window.marketLoadProducts=function(force){
  feed.innerHTML='<p class="empty-feed">Loading products…</p>';
  marketLoadPromise=(async function(){
   try{
-   var snap=await mDb().collection('marketplacePosts').orderBy('createdAt','desc').limit(100).get();
+   var snap=await mDb().collection('marketplacePosts').orderBy('createdAt','desc').limit(40).get();
    marketProducts=snap.docs.map(function(d){var p=d.data();p.id=d.id;return p}).filter(function(p){return p.status!=='deleted'&&(mProduct(p)||p.type==='sell')});
    marketLoadedAt=Date.now();marketRenderProducts();
   }catch(e){console.error('Marketplace read:',e);feed.innerHTML='<div class="empty-feed" style="grid-column:1/-1">Could not load products. Please check your connection and try again.<br><button class="secondary" style="margin-top:10px" onclick="marketLoadProducts(true)">Try again</button></div>'}
@@ -3685,7 +3719,7 @@ async function updateDashboard(){
  if(avatar)avatar.src=u.photoURL||'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#303747"/><circle cx="50" cy="37" r="18" fill="#aeb6c5"/><path d="M15 95c2-24 15-35 35-35s33 11 35 35" fill="#aeb6c5"/></svg>');
  try{
   var d=dbRef();if(!d)return;
-  var none=function(){return {size:0}};var tasks=await Promise.all([d.collection('posts').where('uid','==',u.uid).get(),d.collection('publicProfiles').doc(u.uid).get(),d.collection('follows').where('followingUid','==',u.uid).get().catch(none),d.collection('follows').where('followerUid','==',u.uid).get().catch(none)]);
+  var none=function(){return {size:0}};var tasks=await Promise.all([d.collection('posts').where('uid','==',u.uid).count().get().then(function(s){return {size:s.data().count}}).catch(function(){return d.collection('posts').where('uid','==',u.uid).get()}),d.collection('publicProfiles').doc(u.uid).get(),d.collection('follows').where('followingUid','==',u.uid).get().catch(none),d.collection('follows').where('followerUid','==',u.uid).get().catch(none)]);
   var count=byId('ahPostCount');if(count)count.innerHTML=String(tasks[0].size)+'<small>posts</small>';
   var prof=tasks[1].exists?tasks[1].data():{};
   if(name&&prof.username)name.textContent=prof.username;
@@ -4112,8 +4146,7 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
         window.afPopup({ icon: '🛠️', title: 'Edit needed', message: message });
         return message;
     };
-    window.afWorkerFailure = function (data, status) {
-        var code = data && data.code;
+    window.afWorkerFailure = function (data, status) { var code = data && data.code; if (/^(VERIFICATION_REQUIRED|STORAGE_TOTAL_FULL|DAILY_VIDEO_LIMIT|UPLOAD_IN_PROGRESS|VIDEO_TOO_LONG|EMAIL_NOT_VERIFIED|APPCHECK_FAILED|QUOTA_NOT_CONFIGURED|LOGIN_REQUIRED|SESSION_EXPIRED)$/.test(code || '') && data.error) { window.afPopup({ icon: code === 'DAILY_VIDEO_LIMIT' || code === 'UPLOAD_IN_PROGRESS' ? '⏳' : code === 'VIDEO_TOO_LONG' ? '🛠️' : '📦', message: data.error }); return; }
         if (code === 'STORAGE_LIMIT_REACHED') window.afPopup({ icon: '📦', message: window.AF_QUOTA_MESSAGE });
         else if (code === 'DAILY_LIMIT_REACHED') window.afPopup({ icon: '⏳', message: data.error });
         else if (code === 'FILE_TYPE_NOT_ALLOWED') window.afPopup({ icon: '🛠️', title: 'Edit needed', message: "This file format can't be processed. Please edit it and export it as JPG, PNG or MP4, then upload it again." });
@@ -4127,7 +4160,7 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
         }).then(function (r) {
             if (!r.ok) return true;
             return r.json().then(function (d) {
-                if (d.canUpload === false) { window.afPopup({ icon: '📦', message: window.AF_QUOTA_MESSAGE }); return false; }
+                if (d.canUpload === false) { window.afPopup({ icon: '📦', message: d.message || window.AF_QUOTA_MESSAGE }); return false; }
                 return true;
             });
         }).catch(function () { return true; });
@@ -4765,19 +4798,19 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
 })();
 </script>
 <link rel="stylesheet" href="/creator-dashboard.css">
-<script src="/creator-dashboard.js"></script>
-<script src="/upload-rules.js"></script>
+<script defer src="/creator-dashboard.js"></script>
+<script defer src="/upload-rules.js"></script>
 <!-- AFRISHINE HUB PUSH NOTIFICATIONS -->
-<script src="/push.js"></script>
-<script src="/verfied-badge.js"></script>
-<script src="/inbox-ui.js"></script>
-<script src="/inbox-media.js"></script>
-<script src="/profile-sync.js"></script>
-<script src="/video-viewer-actions.js"></script>
-<script src="afrishine-social.js"></script>
-<script src="afrishine-feed.js"></script>
-<script src="/afrishine-wallet.js"></script>
-<script src="/admin-wallet.js"></script>
+<script defer src="/push.js"></script>
+<script defer src="/verfied-badge.js"></script>
+<script defer src="/inbox-ui.js"></script>
+<script defer src="/inbox-media.js"></script>
+<script defer src="/profile-sync.js"></script>
+<script defer src="/video-viewer-actions.js"></script>
+<script defer src="afrishine-social.js"></script>
+<script defer src="afrishine-feed.js"></script>
+<script defer src="/afrishine-wallet.js"></script>
+<script defer src="/admin-wallet.js"></script>
 <script src="/afrishine-p2p.js"></script>
 
 </body>
