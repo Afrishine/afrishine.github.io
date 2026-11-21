@@ -672,7 +672,7 @@ a.ct-btn:active{background:#1a2030}
 <div class="creator-backdrop" id="creatorBackdrop" onclick="closeCreator()"></div>
 <section class="creator-workspace" id="creatorWorkspace" role="dialog" aria-modal="true"><div class="creator-inner"><div class="creator-header"><h2 id="creatorTitle">Create Post</h2><button class="creator-close" onclick="closeCreator()" aria-label="Close">✕</button></div>
 <div id="postEditor" style="display:none"><textarea id="postText" placeholder="What would you like to share with the Afrishine Hub community?"></textarea><div class="creator-actions"><button class="gold" onclick="previewPost()">Preview Post</button></div><div class="preview-box" id="postPreview"><b>Post Preview</b><div class="preview-text" id="postPreviewText"></div><p class="creator-hint">Preview of your text post.</p><div class="creator-actions"><button class="gold" onclick="publishTextPost()">Publish Post</button><button class="secondary" onclick="editPost()">Edit</button></div></div></div>
-<div id="mediaEditor" style="display:none"><p class="creator-hint" id="mediaInstructions">Choose a file from your phone.</p><input class="hidden-input" type="file" id="photoInput" accept="image/*"><input class="hidden-input" type="file" id="videoInput" accept="video/*"><button class="gold" id="chooseMediaButton" onclick="chooseMedia()">Choose from Gallery</button><div class="preview-box" id="mediaPreview"><b id="mediaPreviewTitle">Preview</b><img id="photoPreview" alt="Selected photo preview" style="display:none"><video id="videoPreview" controls playsinline style="display:none"></video><p class="creator-hint">Choose Post to upload this photo or video to Afrishine Hub. Maximum file size: 40 MB. Sign-in is required.</p><div class="creator-actions"><button class="gold" onclick="mediaUploadNotice()">Post</button><button class="secondary" onclick="chooseMedia()">Choose Another</button></div></div></div>
+<div id="mediaEditor" style="display:none"><p class="creator-hint" id="mediaInstructions">Choose a file from your phone.</p><input class="hidden-input" type="file" id="photoInput" accept="image/*"><input class="hidden-input" type="file" id="videoInput" accept="video/*"><button class="gold" id="chooseMediaButton" onclick="chooseMedia()">Choose from Gallery</button><div class="preview-box" id="mediaPreview"><b id="mediaPreviewTitle">Preview</b><img id="photoPreview" alt="Selected photo preview" style="display:none"><video id="videoPreview" controls playsinline style="display:none"></video><p class="creator-hint">Choose Post to upload this photo or video to Afrishine Hub. Maximum file size: 100 MB. Sign-in is required.</p><div class="creator-actions"><button class="gold" onclick="mediaUploadNotice()">Post</button><button class="secondary" onclick="chooseMedia()">Choose Another</button></div></div></div>
 </div></section>
 <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenu()"></div>
 <aside class="menu-drawer" id="menuDrawer" aria-label="Main menu"><div class="menu-head"><span>AFRISHINE HUB MENU</span><button class="round" onclick="closeMenu()" aria-label="Close menu">✕</button></div>
@@ -875,8 +875,8 @@ function mediaUploadNotice() {
             showPage('profile');
             return;
         }
-        if (file.size > 40 * 1024 * 1024) {
-            notice('This file is larger than the 40 MB limit. Choose a smaller file.');
+        if (file.size > 100 * 1024 * 1024) {
+            notice('This file is larger than the 100 MB limit. Choose a smaller file.');
             return;
         }
         const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'video/mp4', 'video/webm', 'video/quicktime'];
@@ -2378,7 +2378,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 (function () {
     'use strict';
     const MEDIA_WORKER = 'https://afrishine-media.usherluckyelie.workers.dev';
-    const MAX_DAILY_PHOTO = 999, MAX_DAILY_VIDEO = 999, MAX_FREE_VIDEO_SECONDS = 60, STORAGE_LIMIT_BYTES = 9500000000;
+    const MAX_DAILY_PHOTO = 999, MAX_DAILY_VIDEO = 999, MAX_FREE_VIDEO_SECONDS = 300, STORAGE_LIMIT_BYTES = 9500000000;
     const $ = id => document.getElementById(id);
     const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const signed = () => !!(window.currentFirebaseUser || currentFirebaseUser);
@@ -2447,8 +2447,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             const used = Number((_c = (_b = (_a = d.usedBytes) !== null && _a !== void 0 ? _a : d.used) !== null && _b !== void 0 ? _b : d.totalBytes) !== null && _c !== void 0 ? _c : 0);
             const limit = Number((_e = (_d = d.limitBytes) !== null && _d !== void 0 ? _d : d.limit) !== null && _e !== void 0 ? _e : STORAGE_LIMIT_BYTES);
             if (d.canUpload === false || (d.canUpload === undefined && used >= Math.min(limit, STORAGE_LIMIT_BYTES))) {
-            afPopup({ icon: '📦', message: window.AF_QUOTA_MESSAGE });
-            return false;
+            afPopup({ icon: '📦', message: d.message || window.AF_QUOTA_MESSAGE }); return false;
         }
             return true;
         }
@@ -2676,8 +2675,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                 showPage('profile');
                 return;
             }
-            if (type !== 'video' && file.size > 40 * 1024 * 1024) {
-        say('This file is larger than the 40 MB limit.');
+            if (type !== 'video' && file.size > 100 * 1024 * 1024) {
+        say('This file is larger than the 100 MB limit.');
         return;
     }
             if (!(yield checkDailyMedia(type)))
@@ -2694,7 +2693,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             return;
         }
                 if (duration > MAX_FREE_VIDEO_SECONDS) {
-                    say('Videos longer than 1 minute are not supported yet. Please upload a shorter video.');
+                    say('Videos longer than 5 minutes are not supported. Please upload a shorter video.');
                     return;
                 }
             }
@@ -4090,7 +4089,7 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
 
     /* ---- Upload helpers: friendly popups, video conversion, format checks ---- */
     window.AF_QUOTA_MESSAGE = 'You have already used your credits. Please try uploading again after one week, or verify your account to upload immediately.';
-    window.AF_MEDIA = { maxBytes: 40 * 1024 * 1024, targetBytes: 36 * 1024 * 1024, maxConvertSeconds: 60, maxVideoBps: 16000000, audioBps: 128000, maxSide: 1920, fps: 30 };
+    window.AF_MEDIA = { maxBytes: 100 * 1024 * 1024, targetBytes: 92 * 1024 * 1024, maxConvertSeconds: 300, maxVideoBps: 16000000, audioBps: 128000, maxSide: 1920, fps: 30 };
     var MEDIA_WORKER_URL = 'https://afrishine-media.usherluckyelie.workers.dev';
     var MSG_VIDEO = "This video format can't be processed. Please edit it and export it as MP4 (H.264), then upload it again.";
     var MSG_PHOTO = "This photo format can't be processed. Please edit it and save it as JPG or PNG, then upload it again.";
@@ -4110,12 +4109,11 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
         window.afPopup({ icon: '🛠️', title: 'Edit needed', message: message });
         return message;
     };
-    window.afWorkerFailure = function (data, status) {
-        var code = data && data.code;
+    window.afWorkerFailure = function (data, status) { var code = data && data.code; if (/^(VERIFICATION_REQUIRED|STORAGE_TOTAL_FULL|DAILY_VIDEO_LIMIT|UPLOAD_IN_PROGRESS|VIDEO_TOO_LONG|EMAIL_NOT_VERIFIED|APPCHECK_FAILED|QUOTA_NOT_CONFIGURED|LOGIN_REQUIRED|SESSION_EXPIRED)$/.test(code || '') && data.error) { window.afPopup({ icon: code === 'DAILY_VIDEO_LIMIT' || code === 'UPLOAD_IN_PROGRESS' ? '⏳' : code === 'VIDEO_TOO_LONG' ? '🛠️' : '📦', message: data.error }); return; }
         if (code === 'STORAGE_LIMIT_REACHED') window.afPopup({ icon: '📦', message: window.AF_QUOTA_MESSAGE });
         else if (code === 'DAILY_LIMIT_REACHED') window.afPopup({ icon: '⏳', message: data.error });
         else if (code === 'FILE_TYPE_NOT_ALLOWED') window.afPopup({ icon: '🛠️', title: 'Edit needed', message: "This file format can't be processed. Please edit it and export it as JPG, PNG or MP4, then upload it again." });
-        else if (code === 'FILE_TOO_LARGE') window.afPopup({ icon: '🛠️', title: 'Edit needed', message: 'This file is larger than the 40 MB limit. Please trim or compress it, then upload it again.' });
+        else if (code === 'FILE_TOO_LARGE') window.afPopup({ icon: '🛠️', title: 'Edit needed', message: 'This file is larger than the 100 MB limit. Please trim or compress it, then upload it again.' });
     };
     window.afCanUpload = function () {
         var u = (typeof currentFirebaseUser !== 'undefined') ? currentFirebaseUser : null;
@@ -4125,7 +4123,7 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
         }).then(function (r) {
             if (!r.ok) return true;
             return r.json().then(function (d) {
-                if (d.canUpload === false) { window.afPopup({ icon: '📦', message: window.AF_QUOTA_MESSAGE }); return false; }
+                if (d.canUpload === false) { window.afPopup({ icon: '📦', message: d.message || window.AF_QUOTA_MESSAGE }); return false; }
                 return true;
             });
         }).catch(function () { return true; });
@@ -4194,7 +4192,7 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
             }
             if (!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) {
                 finished = true; cleanup();
-                var m = 'Your browser cannot optimize this video. Please trim it or export it under 40 MB (MP4), then upload it again.';
+                var m = 'Your browser cannot optimize this video. Please trim it or export it under 100 MB (MP4), then upload it again.';
                 window.afPopup({ icon: '🛠️', title: 'Edit needed', message: m });
                 return reject(new Error(m));
             }
@@ -4218,9 +4216,9 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
             function begin(d) {
                 var vw = video.videoWidth, vh = video.videoHeight;
                 if (!isFinite(d) || d <= 0 || !vw || !vh) return fail(MSG_VIDEO);
-                if (d > M.maxConvertSeconds) return fail('This video is too long to optimize automatically. Please trim it or export it under 40 MB, then upload it again.');
+                if (d > M.maxConvertSeconds) return fail('This video is too long to optimize automatically. Please trim it or export it under 100 MB, then upload it again.');
                 var videoBps = Math.min(M.maxVideoBps, Math.floor((M.targetBytes * 8 * 0.9) / d - M.audioBps));
-                if (videoBps < 1000000) return fail('This video is too long to keep its quality under 40 MB. Please trim it, then upload it again.');
+                if (videoBps < 1000000) return fail('This video is too long to keep its quality under 100 MB. Please trim it, then upload it again.');
                 var scale = Math.min(1, M.maxSide / Math.max(vw, vh));
                 canvas = document.createElement('canvas');
                 canvas.width = Math.max(2, Math.round(vw * scale / 2) * 2);
@@ -4246,7 +4244,7 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
                     if (finished) return;
                     var blob = new Blob(chunks, { type: outType });
                     if (!blob.size) return fail(MSG_VIDEO);
-                    if (blob.size > M.maxBytes) return fail('We could not compress this video below 40 MB without losing quality. Please trim it, then upload it again.');
+                    if (blob.size > M.maxBytes) return fail('We could not compress this video below 100 MB without losing quality. Please trim it, then upload it again.');
                     finished = true; cleanup();
                     var base = (file.name || 'video').replace(/\.[^.]+$/, '').replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 60) || 'video';
                     resolve(new File([blob], base + (outType === 'video/mp4' ? '.mp4' : '.webm'), { type: outType, lastModified: Date.now() }));
@@ -4259,7 +4257,7 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
                     else { stalls = 0; lastTime = video.currentTime; }
                 }, 4000);
                 if (onStatus) onStatus('Optimizing video… 0%');
-                video.play().then(draw).catch(function () { fail('Your browser blocked video optimization. Please tap Post again, or export the video under 40 MB and upload it again.'); });
+                video.play().then(draw).catch(function () { fail('Your browser blocked video optimization. Please tap Post again, or export the video under 100 MB and upload it again.'); });
             }
             video.onloadeddata = start;
             video.onerror = function () { if (!started) fail(MSG_VIDEO); };
@@ -4267,7 +4265,7 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
             video.src = url;
         });
     }
-    /* Videos up to 40 MB in MP4/WebM/MOV (H.264) upload as they are. Bigger videos, other
+    /* Videos up to 100 MB in MP4/WebM/MOV (H.264) upload as they are. Bigger videos, other
        formats and iPhone HEVC videos are converted to a smaller H.264 video first. */
     window.afPrepareVideo = function (file, onStatus) {
         var M = window.AF_MEDIA, type = inferVideoType(file);
