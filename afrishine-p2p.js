@@ -29,6 +29,8 @@
     }
     function fdate(ms) { var d = new Date(Number(ms) || 0); return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' • ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }); }
     function fiatText(cur, units, price) { var v = (Number(units) / 100) * Number(price); return commas(cur === 'RWF' ? String(Math.round(v)) : v.toFixed(2)); }
+    function feeOf(u) { var c = P.cfg; if (!c || !c.feeBps) return 0; return Math.max(c.minFeeUnits || 0, Math.ceil(u * c.feeBps / 10000)); }
+    function feePct() { return P.cfg && P.cfg.feeBps ? String(P.cfg.feeBps / 100) : '0'; }
     function errMsg(e) { return (e && e.message) || 'Something went wrong. Please try again.'; }
     function appCheck() {
       try { if (typeof firebase !== 'undefined' && typeof firebase.appCheck === 'function') return firebase.appCheck().getToken().then(function (t) { return { 'X-Firebase-AppCheck': t.token }; }).catch(function () { return {}; }); } catch (_) { }
@@ -146,7 +148,7 @@
 
     /* ------------------------------------------------------------------ state */
     var P = { open: false, tab: 'market', side: 'sell', cur: 'RWF', method: '', amount: '', ads: null, adsErr: '', orders: null, scope: 'active', ordersErr: '', mine: null, cfg: null,
-      view: 'main', order: null, msgs: [], skew: 0, flow: null, ordSig: '', lastView: 'main' };
+      view: 'main', order: null, msgs: [], skew: 0, flow: null, ordSig: '', lastView: 'main', ratings: { mine: '', theirs: '', theirComment: '' }, kyc: null };
     var root = null, timer = null, tick = null;
     var METH = { mtn: 'MTN Mobile Money', airtel: 'Airtel Money', bank: 'Bank transfer', usdt_trc20: 'USDT (TRC20)', usdt_bep20: 'USDT (BEP20)', binance: 'Binance Pay' };
     var CUR_METHODS = { RWF: ['mtn', 'airtel', 'bank'], USDT: ['usdt_trc20', 'usdt_bep20', 'binance'] };
@@ -203,7 +205,7 @@
     }
     function adCard(a) {
       var st = a.stats || {}, buy = a.side === 'sell';
-      return '<div class="afp-card"><div class="afp-row">' + avatar(a.name, a.uid) + '<div class="afp-grow"><b>' + esc(a.name) + '</b>' + vb() + '<br><small>' + st.done + ' orders • ' + st.rate + '% completed' + (st.avgMin ? ' • ~' + st.avgMin + ' min' : '') + '</small></div></div>' +
+      return '<div class="afp-card"><div class="afp-row">' + avatar(a.name, a.uid) + '<div class="afp-grow"><b>' + esc(a.name) + '</b>' + vb() + '<br><small>' + st.done + ' orders • ' + st.rate + '% completed' + (st.avgMin ? ' \u2022 ~' + st.avgMin + ' min' : '') + (st.pos !== null && st.pos !== undefined ? ' \u2022 \ud83d\udc4d ' + st.pos + '% (' + (st.up + st.down) + ')' : '') + '</small></div></div>' +
         '<div class="afp-price">' + commas(a.price) + ' <small>' + esc(a.currency) + ' / 1 AST</small></div>' +
         '<small>Available: <b style="color:#fff">' + ast(a.remaining) + ' AST</b> • Limit: <b style="color:#fff">' + ast(a.min) + ' – ' + ast(a.max) + ' AST</b></small><div>' +
         a.methods.map(function (k) { return '<span class="afp-meth">' + esc(mname(k)) + '</span>'; }).join('') + '</div>' + (a.terms ? '<p class="sm" style="margin:8px 0 0">' + esc(a.terms) + '</p>' : '') +
@@ -224,8 +226,16 @@
       if (!P.orders.length) return html + '<div class="afp-empty">' + (P.scope === 'active' ? 'You have no open orders. Choose an advert in the Market to start.' : 'No finished orders yet.') + '</div>';
       return html + P.orders.map(orderCard).join('');
     }
+    function kycCard() {
+      var k = P.kyc, c = P.cfg, need = c && c.kyc === 'all' ? 'Required for all P2P trades.' : (c && c.kyc === 'sellers' ? 'Required to sell AST.' : 'Optional: verified traders earn more trust.');
+      if (!k) return '';
+      var label = { none: 'Not verified', pending: 'Under review', approved: 'Verified \u2714', rejected: 'Not approved' }[k.status] || k.status;
+      return '<div class="afp-card"><div class="afp-row"><div class="afp-h2 gold" style="flex:1;margin:0">\ud83e\udeaa Identity verification</div><span class="afp-pill ' + (k.status === 'approved' ? 'released' : (k.status === 'rejected' ? 'disputed' : 'created')) + '">' + label + '</span></div><p class="afp-sub" style="margin:6px 0 0">' + need + '</p>' +
+        (k.status === 'rejected' && k.note ? '<div class="afp-err">' + esc(k.note) + '</div>' : '') +
+        (k.status === 'none' || k.status === 'rejected' ? '<button class="afp-ghost afp-block" style="margin-top:8px" data-act="kycstart">Verify my identity</button>' : '') + '</div>';
+    }
     function viewAds() {
-      var m = P.mine, html = '<button class="afp-gold afp-block" data-act="newad" style="margin:4px 0 10px">➕ Post a new advert</button>';
+      var m = P.mine, html = kycCard() + '<button class="afp-gold afp-block" data-act="newad" style="margin:4px 0 10px">\u2795 Post a new advert</button>';
       if (m === null) return html + '<div class="afp-empty"><span class="afp-spin"></span>Loading…</div>';
       var st = m.stats || { done: 0, rate: 100, avgMin: 0 };
       html += '<div class="afp-card"><div class="afp-h2 gold">My trading record</div><div class="afp-kv"><span>Completed orders</span><b>' + st.done + '</b></div><div class="afp-kv"><span>Completion rate</span><b>' + st.rate + '%</b></div><div class="afp-kv"><span>Average release time</span><b>' + (st.avgMin ? st.avgMin + ' min' : '—') + '</b></div></div>';
@@ -253,7 +263,7 @@
       api('GET', '/wallet/p2p/orders?scope=' + scope).then(function (j) { if (scope !== P.scope) return; P.orders = j.items; P.ordersErr = ''; if (P.view === 'main' && P.tab === 'orders' && !$('afpModal')) render(); },
         function (e) { if (!silent) { P.orders = []; P.ordersErr = errMsg(e); if (P.tab === 'orders') render(); } });
     }
-    function loadMine() { api('GET', '/wallet/p2p/myads').then(function (j) { P.mine = j; if (P.view === 'main' && P.tab === 'ads' && !$('afpModal')) render(); }, function (e) { P.mine = { items: [], stats: null }; toast(errMsg(e)); if (P.tab === 'ads') render(); }); }
+    function loadMine() { api('GET', '/wallet/p2p/kyc').then(function (j) { P.kyc = j; if (P.view === 'main' && P.tab === 'ads' && !$('afpModal') && P.mine) render(); }, function () { }); api('GET', '/wallet/p2p/myads').then(function (j) { P.mine = j; if (P.view === 'main' && P.tab === 'ads' && !$('afpModal')) render(); }, function (e) { P.mine = { items: [], stats: null }; toast(errMsg(e)); if (P.tab === 'ads') render(); }); }
     function showTab(t) {
       P.tab = t; P.view = 'main'; stopOrderTimers(); render();
       var b = $('afpBody'); if (b) b.scrollTop = 0;
@@ -275,13 +285,21 @@
         '<div class="afp-price" style="margin:0">' + commas(a.price) + ' <small>' + esc(a.currency) + ' / 1 AST</small></div><small>Limit ' + ast(a.min) + ' – ' + ast(a.max) + ' AST</small>' +
         '<label class="afp-label">Amount of AST</label><input class="afp-input" id="afpTAmt" type="text" inputmode="decimal" autocomplete="off" placeholder="' + ast(a.min) + ' – ' + ast(a.max) + '" value="' + esc(F.amount) + '">' +
         '<div class="afp-row" style="margin-top:6px"><span class="sm" style="flex:1">' + (F.buy ? 'You will pay' : 'You will receive') + '</span><b id="afpTFiat" style="font-size:20px;color:#ffb91f">' + fiat + ' ' + esc(a.currency) + '</b></div>' +
-        '<label class="afp-label">Payment method</label><div class="afp-chips">' + a.methods.map(function (k) { return '<button class="' + (F.method === k ? 'on' : '') + '" data-act="tmeth:' + k + '">' + esc(mname(k)) + '</button>'; }).join('') + '</div>';
+        '<div class="sm" id="afpTFee" style="margin-top:6px">' + feeText(F) + '</div><label class="afp-label">Payment method</label><div class="afp-chips">' + a.methods.map(function (k) { return '<button class="' + (F.method === k ? 'on' : '') + '" data-act="tmeth:' + k + '">' + esc(mname(k)) + '</button>'; }).join('') + '</div>';
       if (!F.buy) html += '<label class="afp-label">Your account name (where you receive money)</label><input class="afp-input" id="afpTName" maxlength="60" value="' + esc(F.name) + '"><label class="afp-label">Your account number / phone / address</label><input class="afp-input" id="afpTAcc" maxlength="80" value="' + esc(F.account) + '">';
       html += '<div class="afp-warn">' + (F.buy ? 'After you confirm, the seller’s AST is locked in escrow. You then have <b>30 minutes</b> to pay the seller directly and upload your payment screenshot.' : 'After you confirm, <b>your AST is locked in escrow</b> until you receive the money and release it. The buyer has 30 minutes to pay you.') + '</div>' +
         (F.error ? '<div class="afp-err">' + esc(F.error) + '</div>' : '') + '<button class="afp-gold afp-block" data-act="tconfirm"' + (F.busy ? ' disabled' : '') + '>' + (F.busy ? 'Please wait…' : (F.buy ? 'Buy AST' : 'Sell AST')) + '</button>';
       var keep = document.activeElement && document.activeElement.id;
       setSheet(html);
       if (keep && $(keep) && !F.busy) { try { $(keep).focus(); var v = $(keep).value; $(keep).setSelectionRange(v.length, v.length); } catch (_) { } }
+    }
+    function feeText(F) {
+      if (!P.cfg || !P.cfg.feeBps) return '';
+      var u = Math.round(Number(F.amount) * 100);
+      if (F.buy) return 'The seller pays the P2P fee (' + feePct() + '%). You receive the full amount.';
+      if (!(u > 0)) return 'P2P fee: ' + feePct() + '% (minimum ' + ast(P.cfg.minFeeUnits) + ' AST), paid by you on top of the order.';
+      var f = feeOf(u);
+      return 'P2P fee (' + feePct() + '%): <b style="color:#fff">' + ast(f) + ' AST</b>, paid by you on top. AST locked in escrow: <b style="color:#fff">' + ast(u + f) + ' AST</b>.';
     }
     function readTrade() {
       var F = P.flow; if (!F || F.type !== 'trade') return;
@@ -299,6 +317,30 @@
       api('POST', '/wallet/p2p/order', { adId: a.id, amount: F.amount, method: F.method, name: F.name, account: F.account, idem: F.idem }).then(function (j) {
         closeSheet(); openOrder(j.id); if (window.AfrishineWallet && window.AfrishineWallet.refresh) window.AfrishineWallet.refresh();
       }, function (e) { F.busy = false; F.error = errMsg(e); if (P.flow === F) paintTrade(); });
+    }
+
+    /* ------------------------------------------------------------------ KYC */
+    function startKyc() { P.flow = { type: 'kyc', name: '', doc: 'national_id', front: null, selfie: null, busy: false, error: '' }; paintKyc(); }
+    function readKyc() { var F = P.flow, e = $('afpKName'); if (F && F.type === 'kyc' && e) F.name = e.value.trim(); }
+    function paintKyc() {
+      var F = P.flow; if (!F || F.type !== 'kyc') return;
+      var docs = [['national_id', 'National ID'], ['passport', 'Passport'], ['driving_licence', 'Driving licence']];
+      setSheet(sheetHead('Verify your identity') + '<div class="afp-warn">Send your documents only here. They are used by Afrishine Hub support to check that you are a real person and are not shown to other members.</div>' +
+        '<label class="afp-label">Full name (exactly as on your document)</label><input class="afp-input" id="afpKName" maxlength="80" value="' + esc(F.name) + '">' +
+        '<label class="afp-label">Document type</label><div class="afp-chips">' + docs.map(function (d) { return '<button class="' + (F.doc === d[0] ? 'on' : '') + '" data-act="kdoc:' + d[0] + '">' + d[1] + '</button>'; }).join('') + '</div>' +
+        '<label class="afp-label">1. Photo of the document (front, clear, all corners visible)</label><input class="afp-input" id="afpKFront" type="file" accept="image/*" style="padding:10px 14px;height:auto"><div class="sm" id="afpKFrontName">' + (F.front ? '\u2714 ' + esc(F.front.name) : '') + '</div>' +
+        '<label class="afp-label">2. Selfie holding the document next to your face</label><input class="afp-input" id="afpKSelfie" type="file" accept="image/*" style="padding:10px 14px;height:auto"><div class="sm" id="afpKSelfieName">' + (F.selfie ? '\u2714 ' + esc(F.selfie.name) : '') + '</div>' +
+        (F.error ? '<div class="afp-err">' + esc(F.error) + '</div>' : '') + '<button class="afp-gold afp-block" style="margin-top:10px" data-act="kycgo"' + (F.busy ? ' disabled' : '') + '>' + (F.busy ? 'Uploading\u2026' : 'Submit for review') + '</button>');
+    }
+    function submitKyc() {
+      var F = P.flow; if (!F || F.busy) return; readKyc();
+      if (F.name.length < 5 || F.name.indexOf(' ') < 0) { F.error = 'Enter your full name (first and last name).'; paintKyc(); return; }
+      if (!F.front || !F.selfie) { F.error = 'Please attach both photos.'; paintKyc(); return; }
+      F.busy = true; F.error = ''; paintKyc();
+      uploadImage(F.front).then(function (a) { return uploadImage(F.selfie).then(function (b) { return [a, b]; }); }).then(function (u) {
+        return api('POST', '/wallet/p2p/kyc', { fullName: F.name, docType: F.doc, frontUrl: u[0], selfieUrl: u[1] });
+      }).then(function () { closeSheet(); toast('Submitted. We will review your documents soon.'); loadMine(); },
+        function (e) { F.busy = false; F.error = errMsg(e); if (P.flow === F) paintKyc(); });
     }
 
     /* ------------------------------------------------------------------ post advert sheet */
@@ -327,7 +369,7 @@
         html += '</div>';
       });
       html += '<label class="afp-label">Terms for the other member (optional)</label><textarea class="afp-input" id="afpATerms" maxlength="300" placeholder="e.g. Pay within 15 minutes. No third-party payments.">' + esc(F.terms) + '</textarea>' +
-        '<div class="afp-warn">Your payment details are shown only to the member who opens an order with you. Only verified members can post adverts.</div>' +
+        '<div class="afp-warn">Your payment details are shown only to the member who opens an order with you. Only verified members can post adverts.' + (P.cfg && P.cfg.feeBps ? ' The seller pays a P2P fee of ' + feePct() + '% (minimum ' + ast(P.cfg.minFeeUnits) + ' AST) on top of each order.' : '') + '</div>' +
         (F.error ? '<div class="afp-err">' + esc(F.error) + '</div>' : '') + '<button class="afp-gold afp-block" data-act="apost"' + (F.busy ? ' disabled' : '') + '>' + (F.busy ? 'Posting…' : 'Post advert') + '</button>';
       setSheet(html);
     }
@@ -357,7 +399,7 @@
       api('GET', '/wallet/p2p/order?id=' + encodeURIComponent(id)).then(function (j) {
         if (P.view !== 'order' || P.orderId !== id) return;
         var wasFinal = P.order && ['released', 'cancelled', 'expired', 'refunded'].indexOf(P.order.status) >= 0;
-        P.skew = j.now - Date.now(); P.order = j.order; P.msgs = j.messages;
+        P.skew = j.now - Date.now(); P.order = j.order; P.msgs = j.messages; P.ratings = j.ratings || { mine: '', theirs: '', theirComment: '' };
         paintOrder(false);
         if (!wasFinal && ['released', 'refunded', 'cancelled', 'expired'].indexOf(j.order.status) >= 0 && window.AfrishineWallet && window.AfrishineWallet.refresh) window.AfrishineWallet.refresh();
       }, function (e) { if (!P.order) { var t = $('afpOTop'); if (t) t.innerHTML = '<div class="afp-err">' + esc(errMsg(e)) + '</div>'; } });
@@ -374,19 +416,20 @@
     }
     function paintOrder(force) {
       var o = P.order, top = $('afpOTop'); if (!top || !o) return;
-      var sig = JSON.stringify([o.status, o.proofUrl, o.disputeReason, o.resolution, P.msgs.length, P.msgs.length ? P.msgs[P.msgs.length - 1].id : '']);
+      var sig = JSON.stringify([o.status, o.proofUrl, o.disputeReason, o.resolution, P.ratings.mine, P.ratings.theirs, P.msgs.length, P.msgs.length ? P.msgs[P.msgs.length - 1].id : '']);
       if (!force && sig === P.ordSig) return; P.ordSig = sig;
       var buyer = o.role === 'buyer', seller = o.role === 'seller', other = buyer ? o.sellerName : o.buyerName;
       var title = { created: buyer ? 'Pay the seller now' : 'Waiting for the buyer to pay', paid: buyer ? 'Waiting for the seller to release' : 'Check your account, then release', disputed: 'Dispute: support is reviewing', released: 'Order completed', cancelled: 'Order cancelled', expired: 'Order expired', refunded: 'AST returned to the seller' }[o.status] || o.status;
       var html = '<div class="afp-card" style="border-color:#8e5bff"><div class="afp-row"><div class="afp-grow"><b style="color:' + (buyer ? '#22d36b' : '#ff6672') + '">' + (buyer ? 'Buy' : (seller ? 'Sell' : 'Order')) + ' AST</b></div><span class="afp-pill ' + esc(o.status) + '">' + esc(statusLabel(o)) + '</span></div><div class="afp-h2" style="margin-top:6px">' + esc(title) + '</div>';
       if (o.status === 'created') html += '<div class="afp-timer" id="afpOTimer">--:--</div><div class="sm" style="text-align:center">Time left to pay</div>';
-      html += '<div style="margin-top:8px"><div class="afp-kv"><span>AST amount</span><b>' + ast(o.units) + ' AST</b></div><div class="afp-kv"><span>Price</span><b>' + commas(o.price) + ' ' + esc(o.currency) + '</b></div><div class="afp-kv"><span>' + (buyer ? 'You pay' : 'Buyer pays') + '</span><b style="color:#ffb91f;font-size:17px">' + commas(o.fiat) + ' ' + esc(o.currency) + '</b></div><div class="afp-kv"><span>' + (buyer ? 'Seller' : 'Buyer') + '</span><b>' + esc(other) + '</b></div><div class="afp-kv"><span>Order ID</span><b style="font-size:12px">' + esc(o.id) + '</b></div></div></div>';
+      html += '<div style="margin-top:8px"><div class="afp-kv"><span>AST amount</span><b>' + ast(o.units) + ' AST</b></div>' + (seller && o.fee ? '<div class="afp-kv"><span>P2P fee (paid by you)</span><b>' + ast(o.fee) + ' AST</b></div><div class="afp-kv"><span>Locked in escrow</span><b>' + ast(o.units + o.fee) + ' AST</b></div>' : '') + '<div class="afp-kv"><span>Price</span><b>' + commas(o.price) + ' ' + esc(o.currency) + '</b></div><div class="afp-kv"><span>' + (buyer ? 'You pay' : 'Buyer pays') + '</span><b style="color:#ffb91f;font-size:17px">' + commas(o.fiat) + ' ' + esc(o.currency) + '</b></div><div class="afp-kv"><span>' + (buyer ? 'Seller' : 'Buyer') + '</span><b>' + esc(other) + '</b></div><div class="afp-kv"><span>Order ID</span><b style="font-size:12px">' + esc(o.id) + '</b></div></div></div>';
       if (o.status === 'created' || o.status === 'paid' || o.status === 'disputed') {
         html += '<div class="afp-card"><div class="afp-h2 gold">' + (buyer ? 'Pay to this account' : 'You will be paid here') + '</div><div class="afp-kv"><span>Method</span><b>' + esc(o.methodName) + '</b></div><div class="afp-kv"><span>Account name</span><b>' + esc(o.payName) + '</b></div><div class="afp-kv"><span>Account / number</span><b>' + esc(o.payAccount) + '</b></div>' +
           '<button class="afp-ghost afp-block" style="margin-top:8px;min-height:40px" data-act="copy:' + esc(o.payAccount) + '">📋 Copy account</button>' + (buyer && o.status === 'created' ? '<div class="afp-warn">Pay <b>' + commas(o.fiat) + ' ' + esc(o.currency) + '</b> only to this account, then press <b>I have paid</b> and upload your screenshot.</div>' : '') + '</div>';
       }
       if (o.proofUrl) html += '<div class="afp-card"><div class="afp-h2 gold">Payment screenshot</div><a href="' + esc(o.proofUrl) + '" target="_blank" rel="noopener"><img class="afp-img" src="' + esc(o.proofUrl) + '" alt="Payment screenshot"></a></div>';
       if (o.disputeReason) html += '<div class="afp-card" style="border-color:#d8303c"><div class="afp-h2">⚠️ Dispute</div><p class="afp-sub" style="margin:0">Opened by the ' + esc(o.disputeBy) + ': ' + esc(o.disputeReason) + '</p>' + (o.resolution ? '<div class="afp-ok">' + esc(o.resolution) + '</div>' : '') + '</div>';
+      if (o.status === 'released') html += ratingCard();
       html += '<div class="afp-card" id="afpOActs">';
       if (buyer && o.status === 'created') html += '<button class="afp-green afp-block" data-act="paid">✔ I have paid</button><button class="afp-ghost afp-block" style="margin-top:8px" data-act="cancel">Cancel order</button><p class="sm" style="margin:8px 0 0">Do not cancel if you already paid. Open a dispute instead after marking as paid.</p>';
       else if (seller && (o.status === 'created' || o.status === 'paid')) html += '<button class="afp-green afp-block" data-act="release">🔓 Release AST to buyer</button>' + (o.status === 'paid' ? '<button class="afp-ghost afp-block" style="margin-top:8px" data-act="dispute">Payment not received / problem</button>' : '<p class="sm" style="margin:8px 0 0">The buyer has not marked the payment yet. Release only after the money is in your account.</p>');
@@ -407,6 +450,11 @@
         if (atEnd) chat.scrollTop = chat.scrollHeight;
       }
       paintTimer();
+    }
+    function ratingCard() {
+      var r = P.ratings, em = { up: '\ud83d\udc4d', down: '\ud83d\udc4e' };
+      if (r.mine) return '<div class="afp-card"><div class="afp-h2 gold">Ratings</div><p class="afp-sub" style="margin:0">You rated this trader ' + em[r.mine] + '.' + (r.theirs ? ' They rated you ' + em[r.theirs] + (r.theirComment ? ': \u201c' + esc(r.theirComment) + '\u201d' : '') + '.' : '') + '</p></div>';
+      return '<div class="afp-card"><div class="afp-h2 gold">Rate this trader</div><p class="afp-sub">How was your trade? Your rating helps other members.</p><input class="afp-input" id="afpRCom" maxlength="200" placeholder="Comment (optional)"><div class="afp-row" style="margin-top:8px"><button class="afp-green" style="flex:1;margin-right:8px" data-act="rate:up">\ud83d\udc4d Good</button><button class="afp-red" style="flex:1" data-act="rate:down">\ud83d\udc4e Bad</button></div></div>';
     }
     function pickProof(then) {
       var inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*';
@@ -451,11 +499,15 @@
       if (t.id === 'afpTAmt' && P.flow && P.flow.type === 'trade') {
         P.flow.amount = t.value.trim(); var a = P.flow.ad, u = Math.round(Number(P.flow.amount) * 100), f = $('afpTFiat');
         if (f) f.textContent = (Number(P.flow.amount) > 0 ? fiatText(a.currency, u, a.price) : '0') + ' ' + a.currency;
+        var fe = $('afpTFee'); if (fe) fe.innerHTML = feeText(P.flow);
       } else if (t.id === 'afpAmt') P.amount = t.value.trim();
       else if (t.id === 'afpPFile' && P.flow && P.flow.type === 'paid' && t.files && t.files[0]) {
         if (P.flow.previewUrl) { try { URL.revokeObjectURL(P.flow.previewUrl); } catch (_) { } }
         P.flow.file = t.files[0]; P.flow.previewUrl = URL.createObjectURL(t.files[0]); P.flow.error = ''; paintPaid();
       } else if (t.id === 'afpOFile' && t.files && t.files[0]) { sendChatImage(t.files[0]); t.value = ''; }
+      else if ((t.id === 'afpKFront' || t.id === 'afpKSelfie') && P.flow && P.flow.type === 'kyc' && t.files && t.files[0]) {
+        var isF = t.id === 'afpKFront'; P.flow[isF ? 'front' : 'selfie'] = t.files[0]; var nm = $(isF ? 'afpKFrontName' : 'afpKSelfieName'); if (nm) nm.textContent = '\u2714 ' + t.files[0].name;
+      }
     }
     function onClick(e) {
       var navb = e.target.closest && e.target.closest('[data-nav]');
@@ -488,6 +540,10 @@
         case 'dispute': var why = prompt('Explain the problem (for example: "I paid but the seller did not release" or "I did not receive the money"):'); if (why && why.trim().length >= 5) orderAction('/wallet/p2p/dispute', { id: P.order.id, reason: why.trim() }, 'Dispute opened. Support will review it.', a); else if (why !== null) toast('Please write at least 5 characters.'); break;
         case 'copy': copyText(arg).then(function (ok) { toast(ok ? 'Copied' : 'Could not copy. Press and hold to copy.'); }); break;
         case 'send': sendChat(); break;
+        case 'rate': var rc = $('afpRCom'); a.disabled = true; api('POST', '/wallet/p2p/rate', { id: P.order.id, score: arg, comment: rc ? rc.value.trim() : '' }).then(function () { toast('Thank you for your rating.'); loadOrder(); }, function (er) { a.disabled = false; toast(errMsg(er)); }); break;
+        case 'kycstart': startKyc(); break;
+        case 'kdoc': if (P.flow && P.flow.type === 'kyc') { readKyc(); P.flow.doc = arg; paintKyc(); } break;
+        case 'kycgo': submitKyc(); break;
       }
     }
     function goBack() {
@@ -499,7 +555,7 @@
     /* ------------------------------------------------------------------ terms gate, open, close */
     function termsOk() { try { return window.localStorage.getItem('afp_terms_v1') === '1'; } catch (_) { return false; } }
     function showTerms() {
-      openSheet(sheetHead('P2P Trading rules') + '<div class="afp-warn"><ul><li>The seller’s AST is held in <b>escrow</b> and released only when the seller confirms, or when support decides a dispute.</li><li><b>Never release AST before the money is in your own account.</b> Screenshots can be fake.</li><li>Pay only to the account shown in the order, within the time limit, and only from an account in your own name.</li><li>Keep all communication inside the order chat. Afrishine Hub will never ask for your password.</li><li>Fake payments, false disputes and scams lead to a permanent ban.</li><li>Afrishine Hub does not handle the RWF / USDT payment. It is sent directly between members. Follow the laws of your country.</li></ul></div><button class="afp-gold afp-block" data-act="terms">I understand and agree</button>');
+      openSheet(sheetHead('P2P Trading rules') + '<div class="afp-warn"><ul><li>The seller’s AST is held in <b>escrow</b> and released only when the seller confirms, or when support decides a dispute.</li><li><b>Never release AST before the money is in your own account.</b> Screenshots can be fake.</li><li>Pay only to the account shown in the order, within the time limit, and only from an account in your own name.</li><li>The seller pays a small P2P fee on every order. It is added on top of the amount, so the buyer always receives the full amount.</li><li>Keep all communication inside the order chat. Afrishine Hub will never ask for your password.</li><li>Fake payments, false disputes and scams lead to a permanent ban.</li><li>Afrishine Hub does not handle the RWF / USDT payment. It is sent directly between members. Follow the laws of your country.</li></ul></div><button class="afp-gold afp-block" data-act="terms">I understand and agree</button>');
       var b = $('afpSheet'); if (b) b.addEventListener('click', function (e) { var t = e.target.closest && e.target.closest('[data-act="terms"]'); if (t) { try { window.localStorage.setItem('afp_terms_v1', '1'); } catch (_) { } closeSheet(); } });
     }
     function openP2P(orderId) {
