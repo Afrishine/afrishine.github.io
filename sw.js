@@ -6,7 +6,8 @@ var NOTIFY_ICON = '/icon-192.png';
 
 var APP_FILES = [
   './',
-  './index.html'
+  './index.html',
+  './marketplace.js'
 ];
 
 // Install service worker and cache the main app
