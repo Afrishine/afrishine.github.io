@@ -213,7 +213,7 @@ function mConfirm(opt) {
 /* ---------- share ---------- */
 async function mShare(id) {
   var p = findProduct(id); if (!p) return;
-  var url = SITE + '/api/market-share?id=' + encodeURIComponent(id);   // preview page: shows the product photo, title and price
+  var url = SITE + '/share/marketplacePosts/' + encodeURIComponent(id);   // api/share.js builds the preview: product photo, title and price
   var data = { title: mTitle(p) + ' · Afrishine Marketplace', text: mTitle(p) + ' — ' + mPrice(p) + ' · ' + mLoc(p), url: url };
   try {
     if (navigator.share) { await navigator.share(data); return; }
