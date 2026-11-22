@@ -1,4 +1,4 @@
-/* Afrishine Hub - core JavaScript (app.js). Loads FIRST: Firebase setup, navigation, menus, creating posts and media upload, plus the original Marketplace code that marketplace.js later replaces. */
+/* Afrishine Hub - core JavaScript (app.js). Loads FIRST: Firebase setup, navigation, menus, creating posts and media upload, and the Marketplace sign-in helpers (the Marketplace itself is in marketplace.js). */
 
 (function(){if(!Promise.allSettled){Promise.allSettled=function(items){return Promise.all(Array.prototype.map.call(items,function(item){return Promise.resolve(item).then(function(value){return {status:'fulfilled',value:value};},function(reason){return {status:'rejected',reason:reason};});}));};}})();
 if(!window.CSS){window.CSS={};}if(!window.CSS.escape){window.CSS.escape=function(value){return String(value).replace(/[^a-zA-Z0-9_-]/g,function(ch){return '\\'+ch;});};}
@@ -50,9 +50,7 @@ const firebaseConfig = {
     appId: "1:553901207884:web:81d4dce86149267ae59fe9",
     measurementId: "G-WXNG0SHM9X"
 };
-let auth = null, db = null, currentFirebaseUser = null, cameraStream = null, cameraFacing = 'user', selectedMediaUrl = null, selectedMediaFile = null, selectedMediaType = null, createSource = 'hub', marketplaceFilter = 'all', pendingMarketplaceLogin = false;
-let marketplaceLastDoc = null, marketplaceHasMore = false, marketplaceLoading = false;
-const MARKETPLACE_PAGE_SIZE = 15;
+let auth = null, db = null, currentFirebaseUser = null, cameraStream = null, cameraFacing = 'user', selectedMediaUrl = null, selectedMediaFile = null, selectedMediaType = null, createSource = 'hub', pendingMarketplaceLogin = false;
 try {
     if (!firebase.apps.length)
         firebase.initializeApp(firebaseConfig);
@@ -293,11 +291,7 @@ function stopCamera() { if (cameraStream) {
 function notice(message) { const el = document.getElementById('notice'); el.textContent = message; el.style.display = 'block'; clearTimeout(window.ahNoticeTimer); window.ahNoticeTimer = setTimeout(() => el.style.display = 'none', 4000); }
 function confirmLoveAge() { document.getElementById('loveAgeGate').style.display = 'none'; document.getElementById('loveContent').style.display = 'block'; }
 
-/* AFRISHINE MARKETPLACE: Google-authenticated posts and community interaction */
-function enterMarketplace() { if (!canViewMarketplace()) {
-    openMarketplaceLogin();
-    return;
-} showPage('shop'); loadMarketplacePosts(); }
+/* Marketplace sign-in helpers (used by marketplace.js, auth.js and the page router) */
 function openMarketplaceLogin() { pendingMarketplaceLogin = true; document.getElementById('marketLoginModal').classList.add('open'); }
 function closeMarketplaceLogin() { pendingMarketplaceLogin = false; document.getElementById('marketLoginModal').classList.remove('open'); }
 function marketplaceGoogleLogin() {
@@ -323,211 +317,7 @@ function marketplaceGoogleLogin() {
         }
     });
 }
-function setMarketplaceFilter(filter) { if (!canViewMarketplace()) {
-    openMarketplaceLogin();
-    return;
-} marketplaceFilter = filter; ['marketAllBtn', 'marketBuyBtn', 'marketSellBtn'].forEach(function (id) { var b = document.getElementById(id); if (b)
-    b.classList.remove('active'); }); var active = document.getElementById(filter === 'all' ? 'marketAllBtn' : filter === 'buy' ? 'marketBuyBtn' : 'marketSellBtn'); if (active)
-    active.classList.add('active'); loadMarketplacePosts(true); }
-function publishMarketplacePost() {
-    return __awaiter(this, void 0, void 0, function* () { if (!isGoogleMarketplaceUser(currentFirebaseUser)) {
-        openMarketplaceLogin();
-        return;
-    } if (!db) {
-        notice('We could not connect to Afrishine Hub services. Please check your connection and reload the page.');
-        return;
-    } var type = document.getElementById('marketType').value, text = document.getElementById('marketText').value.trim(), price = document.getElementById('marketPrice').value.trim(), locationText = document.getElementById('marketLocation').value.trim(); if (text.length < 8) {
-        notice('Enter a detailed description before publishing your listing.');
-        return;
-    } if (!locationText) {
-        notice('Enter your location, including country and city or district.');
-        return;
-    } if (text.length > 1200) {
-        notice('The description is too long.');
-        return;
-    } var btn = document.querySelector('#shop .market-form button.gold'); var oldLabel = btn ? btn.textContent : ''; if (btn) {
-        btn.disabled = true;
-        btn.textContent = 'Posting…';
-    } var name = (currentFirebaseUser.displayName || 'Afrishine Member').trim(); try {
-        yield db.collection('marketplacePosts').add({ uid: currentFirebaseUser.uid, authorName: name, authorPhoto: currentFirebaseUser.photoURL || '', type: type, text: text, price: price, location: locationText, createdAt: firebase.firestore.FieldValue.serverTimestamp(), status: 'active' });
-        document.getElementById('marketText').value = '';
-        document.getElementById('marketPrice').value = '';
-        notice('Your Marketplace listing has been published.');
-        yield loadMarketplacePosts(true);
-    }
-    catch (e) {
-        console.error('Marketplace publish failed:', e);
-        notice(firebaseErrorMessage(e));
-    }
-    finally {
-        if (btn) {
-            btn.disabled = false;
-            btn.textContent = oldLabel || 'Post on Marketplace';
-        }
-    } });
-}
-function loadMarketplacePosts() {
-    return __awaiter(this, arguments, void 0, function* (reset = true) {
-        var feed = document.getElementById('marketplaceFeed');
-        if (!feed)
-            return;
-        if (!canViewMarketplace()) {
-            feed.innerHTML = '<p class="muted">Login with Google to view Marketplace posts.</p>';
-            return;
-        }
-        if (!db) {
-            feed.innerHTML = '<p class="muted">We could not connect to Afrishine Hub services. Please check your connection and reload the page.</p>';
-            return;
-        }
-        if (marketplaceLoading)
-            return;
-        marketplaceLoading = true;
-        if (reset) {
-            marketplaceLastDoc = null;
-            marketplaceHasMore = false;
-            feed.innerHTML = '<p class="muted">Loading Marketplace…</p>';
-        }
-        var oldButton = document.getElementById('marketplaceLoadMore');
-        if (oldButton)
-            oldButton.remove();
-        try {
-            var query = db.collection('marketplacePosts').orderBy('createdAt', 'desc').limit(MARKETPLACE_PAGE_SIZE);
-            if (marketplaceLastDoc)
-                query = query.startAfter(marketplaceLastDoc);
-            var snap = yield query.get();
-            marketplaceLastDoc = snap.docs.length ? snap.docs[snap.docs.length - 1] : marketplaceLastDoc;
-            marketplaceHasMore = snap.docs.length === MARKETPLACE_PAGE_SIZE;
-            var posts = snap.docs.map(function (d) { var x = d.data(); x.id = d.id; return x; });
-            if (marketplaceFilter !== 'all')
-                posts = posts.filter(function (p) { return p.type === marketplaceFilter; });
-            if (reset) {
-                if (!posts.length && !marketplaceHasMore)
-                    feed.innerHTML = '<div class="empty-feed">No listings yet. Be the first to publish one.</div>';
-                else
-                    feed.innerHTML = '';
-            }
-            appendMarketplacePosts(posts);
-            if (marketplaceHasMore) {
-                var more = document.createElement('button');
-                more.id = 'marketplaceLoadMore';
-                more.className = 'secondary';
-                more.style = 'display:block;width:100%;margin:16px 0';
-                more.textContent = 'Load More Posts';
-                more.onclick = function () { loadMarketplacePosts(false); };
-                feed.appendChild(more);
-            }
-        }
-        catch (e) {
-            console.error(e);
-            if (reset)
-                feed.innerHTML = '<p class="muted">' + safeText(firebaseErrorMessage(e)) + '</p>';
-            else
-                notice(firebaseErrorMessage(e));
-        }
-        finally {
-            marketplaceLoading = false;
-        }
-    });
-}
 function marketplacePublicName(value) { var n = String(value || '').trim(); return (!n || n.includes('@')) ? 'Afrishine Member' : n; }
-function appendMarketplacePosts(posts) {
-    var feed = document.getElementById('marketplaceFeed');
-    if (!feed || !posts.length)
-        return;
-    var more = document.getElementById('marketplaceLoadMore');
-    if (more)
-        more.remove();
-    var html = posts.map(function (p) { var mine = currentFirebaseUser && p.uid === currentFirebaseUser.uid; var label = p.type === 'buy' ? '🔎 BUY REQUEST' : '🏷️ FOR SALE'; return '<article class="market-post" data-market-post="' + safeText(p.id) + '"><div class="market-post-head"><div><b>' + label + '</b><div class="market-meta">By <button class="secondary" style="padding:3px 8px" onclick="openMemberProfile(\'' + safeText(p.uid) + '\')">' + safeText(marketplacePublicName(p.authorName)) + '</button></div><div class="market-meta">' + safeText(p.location || '') + ' · ' + safeText(postDate(p.createdAt)) + '</div></div>' + (mine ? '<button class="secondary" onclick="deleteMarketplacePost(\'' + safeText(p.id) + '\')">Delete</button>' : '') + '</div><p>' + safeText(p.text || '') + '</p>' + (p.price ? '<b>Price / Budget: ' + safeText(p.price) + '</b>' : '') + '<div class="market-meta" style="margin-top:8px">Email is private · Contact through Inbox</div><div class="actions"><button class="secondary" onclick="openMemberProfile(\'' + safeText(p.uid) + '\')">👤 Profile</button>' + (mine ? '' : '<button class="gold" onclick="startConversation(\'' + safeText(p.uid) + '\',\'' + safeText(marketplacePublicName(p.authorName)).replace(/'/g, '&#39;') + '\')">✉ Inbox</button>') + '<button class="secondary" onclick="toggleMarketplaceComments(\'' + safeText(p.id) + '\')">💬 Show Comments</button><button class="secondary" onclick="reportMarketplacePost(\'' + safeText(p.id) + '\',\'' + safeText(p.uid) + '\')">Report</button></div><div class="comment-area" id="marketCommentArea_' + safeText(p.id) + '" style="display:none"><div id="marketComments_' + safeText(p.id) + '"><span class="market-meta">Tap Show Comments to load comments.</span></div><div class="market-comment"><input class="field" id="marketComment_' + safeText(p.id) + '" maxlength="500" placeholder="Write a comment…"><button class="gold" onclick="addMarketplaceComment(\'' + safeText(p.id) + '\')">Send</button></div></div></article>'; }).join('');
-    var temp = document.createElement('div');
-    temp.innerHTML = html;
-    while (temp.firstChild) {
-        feed.appendChild(temp.firstChild);
-    }
-}
-function toggleMarketplaceComments(id) { var area = document.getElementById('marketCommentArea_' + id); if (!area)
-    return; var opening = area.style.display === 'none'; area.style.display = opening ? 'block' : 'none'; if (opening && !area.dataset.loaded) {
-    loadMarketplaceComments(id);
-    area.dataset.loaded = '1';
-} if (opening) {
-    var input = document.getElementById('marketComment_' + id);
-    if (input)
-        input.focus();
-} }
-function loadMarketplaceComments(id) {
-    return __awaiter(this, void 0, void 0, function* () { if (!isGoogleMarketplaceUser(currentFirebaseUser) || !db)
-        return; try {
-        var snap = yield db.collection('marketplacePosts').doc(id).collection('comments').orderBy('createdAt', 'asc').limit(20).get();
-        var box = document.getElementById('marketComments_' + id);
-        if (!box)
-            return;
-        box.innerHTML = snap.docs.map(function (d) { var c = d.data(); return '<p class="comment-line"><b>' + safeText(c.authorName || 'Member') + ':</b> ' + safeText(c.text || '') + '</p>'; }).join('') || '<span class="market-meta">No comments yet.</span>';
-    }
-    catch (e) {
-        console.warn('Marketplace comments:', e);
-    } });
-}
-function addMarketplaceComment(id) {
-    return __awaiter(this, void 0, void 0, function* () { if (!isGoogleMarketplaceUser(currentFirebaseUser)) {
-        openMarketplaceLogin();
-        return;
-    } if (!db) {
-        notice('We could not connect to Afrishine Hub services. Please check your connection and reload the page.');
-        return;
-    } var input = document.getElementById('marketComment_' + id), text = input && input.value.trim(); if (!text)
-        return; try {
-        var marketPostSnap = yield db.collection('marketplacePosts').doc(id).get();
-        var marketOwnerUid = marketPostSnap.exists ? marketPostSnap.data().uid : null;
-        yield db.collection('marketplacePosts').doc(id).collection('comments').add({ uid: currentFirebaseUser.uid, authorName: currentFirebaseUser.displayName || 'Afrishine Member', text: text, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-        if (marketOwnerUid && marketOwnerUid !== currentFirebaseUser.uid && typeof window.afCreateNotification === 'function') {
-            window.afCreateNotification(marketOwnerUid, 'marketplace_comment', 'New Marketplace comment', (currentFirebaseUser.displayName || 'A member') + ' commented on your listing.', 'shop');
-        }
-        input.value = '';
-        loadMarketplaceComments(id);
-    }
-    catch (e) {
-        notice(firebaseErrorMessage(e));
-    } });
-}
-function deleteMarketplacePost(id) {
-    return __awaiter(this, void 0, void 0, function* () { if (!isGoogleMarketplaceUser(currentFirebaseUser)) {
-        openMarketplaceLogin();
-        return;
-    } if (!confirm('Delete your Marketplace post?'))
-        return; if (!db) {
-        notice('We could not connect to Afrishine Hub services. Please check your connection and reload the page.');
-        return;
-    } try {
-        var ref = db.collection('marketplacePosts').doc(id), snap = yield ref.get();
-        if (!snap.exists || snap.data().uid !== currentFirebaseUser.uid) {
-            notice('You can only delete your own post.');
-            return;
-        }
-        const marketPostData = snap.data();
-        yield ref.delete();
-        [].concat(marketPostData.images || [], marketPostData.imageUrls || [], marketPostData.videoUrl ? [marketPostData.videoUrl] : []).forEach(function (mediaUrl) { if (typeof workerDelete === 'function') workerDelete(mediaUrl).catch(function () { }); });
-        notice('Marketplace post deleted.');
-        loadMarketplacePosts(true);
-    }
-    catch (e) {
-        notice(firebaseErrorMessage(e));
-    } });
-}
-function reportMarketplacePost(id, uid) {
-    return __awaiter(this, void 0, void 0, function* () { if (!isGoogleMarketplaceUser(currentFirebaseUser)) {
-        openMarketplaceLogin();
-        return;
-    } if (!db) {
-        notice('We could not connect to Afrishine Hub services. Please check your connection and reload the page.');
-        return;
-    } var reason = prompt('Why are you reporting this listing?'); if (!reason || !reason.trim())
-        return; try {
-        yield db.collection('marketplaceReports').add({ reporterUid: currentFirebaseUser.uid, postId: id, reportedUid: uid, reason: reason.trim().slice(0, 500), createdAt: firebase.firestore.FieldValue.serverTimestamp(), status: 'new' });
-        notice('Report sent. Thank you.');
-    }
-    catch (e) {
-        notice(firebaseErrorMessage(e));
-    } });
-}
 
 /* Offline-ready shell: cache the site shell and reuse cached scripts on slow connections. */
 (function () {
