@@ -213,7 +213,7 @@ function mConfirm(opt) {
 /* ---------- share ---------- */
 async function mShare(id) {
   var p = findProduct(id); if (!p) return;
-  var url = SITE + '/marketplace?product=' + encodeURIComponent(id);
+  var url = SITE + '/api/market-share?id=' + encodeURIComponent(id);   // preview page: shows the product photo, title and price
   var data = { title: mTitle(p) + ' · Afrishine Marketplace', text: mTitle(p) + ' — ' + mPrice(p) + ' · ' + mLoc(p), url: url };
   try {
     if (navigator.share) { await navigator.share(data); return; }
@@ -511,7 +511,7 @@ if (typeof originalShowPage === 'function') {
 }
 if ($('shop') && $('shop').classList.contains('active')) { document.body.classList.add('marketplace-active'); marketShowPanel('home'); marketLoadProducts(); }
 
-/* A shared product link (…/marketplace?product=ID) opens that product straight away. */
+/* A shared product link (…/marketplace?product=ID, reached from the share preview page) opens that product straight away. */
 var sharedProductId = '';
 try { sharedProductId = new URLSearchParams(location.search).get('product') || ''; } catch (e) { sharedProductId = ''; }
 if (sharedProductId) {
