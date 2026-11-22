@@ -472,14 +472,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         const s = document.createElement('style');
         s.textContent = `
 .ah-profile-grid{display:grid;grid-template-columns:88px 1fr;gap:14px;align-items:center}.ah-avatar{width:82px;height:82px;border-radius:50%;object-fit:cover;background:#303747;border:2px solid var(--gold)}.ah-inline{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.ah-input{width:100%;padding:12px;border:1px solid #465064;border-radius:12px;background:#101621;color:#fff;margin:7px 0}.ah-grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0}.ah-grid3 img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;background:#101621}.ah-badge{display:inline-block;padding:3px 8px;border-radius:20px;background:#193d2c;color:#a7f3c0;font-size:11px;font-weight:700}.ah-stat{display:inline-flex;flex-direction:column;padding:8px 13px;background:#111722;border-radius:12px;min-width:76px}.ah-stat b{font-size:17px}.ah-stat small{color:#aeb6c5}.ah-search-results button{display:block;width:100%;text-align:left;padding:10px;border:0;border-bottom:1px solid #303747;background:transparent;color:#fff}.ah-rating{color:#ffca55;letter-spacing:2px}.ah-market-card{border:1px solid #303747;border-radius:14px;padding:12px;margin:12px 0;background:#111722}.ah-hidden{display:none!important}
-.ah-product-post{padding:14px;background:linear-gradient(145deg,#151922,#10141c);border:1px solid #343b49;border-radius:18px}
-.ah-market-product-title{font-size:19px;line-height:1.35;color:#fff;margin:13px 0 10px}
-.ah-market-product-photo{display:block;position:relative;width:100%;padding:0;margin:8px 0;border:0;border-radius:15px;overflow:hidden;background:#080a10;text-align:center}
-.ah-market-product-photo img{display:block;width:100%;height:230px;height:clamp(230px,58vw,470px);max-height:470px;object-fit:contain;background:#080a10}
-.ah-market-product-photo span{display:block;padding:8px;background:#0c1019;color:#ffd064;font-size:12px;font-weight:700}
-.ah-market-photo-strip{display:flex;gap:8px;overflow-x:auto;margin:8px 0 12px;padding-bottom:4px}
-.ah-market-photo-strip img{width:76px;height:76px;flex:0 0 76px;object-fit:cover;border-radius:9px;border:1px solid #394355;cursor:pointer}
-.ah-no-product-photo{padding:35px 12px;text-align:center;background:#0b0f17;border-radius:13px;color:#aeb6c5;margin:10px 0}
 .ah-product-modal{display:none;position:fixed;z-index:150;inset:0;background:#000e;padding:12px;overflow-y:auto;align-items:flex-start;justify-content:center}
 .ah-product-modal.open{display:flex}
 .ah-product-modal-card{position:relative;width:100%;max-width:650px;margin:auto;padding:18px;border:1px solid #6e582d;border-radius:18px;background:#111722;box-shadow:0 18px 55px #000b}
@@ -782,209 +774,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             say(firebaseErrorMessage(e));
         } });
     }
-    function injectMarketplaceFields() { const form = document.querySelector('#shop .market-form'); if (!form || $('ahMarketImages'))
-        return; const f = document.createElement('input'); f.type = 'file'; f.id = 'ahMarketImages'; f.className = 'field'; f.accept = 'image/jpeg,image/png,image/webp'; f.multiple = true; f.setAttribute('aria-label', 'Product photos'); const condition = document.createElement('select'); condition.id = 'ahMarketCondition'; condition.className = 'field'; condition.innerHTML = '<option value="new">Condition: New</option><option value="used">Condition: Used</option>'; const hint = document.createElement('p'); hint.className = 'creator-hint'; hint.textContent = 'Select up to 5 photos for new or used products.'; const btn = form.querySelector('button.gold'); form.insertBefore(f, btn); form.insertBefore(condition, btn); form.insertBefore(hint, btn); }
-    function publishMarketEnhanced() {
-        return __awaiter(this, void 0, void 0, function* () { if (!(typeof isGoogleMarketplaceUser === 'function' && isGoogleMarketplaceUser(user()))) {
-            openMarketplaceLogin();
-            return;
-        } const dbx = firestore(), u = user(); const type = $('marketType').value, text = $('marketText').value.trim(), price = $('marketPrice').value.trim(), loc = $('marketLocation').value.trim(), condition = $('ahMarketCondition').value, files = Array.from(($('ahMarketImages') && $('ahMarketImages').files) || []).slice(0, 5); if (text.length < 8 || !loc) {
-            say('Enter a product description and location.');
-            return;
-        } try {
-            const profileSnap = yield dbx.collection('publicProfiles').doc(u.uid).get();
-            const profileName = profileSnap.exists ? (profileSnap.data().username || u.displayName || 'Afrishine Member') : (u.displayName || 'Afrishine Member');
-            const imageUrls = [], imageKeys = [];
-            for (const file of files) {
-                if (!file.type.startsWith('image/'))
-                    continue;
-                if (!(yield checkWorkerQuota()))
-                    return;
-                const up = yield workerUpload(yield compressImage(file));
-                imageUrls.push(up.url);
-                imageKeys.push(up.key);
-            }
-            yield dbx.collection('marketplacePosts').add({ uid: u.uid, authorName: u.displayName || 'Afrishine Member', authorPhoto: u.photoURL || '', type, text, price, location: loc, condition, imageUrls, imageKeys, createdAt: serverTime(), status: 'active' });
-            $('marketText').value = '';
-            $('marketPrice').value = '';
-            $('ahMarketImages').value = '';
-            say('Your Marketplace listing has been published.');
-            yield loadMarketplacePosts(true);
-        }
-        catch (e) {
-            console.error(e);
-            say(firebaseErrorMessage(e));
-        } });
-    }
-    function loadSellerTrust(uid, card) {
-        return __awaiter(this, void 0, void 0, function* () { try {
-            const dbx = firestore();
-            const profile = yield dbx.collection('publicProfiles').doc(uid).get();
-            const d = profile.exists ? profile.data() : {};
-            const badge = card.querySelector('.ah-badge');
-            if (d.verified === true && !badge) {
-                const b = document.createElement('span');
-                b.className = 'ah-badge';
-                b.textContent = '✓ Verified Seller';
-                const head = card.querySelector('.market-post-head');
-                if (head)
-                    head.appendChild(b);
-            }
-            const reviews = yield dbx.collection('marketplaceReviews').where('sellerUid', '==', uid).limit(100).get();
-            if (reviews.size) {
-                const avg = reviews.docs.reduce((n, x) => n + Number(x.data().rating || 0), 0) / reviews.size;
-                const rating = document.createElement('p');
-                rating.className = 'creator-hint ah-rating';
-                rating.textContent = '★'.repeat(Math.round(avg)) + '☆'.repeat(5 - Math.round(avg)) + ' (' + avg.toFixed(1) + '/5 · ' + reviews.size + ' reviews)';
-                card.appendChild(rating);
-            }
-        }
-        catch (e) {
-            console.warn('Seller trust info', e);
-        } });
-    }
-    function addMarketReview(postId, sellerUid) {
-        return __awaiter(this, void 0, void 0, function* () { const u = user(); if (!u) {
-            say('Please sign in before submitting a review.');
-            return;
-        } if (sellerUid === u.uid)
-            return; const rating = Number(prompt('Rate this seller from 1 to 5:')); if (!Number.isInteger(rating) || rating < 1 || rating > 5)
-            return; const text = (prompt('Describe your experience with this seller (optional):') || '').slice(0, 300); try {
-            yield firestore().collection('marketplaceReviews').add({ postId, sellerUid, reviewerUid: u.uid, reviewerName: u.displayName || 'Member', rating, text, createdAt: serverTime() });
-            say('Your review has been submitted.');
-        }
-        catch (e) {
-            say(firebaseErrorMessage(e));
-        } });
-    }
-    // Extend existing marketplace cards with photo tiles, condition, verification, and review entry.
-    const oldAppendMarketplacePosts = window.appendMarketplacePosts || appendMarketplacePosts;
-    function openMarketplaceProduct(post) {
-        const images = Array.isArray(post.imageUrls) ? post.imageUrls.filter(Boolean) : [];
-        let modal = document.getElementById('ahProductDetailModal');
-        if (!modal) {
-            modal = document.createElement('div');
-            modal.id = 'ahProductDetailModal';
-            modal.className = 'ah-product-modal';
-            modal.setAttribute('role', 'dialog');
-            modal.setAttribute('aria-modal', 'true');
-            modal.innerHTML = '<div class="ah-product-modal-card"><button type="button" class="ah-product-close" aria-label="Close product details">×</button><div class="ah-product-modal-content"></div></div>';
-            document.body.appendChild(modal);
-            modal.addEventListener('click', function (e) { if (e.target === modal)
-                modal.classList.remove('open'); });
-            modal.querySelector('.ah-product-close').addEventListener('click', function () { modal.classList.remove('open'); });
-        }
-        const content = modal.querySelector('.ah-product-modal-content');
-        content.innerHTML = '';
-        const title = (String(post.text || 'Product').split(/[\n.!?]/)[0] || 'Marketplace Product').trim().slice(0, 90);
-        const heading = document.createElement('h2');
-        heading.className = 'ah-product-detail-title';
-        heading.textContent = title || 'Marketplace Product';
-        content.appendChild(heading);
-        if (images.length) {
-            const main = document.createElement('img');
-            main.className = 'ah-product-detail-image';
-            main.src = images[0];
-            main.alt = title;
-            main.loading = 'eager';
-            content.appendChild(main);
-            if (images.length > 1) {
-                const thumbs = document.createElement('div');
-                thumbs.className = 'ah-product-detail-thumbs';
-                images.slice(1, 5).forEach(function (url) { const im = document.createElement('img'); im.src = url; im.alt = 'Additional product photo'; im.addEventListener('click', function () { main.src = url; }); thumbs.appendChild(im); });
-                content.appendChild(thumbs);
-            }
-        }
-        const price = document.createElement('div');
-        price.className = 'ah-product-detail-price';
-        price.textContent = post.price ? (post.type === 'buy' ? 'Budget: ' : 'Price: ') + post.price : 'Price: Contact seller';
-        content.appendChild(price);
-        const description = document.createElement('p');
-        description.className = 'ah-product-detail-description';
-        description.textContent = post.text || 'No additional description.';
-        content.appendChild(description);
-        const info = document.createElement('div');
-        info.className = 'ah-product-detail-info';
-        [['📍 Location', post.location || 'Seller has not added a location'], ['👤 Seller', marketplacePublicName(post.authorName)], ['📅 Posted', postDate(post.createdAt)], ['📦 Type', post.type === 'buy' ? 'Buy request' : 'For sale'], ['Condition', post.condition === 'used' ? 'Used' : 'New / not specified']].forEach(function (pair) { const row = document.createElement('p'); const b = document.createElement('b'); b.textContent = pair[0] + ': '; row.appendChild(b); row.appendChild(document.createTextNode(pair[1])); info.appendChild(row); });
-        content.appendChild(info);
-        const actions = document.createElement('div');
-        actions.className = 'actions';
-        const profile = document.createElement('button');
-        profile.className = 'secondary';
-        profile.textContent = '👤 View Seller Profile';
-        profile.addEventListener('click', function () { modal.classList.remove('open'); openMemberProfile(post.uid); });
-        actions.appendChild(profile);
-        if (!(currentFirebaseUser && post.uid === currentFirebaseUser.uid)) {
-            const message = document.createElement('button');
-            message.className = 'gold';
-            message.textContent = '✉ Contact Seller';
-            message.addEventListener('click', function () { modal.classList.remove('open'); startConversation(post.uid, marketplacePublicName(post.authorName)); });
-            actions.appendChild(message);
-        }
-        content.appendChild(actions);
-        modal.classList.add('open');
-    }
-    window.openMarketplaceProduct = openMarketplaceProduct;
-    window.appendMarketplacePosts = function (posts) {
-        const feed = $('marketplaceFeed');
-        if (!feed || !posts.length)
-            return;
-        oldAppendMarketplacePosts(posts);
-        posts.forEach(function (p) {
-            const card = feed.querySelector('[data-market-post="' + p.id + '"]');
-            if (!card || card.dataset.productEnhanced === '1')
-                return;
-            card.dataset.productEnhanced = '1';
-            card.classList.add('ah-product-post');
-            const imgs = Array.isArray(p.imageUrls) ? p.imageUrls.filter(Boolean) : [];
-            if (imgs.length) {
-                const title = document.createElement('h3');
-                title.className = 'ah-market-product-title';
-                title.textContent = (String(p.text || 'Product').split(/[\n.!?]/)[0] || 'Marketplace Product').trim().slice(0, 90);
-                const head = card.querySelector('.market-post-head');
-                if (head)
-                    head.after(title);
-                const hero = document.createElement('button');
-                hero.type = 'button';
-                hero.className = 'ah-market-product-photo';
-                hero.setAttribute('aria-label', 'Open product details');
-                const img = document.createElement('img');
-                img.src = imgs[0];
-                img.alt = title.textContent;
-                img.loading = 'lazy';
-                hero.appendChild(img);
-                const tap = document.createElement('span');
-                tap.textContent = 'Tap photo to view details';
-                hero.appendChild(tap);
-                hero.addEventListener('click', function () { openMarketplaceProduct(p); });
-                if (title.nextSibling)
-                    card.insertBefore(hero, title.nextSibling);
-                else
-                    card.appendChild(hero);
-                if (imgs.length > 1) {
-                    const strip = document.createElement('div');
-                    strip.className = 'ah-market-photo-strip';
-                    imgs.slice(1, 5).forEach(function (url) { const thumb = document.createElement('img'); thumb.src = url; thumb.alt = 'Additional product photo'; thumb.loading = 'lazy'; thumb.addEventListener('click', function () { openMarketplaceProduct(p); }); strip.appendChild(thumb); });
-                    hero.after(strip);
-                }
-            }
-            else {
-                const noPhoto = document.createElement('div');
-                noPhoto.className = 'ah-no-product-photo';
-                noPhoto.textContent = '📷 No product photo added';
-                const head = card.querySelector('.market-post-head');
-                if (head)
-                    head.after(noPhoto);
-            }
-            const meta = document.createElement('p');
-            meta.className = 'creator-hint';
-            meta.textContent = (p.condition === 'used' ? 'Condition: Used' : 'Condition: New / not specified');
-            const desc = card.querySelector('p');
-            if (desc)
-                desc.after(meta);
-            loadSellerTrust(p.uid, card);
-        });
-    };
     function addPostSaveButtons() { document.querySelectorAll('[data-engagement]').forEach(card => { if (card.querySelector('[data-save-post]'))
         return; const kind = card.dataset.engagement, id = card.dataset.postId; const btn = document.createElement('button'); btn.className = 'secondary'; btn.dataset.savePost = id; btn.dataset.kind = kind; btn.textContent = '🔖 Save'; btn.onclick = () => toggleSavePost(kind, id, btn); const actions = card.querySelector('.post-actions'); if (actions)
         actions.appendChild(btn); if (currentFirebaseUser && card.dataset.authorUid !== currentFirebaseUser.uid && !card.querySelector('[data-follow-author]')) {
@@ -1072,8 +861,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         } });
     }
     // Add marketplace search to inbox and ensure the search panel appears after auth is ready.
-    function setup() { injectStyles(); injectProfileUI(); injectInboxSearch(); injectMediaFields(); injectMarketplaceFields(); const marketBtn = document.querySelector('#shop .market-form button.gold'); if (marketBtn)
-        marketBtn.onclick = publishMarketEnhanced; const loveBtn = document.querySelector('#loveContent button.gold'); if (loveBtn)
+    function setup() { injectStyles(); injectProfileUI(); injectInboxSearch(); injectMediaFields(); const loveBtn = document.querySelector('#loveContent button.gold'); if (loveBtn)
         loveBtn.onclick = uploadLovePost; const mediaBtn = document.querySelector('#mediaPreview .creator-actions button.gold'); if (mediaBtn)
         mediaBtn.onclick = uploadGeneralMedia; }
     if (document.readyState === 'loading')
@@ -1089,7 +877,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             if ($('ahMyName'))
                 $('ahMyName').textContent = 'Sign in to edit your profile';
         } }));
-    window.addEventListener('load', () => { setTimeout(() => { injectProfileUI(); injectInboxSearch(); injectMediaFields(); injectMarketplaceFields(); loadMyProfile(); }, 900); });
+    window.addEventListener('load', () => { setTimeout(() => { injectProfileUI(); injectInboxSearch(); injectMediaFields(); loadMyProfile(); }, 900); });
     // ==============================
     // PROFILE ORGANIZATION + POST MENU + SAVED MEDIA FIXES
     // ==============================
