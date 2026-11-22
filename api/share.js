@@ -34,6 +34,13 @@ function field(v) {
   if ('arrayValue' in v) return (v.arrayValue.values || []).map(field);
   return undefined;
 }
+const money = (raw) => {
+  const t = String(raw == null ? '' : raw).trim(); if (!t) return '';
+  const f = (n) => new Intl.NumberFormat('en-US').format(n);
+  let m = t.match(/^(?:FRW|RWF)\s*([\d.,]+)$/i); if (m && Number(m[1].replace(/,/g, ''))) return f(Number(m[1].replace(/,/g, ''))) + ' Frw';
+  m = t.match(/^\$\s*([\d.,]+)$/); if (m && Number(m[1].replace(/,/g, ''))) return '$' + f(Number(m[1].replace(/,/g, '')));
+  return t;
+};
 const decode = (doc) => Object.fromEntries(Object.entries((doc && doc.fields) || {}).map(([k, v]) => [k, field(v)]));
 
 async function loadDoc(collection, id) {
@@ -49,10 +56,11 @@ async function loadDoc(collection, id) {
 function describe(kind, p) {
   const author = clip(p.authorName || 'a member', 40);
   if (kind === 'marketplacePosts') {
-    const price = p.price ? String(p.price) : '';
+    const price = money(p.price);
+    const name = clip(p.title || String(p.text || '').split(/[\n.!?]/)[0] || 'Marketplace listing', 80);
     return {
-      title: clip(p.title || p.text || 'Marketplace listing', 80),
-      description: clip([price, p.location, p.description || p.text].filter(Boolean).join(' · '), 200) || DEFAULT_DESC,
+      title: price ? name + ' — ' + price : name,
+      description: clip([p.condition, String(p.location || '').trim(), p.description || p.text].filter(Boolean).join(' · '), 200) || DEFAULT_DESC,
       image: httpsUrl((p.images || [])[0]) || httpsUrl((p.imageUrls || [])[0]) || DEFAULT_IMAGE,
       type: 'article'
     };
@@ -127,7 +135,9 @@ module.exports = async (req, res) => {
   }
   const generic = { title: DEFAULT_TITLE, description: DEFAULT_DESC, image: DEFAULT_IMAGE, type: 'website' };
   const shareUrl = valid ? `${SITE}/share/${kind}/${id}` : SITE + '/';
-  const appUrl = valid ? `/?post=${encodeURIComponent(id)}&kind=${encodeURIComponent(collection)}` : '/';
+  const appUrl = !valid ? '/'
+    : collection === 'marketplacePosts' ? `/marketplace?product=${encodeURIComponent(id)}`   // opens the product inside the Marketplace
+    : `/?post=${encodeURIComponent(id)}&kind=${encodeURIComponent(collection)}`;
 
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=86400');
