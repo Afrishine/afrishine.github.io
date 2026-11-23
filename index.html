@@ -28,6 +28,7 @@
 <title>Afrishine Hub — Your Hub, Your Solutions</title>
 
 <link rel="stylesheet" href="/style.css">
+<script>if(/^afrishine-academy/i.test(location.hostname)||/[?&]mode=academy\b/.test(location.search))document.documentElement.className+=" academy-only"</script>
 </head>
 <body>
 <noscript><p style="padding:24px;text-align:center;background:#080a10;color:#fff">Afrishine Hub needs JavaScript. Please enable JavaScript in your browser and reload this page.</p></noscript>
@@ -44,8 +45,8 @@
 <section class="featured-shop" aria-label="Featured Marketplace products">
  <div class="featured-shop-heading"><span class="featured-shop-kicker">DISCOVER · SHOP · ENJOY</span><button class="go-shop-btn" type="button" onclick="enterMarketplace()">Go To Shop <span aria-hidden="true">›</span></button></div>
  <div class="featured-shop-grid">
-  <article class="featured-shop-card"><div class="featured-product-media"><img src="https://images.unsplash.com/photo-1613704193420-a53cab02d194?auto=format&fit=crop&w=900&q=85" alt="Premium gold stainless-steel luxury wristwatch with metal bracelet" loading="eager" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><span class="featured-product-fallback" aria-hidden="true">⌚</span></div><h3>Golden Luxury Watch</h3><p>Gold Stainless-Steel Metal Bracelet Watch</p><strong>8,000 Frw</strong><button type="button" onclick="enterMarketplace()">Shop Now</button></article>
-  <article class="featured-shop-card"><div class="featured-product-media"><img src="https://images.unsplash.com/photo-1608256246200-53e635b5b65f?auto=format&fit=crop&w=900&q=85" alt="Premium men's Timberland-style boots" loading="eager" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><span class="featured-product-fallback" aria-hidden="true">🥾</span></div><h3>Men's Timberland Boots</h3><p>Premium Men's Outdoor Boots</p><strong>40,000 Frw</strong><button type="button" onclick="enterMarketplace()">Shop Now</button></article>
+  <article class="featured-shop-card"><div class="featured-product-media"><img src="https://images.unsplash.com/photo-1613704193420-a53cab02d194?auto=format&fit=crop&w=600&q=75" alt="Premium gold stainless-steel luxury wristwatch with metal bracelet" loading="eager" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><span class="featured-product-fallback" aria-hidden="true">⌚</span></div><h3>Golden Luxury Watch</h3><p>Gold Stainless-Steel Metal Bracelet Watch</p><strong>8,000 Frw</strong><button type="button" onclick="enterMarketplace()">Shop Now</button></article>
+  <article class="featured-shop-card"><div class="featured-product-media"><img src="https://images.unsplash.com/photo-1608256246200-53e635b5b65f?auto=format&fit=crop&w=600&q=75" alt="Premium men's Timberland-style boots" loading="eager" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><span class="featured-product-fallback" aria-hidden="true">🥾</span></div><h3>Men's Timberland Boots</h3><p>Premium Men's Outdoor Boots</p><strong>40,000 Frw</strong><button type="button" onclick="enterMarketplace()">Shop Now</button></article>
  </div>
 </section>
 <button class="academy-home-card" onclick="showPage('academy')"><div class="academy-home-info"><div class="academy-home-icon">🎓</div><div class="academy-home-text"><strong>LEARN WITH AFRISHINE ACADEMY</strong><small>Learn new skills, explore knowledge and grow with Afrishine Academy.</small></div></div><span class="academy-home-arrow">→</span></button>
@@ -233,6 +234,7 @@
 <!-- MARKETPLACE: moved to /marketplace.js (same position in the script order) -->
 <script src="/marketplace.js"></script>
 <script src="/app-extras.js"></script>
+<script src="/afrishine-academy.js"></script>
 
 <link rel="stylesheet" href="/creator-dashboard.css">
 <script src="/creator-dashboard.js"></script>
