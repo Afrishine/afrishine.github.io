@@ -200,14 +200,16 @@ if (auth) {
 }
 
 /* PI LOGIN: unchanged and separate from Firebase email login */
-(function setupPi() {
+var piSetupDone = false;
+function setupPi() {
+    if (piSetupDone) return; piSetupDone = true;
     return __awaiter(this, void 0, void 0, function* () { const btn = document.getElementById('piLoginBtn'); if (!btn)
         return; try {
         if (!window.Pi)
             throw new Error('Pi SDK unavailable');
         window.Pi.init({ version: '2.0', sandbox: false });
         btn.addEventListener('click', () => __awaiter(this, void 0, void 0, function* () { btn.disabled = true; btn.textContent = 'Connecting…'; try {
-            const result = yield window.Pi.authenticate(['username'], () => { });
+            const result = yield (window.afPiLogin ? window.afPiLogin() : window.Pi.authenticate(['username'], () => { }));
             const username = result && result.user && result.user.username;
             if (!username)
                 throw new Error('Pi username was not returned');
@@ -228,7 +230,10 @@ if (auth) {
         btn.textContent = 'Open in Pi Browser';
         btn.addEventListener('click', () => notice('Open Afrishine Hub inside Pi Browser to use Pi Login.'));
     } });
-})();
+}
+/* The Pi SDK is loaded only inside Pi Browser (async, see index.html): wait for it, but never longer than 10 s */
+if (window.Pi || !/PiBrowser/i.test(navigator.userAgent || '')) setupPi();
+else { window.addEventListener('pi-sdk-ready', setupPi, { once: true }); setTimeout(setupPi, 10000); }
 
 /* Opening the first page (from the address or #hash). Kept here, after everything above has loaded. */
 const firstPageHash = decodeURIComponent(location.hash.replace('#', ''));
