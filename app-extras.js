@@ -14,7 +14,15 @@ function ensureProfile(){
  var legacy=Array.from(page.children).filter(function(n){return n.classList&&n.classList.contains('panel')});
  var pi=byId('piLoginArea');if(pi&&!isPi()){var p=pi.closest('.panel');if(p)p.style.display='none'}
  var hero=document.createElement('section');hero.className='panel ah-profile-hero';hero.id='ahProfileDashboard';
- hero.innerHTML='<img class="ah-avatar" id="ahDashboardAvatar" alt="Profile photo"><div class="ah-profile-identity"><h2 id="ahDashboardName">Guest</h2><p class="creator-hint" id="ahDashboardBio">Sign in or create an account to manage your profile.</p><div class="ah-profile-stats"><span id="ahPostCount">0<small>posts</small></span><span id="ahFollowerStat">0<small>followers</small></span><span id="ahFollowingStat">0<small>following</small></span></div><div class="ah-profile-actions"><button class="secondary" type="button" onclick="ahProfileEdit()">Edit Profile</button><button class="secondary" type="button" onclick="ahShareProfile()">Share Profile</button></div></div><details class="ah-profile-more" id="ahProfileMore"><summary aria-label="Profile options">⋮</summary><div class="ah-sheet-backdrop" onclick="document.getElementById(&#39;ahProfileMore&#39;).open=false"></div><div class="ah-profile-menu" role="menu"><div class="ah-sheet-handle"></div> <div class="ah-sheet-head"><img class="ah-sheet-avatar" id="ahSheetAvatar" alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><div><b id="ahSheetName">Afrishine Hub</b><small id="ahSheetSub">Your profile menu</small></div><button type="button" class="ah-sheet-close" aria-label="Close menu" onclick="document.getElementById(&#39;ahProfileMore&#39;).open=false">✕</button></div> <div class="ah-menu-section">Account</div> <button type="button" class="ah-menu-item" role="menuitem" onclick="ahProfileMenuAction(&#39;Edit Profile&#39;)"><i>✏️</i><span>Edit Profile<small>Name, bio and location</small></span></button> <button type="button" class="ah-menu-item" role="menuitem" onclick="ahProfileMenuAction(&#39;Change Profile Photo&#39;)"><i>📷</i><span>Change Profile Photo<small>Update your picture</small></span></button> <button type="button" class="ah-menu-item" role="menuitem" onclick="ahProfileMenuAction(&#39;Share Profile&#39;)"><i>🔗</i><span>Share Profile<small>Copy your profile link</small></span></button> <button type="button" class="ah-menu-item" role="menuitem" onclick="ahProfileMenuAction(&#39;Notifications&#39;)"><i>🔔</i><span>Notifications<small>Messages, follows and new posts</small></span></button> <div class="ah-menu-section">Privacy and security</div> <button type="button" class="ah-menu-item" role="menuitem" onclick="ahProfileMenuAction(&#39;Settings&#39;)"><i>⚙️</i><span>Settings and Privacy<small>Your data and account help</small></span></button> <button type="button" class="ah-menu-item" role="menuitem" onclick="ahProfileMenuAction(&#39;Change Password&#39;)"><i>🔒</i><span>Change Password<small>Get a reset link by email</small></span></button> <div class="ah-menu-section">Grow with Afrishine</div> <button type="button" class="ah-menu-item gold" role="menuitem" onclick="ahProfileMenuAction(&#39;Verification&#39;)"><i>✔️</i><span>Verified Badge<small>Get verified and stand out</small></span></button> <button type="button" class="ah-menu-item gold" role="menuitem" onclick="ahProfileMenuAction(&#39;Subscription&#39;)"><i>👑</i><span>Subscription<small>Unlock premium features</small></span></button> <button type="button" class="ah-menu-item gold" role="menuitem" onclick="ahProfileMenuAction(&#39;Boost Your Post&#39;)"><i>🚀</i><span>Boost Your Post<small>Reach more people</small></span></button> <button type="button" class="ah-menu-item gold" role="menuitem" onclick="ahProfileMenuAction(&#39;Ads&#39;)"><i>📣</i><span>Ads<small>Promote your business</small></span></button> <div class="ah-menu-section">Support</div> <button type="button" class="ah-menu-item" role="menuitem" onclick="ahProfileMenuAction(&#39;Help&#39;)"><i>💬</i><span>Help and Contact<small>We are here to help</small></span></button> <div id="ahMenuAdminWrap" style="display:none"><div class="ah-menu-section">Administration</div><button type="button" class="ah-menu-item admin" id="ahMenuAdmin" role="menuitem" onclick="ahProfileMenuAction(&#39;Admin Dashboard&#39;)"><i>🛡️</i><span>Admin Dashboard<small>Monitor and manage the platform</small></span></button></div> <div class="ah-menu-section"></div> <button type="button" class="ah-menu-item danger" role="menuitem" onclick="ahProfileMenuAction(&#39;Logout&#39;)"><i>⎋</i><span>Log out<small>Sign out on this device</small></span></button> <p class="ah-sheet-foot">Afrishine Hub · Kigali, Rwanda</p></div></details>';
+ hero.innerHTML='<img class="ah-avatar" id="ahDashboardAvatar" alt="Profile photo"><div class="ah-profile-identity"><h2 id="ahDashboardName">Guest</h2><p class="creator-hint" id="ahDashboardBio">Sign in or create an account to manage your profile.</p><div class="ah-profile-stats"><span id="ahPostCount">0<small>posts</small></span><span id="ahFollowerStat">0<small>followers</small></span><span id="ahFollowingStat">0<small>following</small></span></div><div class="ah-profile-actions"><button 
+class="secondary" type="button" onclick="ahProfileEdit()">Edit Profile</button><button class="secondary" type="button" onclick="ahShareProfile()">Share Profile</button></div></div><details class="ah-profile-more" id="ahProfileMore"><summary aria-label="Profile options">⋮</summary><div class="ah-sheet-backdrop" onclick="document.getElementById(&#39;ahProfileMore&#39;).open=false"></div><div class="ah-profile-menu" role="menu"><div class="ah-sheet-handle"></div> <div class="ah-sheet-head"><img 
+class="ah-sheet-avatar" id="ahSheetAvatar" alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><div><b id="ahSheetName">Afrishine Hub</b><small id="ahSheetSub">Your profile menu</small></div><button type="button" class="ah-sheet-close" aria-label="Close menu" onclick="document.getElementById(&#39;ahProfileMore&#39;).open=false">✕</button></div> <div class="ah-menu-section">Account</div> <button type="button" class="ah-menu-item" role="menuitem" 
+onclick="ahProfileMenuAction(&#39;Edit Profile&#39;)"><i>✏️</i><span>Edit Profile<small>Name, bio and location</small></span></button> <button type="button" class="ah-menu-item" role="menuitem" onclick="ahProfileMenuAction(&#39;Change Profile Photo&#39;)"><i>📷</i><span>Change Profile Photo<small>Update your picture</small></span></button> <button type="button" class="ah-menu-item" role="menuitem" onclick="ahProfileMenuAction(&#39;Share Profile&#39;)"><i>🔗</i><span>Share Profile<small>Copy 
+your profile link</small></span></button> <button type="button" class="ah-menu-item" role="menuitem" onclick="ahProfileMenuAction(&#39;Notifications&#39;)"><i>🔔</i><span>Notifications<small>Messages, follows and new posts</small></span></button> <div class="ah-menu-section">Privacy and security</div> <button type="button" class="ah-menu-item" role="menuitem" onclick="ahProfileMenuAction(&#39;Settings&#39;)"><i>⚙️</i><span>Settings and Privacy<small>Your data and account 
+help</small></span></button> <button type="button" class="ah-menu-item" role="menuitem" onclick="ahProfileMenuAction(&#39;Change Password&#39;)"><i>🔒</i><span>Change Password<small>Get a reset link by email</small></span></button> <div class="ah-menu-section">Grow with Afrishine</div> <button type="button" class="ah-menu-item gold" role="menuitem" onclick="ahProfileMenuAction(&#39;Verification&#39;)"><i>✔️</i><span>Verified Badge<small>Get verified and stand out</small></span></button> <button 
+type="button" class="ah-menu-item gold" role="menuitem" onclick="ahProfileMenuAction(&#39;Subscription&#39;)"><i>👑</i><span>Subscription<small>Unlock premium features</small></span></button> <button type="button" class="ah-menu-item gold" role="menuitem" onclick="ahProfileMenuAction(&#39;Boost Your Post&#39;)"><i>🚀</i><span>Boost Your Post<small>Reach more people</small></span></button> <button type="button" class="ah-menu-item gold" role="menuitem" 
+onclick="ahProfileMenuAction(&#39;Ads&#39;)"><i>📣</i><span>Ads<small>Promote your business</small></span></button> <div class="ah-menu-section">Support</div> <button type="button" class="ah-menu-item" role="menuitem" onclick="ahProfileMenuAction(&#39;Help&#39;)"><i>💬</i><span>Help and Contact<small>We are here to help</small></span></button> <div id="ahMenuAdminWrap" style="display:none"><div class="ah-menu-section">Administration</div><button type="button" class="ah-menu-item admin" 
+id="ahMenuAdmin" role="menuitem" onclick="ahProfileMenuAction(&#39;Admin Dashboard&#39;)"><i>🛡️</i><span>Admin Dashboard<small>Monitor and manage the platform</small></span></button></div> <div class="ah-menu-section"></div> <button type="button" class="ah-menu-item danger" role="menuitem" onclick="ahProfileMenuAction(&#39;Logout&#39;)"><i>⎋</i><span>Log out<small>Sign out on this device</small></span></button> <p class="ah-sheet-foot">Afrishine Hub · Kigali, Rwanda</p></div></details>';
  var back=document.createElement('button');back.type='button';back.className='secondary ah-profile-back';back.id='ahProfileBack';back.textContent='← Back';back.style.display='none';back.onclick=function(){showPage(returnPage||'home')};
  page.insertBefore(back,page.firstChild);page.insertBefore(hero,back.nextSibling);
  var tabs=document.createElement('div');tabs.className='ah-profile-tabs';tabs.id='ahProfileTabs';
@@ -414,7 +422,7 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
         if (id === 'admin' && !window.__afIsAdmin) { notice('This area is for administrators only.'); return prevShowPage('home'); }
         var result = prevShowPage(id);
         if (id === 'admin') admRender(ADM.tab);
-        else if (id === 'trafficRules') { paintTrafficGrid(); loadAcademyFiles(false).then(paintTrafficGrid); }
+        else if (id === 'trafficRules') { if (window.afAcademy) window.afAcademy.paint(); }
         else if (id === 'profile') syncAdminMenu();
         return result;
     };
@@ -791,18 +799,7 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
     }
     window.afOpenLinkEditor = openLinkEditor;
 
-    /* ================= ACADEMY: traffic rules ================= */
-    var TR_CATS = [
-        { id: 'gazette', n: 1, icon: '📰', title: 'Igazeti ya Leta', sub: 'Soma amategeko mashya n’andi mabwiriza yatangajwe mu Igazeti ya Leta.', cta: '📖 Soma →' },
-        { id: 'signs', n: 2, icon: '🛑', title: 'Ibyapa', sub: 'Menya icyo ibyapa byo mu muhanda bisobanura.', cta: '▶ Reba →' },
-        { id: 'new_rules', n: 3, icon: '📄', title: 'Amabwiriza Mashya', sub: 'Menya amabwiriza mashya agenga imikoreshereze y’umuhanda.', cta: '📖 Soma →' },
-        { id: 'vehicle_transfer', n: 4, icon: '🚗', title: 'Mutation y’ibinyabiziga', sub: 'Menya amategeko agenga guhindura nyiri ikinyabiziga n’ibyo ugomba kubahiriza.', cta: '📖 Soma →' },
-        { id: 'rules_in_force', n: 5, icon: '📋', title: 'Ibigomba kubahirizwa', sub: 'Menya ibyo amategeko asaba abakoresha umuhanda n’abagenzuzi.', cta: '☑ Quiz →' },
-        { id: 'faq', n: 6, icon: '❓', title: 'Ibibazo n’ibisubizo', sub: 'Subiza ibibazo wipimishe ubumenyi ufite ku mategeko y’umuhanda.', cta: '▶ Reba →' }
-    ];
-    window.AF_TR_CATS = TR_CATS;
-    var TR_LOCKED = 'Get a subscription to unlock premium features, then tap Start Now.';
-    var academy = { files: [], at: 0, loading: null };
+    /* The Academy (traffic rules course, files, viewer) now lives in afrishine-academy.js. */
     function toast(text, wait) {
         var t = document.getElementById('afSmallToast');
         if (!t) { t = document.createElement('div'); t.id = 'afSmallToast'; t.setAttribute('role', 'status'); t.setAttribute('aria-live', 'polite'); document.body.appendChild(t); }
@@ -810,72 +807,8 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
         clearTimeout(toastTimer); toastTimer = setTimeout(hideToast, wait || 5000);
     }
     window.afToast = toast;
-    function loadAcademyFiles(force) {
-        if (!db) return Promise.resolve(academy.files);
-        if (!force && academy.at && Date.now() - academy.at < 5 * 60 * 1000) return Promise.resolve(academy.files);
-        if (academy.loading) return academy.loading;
-        academy.loading = db.collection('academyFiles').limit(300).get().then(function (snap) {
-            academy.files = snap.docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); });
-            academy.at = Date.now(); return academy.files;
-        }).catch(function (e) { console.warn('Academy files:', e); return academy.files; }).then(function (f) { academy.loading = null; return f; });
-        return academy.loading;
-    }
-    window.afAcademyReload = function () { academy.at = 0; return loadAcademyFiles(true); };
-    function filesOf(cat) { return academy.files.filter(function (f) { return f.category === cat; }).sort(function (a, b) { return ms2(b.createdAt) - ms2(a.createdAt); }); }
-    function paintTrafficGrid() {
-        var grid = document.getElementById('trGrid'); if (!grid) return;
-        if (!grid.children.length) {
-            grid.innerHTML = TR_CATS.map(function (c) {
-                return '<button type="button" class="tr-card" data-tr-cat="' + c.id + '"><span class="tr-num">' + c.n + '</span><span class="tr-count" data-tr-count="' + c.id + '"></span><i aria-hidden="true">' + c.icon + '</i><b>' + plain(c.title) + '</b><small>' + plain(c.sub) + '</small><span class="tr-cta">' + c.cta + '</span></button>';
-            }).join('');
-        }
-        TR_CATS.forEach(function (c) { var n = filesOf(c.id).length, b = grid.querySelector('[data-tr-count="' + c.id + '"]'); if (b) { b.textContent = n; b.style.display = n ? 'block' : 'none'; } });
-    }
-    function fileIcon(t) { return t === 'pdf' ? '📄' : t === 'video' ? '🎬' : '🖼️'; }
-    function openTrafficCategory(id) {
-        var cat = TR_CATS.filter(function (c) { return c.id === id; })[0]; if (!cat) return;
-        loadAcademyFiles(false).then(function () {
-            var list = filesOf(id);
-            if (!list.length) { toast(TR_LOCKED); return; }
-            document.getElementById('trListTitle').textContent = cat.title;
-            document.getElementById('trListSub').textContent = cat.sub;
-            document.getElementById('trListBody').innerHTML = list.map(function (f) {
-                var d = ms2(f.createdAt) ? new Date(ms2(f.createdAt)).toLocaleDateString() : '';
-                return '<div class="tr-file"><i aria-hidden="true">' + fileIcon(f.fileType) + '</i><div><b>' + plain(f.title) + '</b><small>' + plain(snip2(f.description, 90)) + (d ? ' · ' + plain(d) : '') + '</small></div><button type="button" data-tr-file="' + plain(f.id) + '">' + (f.fileType === 'video' ? 'Reba' : 'Soma') + '</button></div>';
-            }).join('');
-            showPage('trafficList');
-        });
-    }
     function snip2(t, n) { t = String(t || '').replace(/\s+/g, ' ').trim(); return t.length > n ? t.slice(0, n) + '…' : t; }
     function closeViewer() { var v = document.getElementById('afViewer'); if (v) v.remove(); }
-    function openAcademyFile(f) {
-        var base = 'https://afrishine-media.usherluckyelie.workers.dev/media/';
-        if (!f || String(f.fileUrl || '').indexOf(base) !== 0) { toast('This file could not be opened.'); return; }
-        closeViewer();
-        var url = f.fileUrl, body;
-        if (f.fileType === 'image') body = '<img src="' + plain(url) + '" alt="' + plain(f.title) + '">';
-        else if (f.fileType === 'video') body = '<video src="' + plain(url) + '" controls playsinline autoplay></video>';
-        else body = '<iframe src="https://docs.google.com/viewer?embedded=true&url=' + encodeURIComponent(url) + '" title="' + plain(f.title) + '"></iframe>';
-        var v = document.createElement('div');
-        v.id = 'afViewer'; v.className = 'af-viewer'; v.setAttribute('role', 'dialog'); v.setAttribute('aria-modal', 'true');
-        v.innerHTML = '<div class="af-viewer-bar"><b>' + plain(f.title) + '</b>' + (f.fileType === 'pdf' ? '<a href="' + plain(url) + '" target="_blank" rel="noopener">Open</a>' : '') + '<button type="button" id="afViewerClose">Close</button></div><div class="af-viewer-body">' + body + '</div>';
-        document.body.appendChild(v);
-        v.querySelector('#afViewerClose').addEventListener('click', closeViewer);
-    }
-    document.addEventListener('click', function (e) {
-        var c = e.target.closest ? e.target.closest('[data-tr-cat]') : null;
-        if (c) { openTrafficCategory(c.getAttribute('data-tr-cat')); return; }
-        var f = e.target.closest ? e.target.closest('[data-tr-file]') : null;
-        if (f) { var id = f.getAttribute('data-tr-file'); openAcademyFile(academy.files.filter(function (x) { return x.id === id; })[0]); return; }
-        if (e.target.closest && (e.target.closest('#trStart') || e.target.closest('#trStart2'))) {
-            loadAcademyFiles(false).then(function () {
-                if (!academy.files.length) { toast(TR_LOCKED); return; }
-                var g = document.getElementById('trCats'); if (g && g.scrollIntoView) g.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            });
-        }
-        if (e.target.closest && e.target.closest('[data-open-traffic]')) { showPage('trafficRules'); }
-    });
-
     /* ================= ADMIN DASHBOARD ================= */
     var ADM = { tab: 'overview' };
     window.__afIsAdmin = false;
@@ -954,10 +887,10 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
     }
     function admAcademy() {
         busy();
-        loadAcademyFiles(true).then(function () {
-            var opts = TR_CATS.map(function (c) { return '<option value="' + c.id + '">' + c.n + '. ' + plain(c.title) + '</option>'; }).join('');
-            var lists = TR_CATS.map(function (c) {
-                var fs = filesOf(c.id);
+        window.afAcademy.load(true).then(function () {
+            var opts = window.AF_TR_CATS.map(function (c) { return '<option value="' + c.id + '">' + c.n + '. ' + plain(c.title) + '</option>'; }).join('');
+            var lists = window.AF_TR_CATS.map(function (c) {
+                var fs = window.afAcademy.filesOf(c.id);
                 return '<h3 class="adm-h">' + c.n + '. ' + plain(c.title) + ' (' + fs.length + ')</h3>' + (fs.map(function (f) {
                     return '<div class="adm-row"><div class="grow"><span class="adm-tag">' + plain(f.fileType) + '</span><b>' + plain(f.title) + '</b><small>' + plain(snip2(f.description, 100)) + '</small></div><div class="acts"><button type="button" class="adm-btn" data-adm-act="renamefile" data-id="' + plain(f.id) + '">Rename</button><button type="button" class="adm-btn red" data-adm-act="delfile" data-id="' + plain(f.id) + '">Delete</button></div></div>';
                 }).join('') || '<p class="adm-empty">No files yet. Members will see the “subscription” message here.</p>');
@@ -1008,7 +941,7 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
             }).then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { if (!r.ok || !d.success) { window.afWorkerFailure(d, r.status); throw new Error(d.error || 'Upload failed. Please try again.'); } return d; }); });
         }).then(function (up) {
             return db.collection('academyFiles').add({ category: cat, title: title, description: desc, fileUrl: up.url, fileKey: up.key, fileType: kind, createdAt: firebase.firestore.FieldValue.serverTimestamp(), createdBy: currentFirebaseUser.uid });
-        }).then(function () { notice('File added to the course.'); academy.at = 0; admAcademy(); }).catch(function (e) { btn.disabled = false; msg.textContent = firebaseErrorMessage(e); });
+        }).then(function () { notice('File added to the course.'); window.afAcademy.state.at = 0; admAcademy(); }).catch(function (e) { btn.disabled = false; msg.textContent = firebaseErrorMessage(e); });
     }
     document.addEventListener('click', function (e) {
         var tab = e.target.closest ? e.target.closest('[data-adm-tab]') : null;
@@ -1026,10 +959,10 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
         }
         else if (act === 'reject') db.collection('verificationRequests').doc(id).update({ status: 'rejected', reviewedAt: ts, reviewedBy: currentFirebaseUser.uid }).then(function () { admVerify(); }).catch(function (er) { notice(firebaseErrorMessage(er)); });
         else if (act === 'upfile') admUploadFile();
-        else if (act === 'renamefile') { var f = academy.files.filter(function (x) { return x.id === id; })[0], nt = f && prompt('New title', f.title); if (nt && nt.trim().length >= 3) db.collection('academyFiles').doc(id).update({ title: nt.trim().slice(0, 150), updatedAt: ts }).then(function () { academy.at = 0; admAcademy(); }).catch(function (er) { notice(firebaseErrorMessage(er)); }); }
+        else if (act === 'renamefile') { var f = window.afAcademy.state.files.filter(function (x) { return x.id === id; })[0], nt = f && prompt('New title', f.title); if (nt && nt.trim().length >= 3) db.collection('academyFiles').doc(id).update({ title: nt.trim().slice(0, 150), updatedAt: ts }).then(function () { window.afAcademy.state.at = 0; admAcademy(); }).catch(function (er) { notice(firebaseErrorMessage(er)); }); }
         else if (act === 'delfile') {
-            var file = academy.files.filter(function (x) { return x.id === id; })[0];
-            if (file && confirm('Delete this file from the course?')) db.collection('academyFiles').doc(id).delete().then(function () { if (file.fileKey && window.workerDelete) window.workerDelete(file.fileKey).catch(function () { }); academy.at = 0; admAcademy(); }).catch(function (er) { notice(firebaseErrorMessage(er)); });
+            var file = window.afAcademy.state.files.filter(function (x) { return x.id === id; })[0];
+            if (file && confirm('Delete this file from the course?')) db.collection('academyFiles').doc(id).delete().then(function () { if (file.fileKey && window.workerDelete) window.workerDelete(file.fileKey).catch(function () { }); window.afAcademy.state.at = 0; admAcademy(); }).catch(function (er) { notice(firebaseErrorMessage(er)); });
         }
     });
     document.addEventListener('input', function (e) {
