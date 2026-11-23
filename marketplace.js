@@ -213,7 +213,7 @@ function mConfirm(opt) {
 /* ---------- share ---------- */
 async function mShare(id) {
   var p = findProduct(id); if (!p) return;
-  var url = SITE + '/share/marketplacePosts/' + encodeURIComponent(id);   // api/share.js builds the preview: product photo, title and price
+  var url = SITE + '/api/share?kind=marketplacePosts&id=' + encodeURIComponent(id);   // api/share.js builds the preview (product photo, title, price); this form works without any vercel.json rewrite
   var data = { title: mTitle(p) + ' · Afrishine Marketplace', text: mTitle(p) + ' — ' + mPrice(p) + ' · ' + mLoc(p), url: url };
   try {
     if (navigator.share) { await navigator.share(data); return; }
@@ -513,7 +513,10 @@ if ($('shop') && $('shop').classList.contains('active')) { document.body.classLi
 
 /* A shared product link (…/marketplace?product=ID, reached from the share preview page) opens that product straight away. */
 var sharedProductId = '';
-try { sharedProductId = new URLSearchParams(location.search).get('product') || ''; } catch (e) { sharedProductId = ''; }
+try {
+  var qs = new URLSearchParams(location.search);
+  sharedProductId = qs.get('product') || (qs.get('kind') === 'marketplacePosts' ? (qs.get('post') || '') : '');   // second form: links made by an older api/share.js
+} catch (e) { sharedProductId = ''; }
 if (sharedProductId) {
   fetchProduct(sharedProductId).then(function (p) {
     if (!p) { mNotice('This product is no longer available.'); return; }
