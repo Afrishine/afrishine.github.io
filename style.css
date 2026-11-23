@@ -32,6 +32,8 @@ footer{text-align:center;color:#788294;font-size:11px;padding:25px 5px}
 .notice{display:none;position:fixed;z-index:100;bottom:90px;left:50%;transform:translateX(-50%);max-width:90%;padding:11px 15px;background:#2b2415;border:1px solid #98752d;border-radius:12px;color:#ffe2a0;font-size:12px}
 .menu-drawer{display:none;position:fixed;z-index:25;top:0;right:0;width:86vw;max-width:580px;height:100vh;height:100dvh;overflow-y:auto;background:#111722;border-left:1px solid #343b49;padding:22px 18px;box-shadow:-15px 0 40px #0009}.menu-drawer.open{display:block}
 .menu-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;color:var(--gold);font-size:19px;font-weight:850}
+.menu-drawer a{display:block;padding:17px 14px;margin:8px 0;border:1px solid #303747;border-radius:18px;color:#fff;text-decoration:none;background:linear-gradient(110deg,#1c2230,#191e2b);font-size:17px}
+.menu-backdrop,.create-backdrop,.creator-backdrop{display:none;position:fixed;inset:0}.menu-backdrop{z-index:24;background:#0009}.create-backdrop{z-index:40;background:#000b}.creator-backdrop{z-index:60;background:#000d}
 .menu-backdrop.open,.create-backdrop.open,.creator-backdrop.open{display:block}
 .create-menu{display:none;position:fixed;z-index:41;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;padding:22px 18px calc(25px + env(safe-area-inset-bottom));background:#171d29;border:1px solid #424b5d;border-radius:22px 22px 0 0;box-shadow:0 -12px 40px #0009}
 .create-menu.open{display:block}.create-menu-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:17px}.create-menu-head h2{font-size:19px;color:var(--gold)}
@@ -559,3 +561,14 @@ body.mk-lock{overflow:hidden}
 .mk-reason input{width:18px;height:18px;accent-color:#ffb91f}
 @media(min-width:600px){.mk-overlay{align-items:center}.mk-sheet{border-bottom:1px solid #33405a;border-radius:22px}}
 .mk-rate-form textarea,.mk-sheet textarea,.mk-comment-form input{font:inherit}
+
+/* ===== AFRISHINE ACADEMY ON ITS OWN ADDRESS (afrishine-academy.js adds the "academy-only" class) ===== */
+html.academy-only #home,html.academy-only .bottom-nav,html.academy-only .header-search,html.academy-only .menu-button,html.academy-only .menu-backdrop,html.academy-only .menu-drawer{display:none!important}
+html.academy-only #academy .lp-back{display:none}
+.ac-hub-link{display:inline-flex;align-items:center;padding:9px 13px;border:1px solid #8b713d;border-radius:20px;background:#111722;color:var(--gold);font-size:13px;font-weight:800;text-decoration:none;white-space:nowrap}
+.academy-nav{position:fixed;bottom:0;left:0;right:0;z-index:10;display:flex;justify-content:center;gap:6px;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:#0c1019;border-top:1px solid #303747}
+.academy-nav button{flex:1;max-width:150px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 6px;border:0;background:none;color:#929aaa;font-size:21px}
+.academy-nav button small{font-size:11px;font-weight:700}
+.academy-nav button.active{color:var(--gold)}
+@media(max-width:380px){.ac-hub-link{padding:8px 10px;font-size:12px}}
+
