@@ -196,7 +196,8 @@ var ALLOWED_OWN = { profile: 1, settings: 1, contact: 1 };
 var COMMISSION = 0.05;
 var store = { items: [], loaded: 0, q: '' };
 function $(id) { return document.getElementById(id); }
-function curUser() { return (typeof currentFirebaseUser !== 'undefined' && currentFirebaseUser) || null; }
+/* The Store works with Pi accounts only (uid starts with pi_); Google / email accounts are ignored here. */
+function curUser() { var u = (typeof currentFirebaseUser !== 'undefined' && currentFirebaseUser) || null; return u && /^pi_/.test(u.uid) ? u : null; }
 function inPi() { return typeof isPiBrowser === 'function' && isPiBrowser(); }
 function piFmt(n) { return 'π ' + Number(n).toLocaleString('en-US', { maximumFractionDigits: 7 }); }
 function postJson(url, data) {
@@ -219,10 +220,9 @@ window.afPiLogin = function () {
 };
 function needUser() {
   var u = curUser();
-  if (u) return Promise.resolve(u);
+  if (u && /^pi_/.test(u.uid)) return Promise.resolve(u);          // already signed in with Pi
   if (inPi()) return window.afPiLogin().then(function () { return curUser(); }).catch(function (e) { say(e.message || 'Pi sign-in failed'); return null; });
-  if (!piOnlyHost() && typeof openMarketplaceLogin === 'function') { openMarketplaceLogin(); return Promise.resolve(null); }
-  say('Please open Afrishine Skills in Pi Browser and sign in with Pi.'); return Promise.resolve(null);
+  say('Afrishine Store works with Pi login only. Please open it in Pi Browser.'); return Promise.resolve(null);
 }
 function piOnlyHost() { return /^afrishine-skills/i.test(location.hostname); }
 
