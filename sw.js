@@ -1,6 +1,6 @@
 'use strict';
 
-var CACHE_NAME = 'afrishine-hub-v11';
+var CACHE_NAME = 'afrishine-hub-v15';
 var META_CACHE = 'afrishine-meta';   // tiny cache that remembers who is signed in (used to skip your own video alerts)
 var NOTIFY_ICON = '/icon-192.png';
 
@@ -15,7 +15,7 @@ var APP_FILES = [
   './app-features.js',
   './marketplace.js',
   './app-extras.js',
-  './afrishine-academy.js'
+  './afrishine-academy.js', './academy-hero.jpg'
 ];
 
 // Install service worker and cache the main app
