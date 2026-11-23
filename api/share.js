@@ -15,10 +15,11 @@ const PROJECT_ID = 'afrishine-hub';
 const API_KEY = process.env.FIREBASE_API_KEY || 'AIzaSyBnrdoguyhUd_E3I5RHqcQxHNVLa6kIMX4'; // public web key (same as index.html)
 const SITE = (process.env.SITE_URL || 'https://afrishinegithubio.vercel.app').replace(/\/$/, '');
 const WORKER = 'https://afrishine-media.usherluckyelie.workers.dev';
+const SKILLS = 'https://afrishine-skills.vercel.app';
 const DEFAULT_IMAGE = SITE + '/og-image.jpg';
 const DEFAULT_TITLE = 'Afrishine Hub';
 const DEFAULT_DESC = 'Your Hub, Your Solutions. Discover talent, connect, learn, shop and explore opportunities.';
-const COLLECTIONS = { posts: 'posts', marketplacePosts: 'marketplacePosts', market: 'marketplacePosts', love_posts: 'love_posts' };
+const COLLECTIONS = { posts: 'posts', marketplacePosts: 'marketplacePosts', market: 'marketplacePosts', love_posts: 'love_posts', academyProducts: 'academyProducts' };
 
 const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const clip = (v, n) => { const t = String(v || '').replace(/\s+/g, ' ').trim(); return t.length > n ? t.slice(0, n - 1).trimEnd() + '…' : t; };
@@ -54,6 +55,10 @@ async function loadDoc(collection, id) {
 }
 
 function describe(kind, p) {
+  if (kind === 'academyProducts') {
+    const img = httpsUrl(Array.isArray(p.images) ? p.images[0] : '') || DEFAULT_IMAGE;
+    return { title: clip((p.title || 'Product') + (p.price ? ' — π ' + p.price : ''), 90), description: clip(['Afrishine Store', p.condition, p.description].filter(Boolean).join(' · '), 190), image: workerUrl(img) || httpsUrl(img) || DEFAULT_IMAGE, type: 'website' };
+  }
   const author = clip(p.authorName || 'a member', 40);
   if (kind === 'marketplacePosts') {
     const price = money(p.price);
@@ -123,6 +128,11 @@ function page(meta, shareUrl, appUrl) {
 }
 
 module.exports = async (req, res) => {
+  if (String((req.query && req.query.kind) || '') === 'academy') { // Afrishine Academy / Skills link preview
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
+    return res.status(200).send(page({ title: 'Afrishine Academy', description: 'Learn. Grow. Succeed. Free traffic rules course and more, on Afrishine Skills.', image: DEFAULT_IMAGE, type: 'website' }, SKILLS + '/', SKILLS + '/'));
+  }
   const kind = String((req.query && req.query.kind) || 'posts');
   const id = String((req.query && req.query.id) || '');
   const collection = COLLECTIONS[kind];
@@ -136,6 +146,7 @@ module.exports = async (req, res) => {
   const generic = { title: DEFAULT_TITLE, description: DEFAULT_DESC, image: DEFAULT_IMAGE, type: 'website' };
   const shareUrl = valid ? `${SITE}/share/${kind}/${id}` : SITE + '/';
   const appUrl = !valid ? '/'
+    : collection === 'academyProducts' ? `${SKILLS}/?store=${encodeURIComponent(id)}`
     : collection === 'marketplacePosts' ? `/marketplace?product=${encodeURIComponent(id)}`   // opens the product inside the Marketplace
     : `/?post=${encodeURIComponent(id)}&kind=${encodeURIComponent(collection)}`;
 
