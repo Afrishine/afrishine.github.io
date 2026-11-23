@@ -898,7 +898,25 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
             body().innerHTML = '<div class="adm-stat"><small>New uploads this month</small><b>' + gb(d.monthlyUsedBytes || d.usedBytes) + ' / ' + gb(d.limitBytes) + '</b><div class="adm-bar"><span style="width:' + pct + '%"></span></div><small style="margin-top:8px">' + pct + '% used · uploads ' + (d.canUpload === false ? 'are paused' : 'are open') + (d.resetsAt ? ' · resets ' + plain(new Date(d.resetsAt).toLocaleDateString()) : '') + '</small></div><div class="adm-grid" style="margin-top:10px"><div class="adm-stat"><i>🗄️</i><b>' + gb(d.totalStoredBytes) + '</b><small>Total stored in Cloudflare</small></div><div class="adm-stat"><i>📁</i><b>' + plain(d.objectCount == null ? '—' : d.objectCount) + '</b><small>Files stored</small></div></div><p class="adm-empty">Cloudflare’s free R2 allowance is 10 GB of stored data. Files from earlier months stay stored and still count toward it.</p>';
         }).catch(function () { body().innerHTML = '<p class="adm-empty">Storage numbers are not available right now.</p>'; });
     }
-    var ADM_TABS = { overview: admOverview, members: admMembers, content: admContent, reports: admReports, verify: admVerify, academy: admAcademy, storage: admStorage };
+    function admOrders() {
+        busy();
+        db.collection('academyOrders').orderBy('createdAt', 'desc').limit(200).get().then(function (snap) {
+            var rows = docsOf(snap), num = function (v) { return Number(v) || 0; }, pi = function (n) { return 'π ' + (Math.round(n * 1e7) / 1e7).toLocaleString('en-US', { maximumFractionDigits: 7 }); };
+            var gross = 0, fee = 0, owed = 0;
+            rows.forEach(function (o) { gross += num(o.amount); fee += num(o.commission); if (o.payoutStatus !== 'paid') owed += num(o.sellerAmount); });
+            var uids = {}; rows.forEach(function (o) { if (o.sellerUid) uids[o.sellerUid] = 1; });
+            return Promise.all(Object.keys(uids).map(function (u) { return db.collection('publicProfiles').doc(u).get().then(function (d) { return [u, d.exists ? (d.data().piUsername || d.data().username) : '']; }).catch(function () { return [u, '']; }); })).then(function (pairs) {
+                var names = {}; pairs.forEach(function (x) { names[x[0]] = x[1]; });
+                var stats = '<div class="adm-grid"><div class="adm-stat"><i>💰</i><b>' + plain(pi(gross)) + '</b><small>Total sales</small></div><div class="adm-stat"><i>🏦</i><b>' + plain(pi(fee)) + '</b><small>Your commission (5%)</small></div><div class="adm-stat"><i>⏳</i><b>' + plain(pi(owed)) + '</b><small>Still to pay sellers</small></div><div class="adm-stat"><i>🧾</i><b>' + rows.length + '</b><small>Orders</small></div></div>';
+                var list = rows.map(function (o) {
+                    var paid = o.payoutStatus === 'paid', seller = names[o.sellerUid] || o.sellerUid || 'seller';
+                    return '<div class="adm-row"><div class="grow"><b>' + plain(o.title || 'Product') + '</b><small>' + plain(pi(num(o.amount))) + ' · commission ' + plain(pi(num(o.commission))) + ' · pay seller <b>' + plain(pi(num(o.sellerAmount))) + '</b></small><small>Seller: ' + plain(seller) + ' · Buyer: ' + plain(o.buyerUid || '') + '</small><small>' + plain(fdate(o.createdAt)) + ' · ' + (paid ? '✅ seller paid' : '⏳ seller not paid yet') + '</small></div>' + (paid ? '' : '<div class="acts"><button type="button" class="adm-btn" data-adm-act="orderpaid" data-id="' + plain(o.id) + '">Mark seller paid</button></div>') + '</div>';
+                }).join('');
+                body().innerHTML = stats + '<h3 class="adm-h">Store orders</h3>' + (list || '<p class="adm-empty">No Store orders yet.</p>') + '<button type="button" class="adm-btn" data-adm-act="refresh">Refresh</button>';
+            });
+        }).catch(fail);
+    }
+    var ADM_TABS = { overview: admOverview, members: admMembers, content: admContent, reports: admReports, verify: admVerify, academy: admAcademy, orders: admOrders, storage: admStorage };
     function admRender(tab) {
         ADM.tab = ADM_TABS[tab] ? tab : 'overview';
         Array.prototype.forEach.call(document.querySelectorAll('#admTabs [data-adm-tab]'), function (b) { b.classList.toggle('on', b.getAttribute('data-adm-tab') === ADM.tab); });
@@ -943,6 +961,7 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
         var act = b.getAttribute('data-adm-act'), id = b.getAttribute('data-id'), ts = firebase.firestore.FieldValue.serverTimestamp();
         if (act === 'refresh') admRender(ADM.tab);
         else if (act === 'verify') db.collection('publicProfiles').doc(id).update({ verified: b.getAttribute('data-on') === '1' }).then(function () { notice('Updated.'); admMembers(); }).catch(function (er) { notice(firebaseErrorMessage(er)); });
+        else if (act === 'orderpaid') db.collection('academyOrders').doc(id).update({ payoutStatus: 'paid', paidAt: ts }).then(function () { notice('Marked as paid.'); admOrders(); }).catch(function (er) { notice(firebaseErrorMessage(er)); });
         else if (act === 'del') admDelete(b.getAttribute('data-col'), id, b.getAttribute('data-report'), b.getAttribute('data-rcol'));
         else if (act === 'report') db.collection(b.getAttribute('data-rcol')).doc(id).update({ status: b.getAttribute('data-s'), reviewedAt: ts, reviewedBy: currentFirebaseUser.uid }).then(function () { admReports(); }).catch(function (er) { notice(firebaseErrorMessage(er)); });
         else if (act === 'approve') {
