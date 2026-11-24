@@ -9,6 +9,10 @@
       "destination": "/"
     },
     {
+      "source": "/solution",
+      "destination": "/"
+    },
+    {
       "source": "/talent",
       "destination": "/"
     },
@@ -19,6 +23,12 @@
     {
       "source": "/share/:kind/:id",
       "destination": "/api/share?kind=:kind&id=:id"
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/sec",
+      "schedule": "0 22 * * *"
     }
   ]
 }
