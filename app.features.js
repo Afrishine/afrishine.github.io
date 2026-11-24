@@ -162,26 +162,52 @@
             });
         }
     }
+    var HOME_MAX = 6;                 /* videos shown in the Home grid: 3 rows of 2 */
+    var stillPhotos = {};             /* uid -> photo URL (read once per member) */
+    function paintStills() {
+        var dbx = (typeof db !== 'undefined' && db) ? db : null;
+        Array.prototype.forEach.call(feed.querySelectorAll('[data-still-uid]'), function (box) {
+            var uid = box.getAttribute('data-still-uid'); if (!uid) return;
+            function put(url) {
+                if (!url || !/^https:\/\//.test(url) || box.querySelector('img')) return;
+                var img = document.createElement('img'); img.alt = ''; img.decoding = 'async'; img.src = url;
+                img.onerror = function () { img.remove(); };
+                box.insertBefore(img, box.firstChild);
+            }
+            if (stillPhotos[uid] !== undefined) { put(stillPhotos[uid]); return; }
+            if (!dbx) return;
+            dbx.collection('publicProfiles').doc(uid).get().then(function (snap) {
+                stillPhotos[uid] = (snap.exists && snap.data().photoURL) || '';
+                put(stillPhotos[uid]);
+            }).catch(function () { stillPhotos[uid] = ''; });
+        });
+    }
     function renderHomeVideos(posts) {
         videoItems = (posts || []).filter(function (p) {
             return String(p.type || '').toLowerCase() === 'video' && getVideoUrl(p);
         }).map(function (p) {
             return {
                 id: p.id, url: getVideoUrl(p), caption: makeCaption(p),
-                author: esc(p.authorName || 'Afrishine Member')
+                author: esc(p.authorName || 'Afrishine Member'), uid: p.uid || '', name: String(p.authorName || 'A')
             };
         });
         if (!videoItems.length) {
             feed.innerHTML = '<div class="video-empty"><div class="empty-icon">🎬</div><strong>No videos yet</strong><p>Videos shared by members will appear here. Tap a video to watch it full screen.</p></div>';
             return;
         }
-        feed.innerHTML = videoItems.map(function (v, i) {
+        /* Home "Videos For You": only HOME_MAX cards (newest first, new posts arrive live).
+           The first card plays a silent preview; the others show the member's profile photo and
+           download nothing until tapped. The full-screen player still holds every video. */
+        feed.innerHTML = videoItems.slice(0, HOME_MAX).map(function (v, i) {
+            var media = i === 0
+                ? '<video src="' + esc(v.url) + '" muted playsinline webkit-playsinline loop preload="metadata"></video>'
+                : '<div class="home-video-still" data-still-uid="' + esc(v.uid) + '"><span>' + esc(v.name.charAt(0).toUpperCase() || 'A') + '</span></div>';
             return '<article class="home-video-card" role="button" tabindex="0" aria-label="Watch video ' +
-                (i + 1) + '" data-video-index="' + i + '"><video src="' + esc(v.url) +
-                '" muted playsinline webkit-playsinline loop preload="metadata"></video><span class="video-play-indicator">▶</span><div class="home-video-overlay"><div><strong>' +
+                (i + 1) + '" data-video-index="' + i + '">' + media + '<span class="video-play-indicator">▶</span><div class="home-video-overlay"><div><strong>' +
                 v.caption + '</strong><small>by ' + v.author +
                 '</small></div><span>↗</span></div></article>';
         }).join('');
+        paintStills();
 
         feed.querySelectorAll('[data-video-index]').forEach(function (card) {
             function openFromGesture() {
