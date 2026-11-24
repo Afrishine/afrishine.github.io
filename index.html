@@ -28,7 +28,7 @@
 <title>Afrishine Hub — Your Hub, Your Solutions</title>
 
 <link rel="stylesheet" href="/style.css">
-<script>if(/^afrishine-(academy|skills)/i.test(location.hostname)||/[?&]mode=academy\b/.test(location.search))document.documentElement.className+=" academy-only"</script>
+<script>window.AF_SKILLS=/^afrishine-skills/i.test(location.hostname);if(/^afrishine-(academy|skills)/i.test(location.hostname)||/[?&]mode=academy\b/.test(location.search))document.documentElement.className+=" academy-only"</script>
 </head>
 <body>
 <noscript><p style="padding:24px;text-align:center;background:#080a10;color:#fff">Afrishine Hub needs JavaScript. Please enable JavaScript in your browser and reload this page.</p></noscript>
@@ -80,6 +80,7 @@
 <section class="page" id="jobs"><div class="lp"><button class="lp-back" type="button" onclick="showPage('home')">‹ Back</button><section class="lp-hero"><div class="lp-art" aria-hidden="true">💼</div><span class="lp-pill">💼 Digital Jobs</span><h2>Find Your <b>Dream Job</b></h2><p class="lp-tag">Work. Grow. Succeed.</p><p class="lp-text">Discover verified job opportunities from top employers and companies around the world.</p><button type="button" class="lp-cta" onclick="afGate('jobs')">Explore Now →</button></section>
 <section class="lp-sec"><div class="lp-why"><div><h3><span>★</span> Why Choose Afrishine Jobs?</h3><ul><li>Verified Job Listings</li><li>Remote &amp; Local Opportunities</li><li>Career Growth Support</li><li>Skill Development Resources</li></ul></div><div class="lp-badge" aria-hidden="true">💼<b>JOBS</b></div></div></section>
 <section class="lp-sec"><h3><span>📈</span> Find Job</h3><div class="lp-grid c3"><button type="button" class="lp-card" onclick="afGate('jobs')"><i aria-hidden="true">💻</i>IT &amp; Tech</button><button type="button" class="lp-card" onclick="afGate('jobs')"><i aria-hidden="true">📣</i>Marketing</button><button type="button" class="lp-card" onclick="afGate('jobs')"><i aria-hidden="true">📈</i>Business</button><button type="button" class="lp-card" onclick="afGate('jobs')"><i aria-hidden="true">🩺</i>Health</button><button type="button" class="lp-card" onclick="afGate('jobs')"><i aria-hidden="true">🎓</i>Education</button><button type="button" class="lp-card" onclick="afGate('jobs')"><i aria-hidden="true">⚙️</i>Others</button></div></section><div class="lp-bottom"><button type="button" class="lp-cta" onclick="afGate('jobs')">Find Job →</button><p class="lp-note">Be the first to know when new job opportunities are available.</p></div></div></section>
+<section class="page" id="secshop"></section>
 <section class="page" id="shop">
   <div class="market-topbar">
     <button class="market-back" type="button" onclick="marketGoBack()" aria-label="Back">‹</button>
@@ -88,7 +89,7 @@
   </div>
   <p class="muted market-intro">Discover products, ask for what you need and connect directly with sellers across Rwanda.</p>
   <div class="shop-options">
-    <div class="shop-card buy"><div style="font-size:30px">🛍️</div><b>Buy Products</b><p>Find what you need</p><button class="white-btn" onclick="marketSetView('all')">Explore Now →</button></div>
+    <div class="shop-card buy"><div style="font-size:30px">🛍️</div><b>Buy Products</b><p>Find what you need</p><button class="white-btn" onclick="afSecOpen()">Explore Now →</button></div>
     <div class="shop-card sell"><div style="font-size:30px">🏷️</div><b>Sell Products</b><p>Reach more customers</p><button class="white-btn" onclick="marketOpenSell()">Start Selling →</button></div>
   </div>
   <div class="market-search-wrap"><span>⌕</span><input id="marketSearchInput" type="search" placeholder="Search products, e.g. CCTV camera, Home..." oninput="marketRenderProducts()"><button type="button" onclick="document.getElementById('marketSearchInput').value='';marketRenderProducts()">✕</button></div>
@@ -178,7 +179,7 @@
 </div></section>
 <section class="page" id="admin"><div class="eyebrow">ADMINISTRATION</div><h1>Admin Dashboard</h1><p class="muted">Monitor and manage everything happening on Afrishine Hub.</p>
 <div class="adm-tabs" id="admTabs" role="tablist" aria-label="Admin sections">
-<button type="button" class="on" data-adm-tab="overview">Overview</button><button type="button" data-adm-tab="members">Members</button><button type="button" data-adm-tab="content">Content</button><button type="button" data-adm-tab="reports">Reports</button><button type="button" data-adm-tab="verify">Verification</button><button type="button" data-adm-tab="academy">Academy</button><button type="button" data-adm-tab="orders">Orders</button><button type="button" data-adm-tab="storage">Storage</button></div>
+<button type="button" class="on" data-adm-tab="overview">Overview</button><button type="button" data-adm-tab="members">Members</button><button type="button" data-adm-tab="content">Content</button><button type="button" data-adm-tab="reports">Reports</button><button type="button" data-adm-tab="verify">Verification</button><button type="button" data-adm-tab="academy">Academy</button><button type="button" data-adm-tab="orders">Orders</button><button type="button" data-adm-tab="security">Security</button><button type="button" data-adm-tab="storage">Storage</button></div>
 <div id="admBody"></div></section>
 <section class="page" id="contact"><div class="eyebrow">WE ARE HERE TO HELP</div><h1>Contact Us</h1><p class="muted">Get in touch with Afrishine Hub for support, questions and business inquiries.</p>
 <section class="panel"><h2>About Afrishine Hub</h2><p>Afrishine Hub is a Rwandan digital platform where creators share their talent, people buy and sell in the Marketplace, and members access more services such as learning, jobs and travel, all in one place.</p></section>
@@ -235,6 +236,7 @@
 <script src="/marketplace.js"></script>
 <script src="/app-extras.js"></script>
 <script src="/afrishine-academy.js"></script>
+<script src="/afrishine-security.js"></script>
 
 <link rel="stylesheet" href="/creator-dashboard.css">
 <script src="/creator-dashboard.js"></script>
