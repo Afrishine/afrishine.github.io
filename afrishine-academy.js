@@ -156,6 +156,15 @@ function paintLibrary() {
   });
 }
 
+
+/* Terms / Privacy links at the bottom of the Academy page */
+(function () {
+  var page = document.getElementById('academy'); if (!page) return;
+  var p = document.createElement('p'); p.className = 'ac-legal';
+  p.innerHTML = '<a href="/terms">Terms</a> · <a href="/privacy">Privacy</a>';
+  page.appendChild(p);
+})();
+
 var nav = document.createElement('nav');
 nav.className = 'academy-nav'; nav.setAttribute('aria-label', 'Academy navigation');
 nav.innerHTML = '<button type="button" data-ac-nav="home">⌂<small>Home</small></button><button type="button" data-ac-nav="community">◎<small>Community</small></button><button type="button" class="add" data-ac-nav="add" aria-label="Create">＋</button><button type="button" data-ac-nav="inbox">✉<small>Inbox</small></button><button type="button" data-ac-nav="profile">☺<small>Profile</small></button>';
@@ -210,20 +219,45 @@ function piIncomplete(payment) {
   if (payment && payment.identifier && tx) postJson('/api/pi-complete', { paymentId: payment.identifier, txid: tx }).catch(function () { });
 }
 window.afPiLogin = function () {
-  if (!window.Pi) return Promise.reject(new Error('Open Afrishine Skills in Pi Browser'));
-  try { window.Pi.init({ version: '2.0', sandbox: false }); } catch (e) { }
-  return window.Pi.authenticate(['username', 'payments'], piIncomplete).then(function (r) {
+  if (!PI_HOST) { window.afPiGate(); return Promise.reject(new Error('Pi sign-in is on Afrishine Skills')); }
+  if (!window.Pi) { window.afPiGate(); return Promise.reject(new Error('Open Afrishine Skills in Pi Browser')); }
+  /* Pi.init must finish before Pi.authenticate; no "sandbox" option (it is detected automatically) */
+  return Promise.resolve(window.Pi.init({ version: '2.0' })).then(function () {
+    return window.Pi.authenticate(['username', 'payments'], piIncomplete);
+  }).then(function (r) {
+    /* Only the access token is used. The identity comes back from the server (App Studio), never from the browser. */
     return postJson('/api/pi-login', { accessToken: r.accessToken }).then(function (d) {
-      return auth.signInWithCustomToken(d.token).then(function () { try { sessionStorage.setItem('afrishine_pi_username', d.username); } catch (e) { } return r; });
+      return auth.signInWithCustomToken(d.token).then(function () {
+        try { sessionStorage.setItem('afrishine_pi_username', d.username); } catch (e) { }
+        return { accessToken: r.accessToken, user: { username: d.username } };
+      });
     });
+  });
+};
+/* Outside Pi Browser: explain that Pi sign-in needs Pi Browser and help the member get there */
+window.afPiGate = function () {
+  if (!PI_HOST) {
+    sheet('<h3>Sign in with Pi on Afrishine Skills</h3><p class="as-desc">Pi sign-in, the Store and Pi payments work on <b>Afrishine Skills</b>. Open it in Pi Browser to continue.</p><div class="as-actions static"><a class="as-btn main as-link" href="' + SKILLS_URL + '/">Open Afrishine Skills</a></div><div class="as-actions static"><button type="button" class="as-btn ghost" data-as="sheet-close">Close</button></div>');
+    return;
+  }
+  var link = location.origin + '/';
+  var o = sheet('<h3>Login with Pi Browser</h3><p class="as-desc">Afrishine Skills signs you in with your Pi account, which works inside <b>Pi Browser</b> only. Open this page in Pi Browser to continue.</p>' +
+    '<div class="as-actions static"><button type="button" class="as-btn main" id="asPiCopy">Copy link</button></div>' +
+    '<p class="as-note" style="margin:0">Do not have Pi Browser yet?</p>' +
+    '<div class="as-actions static"><a class="as-btn ghost as-link" href="https://play.google.com/store/apps/details?id=pi.browser" target="_blank" rel="noopener">Android</a><a class="as-btn ghost as-link" href="https://apps.apple.com/app/id1560911608" target="_blank" rel="noopener">iPhone</a></div>' +
+    '<div class="as-actions static"><button type="button" class="as-btn ghost" data-as="sheet-close">Close</button></div>');
+  o.querySelector('#asPiCopy').addEventListener('click', function () {
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(link).then(function () { say('Link copied. Paste it in Pi Browser.'); }, function () { prompt('Copy this link', link); });
+    else prompt('Copy this link', link);
   });
 };
 function needUser() {
   var u = curUser();
   if (u && /^pi_/.test(u.uid)) return Promise.resolve(u);          // already signed in with Pi
   if (inPi()) return window.afPiLogin().then(function () { return curUser(); }).catch(function (e) { say(e.message || 'Pi sign-in failed'); return null; });
-  say('Afrishine Store works with Pi login only. Please open it in Pi Browser.'); return Promise.resolve(null);
+  window.afPiGate(); return Promise.resolve(null);
 }
+var PI_HOST = /^afrishine-skills/i.test(location.hostname);   // Pi sign-in works on Afrishine Skills only
 function piOnlyHost() { return /^afrishine-skills/i.test(location.hostname); }
 
 /* ---- small UI helpers ---- */
@@ -303,7 +337,7 @@ function shareProduct(id) {
 /* ---- buy with Pi ---- */
 function buy(id) {
   var p = findItem(id); if (!p) return;
-  if (!inPi()) { say('Pi payments work inside Pi Browser. Open Afrishine Skills in Pi Browser to buy.'); return; }
+  if (!inPi()) { window.afPiGate(); return; }
   needUser().then(function (u) {
     if (!u) return;
     if (u.uid === p.uid) { say('This is your own product.'); return; }
