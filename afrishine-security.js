@@ -296,7 +296,7 @@
     var subs = { wallet: walletPaint, network: networkPaint, orders: ordersPaint, withdraw: withdrawPaint, invite: invitePaint, settings: settingsPaint, disclaimer: disclaimerPaint };
     if (S.sub && subs[S.sub]) { setTitle({ wallet: 'My Wallet', network: 'My Network', orders: 'My Orders', withdraw: 'Withdraw', invite: 'Register New Member', settings: 'Settings', disclaimer: 'Income Disclaimer' }[S.sub], false); subs[S.sub](el); return; }
     setTitle(m.name || 'Profile', true);
-    var carry = (m.leftBal || 0) + (m.rightBal || 0), link = location.origin + '/?sec=1&ref=' + encodeURIComponent(m.username);
+    var carry = (m.leftBal || 0) + (m.rightBal || 0), link = location.origin + '/solution?ref=' + encodeURIComponent(m.username);
     el.innerHTML = '<div class="sec-prof"><div class="sec-prof-top">' + avatar(m.name, m.photo || (u && u.photoURL), 'lg') + '<div><b>' + esc(m.name) + '</b><span>@' + esc(m.username) + '</span><em class="sec-stat ' + (m.status === 'active' ? 'on' : '') + '">' + (m.status === 'active' ? '● Active member' : '● Pending — waiting for payment confirmation') + '</em></div></div>' +
       '<p class="sec-hint">Sponsor: @' + esc(m.sponsorUsername || '-') + '</p></div>' +
       '<h3 class="sec-h">Wallet</h3><div class="sec-stats"><div class="sec-st"><small>Total Earned</small><b>' + rwf(m.earnedTotal) + '</b></div><div class="sec-st"><small>Total Withdrawn</small><b>' + rwf(m.withdrawn) + '</b></div><div class="sec-st hi"><small>Available Balance</small><b>' + rwf(m.balance) + '</b></div></div>' +
@@ -478,7 +478,7 @@
           S.net = null; S.inv = null; $('ivOut').innerHTML = '<div class="sec-ok">✔ Invite created. Give this code to the new member:<div class="sec-code">' + esc(r.code) + '</div><small>They sign in, open Security Solutions, choose a product, tap “I have an invite code”, and pay for their first order.</small></div>'; b.style.display = 'none';
         }).catch(function (er) { say(er.message); b.disabled = false; }); break;
       case 'shareLink':
-        var link = location.origin + '/?sec=1&ref=' + encodeURIComponent(S.member.username), txt = 'Join me on Afrishine Security Solutions: ' + link;
+        var link = location.origin + '/solution?ref=' + encodeURIComponent(S.member.username), txt = 'Join me on Afrishine Security Solutions: ' + link;
         if (navigator.share) navigator.share({ title: 'Afrishine Security Solutions', text: txt, url: link }).catch(function () { }); else if (navigator.clipboard) navigator.clipboard.writeText(link).then(function () { say('Link copied.'); }); break;
       case 'pwGo':
         var o = $('pwOld').value, n1 = $('pwNew').value, n2 = $('pwNew2').value;
@@ -489,7 +489,7 @@
     }
   }
   function shareProduct(id) {
-    var p = findP(id); if (!p) return; var link = location.origin + '/?sec=1&p=' + encodeURIComponent(id) + (S.member ? '&ref=' + encodeURIComponent(S.member.username) : '');
+    var p = findP(id); if (!p) return; var link = location.origin + '/solution?p=' + encodeURIComponent(id) + (S.member ? '&ref=' + encodeURIComponent(S.member.username) : '');
     var data = { title: p.title, text: p.title + ' — ' + rwf(p.price), url: link };
     if (navigator.share) navigator.share(data).catch(function () { }); else if (navigator.clipboard) navigator.clipboard.writeText(link).then(function () { say('Link copied.'); });
   }
@@ -513,6 +513,7 @@
     window.showPage = function (id) {
       prev.apply(this, arguments);
       document.body.classList.toggle('sec-on', id === 'secshop');
+      if (id === 'secshop' && window.history && history.replaceState) { try { history.replaceState(null, '', '/solution' + (location.search || '')); } catch (e) { } }
       if (id !== 'secshop') { closeSheet(); if (S.unsubChat) { try { S.unsubChat(); } catch (e) { } S.unsubChat = null; } }
     };
     window.showPage.__sec = true;
@@ -522,7 +523,7 @@
     try {
       var q = new URLSearchParams(location.search), r = q.get('ref');
       if (r) { try { localStorage.setItem('af_sec_ref', r.toLowerCase().slice(0, 20)); } catch (e) { } }
-      if (q.get('sec') === '1') { setTimeout(function () { window.afSecOpen(); var p = q.get('p'); if (p) loadProducts().then(function () { openProduct(p); }); }, 700); }
+      if (q.get('sec') === '1' || /^\/solution\/?$/.test(location.pathname)) { setTimeout(function () { window.afSecOpen(); var p = q.get('p'); if (p) loadProducts().then(function () { openProduct(p); }); }, 700); }
     } catch (e) { }
     var tries = 0, t = setInterval(function () {
       tries++;
