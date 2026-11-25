@@ -1,0 +1,9 @@
+{
+  "name": "afrishine-hub",
+  "private": true,
+  "version": "1.0.0",
+  "engines": { "node": "20.x" },
+  "dependencies": {
+    "@stellar/stellar-sdk": "12.3.0"
+  }
+}
