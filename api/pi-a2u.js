@@ -3,7 +3,7 @@
 // paired Testnet app before it grants a Mainnet app wallet).
 //
 // Vercel environment variables (names only - you type the values yourself in Vercel, never in chat or GitHub):
-//   PI_NETWORK_API_KEY   the app's Pi Platform API key (Pi Develop > your app > Settings > API key)
+//   PI_TESTNET_API_KEY   API key of the paired TESTNET app (used only by this payout tool). PI_NETWORK_API_KEY stays for normal payments.
 //   PI_WALLET_SEED       the app wallet's secret seed (starts with S...). Server only. Never put it in GitHub or the browser.
 //   FIREBASE_SERVICE_ACCOUNT  (already set)
 //   PI_NETWORK_MODE      optional: "testnet" (default) or "mainnet"
@@ -18,7 +18,8 @@ const MAX_AMOUNT = 1;     // safety cap per payment (Pi)
 
 function Fail(msg, status) { const e = new Error(msg); e.status = status || 400; e.user = true; return e; }
 const clean = (s, n) => String(s == null ? '' : s).replace(/[<>]/g, '').trim().slice(0, n);
-const key = () => process.env.PI_NETWORK_API_KEY || process.env.PI_API_KEY || '';
+// the payout tool has its OWN key (PI_TESTNET_API_KEY) so the normal Mainnet payments keep working with PI_NETWORK_API_KEY
+const key = () => process.env.PI_TESTNET_API_KEY || process.env.PI_NETWORK_API_KEY || process.env.PI_API_KEY || '';
 const auth = () => ({ Authorization: 'Key ' + key(), 'Content-Type': 'application/json' });
 const mode = () => (String(process.env.PI_NETWORK_MODE || 'testnet').toLowerCase() === 'mainnet' ? 'mainnet' : 'testnet');
 const HORIZON = { testnet: 'https://api.testnet.minepi.com', mainnet: 'https://api.mainnet.minepi.com' };
@@ -70,7 +71,7 @@ async function submitToChain(payment) {
 
 async function pay(admin, b) {
   const rd = readiness();
-  if (!rd.hasApiKey) throw Fail('PI_NETWORK_API_KEY is not set in Vercel.');
+  if (!rd.hasApiKey) throw Fail('PI_TESTNET_API_KEY is not set in Vercel.');
   if (!rd.hasSeed || !rd.seedValid) throw Fail('PI_WALLET_SEED is missing or not a valid wallet seed in Vercel.');
   const uid = clean(b.uid, 80), piUid = uid.replace(/^pi_/, '');
   if (!/^pi_[A-Za-z0-9_-]{4,70}$/.test(uid)) throw Fail('Choose a member who signed in with Pi.');
