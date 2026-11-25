@@ -2,7 +2,7 @@
   "id": "/",
   "name": "Afrishine Hub",
   "short_name": "Afrishine",
-  "description": "Africa's all-in-one platform for Talent, Love Connection, Shopping, Travel, Digital Jobs and Learning.",
+  "description": "Africa's all-in-one platform for Talent, Marketplace and Shopping, Security Solutions, Digital Jobs and Learning.",
   "lang": "en",
   "dir": "ltr",
   "start_url": "/",
@@ -19,22 +19,15 @@
     "education"
   ],
   "shortcuts": [
-    { "name": "Talent Hub", "url": "/#talent" },
-    { "name": "Marketplace", "url": "/#shop" },
-    { "name": "Inbox", "url": "/#inbox" }
+    { "name": "Talent Hub", "short_name": "Talent", "url": "/talent" },
+    { "name": "Marketplace", "short_name": "Market", "url": "/marketplace" },
+    { "name": "Security Solutions", "short_name": "Security", "url": "/solution" },
+    { "name": "Academy", "short_name": "Academy", "url": "/academy" }
   ],
   "icons": [
-    {
-      "src": "/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
