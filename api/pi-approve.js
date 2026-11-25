@@ -2,7 +2,7 @@
 // Needs on Vercel: PI_API_KEY (Pi Developer Portal) and FIREBASE_SERVICE_ACCOUNT.
 const { getDoc } = require('./_firebase');
 const PI = 'https://api.minepi.com/v2';
-const auth = () => ({ Authorization: 'Key ' + process.env.PI_API_KEY, 'Content-Type': 'application/json' });
+const auth = () => ({ Authorization: 'Key ' + (process.env.PI_NETWORK_API_KEY || process.env.PI_API_KEY), 'Content-Type': 'application/json' });
 
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
