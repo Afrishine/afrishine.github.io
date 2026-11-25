@@ -219,7 +219,7 @@ function setupPi() {
         }
         catch (e) {
             console.error(e);
-            notice('Pi Login failed. Reopen in Pi Browser and try again.');
+            notice('Pi Login failed' + (e && e.step ? ' at ' + e.message : (e && e.message ? ': ' + e.message : '')) + '. Reopen in Pi Browser and try again.');
             btn.disabled = false;
             btn.textContent = 'Login with Pi →';
         } }));
