@@ -916,7 +916,7 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
             });
         }).catch(fail);
     }
-    var ADM_TABS = { overview: admOverview, members: admMembers, content: admContent, reports: admReports, verify: admVerify, academy: admAcademy, orders: admOrders, security: function () { if (window.afSecAdmin) window.afSecAdmin(body()); else busy('Security module not loaded.'); }, storage: admStorage };
+    var ADM_TABS = { overview: admOverview, members: admMembers, content: admContent, reports: admReports, verify: admVerify, academy: admAcademy, orders: admOrders, security: function () { if (window.afSecAdmin) window.afSecAdmin(body()); else busy('Security module not loaded.'); }, payouts: function () { if (window.afPiPayouts) window.afPiPayouts(); else busy('Payouts module not loaded.'); }, storage: admStorage };
     function admRender(tab) {
         ADM.tab = ADM_TABS[tab] ? tab : 'overview';
         Array.prototype.forEach.call(document.querySelectorAll('#admTabs [data-adm-tab]'), function (b) { b.classList.toggle('on', b.getAttribute('data-adm-tab') === ADM.tab); });
