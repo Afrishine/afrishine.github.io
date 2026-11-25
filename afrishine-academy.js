@@ -222,12 +222,14 @@ window.afPiLogin = function () {
   if (!PI_HOST) { window.afPiGate(); return Promise.reject(new Error('Pi sign-in is on Afrishine Skills')); }
   if (!window.Pi) { window.afPiGate(); return Promise.reject(new Error('Open Afrishine Skills in Pi Browser')); }
   /* Pi.init must finish before Pi.authenticate; no "sandbox" option (it is detected automatically) */
-  return Promise.resolve(window.Pi.init({ version: '2.0' })).then(function () {
-    return window.Pi.authenticate(['username', 'payments'], piIncomplete);
-  }).then(function (r) {
+  var step = function (name, fn) { return function (v) { try { return Promise.resolve(fn(v)).catch(function (e) { var m = (e && e.message) || String(e || ''); var er = new Error(name + ': ' + m); er.step = name; throw er; }); } catch (e) { var er2 = new Error(name + ': ' + ((e && e.message) || e)); er2.step = name; return Promise.reject(er2); } }; };
+  return Promise.resolve().then(step('Pi.init', function () { return window.Pi.init({ version: '2.0' }); })).then(step('Pi.authenticate', function () {
+    /* login only needs the username; the payments permission is requested right before a purchase */
+    return window.Pi.authenticate(['username'], piIncomplete);
+  })).then(function (r) {
     /* Only the access token is used. The identity comes back from the server (App Studio), never from the browser. */
-    return postJson('/api/pi-login', { accessToken: r.accessToken }).then(function (d) {
-      return auth.signInWithCustomToken(d.token).then(function () {
+    return step('server login', function () { return postJson('/api/pi-login', { accessToken: r.accessToken }); })().then(function (d) {
+      return step('Firebase sign-in', function () { return auth.signInWithCustomToken(d.token); })().then(function () {
         try { sessionStorage.setItem('afrishine_pi_username', d.username); } catch (e) { }
         return { accessToken: r.accessToken, user: { username: d.username } };
       });
@@ -344,7 +346,7 @@ function buy(id) {
     var o = sheet('<h3>Confirm purchase</h3><p class="as-desc"><b>' + plain(p.title) + '</b><br>Price: <b>' + piFmt(p.price) + '</b><br>You pay with Pi only. Afrishine keeps a 5% commission; the seller receives ' + piFmt(Math.round(p.price * (1 - COMMISSION) * 1e7) / 1e7) + '.</p><div class="as-actions static"><button type="button" class="as-btn ghost" data-as="sheet-close">Cancel</button><button type="button" class="as-btn main" id="asPay">Pay ' + piFmt(p.price) + '</button></div>');
     o.querySelector('#asPay').addEventListener('click', function () {
       this.disabled = true; this.textContent = 'Opening Pi…';
-      window.Pi.createPayment({ amount: Number(p.price), memo: ('Afrishine Store: ' + p.title).slice(0, 120), metadata: { productId: p.id } }, {
+      Promise.resolve(window.Pi.authenticate(['username', 'payments'], piIncomplete)).catch(function () { }).then(function () { window.Pi.createPayment({ amount: Number(p.price), memo: ('Afrishine Store: ' + p.title).slice(0, 120), metadata: { productId: p.id } }, {
         onReadyForServerApproval: function (paymentId) { postJson('/api/pi-approve', { paymentId: paymentId }).catch(function (e) { say(e.message); }); },
         onReadyForServerCompletion: function (paymentId, txid) {
           postJson('/api/pi-complete', { paymentId: paymentId, txid: txid }).then(function () {
@@ -353,7 +355,7 @@ function buy(id) {
         },
         onCancel: function () { closeOv('asSheet'); say('Payment cancelled.'); },
         onError: function () { closeOv('asSheet'); say('Payment failed. Please try again.'); }
-      });
+      }); });
     });
   });
 }
