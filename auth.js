@@ -207,7 +207,6 @@ function setupPi() {
         return; try {
         if (!window.Pi)
             throw new Error('Pi SDK unavailable');
-        window.Pi.init({ version: '2.0', sandbox: false });
         btn.addEventListener('click', () => __awaiter(this, void 0, void 0, function* () { btn.disabled = true; btn.textContent = 'Connecting…'; try {
             const result = yield (window.afPiLogin ? window.afPiLogin() : window.Pi.authenticate(['username'], () => { }));
             const username = result && result.user && result.user.username;
@@ -216,7 +215,7 @@ function setupPi() {
             sessionStorage.setItem('afrishine_pi_username', username);
             const safe = String(username).replace(/[&<>"']/g, '');
             document.getElementById('piLoginArea').innerHTML = '<div class="pi-info"><div class="pi-symbol">π</div><div><b>Welcome @' + safe + '</b><small>Pi sign-in completed</small></div></div>';
-            document.getElementById('profileStatus').textContent = 'Signed in with Pi as @' + safe + '. Email sign-in is separate.';
+            document.getElementById('profileStatus').textContent = 'Signed in with Pi as @' + safe + '.' + (window.AF_SKILLS ? '' : ' Email sign-in is separate.');
         }
         catch (e) {
             console.error(e);
@@ -228,7 +227,7 @@ function setupPi() {
     catch (e) {
         console.warn('Pi SDK initialization:', e);
         btn.textContent = 'Open in Pi Browser';
-        btn.addEventListener('click', () => notice('Open Afrishine Hub inside Pi Browser to use Pi Login.'));
+        btn.addEventListener('click', () => { if (typeof window.afPiGate === 'function') window.afPiGate(); else notice('Open Afrishine Hub inside Pi Browser to use Pi Login.'); });
     } });
 }
 /* The Pi SDK is loaded only inside Pi Browser (async, see index.html): wait for it, but never longer than 10 s */
