@@ -30,7 +30,7 @@ async function accessToken() {
 // Firebase custom login token: lets a Pi user sign in to Firebase (uid is "pi_<Pi uid>")
 function customToken(uid) {
   const a = account(), now = Math.floor(Date.now() / 1000);
-  return signJwt({ iss: a.client_email, sub: a.client_email, aud: 'https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit', iat: now, exp: now + 3600, uid, claims: { pi_verified: true } }, a.private_key);
+  return signJwt({ iss: a.client_email, sub: a.client_email, aud: 'https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit', iat: now, exp: now + 3600, uid, claims: { pi: true, pi_verified: true } }, a.private_key);
 }
 const enc = (v) => {
   if (v === null || v === undefined) return { nullValue: null };
