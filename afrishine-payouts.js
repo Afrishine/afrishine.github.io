@@ -27,13 +27,13 @@
       '<input class="field" id="paAmt" type="number" step="0.001" min="0.001" max="1" value="0.01" inputmode="decimal" placeholder="Amount (Pi)">' +
       '<input class="field" id="paMemo" maxlength="28" value="Afrishine test payment" placeholder="Memo">' +
       (S.msg ? '<small class="adm-empty" style="padding:0">' + esc(S.msg) + '</small>' : '') + '</div>' +
-      '<h3 class="adm-h">Members who signed in with Pi</h3>';
+      '<h3 class="adm-h">Testers (signed in through Pi Sandbox)</h3>';
     var rows = (d.members || []).map(function (m) {
       var tag = m.status === 'completed' ? '<span class="adm-tag">✅ Paid</span>' : (m.status ? '<span class="adm-tag">' + esc(m.status) + '</span>' : '');
       var act = m.status === 'completed' ? '' : '<div class="acts"><button type="button" class="adm-btn gold" data-pa="pay" data-uid="' + esc(m.uid) + '"' + (S.busy ? ' disabled' : '') + '>' + (S.busy === m.uid ? 'Sending…' : (m.status ? 'Resume' : 'Pay')) + '</button></div>';
       return '<div class="adm-row"><div class="grow"><b>' + esc(m.username || 'Pi member') + '</b> ' + tag + '<small>' + esc(m.uid) + '</small>' + (m.txid ? '<small style="word-break:break-all">' + esc(m.txid) + '</small>' : '') + (m.error ? '<small style="color:#ff9b9b">' + esc(m.error) + '</small>' : '') + '</div>' + act + '</div>';
     }).join('');
-    html += (rows || '<p class="adm-empty">No Pi members yet. Ask your testers to open the app and press Login with Pi.</p>') + '<button type="button" class="adm-btn" data-pa="refresh">Refresh</button>';
+    html += (rows || '<p class="adm-empty">No testers yet. Open /pi-tester.html in Pi Sandbox (Pi Develop → Run in Sandbox) and sign in with Pi. Do this for 5 different Pi accounts, then press Refresh.</p>') + '<button type="button" class="adm-btn" data-pa="refresh">Refresh</button>';
     b.innerHTML = html;
   }
   function load() {
