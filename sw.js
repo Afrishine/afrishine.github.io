@@ -1,6 +1,6 @@
 'use strict';
 
-var CACHE_NAME = 'afrishine-hub-v23';
+var CACHE_NAME = 'afrishine-hub-v24';
 var META_CACHE = 'afrishine-meta';   // tiny cache that remembers who is signed in (used to skip your own video alerts)
 var NOTIFY_ICON = '/icon-192.png';
 
