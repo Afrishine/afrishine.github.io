@@ -2,7 +2,7 @@
 const { getDoc, setDoc } = require('./_firebase');
 const PI = 'https://api.minepi.com/v2';
 const COMMISSION = 0.05;
-const auth = () => ({ Authorization: 'Key ' + process.env.PI_API_KEY, 'Content-Type': 'application/json' });
+const auth = () => ({ Authorization: 'Key ' + (process.env.PI_NETWORK_API_KEY || process.env.PI_API_KEY), 'Content-Type': 'application/json' });
 const round7 = (n) => Math.round(n * 1e7) / 1e7;
 
 module.exports = async (req, res) => {
