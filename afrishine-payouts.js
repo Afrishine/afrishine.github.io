@@ -21,7 +21,7 @@
     var r = d.ready || {}, ready = r.hasApiKey && r.seedValid && r.hasSdk;
     var html = '<div class="adm-form"><b>Pi test payments (App → User)</b>' +
       '<small class="adm-empty" style="padding:0">Network: <b>' + esc(r.mode) + '</b> · Paid wallets: <b>' + d.completed + ' / ' + d.needed + '</b></small>' +
-      '<small class="adm-empty" style="padding:0">' + yes(r.hasApiKey) + ' PI_NETWORK_API_KEY · ' + yes(r.seedValid) + ' PI_WALLET_SEED' + (r.hasSeed && !r.seedValid ? ' (not a valid seed)' : '') + ' · ' + yes(r.hasSdk) + ' Stellar package</small>' +
+      '<small class="adm-empty" style="padding:0">' + yes(r.hasApiKey) + ' PI_TESTNET_API_KEY · ' + yes(r.seedValid) + ' PI_WALLET_SEED' + (r.hasSeed && !r.seedValid ? ' (not a valid seed)' : '') + ' · ' + yes(r.hasSdk) + ' Stellar package</small>' +
       (r.walletPublic ? '<small class="adm-empty" style="padding:0;word-break:break-all">App wallet (public): ' + esc(r.walletPublic) + ' · <a href="' + esc(r.explorer) + '" target="_blank" rel="noopener">Blockexplorer</a></small>' : '') +
       (ready ? '' : '<small class="adm-empty" style="padding:0;color:#ff9b9b">Finish the missing items in Vercel (Environment Variables), Redeploy, then press Refresh.</small>') +
       '<input class="field" id="paAmt" type="number" step="0.001" min="0.001" max="1" value="0.01" inputmode="decimal" placeholder="Amount (Pi)">' +
