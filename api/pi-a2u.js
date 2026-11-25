@@ -73,8 +73,9 @@ async function pay(admin, b) {
   const rd = readiness();
   if (!rd.hasApiKey) throw Fail('PI_TESTNET_API_KEY is not set in Vercel.');
   if (!rd.hasSeed || !rd.seedValid) throw Fail('PI_WALLET_SEED is missing or not a valid wallet seed in Vercel.');
-  const uid = clean(b.uid, 80), piUid = uid.replace(/^pi_/, '');
-  if (!/^pi_[A-Za-z0-9_-]{4,70}$/.test(uid)) throw Fail('Choose a member who signed in with Pi.');
+  const uid = clean(b.uid, 80), piUid = uid.replace(/^pt_/, '');
+  if (!/^pt_[A-Za-z0-9-]{8,70}$/.test(uid)) throw Fail('Choose a tester from the list.');
+  if (!(await fb.getDoc('piTesters/' + piUid))) throw Fail('This tester is not registered. Ask them to open the tester page in Pi Sandbox.');
   const amount = Math.round(Number(b.amount) * 1e7) / 1e7;
   if (!(amount > 0) || amount > MAX_AMOUNT) throw Fail('Amount must be more than 0 and at most ' + MAX_AMOUNT + ' Pi.');
   const memo = clean(b.memo, 28) || 'Afrishine test payment';
@@ -128,15 +129,33 @@ async function pay(admin, b) {
   return { ok: true, txid, paymentId: identifier };
 }
 
+// A tester opens /pi-tester.html in Pi Sandbox, signs in with Pi, and the page sends the Pi access token here.
+// We ask Pi (GET /v2/me) who that is. The uid Pi returns belongs to THIS app, which is what A2U payments need.
+const seenIp = {};
+async function tester(req, b) {
+  const ip = String((req.headers['x-forwarded-for'] || '')).split(',')[0].trim() || 'x', now = Date.now();
+  seenIp[ip] = (seenIp[ip] || []).filter((t) => now - t < 60000); seenIp[ip].push(now);
+  if (seenIp[ip].length > 10) throw Fail('Too many tries. Wait a minute.', 429);
+  const t = String(b.accessToken || '');
+  if (t.length < 10 || t.length > 4000) throw Fail('Missing Pi access token.');
+  const r = await fetch(PI + '/me', { headers: { Authorization: 'Bearer ' + t } });
+  if (!r.ok) throw Fail('Pi could not verify this sign-in (status ' + r.status + ').', 401);
+  const me = await r.json(), uid = String(me.uid || '');
+  if (!/^[A-Za-z0-9-]{8,70}$/.test(uid)) throw Fail('Pi did not send a user id.', 502);
+  const username = clean(me.username, 40);
+  await fb.setDoc('piTesters/' + uid, { uid, username, seenAt: new Date() });
+  return { ok: true, username };
+}
+
 async function overview() {
   const rd = readiness();
   const members = [], paid = {};
   await fb.listAll('piA2U', async (rows) => rows.forEach((r) => { paid[r.id] = r; }));
   let seen = 0;
-  await fb.listAll('publicProfiles', async (rows) => rows.forEach((r) => {
-    if (seen >= 500 || !/^pi_/.test(r.id)) return; seen++;
-    const p = paid['a2u_' + r.id.replace(/^pi_/, '')];
-    members.push({ uid: r.id, username: String(r.username || r.piUsername || '').slice(0, 40), status: p ? p.status : '', txid: p && p.txid || '', error: p && p.error || '' });
+  await fb.listAll('piTesters', async (rows) => rows.forEach((r) => {
+    if (seen >= 200) return; seen++;
+    const p = paid['a2u_' + r.id];
+    members.push({ uid: 'pt_' + r.id, username: String(r.username || '').slice(0, 40), status: p ? p.status : '', txid: p && p.txid || '', error: p && p.error || '' });
   }));
   const completed = Object.keys(paid).filter((k) => paid[k].status === 'completed').length;
   return { ok: true, ready: rd, completed, needed: 5, members };
@@ -147,6 +166,7 @@ module.exports = async (req, res) => {
   try {
     if (req.method !== 'POST') throw Fail('POST only.', 405);
     const b = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
+    if (b.action === 'tester') return res.status(200).json(await tester(req, b));
     const user = await fb.verifyIdToken(String(req.headers.authorization || '').replace(/^Bearer\s+/i, ''));
     if (!user) throw Fail('Please sign in again.', 401);
     await needAdmin(user.uid);
