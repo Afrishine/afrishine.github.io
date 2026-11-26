@@ -16,14 +16,17 @@ button:disabled{opacity:.6}#out{margin-top:16px;font-weight:600;word-break:break
 (function(){
   var out=document.getElementById('out'), btn=document.getElementById('go');
   function say(t){out.textContent=t;}
+  var inPi=/PiBrowser/i.test(navigator.userAgent||'');
+  if(!inPi)say('⚠️ This does not look like Pi Browser. Open Pi Browser → Develop → your app → Run in Sandbox. Chrome cannot sign in with Pi.');
   btn.addEventListener('click',function(){
-    if(!window.Pi){say('Open this page inside Pi Browser (Sandbox).');return;}
+    if(!window.Pi){say('Open this page inside Pi Browser (Pi Develop → Run in Sandbox).');return;}
     btn.disabled=true;say('Opening Pi sign-in…');
+    setTimeout(function(){if(out.textContent==='Opening Pi sign-in…'){say('Still waiting. Open this page from Pi Browser → Develop → Run in Sandbox (not from Chrome), then press the button again.');btn.disabled=false;}},15000);
     try{window.Pi.init({version:'2.0',sandbox:true});}catch(e){}
-    Promise.resolve(window.Pi.authenticate(['username'],function(){})).then(function(a){
+    Promise.resolve(window.Pi.authenticate(['username','payments'],function(){})).then(function(a){
       return fetch('/api/pi-a2u',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'tester',accessToken:a.accessToken})});
     }).then(function(r){return r.json().catch(function(){return {};}).then(function(d){if(!r.ok||d.error)throw new Error(d.error||'Something went wrong.');return d;});})
-    .then(function(d){say('✅ Registered: '+d.username+'. You can close this page.');})
+    .then(function(d){say('✅ Registered: '+d.username+' (id '+(d.id||'')+'…). You can close this page.');})
     .catch(function(e){say('❌ '+(e&&e.message?e.message:'Sign-in failed.'));btn.disabled=false;});
   });
 })();
