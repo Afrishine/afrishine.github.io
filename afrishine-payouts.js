@@ -30,7 +30,7 @@
       '<h3 class="adm-h">Testers (signed in through Pi Sandbox)</h3>';
     var rows = (d.members || []).map(function (m) {
       var tag = m.status === 'completed' ? '<span class="adm-tag">✅ Paid</span>' : (m.status ? '<span class="adm-tag">' + esc(m.status) + '</span>' : '');
-      var act = m.status === 'completed' ? '' : '<div class="acts"><button type="button" class="adm-btn gold" data-pa="pay" data-uid="' + esc(m.uid) + '"' + (S.busy ? ' disabled' : '') + '>' + (S.busy === m.uid ? 'Sending…' : (m.status ? 'Resume' : 'Pay')) + '</button></div>';
+      var act = m.status === 'completed' ? '' : '<div class="acts"><button type="button" class="adm-btn gold" data-pa="pay" data-uid="' + esc(m.uid) + '"' + (S.busy ? ' disabled' : '') + '>' + (S.busy === m.uid ? 'Sending…' : (m.status ? 'Resume' : 'Pay')) + '</button><button type="button" class="adm-btn red" data-pa="remove" data-uid="' + esc(m.uid) + '"' + (S.busy ? ' disabled' : '') + '>Remove</button></div>';
       return '<div class="adm-row"><div class="grow"><b>' + esc(m.username || 'Pi member') + '</b> ' + tag + '<small>' + esc(m.uid) + '</small>' + (m.txid ? '<small style="word-break:break-all">' + esc(m.txid) + '</small>' : '') + (m.error ? '<small style="color:#ff9b9b">' + esc(m.error) + '</small>' : '') + '</div>' + act + '</div>';
     }).join('');
     html += (rows || '<p class="adm-empty">No testers yet. Open /pi-tester.html in Pi Sandbox (Pi Develop → Run in Sandbox) and sign in with Pi. Do this for 5 different Pi accounts, then press Refresh.</p>') + '<button type="button" class="adm-btn" data-pa="refresh">Refresh</button>';
@@ -44,6 +44,13 @@
     var t = ev.target && ev.target.closest ? ev.target.closest('[data-pa]') : null; if (!t || !box() || !box().contains(t)) return;
     var a = t.getAttribute('data-pa');
     if (a === 'refresh') return load();
+    if (a === 'remove' && !S.busy) {
+      if (!confirm('Remove this tester? They can sign in again from Pi Sandbox to register fresh.')) return;
+      S.msg = 'Removing…'; render();
+      ask('remove', { uid: t.getAttribute('data-uid') }).then(function () { S.msg = 'Removed. Ask them to open the tester page in Pi Sandbox again.'; return ask('overview'); })
+        .then(function (d) { S.data = d; render(); }).catch(function (e) { S.msg = e.message; render(); });
+      return;
+    }
     if (a === 'pay' && !S.busy) {
       var uid = t.getAttribute('data-uid'), amt = parseFloat((document.getElementById('paAmt') || {}).value), memo = (document.getElementById('paMemo') || {}).value || '';
       if (!(amt > 0) || amt > 1) { S.msg = 'Amount must be more than 0 and at most 1 Pi.'; return render(); }
