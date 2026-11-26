@@ -147,6 +147,18 @@ async function tester(req, b) {
   return { ok: true, username };
 }
 
+// Admin: forget a tester (and its failed payment record) so the person can register again from scratch.
+async function removeTester(b) {
+  const uid = clean(b.uid, 80), id = uid.replace(/^pt_/, '');
+  if (!/^pt_[A-Za-z0-9-]{8,70}$/.test(uid)) throw Fail('Choose a tester from the list.');
+  const rec = await fb.getDoc('piA2U/a2u_' + id);
+  if (rec && rec.status === 'completed') throw Fail('This tester was already paid, so the record is kept as proof.');
+  const writes = [W.del('piTesters/' + id)];
+  if (rec) writes.push(W.del('piA2U/a2u_' + id));
+  await fb.commit(writes);
+  return { ok: true };
+}
+
 async function overview() {
   const rd = readiness();
   const members = [], paid = {};
@@ -174,6 +186,7 @@ module.exports = async (req, res) => {
     switch (b.action) {
       case 'overview': out = await overview(); break;
       case 'pay': out = await pay(user.uid, b); break;
+      case 'remove': out = await removeTester(b); break;
       default: throw Fail('Unknown action.');
     }
     res.status(200).json(out);
