@@ -144,7 +144,7 @@ async function tester(req, b) {
   if (!/^[A-Za-z0-9-]{8,70}$/.test(uid)) throw Fail('Pi did not send a user id.', 502);
   const username = clean(me.username, 40);
   await fb.setDoc('piTesters/' + uid, { uid, username, seenAt: new Date() });
-  return { ok: true, username };
+  return { ok: true, username, id: uid.slice(0, 8) };
 }
 
 // Admin: forget a tester (and its failed payment record) so the person can register again from scratch.
