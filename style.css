@@ -589,11 +589,50 @@ html.academy-only #profile .panel.ac-email{display:none!important}
 .ac-head{display:flex;align-items:center;gap:12px;margin:4px 0 14px}.ac-head h2{margin:0;font-size:22px}.ac-head p{margin:2px 0 0;color:var(--muted);font-size:13.5px}
 .ac-soon{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:30px 18px;border-radius:20px;border:1px dashed #2f4a96;background:#0c1633}
 .ac-soon i{font-style:normal;font-size:34px}.ac-soon b{font-size:18px;color:var(--gold)}.ac-soon p{margin:0;color:#c3cfee;font-size:14px;line-height:1.5}
-.academy-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:10;justify-content:center;background:#0c1019;border-top:1px solid #303747;padding:8px 0 calc(8px + env(safe-area-inset-bottom))}
-body.ac-on .academy-nav{display:flex}body.ac-on .bottom-nav{display:none!important}
-.academy-nav button{width:19%;max-width:120px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:0;border:0;background:none;color:#929aaa;font-size:22px}
-.academy-nav small{font-size:12px}.academy-nav button.active{color:var(--gold)}
-.academy-nav .add{width:46px;height:46px;margin:-17px 7px 0;border:3px solid var(--bg);border-radius:50%;background:var(--gold);color:#171107;font-size:27px;font-weight:900;justify-content:center}
+.academy-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:10;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:linear-gradient(180deg,transparent,#05070d 38%)}
+body.ac-on .academy-nav{display:block}body.ac-on .bottom-nav{display:none!important}
+.academy-nav .ac-pill{display:flex;align-items:stretch;justify-content:space-around;gap:2px;max-width:520px;margin:0 auto;padding:6px;border-radius:26px;border:1px solid #2a3f86;background:linear-gradient(180deg,#0e1a45,#0a1233);box-shadow:0 8px 24px #000a}
+.academy-nav button{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:7px 2px 6px;border:0;border-radius:20px;background:none;color:#e8edf8;font-size:12.5px;font-weight:700;position:relative}
+.academy-nav button svg{width:26px;height:26px;display:block}
+.academy-nav small{font-size:12.5px;font-weight:700}
+.academy-nav button.active{color:var(--gold);background:radial-gradient(circle at 50% 0,#ffc22a30,transparent 75%)}
+.academy-nav button.active::after{content:'';position:absolute;left:24%;right:24%;bottom:2px;height:3px;border-radius:3px;background:var(--gold)}
+.academy-nav .chan .ch-ico{width:46px;height:46px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(180deg,#ffd13f,#f5a800);color:#111;box-shadow:0 4px 14px #f5a80050;margin-top:-14px}
+.academy-nav .chan{color:#fff}.academy-nav .chan.active{background:none}.academy-nav .chan.active::after{display:none}
+.academy-nav .chan.active .ch-ico{box-shadow:0 0 0 3px #ffd13f66,0 4px 14px #f5a80060}
+@media(max-width:360px){.academy-nav small{font-size:11.5px}}
+/* ===== Channel (video links) ===== */
+.ac-chan{margin:26px 0 8px}.ac-chan h3{margin:0 0 4px;font-size:20px}.ac-chan>p{margin:0 0 12px;color:var(--muted);font-size:14px}
+.ac-chan-grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:760px){.ac-chan-grid{grid-template-columns:1fr 1fr}}
+.ac-chan-item{border:1px solid #2c4a9a;border-radius:18px;background:linear-gradient(170deg,#0f2150,#0a1330);padding:12px;min-width:0}
+.ac-chan-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.ac-chan-head .who{flex:1;min-width:0}.ac-chan-head b{font-size:15px;word-break:break-word}.ac-chan-head small{display:block;color:var(--muted);font-size:12px}
+.ac-chan-av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:#111;font-weight:900;flex-shrink:0}
+.ac-chan-cap{margin:2px 0 4px;font-size:14.5px;line-height:1.5;color:#e4eaf8;word-break:break-word}
+.ac-chan-del{border:0;border-radius:10px;background:#4a1d1d;color:#ffb3b3;font-weight:700;font-size:12.5px;padding:6px 10px}
+.ac-chan-more{display:block;margin:14px auto 0;padding:10px 18px;border:1px solid #394355;border-radius:999px;background:#171d29;color:var(--gold);font-weight:800}
+.ac-chan-form{display:grid;gap:10px;margin-bottom:16px;padding:14px;border-radius:18px;border:1px solid #2c4a9a;background:#0d1838}
+.ac-chan-lock{text-align:center;padding:22px 16px;border-radius:18px;border:1px dashed #8b713d;background:#16140c;margin-bottom:16px}
+.ac-chan-lock i{font-style:normal;font-size:34px;display:block;margin-bottom:6px}.ac-chan-lock p{color:#d6cdb4;margin:6px 0 14px;font-size:14.5px;line-height:1.5}
+.ac-msg{margin:0;font-size:13.5px;color:var(--muted)}.ac-msg.err{color:#ff9b9b}.ac-msg.ok{color:#8ee6a8}
+/* ===== Verified badge request (Afrishine Skills > Profile) ===== */
+.ac-verify{margin:14px 0 4px}
+.ac-verify h3{margin:0 0 4px;font-size:21px}.ac-verify .sub{margin:0 0 12px;color:var(--muted);font-size:14px;line-height:1.5}
+.ac-vstatus{margin:0 0 12px;padding:10px 12px;border-radius:12px;background:#0f2a1a;border:1px solid #1f6b3b;color:#9af0b5;font-weight:700;font-size:14px}
+.ac-plans{display:grid;gap:10px;margin:6px 0 12px}
+.ac-plan{position:relative;display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:16px;border:2px solid #2c3446;background:#10141d;cursor:pointer;text-align:left;color:#fff;width:100%}
+.ac-plan.on{border-color:var(--gold);background:linear-gradient(170deg,#241c08,#12110a);box-shadow:0 0 0 3px #ffc22a22}
+.ac-plan .dot{width:20px;height:20px;border-radius:50%;border:2px solid #6b7488;flex-shrink:0;display:grid;place-items:center}.ac-plan.on .dot{border-color:var(--gold)}.ac-plan.on .dot::after{content:'';width:10px;height:10px;border-radius:50%;background:var(--gold)}
+.ac-plan .t{flex:1;min-width:0}.ac-plan .t b{display:block;font-size:16px}.ac-plan .t small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+.ac-plan .p{text-align:right;flex-shrink:0}.ac-plan .p b{display:block;font-size:19px;color:var(--gold)}.ac-plan .p small{color:var(--muted);font-size:12px}
+.ac-plan .pop{position:absolute;top:-9px;right:12px;padding:2px 9px;border-radius:999px;background:#d93025;color:#fff;font-size:11px;font-weight:800}
+.ac-vgrid{display:grid;gap:10px;margin-bottom:10px}
+.ac-vgrid .ro{opacity:.85}
+.ac-vbtns{display:grid;gap:10px;margin-top:6px}
+.ac-vbtns .pay{min-height:52px;font-size:17px}
+.ac-help{margin:14px 0 0;font-size:13.5px;color:var(--muted);line-height:1.5}.ac-help a{color:var(--gold);font-weight:700}
+html.academy-only #ahVerifyToggle,html.academy-only #ahVerifyDetailsPanel{display:none!important}
 
 /* ===== Afrishine Store ===== */
 body.as-lock{overflow:hidden}
