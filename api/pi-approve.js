@@ -13,6 +13,13 @@ module.exports = async (req, res) => {
     const pr = await fetch(`${PI}/payments/${paymentId}`, { headers: auth() });
     if (!pr.ok) return res.status(400).json({ error: 'Payment not found' });
     const pay = await pr.json();
+    if (pay.metadata && pay.metadata.kind === 'verify') {            // Verified badge payment (Afrishine Skills > Profile)
+      const bad = await require('./_verify').checkApprove(pay);
+      if (bad) return res.status(400).json({ error: bad });
+      const vr = await fetch(`${PI}/payments/${paymentId}/approve`, { method: 'POST', headers: auth() });
+      if (!vr.ok) return res.status(502).json({ error: 'Pi could not approve the payment' });
+      return res.status(200).json({ ok: true });
+    }
     const productId = pay.metadata && pay.metadata.productId;
     const product = productId && /^[A-Za-z0-9_-]{6,64}$/.test(productId) ? await getDoc('academyProducts/' + productId) : null;
     if (!product || product.status !== 'active') return res.status(400).json({ error: 'This product is no longer available' });
