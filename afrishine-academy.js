@@ -120,7 +120,7 @@ window.afAcademyReload = function () { academy.at = 0; return loadAcademyFiles(t
 var piOnly = /^afrishine-skills/i.test(location.hostname);   // Afrishine Skills address: Pi sign-in only, no link to the Hub
 var ownAddress = /^afrishine-(academy|skills)/i.test(location.hostname) || /[?&]mode=academy\b/.test(location.search);
 
-var AC_PAGES = { academy: 1, trafficRules: 1, trafficList: 1, acLibrary: 1, acServices: 1, acFreelance: 1, acCommunity: 1, acBooking: 1, acStore: 1, acInbox: 1 };
+var AC_PAGES = { academy: 1, trafficRules: 1, trafficList: 1, acLibrary: 1, acServices: 1, acFreelance: 1, acCommunity: 1, acBooking: 1, acStore: 1, acInbox: 1, acChannel: 1 };
 var SECTIONS = {
   library:   { id: 'acLibrary',   icon: '📖', title: 'E-Library', sub: 'Courses, guides and resources.' },
   services:  { id: 'acServices',  icon: '🧰', title: 'Professional Services', sub: 'Electricians, CCTV installers and other experts.' },
@@ -144,7 +144,8 @@ if (holder) {
     sectionPage(SECTIONS.community, soon(VERIFIED_NOTE)) +
     sectionPage(SECTIONS.booking, soon('You will be able to book an expert directly from here.')) +
     sectionPage(SECTIONS.store, '<div id="acStoreBody"></div>') +
-    sectionPage({ id: 'acInbox', icon: '✉️', title: 'Inbox', sub: 'Your messages.' }, soon('Messages will be available here.')));
+    sectionPage({ id: 'acInbox', icon: '✉️', title: 'Inbox', sub: 'Your messages.' }, soon('Messages will be available here.')) +
+    sectionPage({ id: 'acChannel', icon: '📺', title: 'Channel', sub: 'Share your YouTube or TikTok video link.' }, '<div id="acChannelBody"></div>'));
 }
 function paintLibrary() {
   var box = document.getElementById('acLibraryBody'); if (!box) return;
@@ -157,24 +158,36 @@ function paintLibrary() {
 }
 
 
-/* Terms / Privacy links at the bottom of the Academy page */
+/* Terms / Privacy links: at the bottom of Profile on the Academy address; at the bottom of the Academy page on the Hub */
 (function () {
-  var page = document.getElementById('academy'); if (!page) return;
+  var page = document.getElementById(ownAddress ? 'profile' : 'academy'); if (!page) return;
   var p = document.createElement('p'); p.className = 'ac-legal';
   p.innerHTML = '<a href="/terms">Terms</a> · <a href="/privacy">Privacy</a>';
   page.appendChild(p);
+  if (ownAddress && window.MutationObserver) {                       // other Profile blocks are added later: keep Terms / Privacy last
+    new MutationObserver(function () { if (page.lastElementChild !== p) page.appendChild(p); }).observe(page, { childList: true });
+  }
 })();
 
 var nav = document.createElement('nav');
 nav.className = 'academy-nav'; nav.setAttribute('aria-label', 'Academy navigation');
-nav.innerHTML = '<button type="button" data-ac-nav="home">⌂<small>Home</small></button><button type="button" data-ac-nav="community">◎<small>Community</small></button><button type="button" class="add" data-ac-nav="add" aria-label="Create">＋</button><button type="button" data-ac-nav="inbox">✉<small>Inbox</small></button><button type="button" data-ac-nav="profile">☺<small>Profile</small></button>';
+var ICO = {
+  home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-5.5h4V20"/></svg>',
+  channel: '<svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true"><path d="M21.6 7.2a2.6 2.6 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.200 0-7.800.4A2.600 2.600 0 0 0 2.400 7.200C2 8.800 2 12 2 12s0 3.200.4 4.800a2.600 2.600 0 0 0 1.800 1.800C5.800 19 12 19 12 19s6.200 0 7.800-.4a2.600 2.600 0 0 0 1.800-1.800c.4-1.600.4-4.800.4-4.800s0-3.200-.4-4.800ZM10 15.200V8.800l5.500 3.200Z"/></svg>',
+  inbox: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></svg>',
+  profile: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="8" r="4.200"/><path d="M4 21c0-4.200 3.600-7 8-7s8 2.800 8 7Z"/></svg>'
+};
+nav.innerHTML = '<div class="ac-pill">' +
+  '<button type="button" data-ac-nav="home">' + ICO.home + '<small>Home</small></button>' +
+  '<button type="button" class="chan" data-ac-nav="channel"><span class="ch-ico">' + ICO.channel + '</span><small>Channel</small></button>' +
+  '<button type="button" data-ac-nav="inbox">' + ICO.inbox + '<small>Inbox</small></button>' +
+  '<button type="button" data-ac-nav="profile">' + ICO.profile + '<small>Profile</small></button></div>';
 document.body.appendChild(nav);
 function navGo(k) {
   if (k === 'home') showPage('academy');
-  else if (k === 'community') showPage('acCommunity');
+  else if (k === 'channel') showPage('acChannel');
   else if (k === 'inbox') showPage(ownAddress ? 'acInbox' : 'inbox');
   else if (k === 'profile') showPage('profile');
-  else if (k === 'add') say(VERIFIED_NOTE);
 }
 document.addEventListener('click', function (e) {
   var n = e.target.closest ? e.target.closest('[data-ac-nav]') : null;
@@ -183,7 +196,7 @@ document.addEventListener('click', function (e) {
   if (t) { var s = SECTIONS[t.getAttribute('data-ac-go')]; if (s) showPage(s.id); }
 });
 function markNav(id) {
-  var key = id === 'academy' || id === 'trafficRules' || id === 'trafficList' || (id.indexOf('ac') === 0 && id !== 'acCommunity' && id !== 'acInbox') ? 'home' : id === 'acCommunity' ? 'community' : id === 'acInbox' ? 'inbox' : id === 'profile' ? 'profile' : '';
+  var key = id === 'academy' || id === 'trafficRules' || id === 'trafficList' || (id.indexOf('ac') === 0 && id !== 'acChannel' && id !== 'acInbox') ? 'home' : id === 'acChannel' ? 'channel' : id === 'acInbox' ? 'inbox' : id === 'profile' ? 'profile' : '';
   Array.prototype.forEach.call(nav.querySelectorAll('[data-ac-nav]'), function (b) { b.classList.toggle('active', b.getAttribute('data-ac-nav') === key); });
 }
 /* The Academy has its own bottom navigation; the Hub one is hidden while an Academy page is open */
@@ -196,9 +209,13 @@ window.showPage = function (id) {
   if (cur === 'acLibrary') paintLibrary();
   if (cur === 'acStore') paintStore();
   if (cur === 'acInbox') paintInbox();
+  if (cur === 'academy') paintChannelHome();
+  if (cur === 'acChannel') paintChannelPage();
+  if (cur === 'profile') mountVerify();
   return r;
 };
 var ALLOWED_OWN = { profile: 1, settings: 1, contact: 1 };
+var CH_CHIP = 'Only members with a Verified badge can post in Channel.';
 (function () { var a = document.querySelector('.page.active'); if (a) { document.body.classList.toggle('ac-on', !!AC_PAGES[a.id]); markNav(a.id); } })();
 
 /* ================= 4. AFRISHINE STORE (electronics, paid with Pi only, 5% commission) ================= */
@@ -223,7 +240,7 @@ window.afPiLogin = function () {
   if (!window.Pi) { window.afPiGate(); return Promise.reject(new Error('Open Afrishine Skills in Pi Browser')); }
   /* Pi.init must finish before Pi.authenticate; no "sandbox" option (it is detected automatically) */
   var step = function (name, fn) { return function (v) { try { return Promise.resolve(fn(v)).catch(function (e) { var m = (e && e.message) || String(e || ''); var er = new Error(name + ': ' + m); er.step = name; throw er; }); } catch (e) { var er2 = new Error(name + ': ' + ((e && e.message) || e)); er2.step = name; return Promise.reject(er2); } }; };
-  return Promise.resolve().then(step('Pi.init', function () { return window.Pi.init({ version: '2.0' }); })).then(step('Pi.authenticate', function () {
+  return Promise.resolve().then(step('Pi.init', function () { window.__afPiInited = true; return window.Pi.init({ version: '2.0' }); })).then(step('Pi.authenticate', function () {
     /* login only needs the username; the payments permission is requested right before a purchase */
     return window.Pi.authenticate(['username'], piIncomplete);
   })).then(function (r) {
@@ -274,7 +291,8 @@ function sheet(html) {
   o.classList.add('as-sheet'); o.addEventListener('click', function (e) { if (e.target === o) closeOv('asSheet'); }); return o;
 }
 function verifiedChip(on) { return on ? '<span class="as-verified">✓ Verified</span>' : ''; }
-function isVerified(uid) { return db.collection('publicProfiles').doc(uid).get().then(function (s) { return !!(s.exists && s.data().verified === true); }).catch(function () { return false; }); }
+function verifiedNow(p) { if (!p || p.verified !== true) return false; var u = ms2(p.verifiedUntil); return !u || u > Date.now(); }   // a badge with an end date stops at that date
+function isVerified(uid) { return db.collection('publicProfiles').doc(uid).get().then(function (s) { return !!(s.exists && verifiedNow(s.data())); }).catch(function () { return false; }); }
 function myName() { var u = curUser(); return (u && (u.displayName || '')) || sessionStorageGet('afrishine_pi_username') || 'Afrishine Member'; }
 function sessionStorageGet(k) { try { return sessionStorage.getItem(k) || ''; } catch (e) { return ''; } }
 
@@ -489,10 +507,258 @@ document.addEventListener('click', function (e) {
   window.addEventListener('load', function () { showPage('acStore'); setTimeout(function () { openProduct(m[1]); }, 300); });
 })();
 
+/* ================= 5. CHANNEL: YouTube / TikTok links shared by Verified members ================= */
+var chan = { items: [], docs: [], loaded: 0, last: null, more: false, loading: null };
+var chanVer = {};
+function chanUserNow() { return (typeof currentFirebaseUser !== 'undefined' && currentFirebaseUser) || null; }
+function chanName(u) { return String((u && u.displayName) || sessionStorageGet('afrishine_pi_username') || 'Afrishine Member').slice(0, 100); }
+function dShort(t) { var m = ms2(t); return m ? new Date(m).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }) : ''; }
+function chanCard(p) {
+  var me = chanUserNow(), canDel = (me && p.uid === me.uid) || window.__afIsAdmin === true;
+  var card = typeof window.afLinkCardHtml === 'function' ? window.afLinkCardHtml({ linkProvider: p.linkProvider, linkId: p.linkId, linkUrl: p.linkUrl, linkTitle: p.linkTitle, linkThumb: p.linkThumb }) : '<a href="' + plain(p.linkUrl) + '" target="_blank" rel="noopener">' + plain(p.linkTitle || 'Open video') + '</a>';
+  return '<article class="ac-chan-item"><div class="ac-chan-head"><span class="ac-chan-av">' + plain(String(p.authorName || 'A').charAt(0).toUpperCase()) + '</span><div class="who"><b>' + plain(p.authorName || 'Member') + ' <span data-chan-ver="' + plain(p.uid) + '"></span></b><small>' + plain(dShort(p.createdAt)) + '</small></div>' +
+    (canDel ? '<button type="button" class="ac-chan-del" data-chan-del="' + plain(p.id) + '">Delete</button>' : '') + '</div>' +
+    (p.text ? '<p class="ac-chan-cap">' + plain(p.text) + '</p>' : '') + card + '</article>';
+}
+function chanChips(root) {                         // show "✓ Verified" next to members whose badge is active right now
+  Array.prototype.forEach.call(root.querySelectorAll('[data-chan-ver]'), function (el) {
+    var uid = el.getAttribute('data-chan-ver');
+    if (!(uid in chanVer)) chanVer[uid] = isVerified(uid);
+    Promise.resolve(chanVer[uid]).then(function (v) { chanVer[uid] = v; el.innerHTML = verifiedChip(v); });
+  });
+}
+function loadChannel(more) {
+  if (!db) return Promise.resolve();
+  if (chan.loading) return chan.loading;
+  if (!more && chan.loaded && Date.now() - chan.loaded < 30000) return Promise.resolve();
+  var q = db.collection('academyChannel').orderBy('createdAt', 'desc').limit(12);
+  if (more && chan.last) q = q.startAfter(chan.last);
+  chan.loading = q.get().then(function (snap) {
+    var rows = snap.docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); });
+    chan.items = more ? chan.items.concat(rows) : rows;
+    if (snap.docs.length) chan.last = snap.docs[snap.docs.length - 1];
+    chan.more = snap.docs.length === 12; chan.loaded = Date.now();
+  }).catch(function (e) { console.warn('Channel:', e); }).then(function () { chan.loading = null; });
+  return chan.loading;
+}
+function paintChannelHome(more) {
+  var sec = $('acChanHome'); if (!sec) return;
+  loadChannel(more === true).then(function () {
+    var grid = $('acChanGrid'), btn = $('acChanMore'); if (!grid) return;
+    if (grid.querySelector('[data-vlink-playing="1"]')) return;               // do not interrupt a video that is playing
+    grid.innerHTML = chan.items.length ? chan.items.map(chanCard).join('') : '<div class="ac-soon" style="grid-column:1/-1"><i aria-hidden="true">📺</i><b>No videos yet</b><p>Verified members can share the first one from <b>Channel</b>.</p></div>';
+    if (btn) btn.style.display = chan.more ? 'block' : 'none';
+    chanChips(grid);
+  });
+}
+(function () {                                    // the list sits below "Start Learning"
+  var page = $('academy'); if (!page) return;
+  var bottom = page.querySelector('.lp-bottom'), sec = document.createElement('section');
+  sec.className = 'ac-chan'; sec.id = 'acChanHome';
+  sec.innerHTML = '<h3>📺 Latest from Channel</h3><p>Videos shared by Verified members.</p><div class="ac-chan-grid" id="acChanGrid"></div><button type="button" class="ac-chan-more" id="acChanMore" style="display:none">Show more</button>';
+  if (bottom && bottom.parentNode) bottom.parentNode.insertBefore(sec, bottom.nextSibling); else page.appendChild(sec);
+})();
+
+var chanForm = null;
+function paintChannelPage() {
+  var box = $('acChannelBody'); if (!box) return;
+  var u = chanUserNow();
+  if (!u) {
+    box.innerHTML = '<div class="ac-chan-lock"><i aria-hidden="true">📺</i><b>Sign in to post in Channel</b><p>' + plain(CH_CHIP) + ' Sign in with Pi first.</p><button type="button" class="as-btn main" data-chan="signin">Sign in with Pi</button></div>';
+    return;
+  }
+  box.innerHTML = '<p class="ac-msg">Loading…</p>';
+  isVerified(u.uid).then(function (ok) {
+    if (!$('acChannelBody')) return;
+    if (!ok) {
+      box.innerHTML = '<div class="ac-chan-lock"><i aria-hidden="true">🔒</i><b>Verified members only</b><p>' + plain(CH_CHIP) + ' Get your badge in Profile → Request Verification, then come back here.</p><button type="button" class="as-btn main" data-chan="getverified">Get Verified</button></div><div id="acMyVideos"></div>';
+      return;
+    }
+    box.innerHTML = '<div class="ac-chan-form"><b>Share a video link</b><p class="ac-msg">Paste a YouTube or TikTok link. It goes public right away and appears on the Academy home, below “Start Learning”.</p>' +
+      '<input class="field" id="acChanUrl" type="url" inputmode="url" autocomplete="off" placeholder="https://youtube.com/watch?v=…"><div id="acChanPrev"></div><p class="ac-msg" id="acChanMsg" role="status"></p>' +
+      '<input class="field" id="acChanTitle" maxlength="200" placeholder="Title (optional)" style="display:none"><textarea class="field" id="acChanCap" maxlength="500" placeholder="Say something about this video (optional)"></textarea>' +
+      '<button type="button" class="gold" id="acChanPost" disabled>Post Video</button></div><h3 class="adm-h" style="margin:6px 0 8px">Your videos</h3><div id="acMyVideos"></div>';
+    wireChannelForm(u); paintMyVideos(u);
+  });
+}
+function paintMyVideos(u) {
+  var host = $('acMyVideos'); if (!host) return;
+  db.collection('academyChannel').where('uid', '==', u.uid).limit(30).get().then(function (snap) {
+    var rows = snap.docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); }).sort(function (a, b) { return ms2(b.createdAt) - ms2(a.createdAt); });
+    host.innerHTML = rows.length ? '<div class="ac-chan-grid">' + rows.map(chanCard).join('') + '</div>' : '<p class="ac-msg">You have not shared a video yet.</p>';
+  }).catch(function () { host.innerHTML = '<p class="ac-msg err">Could not load your videos.</p>'; });
+}
+function wireChannelForm(u) {
+  var input = $('acChanUrl'), msg = $('acChanMsg'), prev = $('acChanPrev'), btn = $('acChanPost'), titleEl = $('acChanTitle'), timer = null, seq = 0;
+  chanForm = null;
+  function say2(t, cls) { msg.textContent = t || ''; msg.className = 'ac-msg' + (cls ? ' ' + cls : ''); }
+  function check() {
+    var mine = ++seq, raw = input.value.trim();
+    chanForm = null; btn.disabled = true; prev.innerHTML = ''; titleEl.style.display = 'none';
+    if (!raw) return say2('');
+    if (typeof window.afParseVideoLink !== 'function' || typeof window.afResolveVideoLink !== 'function') return say2('Video links are not ready. Please reload the page.', 'err');
+    var info = window.afParseVideoLink(raw);
+    if (!info) return say2('Paste a valid YouTube or TikTok video link.', 'err');
+    say2('Checking link…');
+    window.afResolveVideoLink(info).then(function (r) {
+      if (mine !== seq) return;
+      if (!r) return say2('Please paste the full TikTok link that looks like tiktok.com/@name/video/123…', 'err');
+      chanForm = r;
+      titleEl.style.display = ''; titleEl.value = r.title ? r.title.slice(0, 200) : '';
+      prev.innerHTML = window.afLinkCardHtml({ linkProvider: r.provider, linkId: r.id, linkUrl: r.url, linkTitle: r.title, linkThumb: r.thumb });
+      say2('Ready to post.', 'ok'); btn.disabled = false;
+    });
+  }
+  input.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(check, 450); });
+  input.addEventListener('paste', function () { setTimeout(check, 60); });
+  btn.addEventListener('click', function () {
+    var r = chanForm; if (!r || !db) return;
+    var title = (titleEl.value || '').trim().slice(0, 200) || (r.provider === 'tiktok' ? 'TikTok video' : 'YouTube video');
+    btn.disabled = true; btn.textContent = 'Posting…';
+    db.collection('academyChannel').add({
+      uid: u.uid, authorName: chanName(u), text: ($('acChanCap').value || '').trim().slice(0, 500),
+      linkProvider: r.provider, linkUrl: r.url, linkId: r.id, linkTitle: title, linkThumb: (r.thumb && r.thumb.length <= 600) ? r.thumb : '',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(function () {
+      chan.loaded = 0; say('Your video is now live ✅'); paintChannelPage();
+      var g = $('acChanGrid'); if (g) paintChannelHome();
+    }).catch(function (e) { btn.disabled = false; btn.textContent = 'Post Video'; say2(typeof firebaseErrorMessage === 'function' ? firebaseErrorMessage(e) : 'Could not post. Please try again.', 'err'); });
+  });
+}
+function delChannel(id) {
+  if (!confirm('Delete this video from Channel?')) return;
+  db.collection('academyChannel').doc(id).delete().then(function () {
+    chan.items = chan.items.filter(function (x) { return x.id !== id; }); chan.loaded = 0;
+    say('Deleted'); paintChannelHome(); if (document.querySelector('.page.active') && document.querySelector('.page.active').id === 'acChannel') paintChannelPage();
+  }).catch(function () { say('Could not delete.'); });
+}
+document.addEventListener('click', function (e) {
+  var t = e.target.closest ? e.target : null; if (!t) return;
+  var d = t.closest('[data-chan-del]'); if (d) { delChannel(d.getAttribute('data-chan-del')); return; }
+  if (t.closest('#acChanMore')) { paintChannelHome(true); return; }
+  var c = t.closest('[data-chan]'); if (!c) return;
+  var a = c.getAttribute('data-chan');
+  if (a === 'signin') needUser().then(function () { paintChannelPage(); });
+  else if (a === 'getverified') { showPage('profile'); setTimeout(function () { var tg = $('acVerifyToggle'); if (tg && $('acVerify') && $('acVerify').hasAttribute('hidden')) tg.click(); if (tg && tg.scrollIntoView) tg.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 700); }
+});
+
+/* ================= 6. VERIFIED BADGE REQUEST + PAY WITH PI (Profile, Afrishine Skills only) ================= */
+var VPLANS = [
+  { id: 'verified', title: 'Verified', usd: 10, per: '/ 1 Year', note: 'YouTube & TikTok links in Channel' },
+  { id: 'boost', title: 'Verified + Boost', usd: 15, per: '/ 30 Days', note: 'Boost your posts', pop: true },
+  { id: 'vip', title: 'Verified VIP', usd: 150, per: '/ 30 Days', note: 'Unlock all features' }
+];
+var vstate = { plan: 'verified', pi: {}, busy: false };
+var CONTACT_MAIL = 'afrishinehub@gmail.com';
+function planOf(id) { return VPLANS.filter(function (p) { return p.id === id; })[0] || VPLANS[0]; }
+function paintPlans() {
+  var host = $('acvPlans'); if (!host) return;
+  host.innerHTML = VPLANS.map(function (p) {
+    var pi = vstate.pi[p.id];
+    return '<button type="button" class="ac-plan' + (vstate.plan === p.id ? ' on' : '') + '" data-vplan="' + p.id + '" aria-pressed="' + (vstate.plan === p.id) + '">' + (p.pop ? '<span class="pop">Popular</span>' : '') +
+      '<span class="dot"></span><span class="t"><b>' + plain(p.title) + '</b><small>' + plain(p.note) + '</small></span><span class="p"><b>$' + p.usd + '</b><small>' + plain(p.per) + (pi ? ' · ≈ ' + plain(piFmt(pi)) : '') + '</small></span></button>';
+  }).join('');
+  var pay = $('acvPay'); if (pay && !vstate.busy) pay.textContent = 'Pay with Pi Network · ' + (vstate.pi[vstate.plan] ? piFmt(vstate.pi[vstate.plan]) : '$' + planOf(vstate.plan).usd);
+}
+function loadPlanPrices() {
+  return postJson('/api/pi-verify', { action: 'plans' }).then(function (d) { (d.plans || []).forEach(function (p) { vstate.pi[p.id] = p.amountPi; }); paintPlans(); }).catch(function () { });
+}
+function paintVerifyStatus() {
+  var el = $('acvStatus'), u = chanUserNow(); if (!el) return;
+  if (!u) { el.style.display = 'none'; return; }
+  db.collection('publicProfiles').doc(u.uid).get().then(function (s) {
+    var p = s.exists ? s.data() : null, until = p ? ms2(p.verifiedUntil) : 0, e = $('acvStatus'); if (!e) return;
+    if (verifiedNow(p)) { e.style.display = ''; e.textContent = '✓ You are Verified' + (until ? ' until ' + dShort(p.verifiedUntil) : '') + '. Pay again to add more time.'; }
+    else if (p && p.verifiedPlan && until) { e.style.display = ''; e.textContent = 'Your badge ended on ' + dShort(p.verifiedUntil) + '. Renew below.'; }
+    else e.style.display = 'none';
+  }).catch(function () { });
+}
+function fillVerifyPanel() {
+  var panel = $('acVerify'); if (!panel) return;
+  var u = chanUserNow();
+  panel.innerHTML = '<h3>Professional Verification</h3><p class="sub">Request a Verified badge as a business or professional. Verified members can post in Channel and sell in the Store.</p><p class="ac-vstatus" id="acvStatus" style="display:none"></p>' +
+    '<div class="ac-vgrid"><input class="field" id="acvProf" maxlength="100" placeholder="Profession / Business" autocomplete="organization-title"><textarea class="field" id="acvWhy" maxlength="500" placeholder="Explain why you are requesting verification (at least 10 characters)"></textarea></div>' +
+    '<b style="display:block;margin:4px 0 2px">Choose your plan</b><div class="ac-plans" id="acvPlans"></div>' +
+    '<div class="ac-vgrid"><input class="field ro" id="acvName" readonly placeholder="Your name"><input class="field ro" id="acvUser" readonly placeholder="Username"><input class="field" id="acvEmail" type="email" inputmode="email" maxlength="120" placeholder="Your e-mail address" autocomplete="email"></div>' +
+    '<div class="ac-vbtns"><button type="button" class="gold pay" id="acvPay" data-acv="pay">Pay with Pi Network</button><button type="button" class="secondary" data-acv="request">Request Verification</button></div>' +
+    '<p class="ac-msg" id="acvMsg" role="status"></p>' +
+    '<p class="ac-help">Pay with Pi: your badge turns on as soon as the payment is complete. Request Verification: we review your details and contact you. Questions? Write to <a href="mailto:' + CONTACT_MAIL + '">' + CONTACT_MAIL + '</a>.</p>';
+  var nm = (u && (u.displayName || '')) || sessionStorageGet('afrishine_pi_username') || '', un = sessionStorageGet('afrishine_pi_username') || '';
+  $('acvName').value = nm; $('acvUser').value = un ? '@' + un : '';
+  if (u && u.email) $('acvEmail').value = u.email;
+  if (u && !un) db.collection('publicProfiles').doc(u.uid).get().then(function (s) { var d = s.exists ? s.data() : {}, v = d.piUsername || d.username || ''; if (v && $('acvUser')) { $('acvUser').value = '@' + v; if (!$('acvName').value) $('acvName').value = d.username || v; } }).catch(function () { });
+  paintPlans(); loadPlanPrices(); paintVerifyStatus();
+}
+function mountVerify() {
+  if (!ownAddress || $('acVerifyWrap')) return;
+  var ed = $('ahProfileEditor'); if (!ed) return;
+  var wrap = document.createElement('div'); wrap.id = 'acVerifyWrap'; wrap.style.margin = '12px 0 0';
+  wrap.innerHTML = '<button type="button" class="secondary" id="acVerifyToggle">Request Verification</button><section class="ac-verify" id="acVerify" hidden></section>';
+  var old = $('ahVerifyToggle');
+  if (old && old.parentNode) old.parentNode.insertBefore(wrap, old); else ed.appendChild(wrap);
+  $('acVerifyToggle').addEventListener('click', function () {
+    var p = $('acVerify'), open = p.hasAttribute('hidden');
+    if (open) { p.removeAttribute('hidden'); fillVerifyPanel(); this.textContent = 'Hide Verification'; } else { p.setAttribute('hidden', ''); this.textContent = 'Request Verification'; }
+  });
+}
+(function () {                                    // the Profile editor is built after the page opens: mount when it appears
+  var prof = $('profile'); if (!prof || !ownAddress || !window.MutationObserver) return;
+  new MutationObserver(function () { mountVerify(); }).observe(prof, { childList: true });
+  window.addEventListener('load', mountVerify);
+})();
+function vmsg(t, cls) { var m = $('acvMsg'); if (m) { m.textContent = t || ''; m.className = 'ac-msg' + (cls ? ' ' + cls : ''); } }
+function readVerifyForm() {
+  var prof = ($('acvProf').value || '').trim(), why = ($('acvWhy').value || '').trim(), email = ($('acvEmail').value || '').trim();
+  if (prof.length < 2) { vmsg('Write your profession or business.', 'err'); return null; }
+  if (why.length < 10) { vmsg('Explain why you are requesting verification (at least 10 characters).', 'err'); return null; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { vmsg('Enter a valid e-mail address.', 'err'); return null; }
+  return { plan: vstate.plan, profession: prof, details: why, email: email, name: $('acvName').value, username: String($('acvUser').value || '').replace(/^@/, '') };
+}
+function submitVerify(pay) {
+  if (vstate.busy) return;
+  var f = readVerifyForm(); if (!f) return;
+  if (pay && !inPi()) { window.afPiGate(); return; }
+  vstate.busy = true; vmsg('Sending…');
+  var payBtn = $('acvPay'); if (payBtn) payBtn.disabled = true;
+  var done = function () { vstate.busy = false; if (payBtn) payBtn.disabled = false; paintPlans(); };
+  needUser().then(function (u) {
+    if (!u) { vmsg('Please sign in with Pi first.', 'err'); return done(); }
+    return u.getIdToken().then(function (t) { f.idToken = t; return postJson('/api/pi-verify', Object.assign({ action: 'submit' }, f)); }).then(function (r) {
+      if (!pay) { vmsg('Request sent ✅ We will review it and contact you by e-mail. Questions? ' + CONTACT_MAIL, 'ok'); return done(); }
+      vmsg(''); done(); payVerify(r);
+    });
+  }).catch(function (e) { vmsg((e && e.message) || 'Could not send. Please try again.', 'err'); done(); });
+}
+function payVerify(r) {
+  var o = sheet('<h3>Confirm payment</h3><p class="as-desc"><b>' + plain(r.label) + '</b> · ' + plain(planOf(r.plan).per.replace('/ ', '')) + '<br>Price: <b>$' + plain(r.usd) + '</b> = <b>' + piFmt(r.amountPi) + '</b><br>You pay with Pi. Your Verified badge turns on as soon as the payment is complete.</p><div class="as-actions static"><button type="button" class="as-btn ghost" data-as="sheet-close">Cancel</button><button type="button" class="as-btn main" id="acvConfirm">Pay ' + piFmt(r.amountPi) + '</button></div>');
+  o.querySelector('#acvConfirm').addEventListener('click', function () {
+    this.disabled = true; this.textContent = 'Opening Pi…';
+    if (!window.__afPiInited) { try { window.Pi.init({ version: '2.0' }); window.__afPiInited = true; } catch (_) { } }
+    Promise.resolve(window.Pi.authenticate(['username', 'payments'], piIncomplete)).catch(function () { }).then(function () {
+      window.Pi.createPayment({ amount: Number(r.amountPi), memo: ('Afrishine ' + r.label + ' badge').slice(0, 120), metadata: { kind: 'verify', plan: r.plan, requestId: r.requestId } }, {
+        onReadyForServerApproval: function (paymentId) { postJson('/api/pi-approve', { paymentId: paymentId }).catch(function (e) { say(e.message); }); },
+        onReadyForServerCompletion: function (paymentId, txid) {
+          postJson('/api/pi-complete', { paymentId: paymentId, txid: txid }).then(function () {
+            closeOv('asSheet'); chanVer = {}; say('Payment complete ✅ You are Verified!'); paintVerifyStatus(); vmsg('You are Verified ✅', 'ok');
+          }).catch(function (e) { say(e.message); });
+        },
+        onCancel: function () { closeOv('asSheet'); say('Payment cancelled.'); },
+        onError: function () { closeOv('asSheet'); say('Payment failed. Please try again.'); }
+      });
+    });
+  });
+}
+document.addEventListener('click', function (e) {
+  var pl = e.target.closest ? e.target.closest('[data-vplan]') : null;
+  if (pl) { vstate.plan = pl.getAttribute('data-vplan'); paintPlans(); return; }
+  var a = e.target.closest ? e.target.closest('[data-acv]') : null; if (!a) return;
+  submitVerify(a.getAttribute('data-acv') === 'pay');
+});
+
 /* ================= 2. ACADEMY-ONLY MODE (own address) ================= */
 if (!ownAddress) return;
 
-var ALLOWED = { academy: 1, trafficRules: 1, trafficList: 1, profile: 1, settings: 1, contact: 1, acLibrary: 1, acServices: 1, acFreelance: 1, acCommunity: 1, acBooking: 1, acStore: 1, acInbox: 1 };
+var ALLOWED = { academy: 1, trafficRules: 1, trafficList: 1, profile: 1, settings: 1, contact: 1, acLibrary: 1, acServices: 1, acFreelance: 1, acCommunity: 1, acBooking: 1, acStore: 1, acInbox: 1, acChannel: 1 };
 document.documentElement.classList.add('academy-only');
 document.body.classList.add('academy-only');
 document.title = 'Afrishine Skills · Learn. Create. Teach. Earn.';
