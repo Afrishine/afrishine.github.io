@@ -655,6 +655,7 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
         return null;
     }
     window.afParseVideoLink = parseVideoLink;
+    window.afResolveVideoLink = function (info) { return resolveVideoLink(info); };
     function fetchJson(u, wait) {
         return new Promise(function (resolve) {
             var done = false;
@@ -873,7 +874,7 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
         Promise.all([db.collection('verificationRequests').where('status', '==', 'pending').limit(50).get().then(docsOf).catch(function () { return []; }), db.collection('verificationInterest').limit(50).get().then(docsOf).catch(function () { return []; })]).then(function (r) {
             var req = byNew(r[0]);
             body().innerHTML = '<h3 class="adm-h">Pending verification requests</h3>' + (req.map(function (x) {
-                return '<div class="adm-row"><div class="grow"><b>' + plain(x.displayName || 'Member') + '</b> <span class="adm-tag">' + plain(x.profession) + '</span><small>' + plain(snip2(x.details, 300)) + '</small><small>' + plain(x.uid) + ' · ' + plain(fdate(x.createdAt)) + '</small></div><div class="acts"><button type="button" class="adm-btn gold" data-adm-act="approve" data-id="' + plain(x.id) + '" data-uid="' + plain(x.uid) + '">Approve</button><button type="button" class="adm-btn red" data-adm-act="reject" data-id="' + plain(x.id) + '">Reject</button></div></div>';
+                return '<div class="adm-row"><div class="grow"><b>' + plain(x.displayName || 'Member') + '</b> <span class="adm-tag">' + plain(x.profession) + '</span>' + (x.planLabel ? '<span class="adm-tag">' + plain(x.planLabel) + ' · $' + plain(x.priceUsd) + '</span>' : '') + (x.paid ? '<span class="adm-tag">💰 Paid</span>' : '') + '<small>' + plain(snip2(x.details, 300)) + '</small>' + (x.email ? '<small>✉ ' + plain(x.email) + (x.username ? ' · @' + plain(x.username) : '') + '</small>' : '') + '<small>' + plain(x.uid) + ' · ' + plain(fdate(x.createdAt)) + '</small></div><div class="acts"><button type="button" class="adm-btn gold" data-adm-act="approve" data-id="' + plain(x.id) + '" data-uid="' + plain(x.uid) + '" data-plan="' + plain(x.plan || '') + '">Approve</button><button type="button" class="adm-btn red" data-adm-act="reject" data-id="' + plain(x.id) + '">Reject</button></div></div>';
             }).join('') || '<p class="adm-empty">No pending requests.</p>') + '<h3 class="adm-h">“Notify me” list (' + r[1].length + ')</h3>' + (r[1].map(function (x) { return '<div class="adm-row"><div class="grow">' + plain(x.email || '(no email)') + '<small>' + plain(x.uid) + '</small></div></div>'; }).join('') || '<p class="adm-empty">Nobody yet.</p>');
         });
     }
@@ -916,7 +917,7 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
             });
         }).catch(fail);
     }
-    var ADM_TABS = { overview: admOverview, members: admMembers, content: admContent, reports: admReports, verify: admVerify, academy: admAcademy, orders: admOrders, security: function () { if (window.afSecAdmin) window.afSecAdmin(body()); else busy('Security module not loaded.'); }, payouts: function () { if (window.afPiPayouts) window.afPiPayouts(); else busy('Payouts module not loaded.'); }, storage: admStorage };
+    var ADM_TABS = { overview: admOverview, members: admMembers, content: admContent, reports: admReports, verify: admVerify, academy: admAcademy, orders: admOrders, security: function () { if (window.afSecAdmin) window.afSecAdmin(body()); else busy('Security module not loaded.'); }, payouts: function () { if (window.afPiPayouts) window.afPiPayouts(); else busy('Payouts module not loaded.'); }, badges: function () { if (window.afPiBadges) window.afPiBadges(); else busy('Badges module not loaded.'); }, storage: admStorage };
     function admRender(tab) {
         ADM.tab = ADM_TABS[tab] ? tab : 'overview';
         Array.prototype.forEach.call(document.querySelectorAll('#admTabs [data-adm-tab]'), function (b) { b.classList.toggle('on', b.getAttribute('data-adm-tab') === ADM.tab); });
@@ -966,7 +967,8 @@ if(typeof auth!=='undefined'&&auth&&auth.onAuthStateChanged)auth.onAuthStateChan
         else if (act === 'report') db.collection(b.getAttribute('data-rcol')).doc(id).update({ status: b.getAttribute('data-s'), reviewedAt: ts, reviewedBy: currentFirebaseUser.uid }).then(function () { admReports(); }).catch(function (er) { notice(firebaseErrorMessage(er)); });
         else if (act === 'approve') {
             var uid = b.getAttribute('data-uid');
-            db.collection('publicProfiles').doc(uid).update({ verified: true }).then(function () { return db.collection('verificationRequests').doc(id).update({ status: 'approved', reviewedAt: ts, reviewedBy: currentFirebaseUser.uid }); }).then(function () { notice('Member verified.'); admVerify(); }).catch(function (er) { notice(firebaseErrorMessage(er)); });
+            var bf = (window.afBadgeFields && b.getAttribute('data-plan')) ? window.afBadgeFields(b.getAttribute('data-plan')) : { verified: true };
+            db.collection('publicProfiles').doc(uid).update(bf).then(function () { return db.collection('verificationRequests').doc(id).update({ status: 'approved', reviewedAt: ts, reviewedBy: currentFirebaseUser.uid }); }).then(function () { notice('Member verified.'); admVerify(); }).catch(function (er) { notice(firebaseErrorMessage(er)); });
         }
         else if (act === 'reject') db.collection('verificationRequests').doc(id).update({ status: 'rejected', reviewedAt: ts, reviewedBy: currentFirebaseUser.uid }).then(function () { admVerify(); }).catch(function (er) { notice(firebaseErrorMessage(er)); });
         else if (act === 'upfile') admUploadFile();
