@@ -20,6 +20,10 @@ module.exports = async (req, res) => {
       const cr = await fetch(`${PI}/payments/${paymentId}/complete`, { method: 'POST', headers: auth(), body: JSON.stringify({ txid }) });
       if (!cr.ok) return res.status(502).json({ error: 'Pi could not complete the payment' });
     }
+    if (pay.metadata && pay.metadata.kind === 'verify') {            // Verified badge payment: give the badge
+      await require('./_verify').grant(pay, paymentId, txid);
+      return res.status(200).json({ ok: true });
+    }
     const productId = pay.metadata && pay.metadata.productId;
     const product = productId && /^[A-Za-z0-9_-]{6,64}$/.test(productId) ? await getDoc('academyProducts/' + productId) : null;
     if (product) {
