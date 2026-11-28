@@ -19,15 +19,50 @@
     "education"
   ],
   "shortcuts": [
-    { "name": "Talent Hub", "short_name": "Talent", "url": "/talent" },
-    { "name": "Marketplace", "short_name": "Market", "url": "/marketplace" },
-    { "name": "Security Solutions", "short_name": "Security", "url": "/solution" },
-    { "name": "Academy", "short_name": "Academy", "url": "/academy" }
+    {
+      "name": "Talent Hub",
+      "short_name": "Talent",
+      "url": "/talent"
+    },
+    {
+      "name": "Marketplace",
+      "short_name": "Market",
+      "url": "/marketplace"
+    },
+    {
+      "name": "Security Solutions",
+      "short_name": "Security",
+      "url": "/solution"
+    },
+    {
+      "name": "Academy",
+      "short_name": "Academy",
+      "url": "/academy"
+    },
+    {
+      "name": "My Wallet",
+      "short_name": "Wallet",
+      "url": "/#wallet"
+    }
   ],
   "icons": [
-    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
