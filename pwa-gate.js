@@ -1,6 +1,6 @@
 /* Afrishine Hub – PWA install + "actions go to Pi Browser" gate.
-   Viewing stays free. Outside Pi Browser (and not on afrishine-skills) every action that needs
-   a signed-in member (post, like, comment, follow, message, gift, wallet, Verified...) opens a
+   Viewing and My Wallet stay free. Outside Pi Browser (and not on afrishine-skills) every action that needs
+   a signed-in member (post, like, comment, follow, message, gift, Verified...) opens a
    sheet that sends the member to Afrishine Skills in Pi Browser. Email/Google sign-in stays usable. */
 (function () {
   'use strict';
@@ -13,12 +13,11 @@
   var last = 0;
   function gate() {
     var now = Date.now(); if (now - last < 600) return; last = now;
-    if (typeof window.afPiGate === 'function') { window.afPiGate(); return; }
     var ov = document.createElement('div');
     ov.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.65);display:flex;align-items:flex-end;justify-content:center';
     ov.innerHTML = '<div style="background:#10131c;color:#fff;border-radius:18px 18px 0 0;padding:20px 18px 24px;max-width:480px;width:100%;box-sizing:border-box;font-family:inherit">' +
-      '<h3 style="margin:0 0 8px">Continue in Pi Browser</h3>' +
-      '<p style="margin:0 0 14px;opacity:.85;line-height:1.45">Posting, likes, comments, messages, gifts and your wallet work on <b>Afrishine Skills</b> inside <b>Pi Browser</b>. Copy the link and open it there.</p>' +
+      '<h3 style="margin:0 0 8px">Continue on Afrishine Skills</h3>' +
+      '<p style="margin:0 0 14px;opacity:.85;line-height:1.45">To post, like, comment, follow or message, sign in on <b>Afrishine Skills</b> inside <b>Pi Browser</b>. Open Pi Browser, search <b>Afrishine</b> in the Pi Ecosystem and open <b>Afrishine - Skills</b>, or copy the link below and open it there. Viewing and My Wallet stay available here.</p>' +
       '<button type="button" id="afGCopy" style="width:100%;padding:13px;border:0;border-radius:12px;background:#d4a62a;color:#111;font-weight:700;margin-bottom:8px">Copy link</button>' +
       '<button type="button" id="afGClose" style="width:100%;padding:12px;border:1px solid #333;border-radius:12px;background:transparent;color:#fff">Close</button></div>';
     document.body.appendChild(ov);
@@ -32,7 +31,7 @@
 
   /* ---------- 1. wrap the global action functions ---------- */
   var FN = ['openCreateMenu', 'createAction', 'chooseMedia', 'publishTextPost', 'publishLovePost', 'previewPost',
-    'sendDirectMessage', 'marketPublishProduct', 'marketOpenSell', 'afWalletToast', 'saveLoveProfile', 'editPost'];
+    'sendDirectMessage', 'marketPublishProduct', 'marketOpenSell', 'saveLoveProfile', 'editPost'];
   function wrapAll() {
     FN.forEach(function (n) {
       var f = window[n];
@@ -40,16 +39,10 @@
       var w = function () { if (active()) { gate(); return; } return f.apply(this, arguments); };
       w.__afg = true; window[n] = w;
     });
-    /* pages that are only for signed-in members */
-    var sp = window.showPage;
-    if (typeof sp === 'function' && !sp.__afg) {
-      var w2 = function (id) { if (active() && (id === 'wallet' || id === 'inbox')) { gate(); return; } return sp.apply(this, arguments); };
-      w2.__afg = true; window.showPage = w2;
-    }
   }
 
   /* ---------- 2. capture clicks on dynamic buttons ---------- */
-  var ACTION = /(^|[^a-z])(like|unlike|love|comment|reply|follow|unfollow|repost|gift|send|message|chat|dm|post|publish|upload|create|go[- ]?live|live|wallet|verified|vip|boost|subscribe|apply|book|join|save|report|block|vote)([^a-z]|$)/i;
+  var ACTION = /(^|[^a-z])(like|unlike|love|comment|reply|follow|unfollow|repost|gift|send|message|chat|dm|post|publish|upload|create|go[- ]?live|live|verified|vip|boost|subscribe|apply|book|join|save|report|block|vote)([^a-z]|$)/i;
   var SAFE = /(sign[- ]?in|sign[- ]?up|signin|signup|google|login|log[- ]?in|password|sign[- ]?out|signout|close|back|menu|search|share|copy|cancel|install|pi-?gate|afg)/i;
   function sig(el) {
     return [el.className && el.className.baseVal === undefined ? el.className : '', el.id || '', el.getAttribute('aria-label') || '',
@@ -59,7 +52,7 @@
   document.addEventListener('click', function (e) {
     if (!active()) return;
     var t = e.target; if (!t || !t.closest) return;
-    if (t.closest('.as-ov,#afGateOv,[data-afg-skip]')) return;
+    if (t.closest('.as-ov,#afGateOv,[data-afg-skip],#wallet,#inbox,.ast-wallet-card')) return;
     var el = t.closest('button,a,[role="button"],[data-act],[data-action]');
     if (!el) return;
     if (el.closest('#profile') && /sign|log|google|password|email/i.test(sig(el) + (el.closest('form') ? 'x' : ''))) return;
