@@ -1,13 +1,15 @@
 'use strict';
 
-var CACHE_NAME = 'afrishine-hub-v28';
+var CACHE_NAME = 'afrishine-hub-v30';
 var META_CACHE = 'afrishine-meta';   // tiny cache that remembers who is signed in (used to skip your own video alerts)
 var NOTIFY_ICON = '/icon-192.png';
 
 var APP_FILES = [
   './',
   './index.html',
+  './offline.html',
   './style.css',
+  './skills.css',
   './app.js',
   './love.js',
   './feed.js',
@@ -15,14 +17,18 @@ var APP_FILES = [
   './app-features.js',
   './marketplace.js',
   './app-extras.js',
-  './afrishine-academy.js','./afrishine-security.js','./afrishine-payouts.js','./afrishine-badges.js','./afrishine-gifts.js', './academy-hero.jpg'
+  './afrishine-academy.js', './afrishine-security.js', './afrishine-payouts.js', './afrishine-badges.js', './afrishine-gifts.js',
+  './skills-core.js', './skills-library.js', './skills-pro.js', './skills-freelance.js', './skills-community.js', './skills-booking.js',
+  './pwa-gate.js', './academy-hero.jpg', './icon-192.png', './icon-512.png', './manifest.json'
 ];
 
-// Install service worker and cache the main app
+// Install: every file is cached on its own, so one missing file never stops the installation
 self.addEventListener('install', function (event) {
   event.waitUntil(
     caches.open(CACHE_NAME).then(function (cache) {
-      return cache.addAll(APP_FILES);
+      return Promise.all(APP_FILES.map(function (file) {
+        return cache.add(file).catch(function () { /* skip a missing file */ });
+      }));
     }).then(function () {
       return self.skipWaiting();
     })
@@ -35,10 +41,7 @@ self.addEventListener('activate', function (event) {
     caches.keys().then(function (cacheNames) {
       return Promise.all(
         cacheNames.map(function (cacheName) {
-          if (
-            cacheName.indexOf('afrishine-hub-') === 0 &&
-            cacheName !== CACHE_NAME
-          ) {
+          if (cacheName.indexOf('afrishine-hub-') === 0 && cacheName !== CACHE_NAME) {
             return caches.delete(cacheName);
           }
         })
@@ -49,57 +52,49 @@ self.addEventListener('activate', function (event) {
   );
 });
 
-// Network first for pages, cache fallback when offline
 self.addEventListener('fetch', function (event) {
   var request = event.request;
 
-  if (request.method !== 'GET') {
-    return;
-  }
+  if (request.method !== 'GET') return;
+
+  // Video / audio partial requests (Range) go straight to the network
+  if (request.headers.get('range')) return;
 
   var url = new URL(request.url);
 
-  // Do not cache Firebase, Pi SDK, authentication or external APIs
-  if (url.origin !== self.location.origin) {
-    return;
-  }
+  // Firebase, Pi SDK, media Worker and other external origins are never cached
+  if (url.origin !== self.location.origin) return;
 
-  // Share previews and API routes are always served live by Vercel
-  if (url.pathname.indexOf('/api/') === 0 || url.pathname.indexOf('/share/') === 0) {
-    return;
-  }
+  // Google / Firebase sign-in, share previews and API routes are always live
+  if (url.pathname.indexOf('/__/auth/') === 0 || url.pathname.indexOf('/api/') === 0 || url.pathname.indexOf('/share/') === 0) return;
 
+  // Pages: network first, cached app (or the offline page) when offline
   if (request.mode === 'navigate') {
     event.respondWith(
       fetch(request).then(function (response) {
         if (response && response.ok && (url.pathname === '/' || url.pathname === '/index.html')) {
           var copy = response.clone();
-          caches.open(CACHE_NAME).then(function (cache) {
-            cache.put('./index.html', copy);
-          });
+          caches.open(CACHE_NAME).then(function (cache) { cache.put('./index.html', copy); });
         }
         return response;
       }).catch(function () {
-        return caches.match('./index.html');
+        return caches.match('./index.html').then(function (r) { return r || caches.match('./offline.html'); });
       })
     );
     return;
   }
 
-  // Cache local static files when available
+  // Static files: show the cached copy at once, fetch a fresh one in the background
   event.respondWith(
-    caches.match(request).then(function (cachedResponse) {
-      var networkRequest = fetch(request).then(function (response) {
-        if (response && response.ok) {
+    caches.match(request).then(function (cached) {
+      var network = fetch(request).then(function (response) {
+        if (response && response.ok && response.status === 200) {
           var copy = response.clone();
-          caches.open(CACHE_NAME).then(function (cache) {
-            cache.put(request, copy);
-          });
+          caches.open(CACHE_NAME).then(function (cache) { cache.put(request, copy); });
         }
         return response;
-      });
-
-      return cachedResponse || networkRequest;
+      }).catch(function () { return cached || caches.match('./offline.html'); });
+      return cached || network;
     })
   );
 });
