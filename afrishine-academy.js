@@ -97,7 +97,11 @@ window.afAcademy = {
   state: academy,
   load: loadAcademyFiles,
   filesOf: filesOf,
-  paint: function () { paintTrafficGrid(); return loadAcademyFiles(false).then(paintTrafficGrid); }
+  paint: function () { paintTrafficGrid(); return loadAcademyFiles(false).then(paintTrafficGrid); },
+  open: function (f) { return openAcademyFile(f); },               // used by skills-library.js
+  openChat: function (cid, title) { return openChat(cid, title); }, // used by the skills-*.js files
+  needUser: function () { return needUser(); }, curUser: function () { return curUser(); },
+  myName: function () { return myName(); }, isVerified: function (uid) { return isVerified(uid); }
 };
 window.afAcademyReload = function () { academy.at = 0; return loadAcademyFiles(true); };
 
@@ -148,6 +152,7 @@ if (holder) {
     sectionPage({ id: 'acChannel', icon: '📺', title: 'Channel', sub: 'Share your YouTube or TikTok video link.' }, '<div id="acChannelBody"></div>'));
 }
 function paintLibrary() {
+  if (window.afSkills && window.afSkills.libraryReady) return;     // skills-library.js draws the E-Library
   var box = document.getElementById('acLibraryBody'); if (!box) return;
   loadAcademyFiles(false).then(function () {
     var list = filesOf('elibrary');
